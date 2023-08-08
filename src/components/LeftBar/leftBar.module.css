@@ -1,0 +1,351 @@
+@import "../../style.css";
+
+/* *{
+    background: rgb(208, 218, 222);
+} */
+.leftBar {
+    display: flex;
+    justify-content: flex-start;
+}
+.container {
+    border: none;
+    background: rgb(244, 244, 244);
+    /* height: 100vh; */
+    width: 250px;
+    box-shadow: 10px 0px 9px 1px rgba(137, 137, 137, 0.285);
+}
+.item {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item .header {
+    background: rgb(25, 151, 255);
+}
+.item .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item .logo{
+    margin: 11px 8px;
+    color: white;
+}
+.item:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+.item2 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item2 .header {
+    background: rgb(25, 151, 255);
+}
+.item2 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item2 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item2:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+.item3 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item3 .header {
+    background: rgb(25, 151, 255);
+}
+.item3 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item3 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item3:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+.item4 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item4 .header {
+    background: rgb(25, 151, 255);
+}
+.item4 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item4 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item4:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+.item5 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item5 .header {
+    background: rgb(25, 151, 255);
+}
+.item5 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item5 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item5:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+.item6 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item6 .header {
+    background: rgb(25, 151, 255);
+}
+.item6 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item6 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item6:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+.item7 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item7 .header {
+    background: rgb(25, 151, 255);
+}
+.item7 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item7 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item7:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+.item8 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item8 .header {
+    background: rgb(25, 151, 255);
+}
+.item8 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item8 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item8:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+.item9 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item9 .header {
+    background: rgb(25, 151, 255);
+}
+.item9 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item9 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item9:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+.item10 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item10 .header {
+    background: rgb(25, 151, 255);
+}
+.item10 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item10 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item10:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+.item11 {
+    border: none;
+    border-radius: 12px;
+    background: rgb(25, 151, 255);
+    display: flex;
+    height: 45px;
+    flex-direction: row;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.item11 .header {
+    background: rgb(25, 151, 255);
+}
+.item11 .header h1{
+    font-size: 18px;
+    color: white;
+}
+.item11 .logo {
+    margin: 11px 8px;
+    color: white;
+}
+.item11:hover {
+    box-shadow: 2px 2px 5px rgb(52, 187, 255);
+    cursor: pointer;
+}
+
+/* media queries */
+  /* Laptop-large screen */
+  @media (max-width: 1170px) {
+    .container {
+        border: none;
+        background: rgb(244, 244, 244);
+        /* height: 100vh; */
+        width: 200px;
+        box-shadow: 10px 0px 9px 1px rgba(137, 137, 137, 0.285);
+    }
+  }
+  
+
+
+    /* Soura (Date:7/8/2023) */
+
+    @media (max-width: 440px) {
+        .leftBar{
+            display: none;
+        }
+
+
+        .leftbar_show {
+            /* your styles for the visible left bar */
+            display: block; /* or any other desired display property */
+        }
+
+      } 
+

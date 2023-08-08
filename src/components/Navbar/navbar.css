@@ -1,0 +1,105 @@
+@import "../../style.css";
+
+.navbar{
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px ;
+    height: 50px;
+    border-bottom: 1px solid lightgray;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 999;
+
+}
+
+.left-navbar{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    span{
+        font-weight: bold;
+        font-size: 20px;
+    }
+}
+
+
+.search{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+input{
+    border: none;
+    width: 500px;
+    background-color: transparent;
+}
+
+
+
+
+.right-navbar{
+    
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    img{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    /* span{
+
+    } */
+}
+
+
+.menuIcon{
+    visibility: hidden;
+}
+
+
+
+ @media (max-width: 440px) {
+    input {
+        display: none;
+    }
+
+    .right-navbar{
+        display: none;
+    }
+
+    .menuIcon{
+        visibility: visible;
+    }
+
+
+  } 
+
+  /* Tablet */
+  /* @media (max-width: 960px) {
+
+    input{
+        width: 200px;
+    }
+
+    .user{
+        display: none;
+    }
+  } */

@@ -1,0 +1,54 @@
+/* Light Theme */
+.theme-light .theme-textColor {
+    color: #000;
+  }
+  .theme-light .theme-bg {
+    background: white;
+  }
+  .theme-light .theme-logo {
+    color: darkblue;
+  }
+  .theme-light .theme-bgSoft {
+    background: #f6f3f3;
+  }
+  .theme-light .theme-textColorSoft {
+    color: #555;
+  }
+  .theme-light .theme-border {
+    border-color: lightgray;
+  }
+  
+  /* Dark Theme */
+  .theme-dark .theme-textColor {
+    color: whitesmoke;
+  }
+  .theme-dark .theme-bg {
+    background: #222;
+  }
+  .theme-dark .theme-logo {
+    color: white;
+  }
+  .theme-dark .theme-bgSoft {
+    background: #333;
+  }
+  .theme-dark .theme-textColorSoft {
+    color: lightgray;
+  }
+  .theme-dark .theme-border {
+    border-color: #444;
+  }
+  
+  /* Mobile */
+  @media (max-width: 480px) {
+    .mobile-content {
+      /* Your mobile styles here */
+    }
+  }
+  
+  /* Tablet */
+  @media (max-width: 960px) {
+    .tablet-content {
+      /* Your tablet styles here */
+    }
+  }
+  
