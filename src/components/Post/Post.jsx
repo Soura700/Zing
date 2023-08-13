@@ -39,7 +39,7 @@ const Post = ({ post }) => {
         <div className={styles.info}>
           <div className={styles.item}>
             {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
-            12 Likes
+            13 Likes
           </div>
           <div className={styles.item} onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
