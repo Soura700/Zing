@@ -1,80 +1,190 @@
 @import "../../style.css";
 
 .post {
-    -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-    -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-    border-radius: 20px;
-    background-color: themed("bg");
-    color: themed("textColor");
-
+  -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+  -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+  box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+  border-radius: 20px;
+  /* background-color: themed("bg"); */
+  background: rgb(255, 255, 255);
+  color: themed("textColor");
+  /* background: red; */
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;
 
 }
-.container {
-    padding: 20px;
-  }
 
+.container {
+  /* padding: 20px; */
+  margin: 20px;
+  /* background: rgb(0, 157, 255); */
+}
+
+.post .content p {
+  color: rgb(52, 52, 52);
+  font-size: 20px;
+  margin: 0px;
+}
 
 .user {
-    display: flex;
-    align-items: center;
-    justify-content: space-between
-
-    
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between
+}
 
 
 .userInfo {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 
 
 
 }
 
 .userInfo>img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 
 .details {
-    display: flex;
-    flex-direction: column;
-  }
+  display: flex;
+  flex-direction: column;
+}
 
-  .details>.name{
-    font-weight: 500;
-  }
+.details>.name {
+  font-weight: 500;
+}
 
-  
- .details>.date {
-    font-size: 12px;
-  }
+
+.details>.date {
+  font-size: 12px;
+}
 
 .content {
-    margin: 20px 0px;
+  margin: 20px 0px;
+}
+
+.content>img {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+.info {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 20px;
+}
+
+.info>.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+/* 1170px
+  1026px */
+@media (max-width: 1170px) {
+  .post .content p {
+    color: rgb(54, 54, 54);
+    font-size: 17px;
+    margin: 0px;
   }
 
   .content>img {
     width: 100%;
     max-height: 500px;
     object-fit: cover;
-    margin-top: 20px;
+    border-radius: 12px;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 1026px) {
+  .post {
+    -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    border-radius: 20px;
+    /* background-color: themed("bg"); */
+    background: rgb(255, 255, 255);
+    color: themed("textColor");
+    /* background: red; */
+    /* width: 500px; */
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+
   }
 
-.info {
+  .post .content p {
+    color: rgb(54, 54, 54);
+    font-size: 17px;
+    margin: 0px;
+  }
+
+  .content>img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 15px;
+  }
+}
+
+
+/* media query for tablet, refer to rightbar css media queries for better info */
+@media (min-width: 768px) and (max-width: 950px) {
+  .post {
+    -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    border-radius: 20px;
+    background-color: themed("bg");
+    color: themed("textColor");
+    /* background: red; */
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+
+  }
+
+  .post .content p {
+    color: rgb(54, 54, 54);
+    font-size: 14px;
+    margin: 0px;
+  }
+
+  .content>img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 15px;
+  }
+
+  .info {
     display: flex;
+    justify-content: space-evenly;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
   }
 
   .info>.item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
   }
+}

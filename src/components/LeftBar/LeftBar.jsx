@@ -22,7 +22,7 @@ export const LeftBar = ( {isVisible}) => {
           <div className={styles.item}>
             {/* here item means each options (ex: friends, groups ,marketplace etc) */}
             <div className={styles.logo}>
-              <PeopleAltIcon />
+              <PeopleAltIcon fontSize="small"/>
             </div>
             <div className={styles.header}>
               <h1>Friends</h1>
@@ -31,51 +31,59 @@ export const LeftBar = ( {isVisible}) => {
 
           <div className={styles.item2}>
             <div className={styles.logo}>
-              <GroupsIcon />
+              <MessageIcon fontSize="small"/>
             </div>
             <div className={styles.header}>
-              <h1>Groups</h1>
+              <h1>Messages</h1>
             </div>
           </div>
 
           <div className={styles.item3}>
             <div className={styles.logo}>
-              <StorefrontIcon />
+              <TrendingUpIcon fontSize="small"/>
             </div>
             <div className={styles.header}>
-              <h1>Marketplace</h1>
+              <h1>Trending</h1>
             </div>
           </div>
           <div className={styles.item4}>
             <div className={styles.logo}>
-              <PlayArrowIcon />
-            </div>
-            <div className={styles.header}>
-              <h1>Watch</h1>
-            </div>
-          </div>
-          <hr />
-          <div className={styles.item5}>
-            <div className={styles.logo}>
-              <BookmarkIcon />
-            </div>
-            <div className={styles.header}>
-              <h1>Saved</h1>
-            </div>
-          </div>
-
-          <div className={styles.item6}>
-            <div className={styles.logo}>
-              <EventNoteIcon />
+              <EventNoteIcon fontSize="small"/>
             </div>
             <div className={styles.header}>
               <h1>Events</h1>
             </div>
           </div>
+          <div className={styles.item5}>
+            <div className={styles.logo}>
+              <BookmarkIcon fontSize="small"/>
+            </div>
+            <div className={styles.header}>
+              <h1>Saved</h1>
+            </div>
+          </div>
+          
+          <div className={styles.item6}>
+            <div className={styles.logo}>
+              <SettingsIcon fontSize="small"/>
+            </div>
+            <div className={styles.header}>
+              <h1>Settings</h1>
+            </div>
+          </div>
 
           <div className={styles.item7}>
             <div className={styles.logo}>
-              <TrendingUpIcon />
+              <HelpOutlineIcon fontSize="small"/>
+            </div>
+            <div className={styles.header}>
+              <h1>Help</h1>
+            </div>
+          </div>
+
+          {/* <div className={styles.item7}>
+            <div className={styles.logo}>
+              
             </div>
             <div className={styles.header}>
               <h1>Trending</h1>
@@ -84,7 +92,7 @@ export const LeftBar = ( {isVisible}) => {
 
           <div className={styles.item8}>
             <div className={styles.logo}>
-              <MessageIcon />
+              
             </div>
             <div className={styles.header}>
               <h1>Messages</h1>
@@ -101,7 +109,7 @@ export const LeftBar = ( {isVisible}) => {
           <hr />
           <div className={styles.item10}>
             <div className ={styles.logo}>
-              <SettingsIcon />
+              
             </div>
             <div className={styles.header}>
               <h1>Settings</h1>
@@ -110,12 +118,12 @@ export const LeftBar = ( {isVisible}) => {
 
           <div className={styles.item11}>
             <div className = {styles.logo}>
-              <HelpOutlineIcon />
+              
             </div>
             <div className={styles.header}>
               <h1>Help</h1>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
