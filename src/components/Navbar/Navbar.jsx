@@ -22,16 +22,13 @@ import LeftBar from '../LeftBar/LeftBar';
 
 const Navbar = ( {toggleMenu} ) => {
 
-    // const [ toggle , setToggle ] = useState(false)
+    const [ toggle , setToggle ] = useState(false)
 
 
 
-    // const toggleMenu =  ()=> {
-
-    //     alert("clicked")
-
-    //     setToggle(!toggle);
-    // }
+    const handleToggle =  ()=> {
+        setToggle(!toggle);
+    }
 
 
   return (
@@ -39,16 +36,16 @@ const Navbar = ( {toggleMenu} ) => {
 
     <div className="left-navbar">
         <Link to="/" style={{textDecoration:"none"}}>
-            <span>SocialMedia</span>
+            <span className="title">SocialMedia</span>
         </Link>
 
-        <HomeOutlinedIcon/>
-        <DarkModeOutlinedIcon/>
-        <GridViewOutlinedIcon/>
+        <HomeOutlinedIcon className="icon"/>
+        <DarkModeOutlinedIcon className="icon"/>
+        <GridViewOutlinedIcon className="icon"/>
 
         <div className="search">
-            <SearchOutlinedIcon/>
-            <input type="text" placeholder='Search...' />
+            <SearchOutlinedIcon className="icon" onClick={handleToggle}/>
+            {toggle?<input type="text" placeholder='Search...' className='extended' /> : <input type="text" placeholder='Search...' className='default' />}
         </div>
 
         {/* Sidebar Mneu */}

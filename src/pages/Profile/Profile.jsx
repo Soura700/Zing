@@ -7,6 +7,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import PlaceIcon from "@mui/icons-material/Place";
 import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import SettingsIcon from "@mui/icons-material/Settings";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/Posts/Posts"
 
@@ -29,7 +30,30 @@ const Profile = () => {
       </div>
       <div className={styles.profileContainer}>
         <div className={styles.uInfo}>
-          <div className={styles.left}>
+
+          <div className={styles.name}>
+            <h1>John Doe</h1>
+            {/* <div className={styles.info}>
+              <div className={styles.item}>
+                <PlaceIcon />
+                <span>USA</span>
+              </div>
+              <div className={styles.item}>
+                <LanguageIcon />
+                <span>lama.dev</span>
+              </div>
+            </div> */}
+            <div className={styles.btn}>
+              <button className={styles.btn1}>follow</button>
+              <button className={styles.btn2}>message</button>
+              <SettingsIcon className={styles.settings}/>
+              {/* <div className={styles.settings}>
+                <SettingsIcon/>
+              </div> */}
+            </div>
+          </div>
+
+          <div className={styles.links}>
             <a href="http://facebook.com">
               <FacebookTwoToneIcon fontSize="large" />
             </a>
@@ -46,24 +70,11 @@ const Profile = () => {
               <PinterestIcon fontSize="large" />
             </a>
           </div>
-          <div className={styles.center}>
-            <span>Jane Doe</span>
-            <div className={styles.info}>
-              <div className={styles.item}>
-                <PlaceIcon />
-                <span>USA</span>
-              </div>
-              <div className={styles.item}>
-                <LanguageIcon />
-                <span>lama.dev</span>
-              </div>
-            </div>
-            <button>follow</button>
-          </div>
-          <div className={styles.right}>
+         
+          {/* <div className={styles.right}>
             <EmailOutlinedIcon />
             <MoreVertIcon />
-          </div>
+          </div> */}
         </div>
         {/* Post will be here */}
       <Posts/>

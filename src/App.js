@@ -95,7 +95,7 @@ import Navbar from "./components/Navbar/Navbar"
 import Register from './pages/Register/Register';
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
-import Posts from "../src/components/Posts/Posts"
+// import Posts from "../src/components/Posts/Posts"
 
 import {
   createBrowserRouter,
@@ -104,7 +104,7 @@ import {
   Outlet,
 } from "react-router-dom";
 
-// import Profile from './pages/Profile/Profile';
+import Profile from './pages/Profile/Profile';
 import LeftBar from './components/LeftBar/LeftBar';
 import RightBar from './components/RightBar/RightBar';
 import { useState } from 'react';
@@ -134,8 +134,9 @@ function App() {
         <div style={{ display: "flex" }}>
           <LeftBar isVisible={toggle}/>
           <div style={{ flex: 6 }}>
-            <Outlet />
+            {/* <Outlet /> */}
           </div>
+          <Profile/>
           <RightBar />
         </div>
       </div>

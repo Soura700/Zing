@@ -1,11 +1,11 @@
 @import "../../style.css";
 
-.navbar{
+.navbar {
 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px ;
+    padding: 10px 20px;
     height: 50px;
     border-bottom: 1px solid lightgray;
     position: sticky;
@@ -15,28 +15,28 @@
 
 }
 
-.left-navbar{
+.left-navbar {
     display: flex;
     align-items: center;
     gap: 20px;
 
-    span{
+    span {
         font-weight: bold;
         font-size: 20px;
     }
 }
 
 
-.search{
+.search {
     display: flex;
     align-items: center;
-    gap: 10px;
+    /* gap: 10px; */
     border: 1px solid lightgray;
     padding: 5px;
     border-radius: 10px;
 }
 
-input{
+input {
     border: none;
     width: 500px;
     background-color: transparent;
@@ -45,19 +45,20 @@ input{
 
 
 
-.right-navbar{
-    
+.right-navbar {
+
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.user{
+.user {
     display: flex;
     align-items: center;
     gap: 10px;
     font-weight: 500;
-    img{
+
+    img {
         width: 30px;
         height: 30px;
         border-radius: 50%;
@@ -70,32 +71,97 @@ input{
 }
 
 
-.menuIcon{
+.menuIcon {
     visibility: hidden;
 }
 
 
+/* working fine upto 324px */
+@media (max-width: 440px) {
+    .navbar {
+        width: 96%;
 
- @media (max-width: 440px) {
-    input {
+    }
+
+    .search .extended {
+        border: 2px solid rgb(25, 151, 255);
+        border-radius: 50px;
+        background: white;
+        width: 99vw;
+        z-index: 1;
+        height: 50px;
+        top: 60px;
+        left: -340px;
+        position: absolute;
+        box-shadow: 1px 1px 12px 1px black;
+    }
+
+    ::placeholder {
+        padding: 20px;
+    }
+
+    .search .default {
         display: none;
     }
 
-    .right-navbar{
+    .left-navbar {
+        display: flex;
+        align-items: center;
+        gap: 35px;
+
+        .icon {
+            font-size: 25px;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 20px;
+        }
+    }
+
+    /* input {
+        display: none;
+    } */
+
+    .right-navbar {
         display: none;
     }
 
-    .menuIcon{
+    .search {
+        display: flex;
+        align-items: center;
+        position: relative;
+        /* gap: 10px; */
+        border: 1px solid lightgray;
+        padding: 5px;
+        border-radius: 10px;
+        width: 21px;
+    }
+
+    .menuIcon {
         visibility: visible;
     }
+}
 
 
-  } 
 
-  /* Tablet */
-  /* @media (max-width: 960px) {
 
-    input{
+
+
+/* Tablet */
+@media (min-width: 450px) and (max-width: 768px) {
+    .search {
+        display: flex;
+        align-items: center;
+        /* gap: 10px; */
+        border: 1px solid lightgray;
+        padding: 5px;
+        border-radius: 10px;
+        width: 250px;
+    }
+}
+
+/* input{
         width: 200px;
     }
 
@@ -103,3 +169,34 @@ input{
         display: none;
     }
   } */
+@media (min-width: 768px) and (max-width: 920px) {
+    .search {
+        display: flex;
+        align-items: center;
+        /* gap: 10px; */
+        border: 1px solid lightgray;
+        padding: 5px;
+        border-radius: 10px;
+        width: 300px;
+    }
+}
+
+
+
+/* laptop */
+@media (min-width: 920px) and (max-width: 1025px) {
+    .search {
+        display: flex;
+        align-items: center;
+        /* gap: 10px; */
+        border: 1px solid lightgray;
+        padding: 5px;
+        border-radius: 10px;
+        width: 419px;
+    }
+}
+
+
+
+
+/* upto 974 px all fine */
