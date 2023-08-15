@@ -24,7 +24,7 @@ app.use("/api/auth", registerAuth);
 
 console.log("hello");
 
-console.log("Hello Giuys");
+
 
 //step 5:
 app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`))
