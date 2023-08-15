@@ -29,7 +29,45 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-app.post("/login", async (req, res) => {
+
+
+
+//register api
+
+app.post("/register",  (req, res) => {
+    const username = req.body.username;
+    const email = req.body.email
+    const password = req.body.password;
+
+    try {
+            connection.query(
+                "INSERT INTO users VALUES (username, user_email, user_password)",
+                [username, email, password],
+                (error, results) => {
+                    if (error) {
+                        res.status(500).json(error);
+                    } else {
+                        res.status(200).json(results);
+                    }
+                }
+            );
+    }
+
+    catch (error) {
+        res.status(500).json(error);
+    }
+
+
+});
+
+
+
+
+
+//login api
+
+
+router.post("/login",  async(req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -48,21 +86,11 @@ app.post("/login", async (req, res) => {
             );
         });
 
-        if (queryResult.length > 0) {
-            res.redirect("/welcome");
-        } else {
-            res.redirect("/");
-        }
     } catch (error) {
         console.error("Error executing query:", error);
         res.status(500).send("An error occurred");
     }
 });
-
-app.get("/welcome", (req, res) => {
-    res.sendFile(__dirname + "/welcome.html");
-});
-
 
 
 
