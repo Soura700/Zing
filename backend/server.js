@@ -22,6 +22,6 @@ connection.connect((err) => {
 PORT = 5000;
 app.use("/api/auth", registerAuth);
 
-
+console.log("hello");
 //step 5:
 app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
