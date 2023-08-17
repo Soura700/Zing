@@ -5,19 +5,42 @@ const bodyParser = require("body-parser");
 var router = express();
 const bcrypt = require("bcrypt");
 const connection = require("../connection")
-//register api
-router.post("/register", (req, res) => {
+
+
+// register api // all working 
+
+router.post("/register", async (req, res) => {
     const username = req.body.username;
     const password = req.body.user_password;
     const email = req.body.email;
 
+    const salt = await bcrypt.genSalt(12);
+    const hashedPass = await bcrypt.hash(password, salt);
+
+
+
     try {
+
+        //check if the user already exists or not(by email)
+        const userExistsQuery = "SELECT email FROM users WHERE email = ?";
+        connection.query(
+            userExistsQuery,
+            [email],
+            (error, results) => {
+                if (results.length > 0) {
+                    // User already exists, handle the error
+                    return res.status(400).json({ errors: 'User already registered' });
+                }
+            }
+        )
+
+
         connection.query(
             "INSERT INTO users (username, email, user_password) VALUES (?, ?, ?)",
-            [username, email, password],
+            [username, email, hashedPass],
             (error, results) => {
                 if (error) {
-                    res.status(500).json(error);
+                    // res.status(500).json(error);
                 } else {
                     res.status(200).json(results);
                 }
@@ -28,14 +51,10 @@ router.post("/register", (req, res) => {
     }
 });
 
-// Middleware for parsing url-encoded data
-app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
-});
 
-app.post("/login", async (req, res) => {
+
+router.post("/login", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -65,11 +84,10 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/welcome", (req, res) => {
-    res.sendFile(__dirname + "/welcome.html");
-});
+
 
 
 
 
 // Done By bibha 
+module.exports = router
