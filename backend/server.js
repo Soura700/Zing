@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const app = express();
 var connection = require("./connection")
 var registerAuth = require("./routes/auth")
+var postRoute = require("./routes/post")
 
 //Step 1:
 dotenv.config();
@@ -21,6 +22,7 @@ connection.connect((err) => {
 });
 PORT = 5000;
 app.use("/api/auth", registerAuth);
+app.use("/api/posts", postRoute);
 
 console.log("hello");
 //step 5:
