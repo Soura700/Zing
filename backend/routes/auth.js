@@ -85,7 +85,9 @@ router.post("/login", async (req, res) => {
 
 
 
-
+router.delete("/logout",(req,res)=>{
+    // Delete Api (Session Delete);
+})
 
 
 // Done By bibha 
