@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 var router = express();
 const bcrypt = require("bcrypt");
 const connection = require("../connection")
+const multer = require("multer");
 
 
 const storage = multer.diskStorage({
@@ -46,7 +47,7 @@ router.delete("/delete_post/:userId/:postId", (req,res) => {
 
 //create post
 
-  app.post("/create", upload.array("images", 5), (req, res) => {
+  router.post("/create", upload.array("images", 5), (req, res) => {
     const { userId, description } = req.body;
     const images = req.files.map((file) => file.filename);
   
@@ -75,6 +76,30 @@ router.delete("/delete_post/:userId/:postId", (req,res) => {
     });
   });
 
+
+  //update post
+router.put("/update_post/:userId/:postId", (req,res) => {
+  const userId = req.params.userId;
+  const postId = req.params.postId;
+  const description = req.body.description;
+  //const images = req.body.images;
+  try{
+      connection.query(
+          "UPDATE posts SET description = ? WHERE id = ?"
+          [description,postId],
+          (error,results) =>{
+              if (error) {
+                  res.status(500).json(error);
+              } else {
+                  res.status(200).json("Post has been updated successfuly");
+              }
+          }
+      )
+  }
+  catch(error){
+      res.status(500).json(error);
+  }
+})
 
 
 
