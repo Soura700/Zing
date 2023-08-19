@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const connection = require("../connection")
 
 
+
 // register api // all working 
 
 router.post("/register", async (req, res) => {
