@@ -46,7 +46,7 @@ router.delete("/delete_post/:userId/:postId", (req,res) => {
 
 //create post
 
-  app.post("/api/posts", upload.array("images", 5), (req, res) => {
+  app.post("/create", upload.array("images", 5), (req, res) => {
     const { userId, description } = req.body;
     const images = req.files.map((file) => file.filename);
   
