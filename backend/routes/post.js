@@ -77,7 +77,7 @@ router.delete("/delete_post/:userId/:postId", (req,res) => {
   });
 
 
-  //update post
+//update post
 router.put("/update_post/:userId/:postId", (req,res) => {
   const userId = req.params.userId;
   const postId = req.params.postId;
@@ -85,7 +85,7 @@ router.put("/update_post/:userId/:postId", (req,res) => {
   //const images = req.body.images;
   try{
       connection.query(
-          "UPDATE posts SET description = ? WHERE id = ?"
+          " UPDATE posts SET description = ? WHERE id = ? "
           [description,postId],
           (error,results) =>{
               if (error) {
