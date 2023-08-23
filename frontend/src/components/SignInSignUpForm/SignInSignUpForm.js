@@ -1,6 +1,6 @@
 import axios from 'axios';
 import img from '../../assets/img.svg';
-import img2 from "../../assets/img1.svg";
+import img2 from "../../assets/img1svg.svg";
 import './sign.css';
 // import styles from "./sign.module.css"
 import React, { useState } from "react";
