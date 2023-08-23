@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 var router = express();
 const bcrypt = require("bcrypt");
 const connection = require("../connection")
+const session = require("express-session");
 
 
 
@@ -84,6 +85,41 @@ router.post("/login", async (req, res) => {
     }
 });
 
+
+
+
+router.get("/check-cookie", (req, res) => {
+    // Check if the session_token cookie exists
+    if (req.cookies.user) {
+  
+  
+  
+      if(req.cookies.session_token){
+  
+      
+        const session_cookie = req.cookies.session_token;
+        const [customPart , userId] = session_cookie.split('_');
+  
+        if(customPart === 'custom' && userId ){
+  
+          res.status(200).json(userId);
+          
+          // res.status(200).json({ message: "Cookie exists" + " " +  userId  });
+        }
+  
+        else{
+  
+          res.status(400).json({ message: "Cookie does not exist or has expired" });
+  
+        }
+          
+      }
+    } else {
+      res.status(400).json({ message: "Cookie does not exist or has expired" });
+    }
+  });
+  
+  
 
 
 router.delete("/logout",(req,res)=>{
