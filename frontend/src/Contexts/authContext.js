@@ -1,14 +1,11 @@
-import React , { createContext, useContext, useState } from "react";
-
+import React, { createContext, useState, useContext } from "react";
+// import { get } from '../../../backend/routes/registerAuth';
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
-
-  return useContext(AuthContext); //Consumin the value ...Instead we have to write useContext(name of the context)  int every component we will just call the function ... it will do the same work
-  
-}
-
+  return useContext(AuthContext);
+};
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,11 +13,25 @@ export const AuthProvider = ({ children }) => {
   // Function to check authentication status and set isLoggedIn
   const checkAuthentication = async () => {
     try {
-      const response = await fetch("/check-cookie");
+      const response = await fetch(
+        "http://localhost:5000/api/auth/check-cookie",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
       const data = await response.json();
 
-      if (response.status === 200) {
+      if (response.status == 200) {
+        
+        console.log(data)
+
+        
         setIsLoggedIn(true);
+
+        return data;
+
       } else {
         setIsLoggedIn(false);
       }
@@ -29,15 +40,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const AuthProvider = ({ childres }) => {
-    <AuthContext.Provider value={(isLoggedIn, checkAuthentication)}>
-      {childres}
-    </AuthContext.Provider>;
-  };
-
-  return AuthProvider;
-
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, checkAuthentication }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
-
-
-// Need Changes (19/08/2023)

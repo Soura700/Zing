@@ -108,6 +108,7 @@ import Profile from './pages/Profile/Profile';
 import LeftBar from './components/LeftBar/LeftBar';
 import RightBar from './components/RightBar/RightBar';
 import { useState } from 'react';
+import SignInSignUpForm from './components/SignInSignUpForm/SignInSignUpForm';
 
 
 function App() {
@@ -134,9 +135,10 @@ function App() {
         <div style={{ display: "flex" }}>
           <LeftBar isVisible={toggle}/>
           <div style={{ flex: 6 }}>
-            {/* <Outlet /> */}
+            <Outlet />
           </div>
-          <Profile/>
+          {/* <Profile/> */}
+          {/* <Home/> */}
           <RightBar />
         </div>
       </div>
@@ -147,24 +149,22 @@ function App() {
     {
       path: "/",
       element: (
-        // <ProtectedRoute>
           <Layout />
-        // </ProtectedRoute>
       ),
       children: [
         {
           path: "/",
           element: <Home />,
         },
+        {
+          path: "/profile",
+          element: <Profile />,
+        },
       ],
     },
     {
       path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/register",
-      element: <Register />,
+      element: <SignInSignUpForm />,
     },
   ]);
 
