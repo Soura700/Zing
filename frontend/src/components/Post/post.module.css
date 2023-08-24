@@ -30,7 +30,7 @@
 .user {
   display: flex;
   align-items: center;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 
@@ -91,6 +91,20 @@
   font-size: 14px;
 }
 
+.user .icon {
+  justify-content: flex-end;
+}
+
+.postOpt {
+  border: 2px solid red;
+  z-index: 1;
+}
+
+
+
+.postDefault {
+  display: none;
+}
 
 /* 1170px
   1026px */

@@ -14,6 +14,13 @@ const Post = ({ post }) => {
   //TEMPORARY
   const liked = false;
 
+  const [toggle, setToggle] = useState(false);
+
+  //Post Option toggle
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
+
   return (
     <div className={styles.post}>
       <div className={styles.container}>
@@ -30,7 +37,17 @@ const Post = ({ post }) => {
               <span className={styles.date}>1 min ago</span>
             </div>
           </div>
-          <MoreHorizIcon />
+          <MoreHorizIcon className="icon" onClick={handleToggle}/>
+          {toggle ? (
+            <div className={styles.postOpt}>
+              <ul>
+                <li id="opt1">Update Post</li>
+                <li id="opt2">Delete Post</li>
+              </ul>
+            </div>
+          ) : (
+            <div className={styles.postOpt}></div>
+          )}
         </div>
         <div className={styles.content}>
           <p>{post.desc}</p>
@@ -41,7 +58,10 @@ const Post = ({ post }) => {
             {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
             13 Likes
           </div>
-          <div className={styles.item} onClick={() => setCommentOpen(!commentOpen)}>
+          <div
+            className={styles.item}
+            onClick={() => setCommentOpen(!commentOpen)}
+          >
             <TextsmsOutlinedIcon />
             12 Comments
           </div>

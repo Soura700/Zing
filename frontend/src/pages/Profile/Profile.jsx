@@ -45,7 +45,8 @@ const Profile = () => {
             </div> */}
             <div className={styles.btn}>
               <button className={styles.btn1}>follow</button>
-              <button className={styles.btn2}>message</button>
+              <button className={styles.btn2}>
+                message</button>
               <SettingsIcon className={styles.settings}/>
               {/* <div className={styles.settings}>
                 <SettingsIcon/>
