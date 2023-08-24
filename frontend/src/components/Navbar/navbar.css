@@ -79,7 +79,8 @@ input {
 /* working fine upto 324px */
 @media (max-width: 440px) {
     .navbar {
-        width: 96%;
+        width: 113%;
+        /* 113% working fine 24-aug-23  */
 
     }
 
@@ -107,7 +108,7 @@ input {
     .left-navbar {
         display: flex;
         align-items: center;
-        gap: 35px;
+        gap: 45px;
 
         .icon {
             font-size: 25px;
