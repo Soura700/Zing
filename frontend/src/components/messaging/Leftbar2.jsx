@@ -7,6 +7,12 @@ import TextsmsIcon from "@mui/icons-material/Textsms";
 import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import VideocamIcon from '@mui/icons-material/Videocam';
+import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MicNoneIcon from '@mui/icons-material/MicNone';
+import TelegramIcon from '@mui/icons-material/Telegram';
+
 
 const styles = {
   '*': {
@@ -132,6 +138,42 @@ export const Leftbar2 = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* main chat section */}
+
+      <div className="main-chat-section">
+        <div className="info">
+            <div className="left-part">
+              <div className="user-pic">
+              <img src={image} alt=""></img>
+              </div>
+              <div className="user-info">
+                 <h1>John Doe</h1>
+                 <p>Online</p>
+              </div>
+            </div>
+            <div className="right-part">
+               <CallRoundedIcon className="right-part-icon"/>
+               <VideocamIcon className="right-part-icon"/>
+            </div>
+        </div>
+        <div className="inner-container">
+        </div>
+        <div className="chat-bottom">
+            <div className="chat-input">
+              <input type="text" placeholder="Type a Message"/>
+            </div>
+            <div className="chat-options">
+            <PhotoSizeSelectActualIcon className="chat-btn"/>
+            <LocationOnIcon className="chat-btn"/>
+            <MicNoneIcon className="chat-btn"/>
+            </div>
+            <div className="submit-btn-class">
+              <button><TelegramIcon className="submit-btn"/></button>
+            </div>
+        </div>
+
       </div>
     </div>
   );
