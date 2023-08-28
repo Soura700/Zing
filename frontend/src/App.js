@@ -89,12 +89,13 @@
 // export default App;
 
 
-
+import React from "react";
 import './style.css';
 import Navbar from "./components/Navbar/Navbar"
 import Register from './pages/Register/Register';
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
+// import { Leftbar2 } from './components/messaging/Leftbar2';
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -108,38 +109,38 @@ import Profile from './pages/Profile/Profile';
 import LeftBar from './components/LeftBar/LeftBar';
 import RightBar from './components/RightBar/RightBar';
 import { useState } from 'react';
-// import SignInSignUpForm from './components/SignInSignUpForm/SignInSignUpForm';
+import SignInSignUpForm from './components/SignInSignUpForm/SignInSignUpForm';
 
 
 function App() {
 
-  const Layout = function(){
+  const Layout = function () {
 
     // Toggling 
 
-    const [ toggle , setToggle ] = useState(false)
+    const [toggle, setToggle] = useState(false)
 
 
 
-    const toggleMenu =  ()=> {
+    const toggleMenu = () => {
 
-        // alert("clicked")
+      // alert("clicked")
 
-        setToggle(!toggle);
+      setToggle(!toggle);
     }
 
 
     return (
       <div>
-        <Navbar toggleMenu={toggleMenu}/>
+        {/* <Navbar toggleMenu={toggleMenu} /> */}
         <div style={{ display: "flex" }}>
-          <LeftBar isVisible={toggle}/>
+          {/* <LeftBar isVisible={toggle}/> */}
           <div style={{ flex: 6 }}>
+          <React.StrictMode>
             <Outlet />
+          </React.StrictMode>
           </div>
-          {/* <Profile/> */}
-          {/* <Home/> */}
-          <RightBar />
+          {/* <RightBar /> */}
         </div>
       </div>
     );
@@ -149,7 +150,9 @@ function App() {
     {
       path: "/",
       element: (
-          <Layout />
+        // <ProtectedRoute>
+        <Layout />
+        // </ProtectedRoute>
       ),
       children: [
         {
@@ -160,19 +163,24 @@ function App() {
           path: "/profile",
           element: <Profile />,
         },
+        {
+          path: "/message",
+          element: <Leftbar2/>,
+        },
       ],
+
     },
-    // {
-    //   path: "/login",
-    //   element: <SignInSignUpForm />,
-    // },
+    {
+      path: "/login",
+      element: <SignInSignUpForm />,
+    },
   ]);
 
 
   return (
 
     <div>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </div>
   );
 }

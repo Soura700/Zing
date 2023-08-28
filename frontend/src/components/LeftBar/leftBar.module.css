@@ -1093,6 +1093,7 @@
         border-radius: 35px 35px 35px 35px;
         background: rgb(255, 255, 255);
         z-index: 999;
+        left: 40px;
         width: 106vw;
         height: 65vh;
         /* New */
