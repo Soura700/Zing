@@ -108,7 +108,7 @@ import Profile from './pages/Profile/Profile';
 import LeftBar from './components/LeftBar/LeftBar';
 import RightBar from './components/RightBar/RightBar';
 import { useState } from 'react';
-import SignInSignUpForm from './components/SignInSignUpForm/SignInSignUpForm';
+// import SignInSignUpForm from './components/SignInSignUpForm/SignInSignUpForm';
 
 
 function App() {
@@ -162,10 +162,10 @@ function App() {
         },
       ],
     },
-    {
-      path: "/login",
-      element: <SignInSignUpForm />,
-    },
+    // {
+    //   path: "/login",
+    //   element: <SignInSignUpForm />,
+    // },
   ]);
 
 
