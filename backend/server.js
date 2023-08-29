@@ -8,6 +8,7 @@ var registerAuth = require("./routes/auth")
 var postRoute = require("./routes/post")
 const storiesRoute = require("./routes/stories")
 const mongoose = require('mongoose');
+const io = require("socket.io");
 
 app.use(cors({
     origin: 'http://localhost:3000', 
@@ -29,6 +30,7 @@ connection.connect((err) => {
 
     console.log('Connected to the database');
 });
+
 
 mongoose
   .connect(process.env.MONGO_URI, {

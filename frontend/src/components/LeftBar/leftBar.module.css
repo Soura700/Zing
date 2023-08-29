@@ -1096,6 +1096,8 @@
         left: 40px;
         width: 106vw;
         height: 65vh;
+        /* New */
+        left: 40px;
         margin-top: -40px;
         transition: 0.35s ease-in;
         transform: translateY(15%);

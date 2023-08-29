@@ -18,8 +18,6 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(12);
     const hashedPass = await bcrypt.hash(password, salt);
 
-
-
     try {
 
         //check if the user already exists or not(by email)
@@ -56,35 +54,35 @@ router.post("/register", async (req, res) => {
 
 
 
-router.post("/login", async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
+// router.post("/login", async (req, res) => {
+//     const username = req.body.username;
+//     const password = req.body.password;
 
-    try {
-        const queryResult = await new Promise((resolve, reject) => {
-            connection.query(
-                "SELECT * FROM users WHERE username = ? AND  user_password = ?",
-                [username, password],
-                (error, results, fields) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(results);
-                    }
-                }
-            );
-        });
+//     try {
+//         const queryResult = await new Promise((resolve, reject) => {
+//             connection.query(
+//                 "SELECT * FROM users WHERE username = ? AND  user_password = ?",
+//                 [username, password],
+//                 (error, results, fields) => {
+//                     if (error) {
+//                         reject(error);
+//                     } else {
+//                         resolve(results);
+//                     }
+//                 }
+//             );
+//         });
 
-        if (queryResult.length > 0) {
-            res.redirect("/welcome");
-        } else {
-            res.redirect("/");
-        }
-    } catch (error) {
-        console.error("Error executing query:", error);
-        res.status(500).send("An error occurred");
-    }
-});
+//         if (queryResult.length > 0) {
+//             res.redirect("/welcome");
+//         } else {
+//             res.redirect("/");
+//         }
+//     } catch (error) {
+//         console.error("Error executing query:", error);
+//         res.status(500).send("An error occurred");
+//     }
+// });
 
 
 
@@ -121,44 +119,7 @@ router.get("/check-cookie", (req, res) => {
   });
   
   
-
-
-router.delete("/logout",(req,res)=>{
-    // Delete Api (Session Delete);
-})
-
-
-// Done By bibha 
-module.exports = router
-
-//updated login code
-
-/*const mysql = require("mysql2");
-const express = require("express");
-const bodyParser = require("body-parser");
-
-const app = express();
-app.use("/assets", express.static("assets"));
-
-const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "root123",
-    database: "nodejs",
-});
-
-// connect to the database
-connection.connect((error) => {
-    if (error) {
-        throw error;
-    } else {
-        console.log("Connected to the database successfully!");
-    }
-});
-
-app.use(express.json());
-
-app.get('/', (req, res) => {
+  router.get('/', (req, res) => {
     const ip =
         req.headers['cf-connecting-ip'] ||
         req.headers['x-real-ip'] ||
@@ -170,16 +131,12 @@ app.get('/', (req, res) => {
     });
 });
 
-// Middleware for parsing url-encoded data
-app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
-});
+router.post("/login", async (req, res) => {
 
-app.post("/", async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
+    const email = req.body.email;
+    const password = req.body.user_password;
+
     const userIP =
         req.headers['cf-connecting-ip'] ||
         req.headers['x-real-ip'] ||
@@ -188,26 +145,36 @@ app.post("/", async (req, res) => {
 
     try {
         connection.query(
-            "SELECT * FROM users WHERE username = ? AND  user_password = ?",
-            [username, password],
-            (error, results, fields) => {
+            "SELECT * FROM users WHERE email = ?",
+            [email],
+            async (error, results) => {
                 if (error) {
                     console.error("Error executing query:", error);
-                    res.status(500).send("An error occurred");
-                } else {
-                    if (results.length > 0) {
+                    return res.status(500).send("An error occurred");
+                }
+
+                if (results.length > 0) {
+                    const storedHashedPassword = results[0].user_password;
+                    const passwordMatches = await bcrypt.compare(password, storedHashedPassword);
+
+                    if (passwordMatches) {
                         // Insert IP address into database
-                        connection.query('INSERT INTO ip_addresses (ip) VALUES (?)', [userIP], (error, results) => {
+                        connection.query('UPDATE users SET ip_addresses = ? WHERE email = ?', [userIP, email], (error, results) => {
                             if (error) {
-                                console.error("Error inserting IP:", error);
+                                console.error("Error updating IP:", error);
+                                return res.status(500).json(error);
                             } else {
-                                console.log("IP inserted into database");
-                                res.redirect("/welcome");
+                                console.log("IP updated in database");
+                                return res.status(200).json(results);
                             }
                         });
                     } else {
+                        // Password doesn't match
                         res.redirect("/");
                     }
+                } else {
+                    // No user found
+                    res.redirect("/");
                 }
             }
         );
@@ -217,11 +184,12 @@ app.post("/", async (req, res) => {
     }
 });
 
-app.get("/welcome", (req, res) => {
-    res.sendFile(__dirname + "/welcome.html");
-});
 
-// Set app port
-app.listen(4000, () => {
-    console.log("Server listening on port 4000");
-});*/
+router.delete("/logout",(req,res)=>{
+    // Delete Api (Session Delete);
+})
+
+
+
+// Done By bibha 
+module.exports = router
