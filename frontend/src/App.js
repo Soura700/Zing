@@ -95,7 +95,7 @@ import Navbar from "./components/Navbar/Navbar"
 import Register from './pages/Register/Register';
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
-// import { Leftbar2 } from './components/messaging/Leftbar2';
+import { Leftbar2 } from './components/messaging/Leftbar2';
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -110,7 +110,6 @@ import LeftBar from './components/LeftBar/LeftBar';
 import RightBar from './components/RightBar/RightBar';
 import { useState } from 'react';
 import SignInSignUpForm from './components/SignInSignUpForm/SignInSignUpForm';
-
 
 function App() {
 

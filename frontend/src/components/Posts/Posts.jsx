@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
 import Post from "../Post/Post";
 import styles from "./posts.module.css"
+import axios from "axios";
+
 
 const Posts = () => {
+
+  const [postData, setPostData] = useState([]);
   //TEMPORARY
   const posts = [
     {
@@ -22,6 +27,28 @@ const Posts = () => {
       desc: "Tenetur iste voluptates dolorem rem commodi voluptate pariatur, voluptatum, laboriosam consequatur enim nostrum cumque! Maiores a nam non adipisci minima modi tempore.",
     },
   ];
+
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+
+        const postsRes = await axios.get(
+          "http://localhost:5000/api/posts/allPosts"
+        );
+
+       console.log("Data" + postsRes.data)
+
+       var newData = postsRes.data
+
+        setPostData(newData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchPosts();
+  }, []);
 
   return <div className={styles.posts}>
     {posts.map(post=>(

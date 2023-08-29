@@ -11,8 +11,6 @@ import React, { useState } from "react";
  
 const SignInSignUpForm = () => {
 
-
-
   const [isSignUp, setIsSignUp] = useState(false);
 
   const handleSignInClick = () => {
@@ -41,18 +39,22 @@ const SignInSignUpForm = () => {
       console.error("Login error:", error);
       // Handle error
     }
-
   };
 
   const handleSubmitSignUp = async (event) => {
+
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
 
+    console.log(data);
+
     try {
 
       const response = await axios.post("http://localhost:5000/api/auth/register", data);
+      
+      console.log(response);
 
       console.log("Register response:", response.data);
       // Handle success or redirect the user
@@ -61,8 +63,6 @@ const SignInSignUpForm = () => {
       console.error("Register error:", error);
       // Handle error
     }
-
-    
   };
 
 
@@ -98,11 +98,11 @@ const SignInSignUpForm = () => {
             </div>
           
           </form>
-          <form action="#" onSubmit={isSignUp ? handleSubmitSignUp : handleSubmitSignIn} method="POST" className="sign-up-form">
+          <form action="#" onSubmit={isSignUp ? handleSubmitSignUp : handleSubmitSignIn} method="post" className="sign-up-form">
           <h2 class="title">Sign up</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" name='fullname' placeholder="Username" />
+              <input type="text" name='username' placeholder="Username" />
             </div>
             <div class="input-field">
               <i class="fas fa-envelope"></i>

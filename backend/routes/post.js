@@ -47,13 +47,46 @@ router.delete("/delete_post/:userId/:postId", (req,res) => {
 
 //create post
 
+  // router.post("/create", upload.array("images", 5), (req, res) => {
+  //   const { userId, description } = req.body;
+    
+  //   const images = req.files.map((file) => file.filename);
+  
+  //   const checkUserQuery = "SELECT id FROM users WHERE id = ?";
+  //   const insertPostQuery = "INSERT INTO posts (userId, description, images) VALUES (?, ?, ?)";
+  //   const values = [userId, description, JSON.stringify(images)];
+  
+  //   // Check if the user exists
+  //   connection.query(checkUserQuery, [userId], (err, results) => {
+  //     if (err) {
+  //       console.error("Error checking user existence:", err);
+  //       res.status(500).json(err);
+  //     } else if (results.length === 0) {
+  //       res.status(400).json({ error: "User not found" });
+  //     } else {
+  //       // User exists, insert the post
+  //       connection.query(insertPostQuery, values, (err, result) => {
+  //         if (err) {
+  //           console.error("Error creating post:", err);
+  //           res.status(500).json(err);
+  //         } else {
+  //           res.status(201).json({ id: result.insertId, ...req.body, images });
+  //         }
+  //       });
+  //     }
+  //   });
+  // });
+
+
   router.post("/create", upload.array("images", 5), (req, res) => {
     const { userId, description } = req.body;
-    const images = req.files.map((file) => file.filename);
+    
+    // const images = req.files.map((file) => file.filename);
   
     const checkUserQuery = "SELECT id FROM users WHERE id = ?";
-    const insertPostQuery = "INSERT INTO posts (userId, description, images) VALUES (?, ?, ?)";
-    const values = [userId, description, JSON.stringify(images)];
+    const insertPostQuery = "INSERT INTO posts (userId, description) VALUES (?, ?)";
+
+    const values = [userId, description];
   
     // Check if the user exists
     connection.query(checkUserQuery, [userId], (err, results) => {
@@ -69,13 +102,26 @@ router.delete("/delete_post/:userId/:postId", (req,res) => {
             console.error("Error creating post:", err);
             res.status(500).json(err);
           } else {
-            res.status(201).json({ id: result.insertId, ...req.body, images });
+            res.status(201).json({ id: result.insertId, ...req.body });
           }
         });
       }
     });
   });
 
+
+  // Get All post 
+  router.get("/allPosts", (req, result) => {  
+    // Check if the user exists
+    connection.query('SELECT * FROM posts', (err, results) => {
+      if (err) {
+        console.error("Error checking posts:", err);
+        return result.status(500).json(err);
+      } else {
+           return result.status(201).json(result);
+          }
+        });
+    });
 
 //update post
 router.put("/update_post/:userId/:postId", (req,res) => {
