@@ -67,7 +67,7 @@ const SignInSignUpForm = () => {
 
 
   return (
-    <div className={`container ${isSignUp ? "sign-up-mode" : ""}`}>
+    <div className={`sign_container ${isSignUp ? "sign-up-mode" : ""}`}>
       <div className="forms-container">
         <div className="signin-signup">
           <form action="#" onSubmit={isSignUp ? handleSubmitSignUp : handleSubmitSignIn} method='post' className="sign-in-form">

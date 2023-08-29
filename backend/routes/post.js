@@ -110,18 +110,30 @@ router.delete("/delete_post/:userId/:postId", (req,res) => {
   });
 
 
-  // Get All post 
-  router.get("/allPosts", (req, result) => {  
-    // Check if the user exists
-    connection.query('SELECT * FROM posts', (err, results) => {
-      if (err) {
-        console.error("Error checking posts:", err);
-        return result.status(500).json(err);
-      } else {
-           return result.status(201).json(result);
-          }
-        });
-    });
+  // // Get All post 
+
+  // router.get("/allPosts", (req, result) => {  
+  //   // Check if the user exists
+  //   connection.query('SELECT * FROM posts', (err, results) => {
+  //     if (err) {
+  //       console.error("Error checking posts:", err);
+  //       return result.status(500).json(err);
+  //     } else {
+  //          return result.status(201).json(result);
+  //         }
+  //       });
+  //   });
+
+  router.get("/allPosts",(req,res)=>{
+    connection.query('SELECT * FROM posts',(err,result)=>{
+      if(err){
+        console.log("Error Checking Posts");
+        return res.status(500).json(err)
+      }else{
+        return res.status(200).json(result)
+      }
+    })
+  })
 
 //update post
 router.put("/update_post/:userId/:postId", (req,res) => {

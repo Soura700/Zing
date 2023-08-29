@@ -9,6 +9,14 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const Post = ({ post }) => {
+
+
+  console.log("Post" + post);
+  console.log(post.description);
+
+
+
+
   const [commentOpen, setCommentOpen] = useState(false);
 
   //TEMPORARY
@@ -50,7 +58,7 @@ const Post = ({ post }) => {
           )}
         </div>
         <div className={styles.content}>
-          <p>{post.desc}</p>
+          <p>{post.description}</p>
           <img src={post.img} alt="" />
         </div>
         <div className={styles.info}>
