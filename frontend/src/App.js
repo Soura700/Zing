@@ -131,15 +131,15 @@ function App() {
 
     return (
       <div>
-        {/* <Navbar toggleMenu={toggleMenu} /> */}
+        <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
-          {/* <LeftBar isVisible={toggle}/> */}
+          <LeftBar isVisible={toggle}/>
           <div style={{ flex: 6 }}>
           <React.StrictMode>
             <Outlet />
           </React.StrictMode>
           </div>
-          {/* <RightBar /> */}
+          <RightBar />
         </div>
       </div>
     );
@@ -162,16 +162,15 @@ function App() {
           path: "/profile",
           element: <Profile />,
         },
-        {
-          path: "/message",
-          element: <Leftbar2/>,
-        },
       ],
-
     },
     {
       path: "/login",
       element: <SignInSignUpForm />,
+    },
+    {
+      path: "/message",
+      element: <Leftbar2/>,
     },
   ]);
 

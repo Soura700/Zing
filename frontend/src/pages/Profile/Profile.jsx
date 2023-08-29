@@ -10,6 +10,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/Posts/Posts"
+import { Link } from "react-router-dom";
 
 
 const Profile = () => {
@@ -46,7 +47,10 @@ const Profile = () => {
             <div className={styles.btn}>
               <button className={styles.btn1}>follow</button>
               <button className={styles.btn2}>
-                message</button>
+                <Link to="/message" style={{textDecoration:"none"}}>
+                    message
+                </Link>
+              </button>
               <SettingsIcon className={styles.settings}/>
               {/* <div className={styles.settings}>
                 <SettingsIcon/>

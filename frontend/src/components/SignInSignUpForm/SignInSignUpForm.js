@@ -4,8 +4,6 @@ import img2 from "../../assets/img1svg.svg";
 import './sign.css';
 // import styles from "./sign.module.css"
 import React, { useState } from "react";
-
- 
   
 // signupform
  
