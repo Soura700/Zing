@@ -39,10 +39,12 @@ const Post = ({ post }) => {
           </div>
           <MoreHorizIcon className="icon" onClick={handleToggle}/>
           {toggle ? (
-            <div className={styles.postOpt}>
+            <div className={styles.postOptShow}>
               <ul>
-                <li id="opt1">Update Post</li>
-                <li id="opt2">Delete Post</li>
+                <li className={styles.opt1}>Update Post</li>
+                <div className={styles.opt2}>
+                    <li>Delete Post</li>
+                </div>
               </ul>
             </div>
           ) : (
