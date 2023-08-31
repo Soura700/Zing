@@ -112,7 +112,6 @@ import { useState } from 'react';
 // import { Message } from './pages/Message_Page/Message';
 import { Leftbar2 } from "./components/messaging/Leftbar2";
 
-
 function App() {
 
   const Layout = function () {
@@ -167,7 +166,9 @@ function App() {
         {
           path: "/message",
           element: <Leftbar2/>,
+          
         },
+        
       ],
 
     },

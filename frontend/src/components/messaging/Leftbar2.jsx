@@ -7,25 +7,36 @@ import TextsmsIcon from "@mui/icons-material/Textsms";
 import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import VideocamIcon from '@mui/icons-material/Videocam';
-import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import MicNoneIcon from '@mui/icons-material/MicNone';
-import TelegramIcon from '@mui/icons-material/Telegram';
+import VideocamIcon from "@mui/icons-material/Videocam";
+import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import MicNoneIcon from "@mui/icons-material/MicNone";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import CollectionsIcon from '@mui/icons-material/Collections';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import LockIcon from '@mui/icons-material/Lock';
+import BlockIcon from '@mui/icons-material/Block';
+import ReportIcon from '@mui/icons-material/Report';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+import { useState } from "react";
 
 const styles = {
-  '*': {
+  "*": {
     margin: 0,
     padding: 0,
-    boxSizing: 'border-box',
+    boxSizing: "border-box",
   },
 };
 
 export const Leftbar2 = () => {
+  const [toggle, setToggle] = useState(false);
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
   return (
-    <div  style={styles} className="container">
-      
+    <div style={styles} className="container">
       {/* left-options bar */}
 
       <div className="left-opt-menu">
@@ -80,7 +91,7 @@ export const Leftbar2 = () => {
             </div>
 
             <div className="mid-text2">
-            <div className="left2">
+              <div className="left2">
                 <img src={image} alt=""></img>
                 <div className="left-info">
                   <h2>John Doe</h2>
@@ -94,7 +105,7 @@ export const Leftbar2 = () => {
             </div>
 
             <div className="mid-text3">
-            <div className="left3">
+              <div className="left3">
                 <img src={image} alt=""></img>
                 <div className="left-info">
                   <h2>John Doe</h2>
@@ -110,7 +121,7 @@ export const Leftbar2 = () => {
             <span>All Conversations</span>
 
             <div className="mid-text4">
-            <div className="left4">
+              <div className="left4">
                 <img src={image} alt=""></img>
                 <div className="left-info">
                   <h2>John Doe</h2>
@@ -124,7 +135,7 @@ export const Leftbar2 = () => {
             </div>
 
             <div className="mid-text5">
-            <div className="left5">
+              <div className="left5">
                 <img src={image} alt=""></img>
                 <div className="left-info">
                   <h2>John Doe</h2>
@@ -144,36 +155,88 @@ export const Leftbar2 = () => {
 
       <div className="main-chat-section">
         <div className="info">
-            <div className="left-part">
-              <div className="user-pic">
+          <div className="left-part">
+            <div className="user-pic">
               <img src={image} alt=""></img>
-              </div>
-              <div className="user-info">
-                 <h1>John Doe</h1>
-                 <p>Online</p>
-              </div>
             </div>
-            <div className="right-part">
-               <CallRoundedIcon className="right-part-icon"/>
-               <VideocamIcon className="right-part-icon"/>
+            <div className="user-info">
+              <h1>John Doe</h1>
+              <p>Online</p>
             </div>
+          </div>
+          <div className="right-part">
+            <CallRoundedIcon className="right-part-icon" />
+            <VideocamIcon className="right-part-icon" />
+            <MoreVertIcon className="right-part-icon" onClick={handleToggle} />
+            {toggle ? (
+              <div className="RightPopUpShow">
+                <div className="PopUpBox">
+                  <div className="top">
+                    <img src={image} alt=""></img>
+                    <h1>John Doe</h1>
+                    <p>Online</p>
+                  </div>
+                  <div className="mid1">
+                    <CallRoundedIcon className="mid1-icon" />
+                    <VideocamIcon className="mid1-icon" />
+                  </div>
+                  <div className="mid2">
+                    <div className="userOpt">
+                      <CollectionsIcon className="right-part-icon" />
+                      <h2>Media</h2>
+                    </div>
+                  </div>
+                  <div className="mid3">
+                    <div className="userOpt">
+                      <VolumeOffIcon className="right-part-icon" />
+                      <h2>Mute Chat</h2>
+                    </div>
+                  </div>
+                  <div className="mid4">
+                    <div className="userOpt">
+                      <ArrowBackIosIcon className="right-part-icon" />
+                      <h2>Close Chat</h2>
+                    </div>
+                  </div>
+                  <div className="mid5">
+                    <div className="userOpt">
+                      <LockIcon className="right-part-icon" />
+                      <h2>Chat Lock</h2>
+                    </div>
+                  </div>
+                  <div className="bottom">
+                    <div className="userOpt1">
+                      <BlockIcon  className="bottom-icon" />
+                      <h2>Block</h2>
+                    </div>
+                    <div className="userOpt2">
+                      <ReportIcon className="bottom-icon" />
+                      <h2>Report</h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="RightPopUpDefault"></div>
+            )}
+          </div>
         </div>
-        <div className="inner-container">
-        </div>
+        <div className="inner-container"></div>
         <div className="chat-bottom">
-            <div className="chat-input">
-              <input type="text" placeholder="Type a Message"/>
-            </div>
-            <div className="chat-options">
-            <PhotoSizeSelectActualIcon className="chat-btn"/>
-            <LocationOnIcon className="chat-btn"/>
-            <MicNoneIcon className="chat-btn"/>
-            </div>
-            <div className="submit-btn-class">
-              <button><TelegramIcon className="submit-btn"/></button>
-            </div>
+          <div className="chat-input">
+            <input type="text" placeholder="Type a Message" />
+          </div>
+          <div className="chat-options">
+            <PhotoSizeSelectActualIcon className="chat-btn" />
+            <LocationOnIcon className="chat-btn" />
+            <MicNoneIcon className="chat-btn" />
+          </div>
+          <div className="submit-btn-class">
+            <button>
+              <TelegramIcon className="submit-btn" />
+            </button>
+          </div>
         </div>
-
       </div>
     </div>
   );
