@@ -15,7 +15,7 @@ const Profile = () => {
 
 
   const [ user , setUser] = useState(null);
-  const [posts , setPostData] = useState([]);
+  // const [posts , setPostData] = useState([]);
   const {userId} = useParams();
   
 
@@ -30,11 +30,11 @@ const Profile = () => {
         );
 
        console.log("Data User" + userRes.data)
-       console.log(userRes.data);
 
-       var newUser = userRes.data;
+       var newUser = userRes.data
 
-        setPostData(newUser);
+       console.log(user);
+       setUser(newUser);
         
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -44,7 +44,11 @@ const Profile = () => {
     fetchUser();
   }, []);
 
-  console.log(user);
+  
+
+  console.log(user[0].username);
+
+  
   
 
   return (
