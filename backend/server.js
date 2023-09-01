@@ -21,6 +21,12 @@ dotenv.config();
 // Step 2:
 app.use(express.json());
 
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+  credentials: true,
+}))
+
 //step 3:
 connection.connect((err) => {
     if (err) {

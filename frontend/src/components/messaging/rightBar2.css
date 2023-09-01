@@ -1,0 +1,156 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-left: 12px;
+    margin-right: 30px;
+    margin-top: 20px;
+    border: 1px solid lightgray;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgb(132, 132, 132);
+}
+.image{
+    text-align: center;
+}
+.image img{
+    width: 200px;
+    clip-path: circle();
+}
+.accountname{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bolder;
+}
+.contacticons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 25%;
+    justify-content: space-evenly;
+    margin: auto;
+    padding: 10px;
+}
+.call{
+    background-color: transparent;
+    border-color: transparent;
+}
+.message{
+    background-color: transparent;
+    border-color: transparent;
+}
+.videocall{
+    background-color: transparent;
+    border-color: transparent;
+}
+.custom{
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    font-size: 17px;
+    background-color: transparent;
+    border-color: transparent;
+}
+.media_visibility{
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    font-size: 17px;
+    margin-top: 10px;
+    background-color: transparent;
+    border-color: transparent;
+}
+.encryption{
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    font-size: 17px;
+    background-color: transparent;
+    border-color: transparent;
+}
+.disappear{
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    font-size: 17px;
+    margin-top: 10px;
+    background-color: transparent;
+    border-color: transparent;
+}
+.chat_lock{
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 17px;
+    background-color: transparent;
+    border-color: transparent;
+}
+.block{
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    font-size: 17px;
+    background-color: transparent;
+    border-color: transparent;
+    color: red;
+}
+.report{
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    font-size: 17px;
+    margin-top: 10px;
+    background-color: transparent;
+    border-color: transparent;
+    color: red;
+}
+.notifications{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column; 
+    padding-left: 10px;  
+    padding-top: 10px; 
+    padding-bottom: 10px;
+    padding-right: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    
+}
+.chat_settings{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column; 
+    padding-left: 10px;  
+    padding-top: 10px; 
+    padding-bottom: 10px;
+    padding-right: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    
+}
+.modify_chat{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column; 
+    padding-left: 10px;  
+    padding-top: 10px; 
+    padding-bottom: 10px;
+    padding-right: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    
+
+}
+.Last{
+    padding-left: 10px;
+    border: 1px solid lightgray;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    
+}
