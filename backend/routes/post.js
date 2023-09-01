@@ -160,6 +160,28 @@ router.put("/update_post/:userId/:postId", (req,res) => {
 })
 
 
+// Get Post by Id
+router.get("/:userId", (req, res) => {
+  const userId = req.params.userId;
+  try {
+    connection.query(
+      "SELECT * FROM posts WHERE userId = ?",
+      [userId], // Add a comma here to separate the query string from the parameter array
+      (error, results) => {
+        if (error) {
+          return res.status(500).json(error);
+        } else {
+          return res.status(200).json(results);
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+
 
 
 module.exports = router;
