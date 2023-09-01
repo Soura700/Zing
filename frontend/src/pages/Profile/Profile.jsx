@@ -14,7 +14,7 @@ import axios from "axios";
 const Profile = () => {
 
 
-  const [ user , setUser] = useState([]);
+  const [ user , setUser] = useState(null);
   const [posts , setPostData] = useState([]);
   const {userId} = useParams();
   
@@ -30,6 +30,7 @@ const Profile = () => {
         );
 
        console.log("Data User" + userRes.data)
+       console.log(userRes.data);
 
        var newUser = userRes.data;
 
@@ -40,29 +41,10 @@ const Profile = () => {
       }
     }
 
-    // async function fetchPosts() {
-    //   try {
-
-    //     const postsRes = await axios.get(
-    //       "http://localhost:5000/api/posts/" + userId
-    //     );
-
-    //    console.log("Data" + postsRes.data)
-
-    //    var newData = postsRes.data
-
-    //     setPostData(newData);
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // }
-
     fetchUser();
-    // fetchPosts();
+  }, []);
 
-    console.log(posts);
-
-  }, [userId]);
+  console.log(user);
   
 
   return (
@@ -84,7 +66,7 @@ const Profile = () => {
         <div className={styles.uInfo}>
 
           <div className={styles.name}>
-            <h1>{user.username}</h1>
+            <h1>Soura Bose</h1>
             {/* <div className={styles.info}>
               <div className={styles.item}>
                 <PlaceIcon />

@@ -38,7 +38,7 @@ const Posts = () => {
           "http://localhost:5000/api/posts/allPosts"
         );
 
-       console.log("Data" + postsRes.data)
+      //  console.log("Data" + postsRes.data)
 
        var newData = postsRes.data
 
@@ -51,7 +51,7 @@ const Posts = () => {
     fetchPosts();
   }, []);
 
-  console.log(postData);
+  // console.log(postData);
 
   return <div className={styles.posts}>
     {postData.map(post=>(
