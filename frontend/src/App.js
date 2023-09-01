@@ -6,9 +6,9 @@
 // import Posts from "../src/components/Posts/Posts"
 
 // import {
-//   createBrowserRouter,
-//   RouterProvider,
-//   Route,
+// createBrowserRouter,
+// RouterProvider,
+// Route,
 // } from "react-router-dom";
 
 // // import Profile from './pages/Profile/Profile';
@@ -19,71 +19,71 @@
 
 // function App() {
 
-//   const Layout = function(){
+// const Layout = function(){
 
-//     // Toggling 
+// // Toggling 
 
-//     const [ toggle , setToggle ] = useState(false)
-
-
-
-//     const toggleMenu =  ()=> {
-
-//         // alert("clicked")
-
-//         setToggle(!toggle);
-//     }
+// const [ toggle , setToggle ] = useState(false)
 
 
-//     return(
-//       <div>
-//         <Navbar toggleMenu={toggleMenu}/>
-//         <div style={{display:"flex", justifyContent: "space-between"}}>
-//             <LeftBar isVisible={toggle}/>
-//             <RightBar/>
-//         </div>
-//         {/* <Profile/> */}
-//         {/* <Posts/> */}
-//       </div>
-//     )
-//   }
 
-//   const router = createBrowserRouter([
-//     {
-//       path:"/",
-//       element:<Layout/>,
-//       children:[
-//         {
-//           path:"/home",
-//           element:<Home/>
-//         },
-//         {
-//           path:"/profile",
-//           // element:<Profile/>
-//         }
-//       ]
-//     },
-//     {
-//       path:"/login",
-//       element:<Login/>
-//     },
-//     {
-//       path:"/register",
-//       element:<Register/>
-//     },
-//     {
-//       path:"/profile",
-//       // element:<Profile/>
-//     }
+// const toggleMenu = ()=> {
 
-//   ]);
+// // alert("clicked")
 
-//   return (
+// setToggle(!toggle);
+// }
 
-//     <div>
-//       <RouterProvider router={router}/>
-//     </div>
-//   );
+
+// return(
+// <div>
+// <Navbar toggleMenu={toggleMenu}/>
+// <div style={{display:"flex", justifyContent: "space-between"}}>
+// <LeftBar isVisible={toggle}/>
+// <RightBar/>
+// </div>
+// {/* <Profile/> */}
+// {/* <Posts/> */}
+// </div>
+// )
+// }
+
+// const router = createBrowserRouter([
+// {
+// path:"/",
+// element:<Layout/>,
+// children:[
+// {
+// path:"/home",
+// element:<Home/>
+// },
+// {
+// path:"/profile",
+// // element:<Profile/>
+// }
+// ]
+// },
+// {
+// path:"/login",
+// element:<Login/>
+// },
+// {
+// path:"/register",
+// element:<Register/>
+// },
+// {
+// path:"/profile",
+// // element:<Profile/>
+// }
+
+// ]);
+
+// return (
+
+// <div>
+// <RouterProvider router={router}/>
+// </div>
+// );
 // }
 
 // export default App;
@@ -109,8 +109,7 @@ import Profile from './pages/Profile/Profile';
 import LeftBar from './components/LeftBar/LeftBar';
 import RightBar from './components/RightBar/RightBar';
 import { useState } from 'react';
-// import { Message } from './pages/Message_Page/Message';
-// import { Leftbar2 } from "./components/messaging/Leftbar2";
+import SignInSignUpForm from './components/SignInSignUpForm/SignInSignUpForm';
 
 function App() {
 
@@ -160,21 +159,15 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/profile",
+          path: "/profile/:userId",
           element: <Profile />,
         },
-        {
-          path: "/message",
-          element: <Leftbar2/>,
-          
-        },
-        
       ],
     },
-    // {
-    //   path: "/login",
-    //   element: <SignInSignUpForm />,
-    // },
+    {
+      path: "/login",
+      element: <SignInSignUpForm />,
+    },
     {
       path: "/message",
       element: <Leftbar2/>,
@@ -190,4 +183,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
