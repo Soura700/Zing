@@ -189,6 +189,25 @@ router.delete("/logout",(req,res)=>{
     // Delete Api (Session Delete);
 })
 
+router.get("/:userId",(req,res)=>{
+    const userId = req.params.userId;
+    try {
+      connection.query(
+        "SELECT * FROM users WHERE id = ?",
+        [userId], // Add a comma here to separate the query string from the parameter array
+        (error, results) => {
+          if (error) {
+            return res.status(500).json(error);
+          } else {
+            return res.status(200).json(results);
+          }
+        }
+      );
+    } catch (error) {
+      res.status(500).json(error);
+    }  
+})
+
 
 
 // Done By bibha 

@@ -1,8 +1,11 @@
 ONLINE - OFFLINE 
 
-My thinking when the use is on the social media then the my is_online will be 1 from 0;
+My thinking -> when the user is on the social media then the  is_online will be 1 from 0;
 
 
-CASE-1->Suddenly the user closes the tab in the chrome (or any other site) then destroy thr session and the is_online will be agisn back to zero;
+CASE-1->Suddenly the user closes the tab in the chrome (or any other site) then destroy the session and the is_online will be again back to zero;
 
 CASE-2->Suddenly the user cut off the connection then destroy thr session and the is_online will be agisn back to zero;
+
+
+Typing - > Targer the event menas the typing box..If the user is cliking the  box then make the evnt to tru.

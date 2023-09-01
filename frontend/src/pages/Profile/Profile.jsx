@@ -4,16 +4,67 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import PlaceIcon from "@mui/icons-material/Place";
-import LanguageIcon from "@mui/icons-material/Language";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/Posts/Posts"
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 const Profile = () => {
+
+
+  const [ user , setUser] = useState([]);
+  const [posts , setPostData] = useState([]);
+  const {userId} = useParams();
+  
+
+  useEffect(() => {
+
+
+    async function fetchUser() {
+      try {
+
+        const userRes = await axios.get(
+          "http://localhost:5000/api/auth/" + userId
+        );
+
+       console.log("Data User" + userRes.data)
+
+       var newUser = userRes.data;
+
+        setPostData(newUser);
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    // async function fetchPosts() {
+    //   try {
+
+    //     const postsRes = await axios.get(
+    //       "http://localhost:5000/api/posts/" + userId
+    //     );
+
+    //    console.log("Data" + postsRes.data)
+
+    //    var newData = postsRes.data
+
+    //     setPostData(newData);
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // }
+
+    fetchUser();
+    // fetchPosts();
+
+    console.log(posts);
+
+  }, [userId]);
+  
+
   return (
     <div className={styles.profile}>
   
@@ -33,7 +84,7 @@ const Profile = () => {
         <div className={styles.uInfo}>
 
           <div className={styles.name}>
-            <h1>John Doe</h1>
+            <h1>{user.username}</h1>
             {/* <div className={styles.info}>
               <div className={styles.item}>
                 <PlaceIcon />
