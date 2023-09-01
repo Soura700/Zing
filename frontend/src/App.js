@@ -159,7 +159,7 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/profile",
+          path: "/profile/:userId",
           element: <Profile />,
         },
       ],
