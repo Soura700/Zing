@@ -50,8 +50,10 @@ const Posts = () => {
     fetchPosts();
   }, []);
 
+  console.log(postData);
+
   return <div className={styles.posts}>
-    {posts.map(post=>(
+    {postData.map(post=>(
       <Post post={post} key={post.id}/>
     ))}
   </div>;

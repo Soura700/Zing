@@ -31,6 +31,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 
@@ -94,10 +95,60 @@
 .user .icon {
   justify-content: flex-end;
 }
-
 .postOpt {
-  border: 2px solid red;
+  visibility: hidden;
+  position: absolute;
+}
+
+.postOptShow {
+  border: 1px solid rgb(207, 207, 207);
+  background: rgba(255, 255, 255, 0.279);
+  border-radius: 12px;
+  background: white;
+  backdrop-filter: blur(40px);
+  padding: 10px;
+  margin: 10px;
+  right: -1%;
+  top: 80%;
+
   z-index: 1;
+  position: absolute;
+}
+.postOptShow ul {
+  list-style: none;
+}
+.postOptShow li {
+  text-decoration: none;
+  border: 0px solid red;
+  border-radius: 10px;
+  font-weight: 500;
+  padding: 7px;
+  font-size: 15px;
+  border-radius: 1px;
+  margin: 10px 0px;
+  cursor: pointer;
+
+}
+.postOptShow li:hover {
+  font-weight: 500;
+  border-radius: 8px;
+  background: rgb(213, 179, 255);
+  color : rgb(72, 35, 114);
+}
+.postOptShow .opt1 {
+  border-radius: 8px;
+  background: rgb(230, 209, 255);
+  color : rgb(104, 25, 194);
+}
+.postOptShow .opt2 {
+  border-radius: 8px;
+  background: rgb(255, 169, 164);
+  color : rgb(218, 18, 18);
+}
+.postOptShow .opt2 li:hover {
+  border-radius: 8px;
+  background: rgb(250, 65, 55);
+  color : rgb(255, 255, 255);
 }
 
 

@@ -9,6 +9,14 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const Post = ({ post }) => {
+
+
+  console.log("Post" + post);
+  console.log(post.description);
+
+
+
+
   const [commentOpen, setCommentOpen] = useState(false);
 
   //TEMPORARY
@@ -39,10 +47,12 @@ const Post = ({ post }) => {
           </div>
           <MoreHorizIcon className="icon" onClick={handleToggle}/>
           {toggle ? (
-            <div className={styles.postOpt}>
+            <div className={styles.postOptShow}>
               <ul>
-                <li id="opt1">Update Post</li>
-                <li id="opt2">Delete Post</li>
+                <li className={styles.opt1}>Update Post</li>
+                <div className={styles.opt2}>
+                    <li>Delete Post</li>
+                </div>
               </ul>
             </div>
           ) : (
@@ -50,7 +60,7 @@ const Post = ({ post }) => {
           )}
         </div>
         <div className={styles.content}>
-          <p>{post.desc}</p>
+          <p>{post.description}</p>
           <img src={post.img} alt="" />
         </div>
         <div className={styles.info}>
