@@ -543,6 +543,235 @@ span {
 
 }
 
+.info .right-part .RightPopUpDefault {
+    position: relative;
+}
+.info .right-part .RightPopUpShow .PopUpBox {
+    height: 93%;
+    width: 30%;
+    top: 1%;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid rgb(201, 201, 201);
+    box-shadow: 2px 2px 12px 3px rgb(186, 186, 186);
+    border-radius: 16px;
+    background: white;
+    padding: 10px;
+    position: absolute;
+    right: 10%;
+}
+.info .right-part .RightPopUpShow .PopUpBox .top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0px solid red;
+}
+.info .right-part .RightPopUpShow .PopUpBox .top p {
+    color: rgb(42, 191, 42);
+}
+.info .right-part .RightPopUpShow .PopUpBox img {
+    height: 150px;
+    border-radius: 50%;
+    margin-top: 30px;
+    width: 150px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid1 {
+    border: 0px solid red;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;  
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+    margin-bottom: 30px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid1 .mid1-icon {
+    border: 0px solid blue;
+    background: #e3d6ff;
+    color: #5825c0;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 30px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid1 .mid1-icon:hover {
+    border: 0px solid blue;
+    background: #6026de;
+    color: #e6daff;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 30px;
+}
+
+
+.info .right-part .RightPopUpShow .PopUpBox .mid2 {
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid2:hover {
+    border: 1px solid #d7c4ff;
+    background: #ebe1ff;
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox  .userOpt {
+    display: flex;
+    flex-direction: row;
+}
+.info .right-part .RightPopUpShow .PopUpBox  .userOpt h2 {
+    font-size: 15px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid3 {
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid3:hover {
+    border: 1px solid #d7c4ff;
+    background: #ebe1ff;
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid4 {
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid4:hover {
+    border: 1px solid #d7c4ff;
+    background: #ebe1ff;
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid5 {
+    border: 1px solid rgb(206, 206, 206);
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .mid5:hover {
+    border: 1px solid #d7c4ff;
+    background: #ebe1ff;
+    border-radius: 16px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .bottom {
+    border: 0px solid red;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin: 0px 10px;
+    margin-top: 5px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt1 {
+    border: 0px solid red;
+    background: rgb(255, 199, 199);
+    color: rgb(186, 0, 0);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox  .userOpt1 h2 {
+    font-size: 15px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt1 .bottom-icon {
+    margin-top: 3px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt1:hover {
+    border: 0px solid red;
+    background: rgb(255, 49, 49);
+    color: rgb(255, 255, 255);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt2{
+    border: 0px solid red;
+    background: rgb(255, 199, 199);
+    color: rgb(186, 0, 0);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox  .userOpt2 h2 {
+    font-size: 15px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt2 .bottom-icon {
+    margin-top: 3px;
+}
+.info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt2:hover {
+    border: 0px solid red;
+    background: rgb(255, 49, 49);
+    color: rgb(255, 255, 255);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+
+
+
+
 
 
 .inner-container {
