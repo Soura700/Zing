@@ -95,7 +95,7 @@ import Navbar from "./components/Navbar/Navbar"
 import Register from './pages/Register/Register';
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
-// import { Leftbar2 } from './components/messaging/Leftbar2';
+import { Leftbar2 } from './components/messaging/Leftbar2';
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -110,7 +110,7 @@ import LeftBar from './components/LeftBar/LeftBar';
 import RightBar from './components/RightBar/RightBar';
 import { useState } from 'react';
 // import { Message } from './pages/Message_Page/Message';
-import { Leftbar2 } from "./components/messaging/Leftbar2";
+// import { Leftbar2 } from "./components/messaging/Leftbar2";
 
 function App() {
 
@@ -132,15 +132,15 @@ function App() {
 
     return (
       <div>
-        {/* <Navbar toggleMenu={toggleMenu} /> */}
+        <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
-          {/* <LeftBar isVisible={toggle}/> */}
+          <LeftBar isVisible={toggle}/>
           <div style={{ flex: 6 }}>
           <React.StrictMode>
             <Outlet />
           </React.StrictMode>
           </div>
-          {/* <RightBar /> */}
+          <RightBar />
         </div>
       </div>
     );
@@ -170,16 +170,14 @@ function App() {
         },
         
       ],
-
     },
-
+    // {
+    //   path: "/login",
+    //   element: <SignInSignUpForm />,
+    // },
     {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/register",
-      element: <Register />,
+      path: "/message",
+      element: <Leftbar2/>,
     },
   ]);
 

@@ -15,8 +15,8 @@ import { Link } from 'react-router-dom';
 
 // import styles from  "./navbar.module.css"
 
-import "./navbar.css"
-import LeftBar from '../LeftBar/LeftBar';
+// import "./navbar.css"
+import styles from "./navbar.module.css"
 
 
 
@@ -32,25 +32,25 @@ const Navbar = ( {toggleMenu} ) => {
 
 
   return (
-    <div className='navbar'>
+    <div className={styles.navbar}>
 
-    <div className="left-navbar">
+    <div className={styles.left_navbar}>
         <Link to="/" style={{textDecoration:"none"}}>
-            <span className="title">SocialMedia</span>
+            <span className={styles.title}>SocialMedia</span>
         </Link>
 
-        <HomeOutlinedIcon className="icon"/>
-        <DarkModeOutlinedIcon className="icon"/>
-        <GridViewOutlinedIcon className="icon"/>
+        <HomeOutlinedIcon className={styles.icon}/>
+        <DarkModeOutlinedIcon className={styles.icon}/>
+        <GridViewOutlinedIcon className={styles.icon}/>
 
-        <div className="search">
-            <SearchOutlinedIcon className="icon" onClick={handleToggle}/>
-            {toggle?<input type="text" placeholder='Search...' className='extended' /> : <input type="text" placeholder='Search...' className='default' />}
+        <div className={styles.search}>
+            <SearchOutlinedIcon className={styles.icon} onClick={handleToggle}/>
+            {toggle?<input type="text" placeholder='Search...' className={styles.extended} /> : <input type="text" placeholder='Search...' className={styles.default} />}
         </div>
 
         {/* Sidebar Mneu */}
 
-        <MenuRoundedIcon className='menuIcon' onClick={toggleMenu} />
+        <MenuRoundedIcon className={styles.menuIcon} onClick={toggleMenu} />
 
         {/* <MenuRoundedIcon className='menuIcon'  /> */}
 
@@ -60,12 +60,12 @@ const Navbar = ( {toggleMenu} ) => {
     </div>
 
 
-    <div className="right-navbar">
+    <div className={styles.right_navbar}>
         <PersonOutlinedIcon />
         <EmailOutlinedIcon/>
         <NotificationsOutlinedIcon/>
 
-        <div className="user">
+        <div className={styles.user}>
             <img src="" alt="" srcset="" />
             <span>
                 SOURA BOSE

@@ -15,7 +15,7 @@
 
 }
 
-.left-navbar {
+.left_navbar {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -45,7 +45,7 @@ input {
 
 
 
-.right-navbar {
+.right_navbar {
 
     display: flex;
     align-items: center;
@@ -105,7 +105,7 @@ input {
         display: none;
     }
 
-    .left-navbar {
+    .left_navbar {
         display: flex;
         align-items: center;
         gap: 45px;
@@ -124,7 +124,7 @@ input {
         display: none;
     } */
 
-    .right-navbar {
+    .right_navbar {
         display: none;
     }
 

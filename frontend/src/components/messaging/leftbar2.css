@@ -781,6 +781,7 @@ span {
     border-radius: 12px;
     width: 100%;
     height: 90%;
+    overflow: scroll;
 }
 
 
