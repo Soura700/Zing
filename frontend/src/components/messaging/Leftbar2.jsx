@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./leftbar2.css";
 import image from "../../assets/jd-chow-gutlccGLXKI-unsplash.jpg";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -31,9 +31,20 @@ const styles = {
 
 export const Leftbar2 = () => {
   const [toggle, setToggle] = useState(false);
+  const [conversations,setConversations] = useState([]);
+
+
   const handleToggle = () => {
     setToggle(!toggle);
   };
+
+  useEffect( async ()=>{
+
+    const fetchConversations = await fetch('http://localhost:5000/api/conversation/get/1',{
+
+    })
+
+  },[])
   return (
     <div
       style={styles}
