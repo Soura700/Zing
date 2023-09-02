@@ -49,8 +49,9 @@ export const Leftbar2 = () => {
             'Content-Type':'application/json'
           }
         });
-      const data = await res.json()
-      setConversations(data)
+      const data = await res.json();
+      console.log(data);
+      setConversations(data);
     }
     fetchData();
 
