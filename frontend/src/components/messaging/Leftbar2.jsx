@@ -38,18 +38,24 @@ export const Leftbar2 = () => {
   };
 
   useEffect(async () => {
-    const fetchConversations = await fetch(
-      'http://localhost:5000/api/conversation/get/1',
-      {
-        method:'GET',
-        headers:{
-          'Content-Type':'application/json'
-        }
-      }
-    );
-    const data = await fetchConversations.json()
-    setConversations(data)
+
+    const fetchData = async ()=>{
+
+      const res = await fetch(
+        'http://localhost:5000/api/conversation/get/1',
+        {
+          method:'GET',
+          headers:{
+            'Content-Type':'application/json'
+          }
+        });
+      const data = await res.json()
+      setConversations(data)
+    }
+    fetchData();
+
   }, []);
+
   return (
     <div
       style={styles}
