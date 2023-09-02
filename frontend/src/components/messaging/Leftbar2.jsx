@@ -37,7 +37,7 @@ export const Leftbar2 = () => {
     setToggle(!toggle);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
 
     const fetchData = async ()=>{
 
