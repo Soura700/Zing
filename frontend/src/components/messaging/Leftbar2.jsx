@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import "./leftbar2.css";
-import image from "../../assets/jd-chow-gutlccGLXKI-unsplash.jpg";
-import SettingsIcon from "@mui/icons-material/Settings";
-import SearchIcon from "@mui/icons-material/Search";
-import TextsmsIcon from "@mui/icons-material/Textsms";
-import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
-import CallRoundedIcon from "@mui/icons-material/CallRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import MicNoneIcon from "@mui/icons-material/MicNone";
-import TelegramIcon from "@mui/icons-material/Telegram";
+import React, { useEffect } from 'react';
+import './leftbar2.css';
+import image from '../../assets/jd-chow-gutlccGLXKI-unsplash.jpg';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SearchIcon from '@mui/icons-material/Search';
+import TextsmsIcon from '@mui/icons-material/Textsms';
+import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
+import CallRoundedIcon from '@mui/icons-material/CallRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MicNoneIcon from '@mui/icons-material/MicNone';
+import TelegramIcon from '@mui/icons-material/Telegram';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -31,20 +31,25 @@ const styles = {
 
 export const Leftbar2 = () => {
   const [toggle, setToggle] = useState(false);
-  const [conversations,setConversations] = useState([]);
-
+  const [conversations, setConversations] = useState([]);
 
   const handleToggle = () => {
     setToggle(!toggle);
   };
 
-  useEffect( async ()=>{
-
-    const fetchConversations = await fetch('http://localhost:5000/api/conversation/get/1',{
-
-    })
-
-  },[])
+  useEffect(async () => {
+    const fetchConversations = await fetch(
+      'http://localhost:5000/api/conversation/get/1',
+      {
+        method:'GET',
+        headers:{
+          'Content-Type':'application/json'
+        }
+      }
+    );
+    const data = await fetchConversations.json()
+    setConversations(data)
+  }, []);
   return (
     <div
       style={styles}
