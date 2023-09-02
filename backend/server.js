@@ -7,6 +7,8 @@ var connection = require("./connection")
 var registerAuth = require("./routes/auth")
 var postRoute = require("./routes/post")
 const storiesRoute = require("./routes/stories")
+const conversationRoute = require("./routes/conversation");
+const messageRoute = require("./routes/message");
 const mongoose = require('mongoose');
 const io = require("socket.io");
 
@@ -20,13 +22,6 @@ app.use(cors({
 dotenv.config();
 // Step 2:
 app.use(express.json());
-
-app.use(cors({
-  origin: 'http://localhost:3000', 
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
-  credentials: true,
-}))
-
 //step 3:
 connection.connect((err) => {
     if (err) {
@@ -37,9 +32,8 @@ connection.connect((err) => {
     console.log('Connected to the database');
 });
 
-
 mongoose
-  .connect(process.env.MONGO_URI, {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -50,6 +44,8 @@ PORT = 5000;
 app.use("/api/auth", registerAuth);
 app.use("/api/posts", postRoute);
 app.use("/api/stories",storiesRoute);
+app.use("/api/conversation" , conversationRoute);
+app.use("/api/message" , messageRoute);
 
 console.log("hello");
 
