@@ -272,16 +272,23 @@ export const Leftbar2 = () => {
           </div>
         </div>
         <div className="inner-container">
-          <div className="incoming-msg">Hi!</div>
-          <div className="outgoing-msg">How are you?</div>
+          {/* <div className="incoming-msg">Hi!</div>
+          <div className="outgoing-msg">How are you?</div> */}
 
           {messagess.length > 0 ? (
-            messagess.map((message, index) => {
-              return (
-                <div className="incoming-msg">
-                  I am fine. Glad to text you after a long time!
-                </div>
-              );
+            messagess.map((message,  index) => {
+              if(message.senderId === 1){
+                return (
+                  <div className="outgoing-msg">
+                    {/* I am fine. Glad to text you after a long time! */}
+                    {message.message}
+                  </div>
+                );
+              }else{
+                return(
+                  <div className="incoming-msg">{message.message}</div>
+                )
+              }
             })
           ) : (
             <div className="no-conversations">No Messages to show.</div>
