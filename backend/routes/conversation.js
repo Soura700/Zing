@@ -20,14 +20,22 @@ router.post("/create/conversation", async (req, res) => {
   }
 });
 
-router.get("/get", async (req, res) => {
+router.post("/get", async (req, res) => {
     try {
-      const senderId = req.body.senderId;
+      // const {senderId} = req.params;
+      const {senderId} = req.body;
+
+      console.log(senderId)
   
-      const conversations = await Conversations.find({
-        members: senderId,
-      });
+      // const conversations = await Conversations.find({
+      //   members: { $in:[senderId] },
+      // });
   
+      const conversations = await Conversations.find({members: senderId});
+  
+
+      console.log(conversations);
+
       const conversationUserData = await Promise.all(
         conversations.map(async (conversation) => {
           const receiverData = conversation.members.find((member) => member !== senderId);
@@ -38,7 +46,12 @@ router.get("/get", async (req, res) => {
                 console.error(err);
                 reject(err);
               } else {
-                resolve(result);
+                const dataToSend = {
+                  conversationUserData: result,
+                  conversationId: conversation._id, // Assuming _id is a property of the conversation object
+                };
+
+                resolve(dataToSend);
               }
             });
           });

@@ -54,15 +54,16 @@ router.post("/create", async (req, res) => {
 router.get("/get_messages/:conversationId",async(req,res)=>{
 
     try{
-        if(!conversationId) return res.status(400).send('Conversation Id is required')
         const conversationId = req.params.conversationId;
+        if(!conversationId) return res.status(400).send('Conversation Id is required')
+        // const conversationId = req.params.conversationId;
         const messages = await Messages.find({conversationId:conversationId});
         res.status(200).json(messages);
 
     }catch(error){
+      console.log(error)
         res.status(500).json(error);
     }
-
 })
 
 

@@ -10,7 +10,12 @@ const storiesRoute = require("./routes/stories")
 const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
 const mongoose = require('mongoose');
-const io = require("socket.io");
+
+const io = require("socket.io")(5500,{
+  cors:{
+    origin:'http://localhost:3000'
+  }
+});
 
 app.use(cors({
     origin: 'http://localhost:3000', 
@@ -39,6 +44,17 @@ mongoose
   })
   .then(console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
+
+io.on('connection',socket=>{
+  console.log('User Connected' , socket.id);
+  //Receveing 
+  socket.on('addUser',userId=>{
+    socket.userId = userId
+  })
+  // Sending from the backend...
+  io.emit('getUser',socket.userId);
+})
+
 
 PORT = 5000;
 app.use("/api/auth", registerAuth);
