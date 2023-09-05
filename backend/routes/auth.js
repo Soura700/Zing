@@ -8,6 +8,31 @@ const session = require("express-session");
 
 
 
+router.use(
+    session({
+      name: "user",
+      secret: "soura@700@2004#1234",
+      resave: false,
+      saveUninitialized: true,
+      cookie: {
+        httpOnly: true,
+        maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
+      },
+    //   store:
+    //   // mongoStore
+    //   new MongoStore({
+    //     // Configure the MongoDB session store
+    //     url: "mongodb+srv://sourabose:al6KdpioGzfcaqOw@cluster0.8h3wpmr.mongodb.net/ecommerce?retryWrites=true&w=majority",
+    //     collection: "sessions",
+    //     autoRemove: "interval",
+    //     autoRemoveInterval: 1, // Remove expired sessions every 1 minute
+    //     // expires: 60,// Interval in minutes (e.g., remove expired sessions every 15 minutes)
+    //     expires: 15 * 24 * 60, // 15 days in minutes
+    //   }),
+    })
+  );
+
+
 // register api // all working 
 
 router.post("/register", async (req, res) => {
@@ -91,8 +116,6 @@ router.get("/check-cookie", (req, res) => {
     // Check if the session_token cookie exists
     if (req.cookies.user) {
   
-  
-  
       if(req.cookies.session_token){
   
       
@@ -158,6 +181,12 @@ router.post("/login", async (req, res) => {
                     const passwordMatches = await bcrypt.compare(password, storedHashedPassword);
 
                     if (passwordMatches) {
+                        // New From Soura (5/9/2023)
+                        req.session.userId = results[0].id;
+                        const userId = results[0].id.toString();
+                        const customValue = `custom_${userId}`;
+                        res.cookie('session_token', customValue, { httpOnly: true, expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) });
+
                         // Insert IP address into database
                         connection.query('UPDATE users SET ip_addresses = ? WHERE email = ?', [userIP, email], (error, results) => {
                             if (error) {

@@ -21,6 +21,7 @@ import ReportIcon from "@mui/icons-material/Report";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import { io } from "socket.io-client";
+import { useAuth } from "../../Contexts/authContext";
 
 const styles = {
   "*": {
@@ -31,6 +32,8 @@ const styles = {
 };
 
 export const Leftbar2 = () => {
+
+  const { isLoggedIn, checkAuthentication } = useAuth();
   const [toggle, setToggle] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [messagess, setMessages] = useState([]);
@@ -39,6 +42,15 @@ export const Leftbar2 = () => {
   useEffect(() => {
     setSocket(io("http://localhost:5500"));
   }, []);
+
+  useEffect(() => {//Calling the function when first render happens of the app...to update the isLoggeid from false to true..by checking the condition.
+    checkAuthentication(); // Call this when the component mounts
+  }, []);
+
+  
+  useEffect(()=>{
+    socket.emit('addUser')
+  })
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -275,7 +287,8 @@ export const Leftbar2 = () => {
           {/* <div className="incoming-msg">Hi!</div>
           <div className="outgoing-msg">How are you?</div> */}
 
-          {messagess.length > 0 ? (
+          {
+          messagess.length > 0 ? (
             messagess.map((message,  index) => {
               if(message.senderId === 1){
                 return (
