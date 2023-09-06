@@ -60,14 +60,12 @@ io.on('connection', (socket) => {
 
   socket.on('addUser', (userId) => {
 
-
     const userExists = users.find((user) => {
       console.log("userId" + user.userId + typeof( user.userId));
-
       return user.userId === userId
     });
 
-    // console.log("Users", users);
+    console.log(users);
 
     if (userExists) {
       console.log("User already exists");
@@ -80,7 +78,16 @@ io.on('connection', (socket) => {
       io.emit('getUser', users); // Sending the list of active users to all connected clients
     }
   });
+
+  socket.on('disconnect',()=>{
+    users = users.filter((user)=>{user.socketId !==socket.id})
+    io.emit('getUsers',socket.id);
+  })
+
 });
+
+
+
 
 
 

@@ -31,10 +31,13 @@ export const AuthProvider = ({ children }) => {
       if (response.status == 200) {
         
 
-        setUserId(data);
+        // setUserId(data);
         
         setIsLoggedIn(true);
 
+
+        setUserId(data);
+        
 
         console.log("IsLogged In"  + isLoggedIn);
 
