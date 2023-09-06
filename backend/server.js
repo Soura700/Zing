@@ -10,27 +10,17 @@ const storiesRoute = require("./routes/stories")
 const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
 const mongoose = require('mongoose');
-const session = require("express-session");
+const cookieParser = require('cookie-parser');
 
-
-app.use(
-  session({
-    name: "socialmedia",
-    secret: "soura@700@2004#1234",
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
-    },
-  })
-);
 
 const io = require("socket.io")(5500,{
   cors:{
     origin:'http://localhost:3000'
   }
 });
+
+// Use the cookie-parser middleware
+app.use(cookieParser());
 
 app.use(cors({
     origin: 'http://localhost:3000', 

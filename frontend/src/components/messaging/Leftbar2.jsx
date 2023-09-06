@@ -47,6 +47,7 @@ export const Leftbar2 = () => {
     checkAuthentication(); // Call this when the component mounts
   }, []);
 
+  console.log(isLoggedIn);
   
   // useEffect(()=>{
   //   socket.emit('addUser' , user.id);
