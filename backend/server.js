@@ -52,34 +52,36 @@ mongoose
 
 
 
-// io.on('connection',socket=>{
-//   console.log(socket.id)
-//   console.log('User Connected' , socket.id);
-//   //Receveing 
-//   socket.on('addUser',userId=>{
-//     socket.userId = userId
-//   })
-//   // Sending from the backend...
-//   io.emit('getUser',socket.userId);
-// })
 
-let users = []
+let users = [];
 
-io.on('connection',socket=>{
-  console.log('User Connected' , socket.id);
-  //Receveing 
-  socket.on('addUser',userId=>{
-    const userExists = users.find(user=>user.userId === userId);
-     console.log("Users" + users);
-     
-    if(!userExists){
-      const user = {userId , socketId : socket.id};
+io.on('connection', (socket) => {
+  console.log('User Connected', socket.id);
+
+  socket.on('addUser', (userId) => {
+
+
+    const userExists = users.find((user) => {
+      console.log("userId" + user.userId + typeof( user.userId));
+
+      return user.userId === userId
+    });
+
+    // console.log("Users", users);
+
+    if (userExists) {
+      console.log("User already exists");
+    } else {
+      console.log("User doesn't exist");
+
+      const user = { userId, socketId: socket.id };
       users.push(user);
-      io.emit('getUser',socket.userId);  // Sending from the backend...
-      // io.emit('getUser',socket.userId); //Sending the stats like on line or offline 
+
+      io.emit('getUser', users); // Sending the list of active users to all connected clients
     }
-  })
-})
+  });
+});
+
 
 
 PORT = 5000;

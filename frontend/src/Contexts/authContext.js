@@ -11,6 +11,9 @@ export const AuthProvider = ({ children }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [ id , setUserId ] = useState(null);
+
+
   // Function to check authentication status and set isLoggedIn
   const checkAuthentication = async () => {
     try {
@@ -24,12 +27,14 @@ export const AuthProvider = ({ children }) => {
 
       const data = await response.json();
 
+
       if (response.status == 200) {
         
-        console.log(data)
 
+        setUserId(data);
         
         setIsLoggedIn(true);
+
 
         console.log("IsLogged In"  + isLoggedIn);
 
@@ -45,7 +50,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, checkAuthentication }}>
+    <AuthContext.Provider value={{ isLoggedIn, id , checkAuthentication }}>
       {children}
     </AuthContext.Provider>
   );

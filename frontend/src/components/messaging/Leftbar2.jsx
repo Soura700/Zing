@@ -33,41 +33,38 @@ const styles = {
 
 export const Leftbar2 = () => {
 
-  const { isLoggedIn, checkAuthentication } = useAuth();
+  const { isLoggedIn, id ,  checkAuthentication } = useAuth();
   const [toggle, setToggle] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [messagess, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
 
-  useEffect(() => {
-    setSocket(io("http://localhost:5500"));
-  }, []);
 
   useEffect(() => {//Calling the function when first render happens of the app...to update the isLoggeid from false to true..by checking the condition.
     checkAuthentication(); // Call this when the component mounts
   }, []);
 
-  console.log(isLoggedIn);
-  
-  // useEffect(()=>{
-  //   socket.emit('addUser' , user.id);
-  // })
 
-  // useEffect(()=>{
-  //   socket?.emit('addUser' , 1 );
-  //   //Receiving the status from the backend (Offline Or the online etc )
-  //   socket?.on('getUser',users=>{
-  //     console.log("Active Users" + users);
-  //     alert(users);
-  //   })
-  // },[socket])
+  const parsedId  = parseInt(id);
+
+  alert(parsedId);
+
 
   useEffect(() => {
-    socket?.emit('addUser', 1); // Make sure user ID 1 exists on the server
+    setSocket(io("http://localhost:5500"));
+  }, []);
+
+
+
+
+
+
+  useEffect(() => {
+    socket?.emit('addUser', parsedId ); // Make sure user ID 1 exists on the server
     // Receiving the status from the backend (Active Users)
     socket?.on('getUser', activeUsers => {
       console.log("Active Users", activeUsers);
-      alert(JSON.stringify(activeUsers)); // You can't directly alert an object, so stringify it
+      // alert(JSON.stringify(activeUsers)); // You can't directly alert an object, so stringify it
     });
   }, [socket]);
   
@@ -75,6 +72,8 @@ export const Leftbar2 = () => {
   const handleToggle = () => {
     setToggle(!toggle);
   };
+
+
 
   useEffect(() => {
     const fetchData = async () => {
