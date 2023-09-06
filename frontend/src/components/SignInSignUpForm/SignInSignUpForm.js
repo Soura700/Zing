@@ -30,7 +30,11 @@ const SignInSignUpForm = () => {
     console.log(data);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", data);
+      const response = await axios.post("http://localhost:5000/api/auth/login", data ,
+      {
+        withCredentials:true,
+      }
+      );
       console.log("Login response:", response.data);
       // Handle success or redirect the user
     } catch (error) {
@@ -50,7 +54,9 @@ const SignInSignUpForm = () => {
 
     try {
 
-      const response = await axios.post("http://localhost:5000/api/auth/register", data);
+      const response = await axios.post("http://localhost:5000/api/auth/register", data , {
+        withCredentials:true,
+      });
       
       console.log(response);
 

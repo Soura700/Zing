@@ -10,6 +10,21 @@ const storiesRoute = require("./routes/stories")
 const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
 const mongoose = require('mongoose');
+const session = require("express-session");
+
+
+app.use(
+  session({
+    name: "socialmedia",
+    secret: "soura@700@2004#1234",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
+    },
+  })
+);
 
 const io = require("socket.io")(5500,{
   cors:{
@@ -45,14 +60,35 @@ mongoose
   .then(console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
 
+
+
+// io.on('connection',socket=>{
+//   console.log(socket.id)
+//   console.log('User Connected' , socket.id);
+//   //Receveing 
+//   socket.on('addUser',userId=>{
+//     socket.userId = userId
+//   })
+//   // Sending from the backend...
+//   io.emit('getUser',socket.userId);
+// })
+
+let users = []
+
 io.on('connection',socket=>{
   console.log('User Connected' , socket.id);
   //Receveing 
   socket.on('addUser',userId=>{
-    socket.userId = userId
+    const userExists = users.find(user=>user.userId === userId);
+     console.log("Users" + users);
+     
+    if(!userExists){
+      const user = {userId , socketId : socket.id};
+      users.push(user);
+      io.emit('getUser',socket.userId);  // Sending from the backend...
+      // io.emit('getUser',socket.userId); //Sending the stats like on line or offline 
+    }
   })
-  // Sending from the backend...
-  io.emit('getUser',socket.userId);
 })
 
 

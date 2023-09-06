@@ -48,9 +48,28 @@ export const Leftbar2 = () => {
   }, []);
 
   
-  useEffect(()=>{
-    socket.emit('addUser')
-  })
+  // useEffect(()=>{
+  //   socket.emit('addUser' , user.id);
+  // })
+
+  // useEffect(()=>{
+  //   socket?.emit('addUser' , 1 );
+  //   //Receiving the status from the backend (Offline Or the online etc )
+  //   socket?.on('getUser',users=>{
+  //     console.log("Active Users" + users);
+  //     alert(users);
+  //   })
+  // },[socket])
+
+  useEffect(() => {
+    socket?.emit('addUser', 1); // Make sure user ID 1 exists on the server
+    // Receiving the status from the backend (Active Users)
+    socket?.on('getUser', activeUsers => {
+      console.log("Active Users", activeUsers);
+      alert(JSON.stringify(activeUsers)); // You can't directly alert an object, so stringify it
+    });
+  }, [socket]);
+  
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -68,20 +87,19 @@ export const Leftbar2 = () => {
         }),
       });
       const data = await res.json();
-      console.log(data);
+
       setConversations(data);
     };
     fetchData();
   }, []);
 
-  console.log(setConversations);
+  
 
   const fetchMessages = async (id) => {
     const res = await fetch(
       "http://localhost:5000/api/message/get_messages/" + id
     );
     const resJson = await res.json();
-    console.log(resJson);
     setMessages(resJson);
   };
 
@@ -128,7 +146,7 @@ export const Leftbar2 = () => {
             <span>Pinned Messages</span>
 
             {conversations.map((conversation, index) => {
-              console.log(conversation.conversationId);
+              // console.log(conversation.conversationId);
 
               // alert(conversation.conversationId);
 

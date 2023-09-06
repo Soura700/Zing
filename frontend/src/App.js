@@ -16,16 +16,13 @@
 // import RightBar from './components/RightBar/RightBar';
 // import { useState } from 'react';
 
-
 // function App() {
 
 // const Layout = function(){
 
-// // Toggling 
+// // Toggling
 
 // const [ toggle , setToggle ] = useState(false)
-
-
 
 // const toggleMenu = ()=> {
 
@@ -33,7 +30,6 @@
 
 // setToggle(!toggle);
 // }
-
 
 // return(
 // <div>
@@ -88,14 +84,13 @@
 
 // export default App;
 
-
 import React from "react";
-import './style.css';
-import Navbar from "./components/Navbar/Navbar"
-import Register from './pages/Register/Register';
+import "./style.css";
+import Navbar from "./components/Navbar/Navbar";
+import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
-import { Leftbar2 } from './components/messaging/Leftbar2';
+import { Leftbar2 } from "./components/messaging/Leftbar2";
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -105,45 +100,40 @@ import {
   Outlet,
 } from "react-router-dom";
 
-import Profile from './pages/Profile/Profile';
-import LeftBar from './components/LeftBar/LeftBar';
-import RightBar from './components/RightBar/RightBar';
-import { useState } from 'react';
-import SignInSignUpForm from './components/SignInSignUpForm/SignInSignUpForm';
+import Profile from "./pages/Profile/Profile";
+import LeftBar from "./components/LeftBar/LeftBar";
+import RightBar from "./components/RightBar/RightBar";
+import { useState } from "react";
+import SignInSignUpForm from "./components/SignInSignUpForm/SignInSignUpForm";
+import { AuthProvider } from "./Contexts/authContext";
 
 function App() {
-
   const Layout = function () {
+    // Toggling
 
-    // Toggling 
-
-    const [toggle, setToggle] = useState(false)
-
-
+    const [toggle, setToggle] = useState(false);
 
     const toggleMenu = () => {
-
       // alert("clicked")
 
       setToggle(!toggle);
-    }
-
+    };
 
     return (
       <div>
         <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
-          <LeftBar isVisible={toggle}/>
+          <LeftBar isVisible={toggle} />
           <div style={{ flex: 6 }}>
-          <React.StrictMode>
-            <Outlet />
-          </React.StrictMode>
+            <React.StrictMode>
+              <Outlet />
+            </React.StrictMode>
           </div>
           <RightBar />
         </div>
       </div>
     );
-  }
+  };
 
   const router = createBrowserRouter([
     {
@@ -170,17 +160,17 @@ function App() {
     },
     {
       path: "/message",
-      element: <Leftbar2/>,
+      element: <Leftbar2 />,
     },
   ]);
 
-
   return (
-
     <div>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </div>
   );
 }
 
-export default App
+export default App;

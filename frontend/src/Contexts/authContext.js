@@ -8,6 +8,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Function to check authentication status and set isLoggedIn
@@ -30,7 +31,10 @@ export const AuthProvider = ({ children }) => {
         
         setIsLoggedIn(true);
 
+        console.log("IsLogged In"  + isLoggedIn);
+
         return data;
+
 
       } else {
         setIsLoggedIn(false);
