@@ -5,6 +5,7 @@ var router = express();
 const bcrypt = require("bcrypt");
 const connection = require("../connection");
 const Conversations = require("../models/Conversations");
+const Messages = require("../models/Messages");
 
 router.post("/create/conversation", async (req, res) => {
   try {
@@ -20,21 +21,13 @@ router.post("/create/conversation", async (req, res) => {
   }
 });
 
+//Getting the conversations 
 router.post("/get", async (req, res) => {
     try {
       // const {senderId} = req.params;
       const {senderId} = req.body;
-
-      console.log(senderId)
-  
-      // const conversations = await Conversations.find({
-      //   members: { $in:[senderId] },
-      // });
   
       const conversations = await Conversations.find({members: senderId});
-  
-
-      console.log(conversations);
 
       const conversationUserData = await Promise.all(
         conversations.map(async (conversation) => {
@@ -46,10 +39,12 @@ router.post("/get", async (req, res) => {
                 console.error(err);
                 reject(err);
               } else {
-                const dataToSend = {
-                  conversationUserData: result,
-                  conversationId: conversation._id, // Assuming _id is a property of the conversation object
-                };
+                // const dataToSend = {
+                //   conversationUserData: result,
+                //   conversationId: conversation._id, // Assuming _id is a property of the conversation object
+                // };
+
+                const dataToSend = { user : { username: result[0].username , email:result[0].email }  , conversationId: conversation._id,}
 
                 resolve(dataToSend);
               }
@@ -64,6 +59,8 @@ router.post("/get", async (req, res) => {
       res.status(500).json(error);
     }
   });
+
+
   
 
 module.exports = router;

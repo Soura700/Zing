@@ -81,8 +81,9 @@ io.on('connection', (socket) => {
 
   socket.on("sendMessage",({ senderId , message , receiverId , conversationId })=>{
     const receiver = users.find(user=>user.userId === receiverId);
+    const sender = users.find(user=>user.userId ===  senderId);
     if(receiver){
-      io.to(receiver.socketId).to(socket.id).emit('getMessage',{
+      io.to(receiver.socketId).to(sender.socketId).emit('getMessage',{
         senderId,
         message,
         conversationId,
@@ -97,9 +98,6 @@ io.on('connection', (socket) => {
   })//Disconnecting the user ( specifically from socket ... not from manin  io connection...Like when closing the tab the socket will be deleted )
 
 });
-
-
-
 
 
 

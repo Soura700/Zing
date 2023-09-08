@@ -442,16 +442,6 @@ export const Leftbar2 = () => {
     }
   }, [socket, parsedId, isLoggedIn]);
   
-  // useEffect(() => {
-  //   // Only perform socket-related operations if the user is authenticated
-  //   if (isLoggedIn) {
-  //     socket?.emit("addUser", parsedId);
-  //     socket?.on("getUser", (activeUsers) => {
-  //       console.log("Active Users", activeUsers);
-  //     });
-  //   }
-  // }, [socket]);
-  
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -474,7 +464,7 @@ export const Leftbar2 = () => {
 
   const fetchMessages = async (id) => {
 
-    alert("Done");
+    // alert("Done");
 
     if (isLoggedIn) {
       const res = await fetch(
@@ -610,7 +600,8 @@ export const Leftbar2 = () => {
                       />
                       <div className="left-info">
                         <h2 onClick={() => console.log("Hello")}>
-                          {conversation.conversationUserData[0].username}
+                        {/* {conversation.conversationUserData[0].username} */}
+                        {conversation.user.username}
                         </h2>
                         <p className="activity">Lorem, ipsum dolor.</p>
                       </div>
