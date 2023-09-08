@@ -762,12 +762,14 @@ export const Leftbar2 = () => {
                 return (
                   <div className="outgoing-msg">
                     {/* I am fine. Glad to text you after a long time! */}
-                    {message.message}
+                    {/* {message.message} */}
+                    {message}
                   </div>
                 );
               }else{
                 return(
-                  <div className="incoming-msg">{message.message}</div>
+                  // <div className="incoming-msg">{message.message}</div>
+                  <div className="incoming-msg">{message}</div>
                 )
               }
             })
