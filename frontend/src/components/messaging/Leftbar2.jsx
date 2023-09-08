@@ -462,10 +462,8 @@ export const Leftbar2 = () => {
     }
   }, [isLoggedIn]);
 
+
   const fetchMessages = async (id) => {
-
-    // alert("Done");
-
     if (isLoggedIn) {
       const res = await fetch(
         "http://localhost:5000/api/message/get_messages/" + id
@@ -475,6 +473,21 @@ export const Leftbar2 = () => {
       console.log(resJson);
     }
   };
+
+  // const fetchMessages = async (id) => {
+  //   if (isLoggedIn) {
+  //     const res = await fetch("http://localhost:5000/api/message/get_messages/" + id , {
+  //       method:"GET",
+  //       headers:{
+  //         'Content-Type':'application/json'
+  //       },
+  //       body:JS
+  //     });
+  //     const resJson = await res.json();
+  //     setMessages(resJson);
+  //     console.log(resJson);
+  //   }
+  // };
 
 
 
@@ -577,7 +590,9 @@ export const Leftbar2 = () => {
           <div className="mid-part">
             <span>Pinned Messages</span>
 
-            {conversations.map((conversation, index) => {
+            {
+              // conversations.length>0?
+            conversations.map((conversation, index) => {
               // console.log(conversation.conversationId);
 
               // alert(conversation.conversationId);
@@ -741,8 +756,9 @@ export const Leftbar2 = () => {
 
           {
           messagess.length > 0 ? (
-            messagess.map((message,  index) => {
-              if(message.senderId === 1){
+            messagess.map( ( { message, user:{ id } = {} , index }) => {
+              // if(message.senderId === 1){
+                if( id ===  parsedId ){
                 return (
                   <div className="outgoing-msg">
                     {/* I am fine. Glad to text you after a long time! */}

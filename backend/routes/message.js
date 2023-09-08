@@ -103,7 +103,9 @@ router.get("/get_messages/:conversationId", async (req, res) => {
             // Extract the user data you need from the result
 
 
-            const user = { user:{username: result[0].username,email: result[0].email} , message: message.message };
+            const user = { user:{ id: result[0].id ,  username: result[0].username,email: result[0].email} , message: message.message };
+            // const user = { message: message.message };
+
             resolve(user);
           }
         });
