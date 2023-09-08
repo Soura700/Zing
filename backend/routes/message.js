@@ -21,7 +21,9 @@ const Conversations = require("../models/Conversations");
 
 router.post("/create", async (req, res) => {
     try {
-      const { conversationId , senderId , message , receiverId = '' } = req.body;
+      // const { conversationId , senderId , message , receiverId = '' } = req.body;
+
+      const { conversationId , senderId , message , receiverId  } = req.body;
 
       if(!senderId || !message) return res.status(400).json('Please Fill all required fields');
 
@@ -33,7 +35,7 @@ router.post("/create", async (req, res) => {
 
         const conversation = await newConversation.save();
 
-        const newMessage = new Messages({ conversationId , senderId , message });
+        const newMessage = new Messages({ conversationId , senderId , receiverId ,  message });
         const messages = await newMessage.save();
 
         return res.status(200).send('Message Sent Successfully');
@@ -42,7 +44,7 @@ router.post("/create", async (req, res) => {
     //     return res.status(400).send('Please fill all the required fields');
     //   }
   
-      const newMessage = new Messages({ conversationId , senderId , message });
+      const newMessage = new Messages({ conversationId , senderId , receiverId ,  message });
       const messages = await newMessage.save();
       res.status(200).json(messages);
     } catch (error) {

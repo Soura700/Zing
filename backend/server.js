@@ -61,16 +61,16 @@ io.on('connection', (socket) => {
   socket.on('addUser', (userId) => {
 
     const userExists = users.find((user) => {
-      console.log("userId" + user.userId + typeof( user.userId));
+      // console.log("userId" + user.userId + typeof( user.userId));
       return user.userId === userId
     });
 
-    console.log(users);
+    // console.log(users);
 
     if (userExists) {
-      console.log("User already exists");
+      // console.log("User already exists");
     } else {
-      console.log("User doesn't exist");
+      // console.log("User doesn't exist");
 
       const user = { userId, socketId: socket.id };
       users.push(user);
@@ -79,10 +79,22 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('disconnect',()=>{
-    users = users.filter((user)=>{user.socketId !==socket.id})
-    io.emit('getUsers',socket.id);
+  socket.on("sendMessage",({ senderId , message , receiverId , conversationId })=>{
+    const receiver = users.find(user=>user.userId === receiverId);
+    if(receiver){
+      io.to(receiver.socketId).to(socket.id).emit('getMessage',{
+        senderId,
+        message,
+        conversationId,
+        receiverId
+      })
+    }
   })
+
+  socket.on('disconnect',()=>{
+    users = users.filter(user=>user.socketId !== socket.id)
+    io.emit('getUser',users);
+  })//Disconnecting the user ( specifically from socket ... not from manin  io connection...Like when closing the tab the socket will be deleted )
 
 });
 

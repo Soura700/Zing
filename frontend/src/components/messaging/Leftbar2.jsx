@@ -395,10 +395,13 @@ export const Leftbar2 = () => {
   const [toggle, setToggle] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [messagess, setMessages] = useState([]);
+  const [message , setMessage]  = useState('')
   const [socket, setSocket] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
 
   const parsedId = parseInt(id);
+
+  console.log(messagess , 'messages');
 
   const styles = {
   "*": {
@@ -429,8 +432,26 @@ export const Leftbar2 = () => {
       socket?.on("getUser", (activeUsers) => {
         console.log("Active Users", activeUsers);
       });
+      socket.on("getMessage",data=>{
+        console.log(data);
+        setMessages(prev=>({
+          ...prev,
+          messagess: [...prev.messagess ,{ message:data.message } ]
+        }))
+      })
     }
   }, [socket, parsedId, isLoggedIn]);
+  
+  // useEffect(() => {
+  //   // Only perform socket-related operations if the user is authenticated
+  //   if (isLoggedIn) {
+  //     socket?.emit("addUser", parsedId);
+  //     socket?.on("getUser", (activeUsers) => {
+  //       console.log("Active Users", activeUsers);
+  //     });
+  //   }
+  // }, [socket]);
+  
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -452,14 +473,71 @@ export const Leftbar2 = () => {
   }, [isLoggedIn]);
 
   const fetchMessages = async (id) => {
+
+    alert("Done");
+
     if (isLoggedIn) {
       const res = await fetch(
         "http://localhost:5000/api/message/get_messages/" + id
       );
       const resJson = await res.json();
       setMessages(resJson);
+      console.log(resJson);
     }
   };
+
+
+
+  const sendMessage = async (e)=>{
+
+    const conversationId = messagess[0].conversationId; 
+
+    socket?.emit("sendMessage",{
+      conversationId:conversationId,
+      senderId:parsedId,
+      message:message,
+      receiverId:messagess?.receiver?.receiverId
+    });
+
+  try{
+
+    if (!messagess || !messagess.length) {
+      console.error("No conversation selected");
+      return;
+    }
+
+
+
+    const res = await fetch("http://localhost:5000/api/message/create",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({
+        conversationId:conversationId,
+        senderId:parsedId,
+        message:message,
+        // receiverId:""
+      })
+    })
+    if (res.status === 200) {
+      // Message sent successfully to the API, now emit it to the server
+      // socket?.emit("sendMessage", {
+      //   senderId: parsedId,
+      //   receiverId: /* Receiver's ID goes here */,
+      //   message: message,
+      // });
+
+      // Clear the input field after sending
+      setMessage('');
+    } else {
+      console.error("Failed to send message to the API");
+      // Handle error appropriately, e.g., show an error message to the user
+    }
+  }catch(error){
+    console.error("Error sending message:", error);
+  }
+}
 
   // Render loading indicator if still loading authentication data
   if (isLoading) {
@@ -513,6 +591,7 @@ export const Leftbar2 = () => {
               // console.log(conversation.conversationId);
 
               // alert(conversation.conversationId);
+              
 
               if (conversations.length > 0) {
                 return (
@@ -716,7 +795,7 @@ export const Leftbar2 = () => {
         </div>
         <div className="chat-bottom">
           <div className="chat-input">
-            <input type="text" placeholder="Type a Message" />
+            <input type="text" value={message} onChange={(e)=>setMessage(e.target.value)}   placeholder="Type a Message" />
           </div>
           <div className="chat-options">
             <PhotoSizeSelectActualIcon className="chat-btn" />
@@ -724,8 +803,8 @@ export const Leftbar2 = () => {
             <MicNoneIcon className="chat-btn" />
           </div>
           <div className="submit-btn-class">
-            <button>
-              <TelegramIcon className="submit-btn" />
+            <button onClick={()=>sendMessage()}>
+              <TelegramIcon className="submit-btn"  />
             </button>
           </div>
         </div>
