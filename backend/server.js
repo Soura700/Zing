@@ -53,52 +53,91 @@ mongoose
 
 
 
+// let users = [];
+
+// io.on('connection', (socket) => {
+
+//   console.log('User Connected', socket.id);
+
+//   socket.on('addUser', (userId) => {
+
+//     const userExists = users.find((user) => {
+//       // console.log("userId" + user.userId + typeof( user.userId));
+//       return user.userId === userId
+//     });
+
+//     // console.log(users);
+
+//     if (userExists) {
+//       // console.log("User already exists");
+//     } else {
+//       // console.log("User doesn't exist");
+
+//       const user = { userId, socketId: socket.id };
+//       users.push(user);
+
+//       io.emit('getUser', users); // Sending the list of active users to all connected clients
+//     }
+
+//   });
+
+//   socket.on("sendMessage",({ senderId , message , receiverId , conversationId })=>{
+//     const receiver = users.find(user=>user.userId === receiverId);
+//     const sender = users.find(user=>user.userId ===  senderId);
+//     if(receiver){
+//       io.to(receiver.socketId).to(sender.socketId).emit('getMessage',{
+//         senderId,
+//         message,
+//         conversationId,
+//         receiverId
+//       })
+//     }
+//   });
+
+//   socket.on('disconnect',()=>{
+//     users = users.filter(user=>user.socketId !== socket.id)
+//     io.emit('getUser',users);
+//   })//Disconnecting the user ( specifically from socket ... not from manin  io connection...Like when closing the tab the socket will be deleted )
+
+// });
+
 let users = [];
 
 io.on('connection', (socket) => {
   console.log('User Connected', socket.id);
 
   socket.on('addUser', (userId) => {
-
-    const userExists = users.find((user) => {
-      // console.log("userId" + user.userId + typeof( user.userId));
-      return user.userId === userId
-    });
-
-    // console.log(users);
+    const userExists = users.find((user) => user.userId === userId);
 
     if (userExists) {
-      // console.log("User already exists");
+      console.log('User already exists');
     } else {
-      // console.log("User doesn't exist");
-
+      console.log('User added:', userId);
       const user = { userId, socketId: socket.id };
       users.push(user);
-
       io.emit('getUser', users); // Sending the list of active users to all connected clients
     }
   });
 
-  socket.on("sendMessage",({ senderId , message , receiverId , conversationId })=>{
-    const receiver = users.find(user=>user.userId === receiverId);
-    const sender = users.find(user=>user.userId ===  senderId);
-    if(receiver){
-      io.to(receiver.socketId).to(sender.socketId).emit('getMessage',{
+  socket.on('sendMessage', ({ senderId, message, receiverId, conversationId }) => {
+    const receiver = users.find((user) => user.userId === receiverId);
+    const sender = users.find((user) => user.userId === senderId);
+
+    if (receiver) {
+      io.to(receiver.socketId).to(sender.socketId).emit('getMessage', {
         senderId,
         message,
         conversationId,
-        receiverId
-      })
+        receiverId,
+      });
     }
-  })
+  });
 
-  socket.on('disconnect',()=>{
-    users = users.filter(user=>user.socketId !== socket.id)
-    io.emit('getUser',users);
-  })//Disconnecting the user ( specifically from socket ... not from manin  io connection...Like when closing the tab the socket will be deleted )
-
+  socket.on('disconnect', () => {
+    users = users.filter((user) => user.socketId !== socket.id);
+    io.emit('getUser', users);
+  }); // Disconnecting the user
 });
-
 
 
 PORT = 5000;

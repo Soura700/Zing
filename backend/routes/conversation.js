@@ -44,7 +44,7 @@ router.post("/get", async (req, res) => {
                 //   conversationId: conversation._id, // Assuming _id is a property of the conversation object
                 // };
 
-                const dataToSend = { user : { username: result[0].username , email:result[0].email }  , conversationId: conversation._id,}
+                const dataToSend = { user : { receiverId : result[0].id , username: result[0].username , email:result[0].email }  , conversationId: conversation._id,}
 
                 resolve(dataToSend);
               }

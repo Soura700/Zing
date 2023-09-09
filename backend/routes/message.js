@@ -6,19 +6,6 @@ const connection = require("../connection");
 const Messages = require("../models/Messages");
 const Conversations = require("../models/Conversations");
 
-// router.post("/create", async (req, res) => {
-//   try {
-//     const { conversationId , senderId , message } = req.body;
-
-//     const newMessage = new Messages({ conversationId , senderId , message });
-//     const messages = await newMessage.save();
-//     res.status(200).json(messages);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json(error);
-//   }
-// });
-
 router.post("/create", async (req, res) => {
     try {
       // const { conversationId , senderId , message , receiverId = '' } = req.body;
@@ -101,7 +88,6 @@ router.get("/get_messages/:conversationId", async (req, res) => {
             reject(err);
           } else {
             // Extract the user data you need from the result
-
 
             const user = { user:{ id: result[0].id ,  username: result[0].username,email: result[0].email} , message: message.message };
             // const user = { message: message.message };
