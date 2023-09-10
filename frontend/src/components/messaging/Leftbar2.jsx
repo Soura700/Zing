@@ -557,6 +557,8 @@ export const Leftbar2 = () => {
                   }
                 }
               )}
+              <div className="senders-photo"><img src="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=900&t=st=1694330025~exp=1694330625~hmac=9802cf2d74a2d37bc59fd6a722d7a5cd092f49f544149e7d1aa79d18949276b2" alt=""></img></div>
+              <div className="recievers-photo"><img src="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=900&t=st=1694330025~exp=1694330625~hmac=9802cf2d74a2d37bc59fd6a722d7a5cd092f49f544149e7d1aa79d18949276b2" alt=""></img></div>
             </div>
 
             <div className="chat-bottom">
