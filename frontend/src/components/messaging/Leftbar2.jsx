@@ -30,10 +30,10 @@ export const Leftbar2 = () => {
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
-  const [activeUsers , setActiveUsers] = useState([]);
+  const [activeUsers, setActiveUsers] = useState([]);
 
   // console.log(messages.length);
-  console.log(typeof(messages));
+  console.log(typeof messages);
 
   const parsedId = parseInt(id);
 
@@ -71,7 +71,7 @@ export const Leftbar2 = () => {
         console.log(data);
         setMessages((prev) => ({
           ...prev,
-          messages: [...prev.messages, {  message: data.message }],
+          messages: [...prev.messages, { message: data.message }],
         }));
       });
 
@@ -80,24 +80,18 @@ export const Leftbar2 = () => {
       //   setMessages((prevMessages) => [...prevMessages, { message: data.message }]);
       // });
 
-
       // socket?.on('getMessage', (data) => {
       //   console.log(data);
       //   setMessages((prevMessages) => [...prevMessages, data]);
       // });
-
-
     }
   }, [socket, parsedId, isLoggedIn]);
 
-
   console.log("ActiveUser" + activeUsers);
-  
+
   console.log(activeUsers);
 
   console.log(socket);
-
-
 
   const isUserOnline = (userId) => {
     // return activeUsers.find((user)=>user.userId ===  userId );
@@ -105,8 +99,6 @@ export const Leftbar2 = () => {
   };
 
   console.log(isUserOnline());
-
-
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -155,8 +147,6 @@ export const Leftbar2 = () => {
   //   }
   // };
 
-
-
   // const sendMessage = async (e) => {
   //   const conversationId = messages?.conversationId;
 
@@ -166,7 +156,6 @@ export const Leftbar2 = () => {
   //   //   console.error('No conversation selected');
   //   //   return;
   //   // }
-
 
   //   socket?.emit("sendMessage", {
   //     conversationId: conversationId,
@@ -222,22 +211,21 @@ export const Leftbar2 = () => {
   //   }
   // };
 
-
   // const sendMessage = async () => {
   //   const conversationId = messages?.conversationId;
-  
+
   //   if (!conversationId) {
   //     console.error("No conversation selected");
   //     return;
   //   }
-  
+
   //   socket?.emit("sendMessage", {
   //     conversationId: conversationId,
   //     senderId: parsedId,
   //     message: message,
   //     receiverId: messages?.receiver?.receiverId,
   //   });
-  
+
   //   try {
   //     const res = await fetch("http://localhost:5000/api/message/create", {
   //       method: "POST",
@@ -250,7 +238,7 @@ export const Leftbar2 = () => {
   //         message: message,
   //       }),
   //     });
-  
+
   //     if (res.status === 200) {
   //       // Clear the input field after sending
   //       setMessage("");
@@ -262,16 +250,15 @@ export const Leftbar2 = () => {
   //     console.error("Error sending message:", error);
   //   }
   // };
-  
 
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
-  
+
     if (!conversationId) {
       console.error("No conversation selected");
       return;
     }
-  
+
     // Update the local state immediately to show the message in the outgoing message div
     setMessages((prev) => ({
       ...prev,
@@ -280,14 +267,14 @@ export const Leftbar2 = () => {
         { message: message, user: { id: parsedId } },
       ],
     }));
-  
+
     socket?.emit("sendMessage", {
       conversationId: conversationId,
       senderId: parsedId,
       message: message,
       receiverId: messages?.receiver?.receiverId,
     });
-  
+
     try {
       const res = await fetch("http://localhost:5000/api/message/create", {
         method: "POST",
@@ -300,7 +287,7 @@ export const Leftbar2 = () => {
           message: message,
         }),
       });
-  
+
       if (res.status === 200) {
         // Clear the input field after sending
         setMessage("");
@@ -312,9 +299,6 @@ export const Leftbar2 = () => {
       console.error("Error sending message:", error);
     }
   };
-  
-
-
 
   // Render loading indicator if still loading authentication data
   if (isLoading) {
@@ -465,139 +449,154 @@ export const Leftbar2 = () => {
       {/* main chat section */}
 
       <div className="main-chat-section">
-        
-      {messages?.messages?.length > 0 ? (
-        <>
-                      <div className="info">
-                      <div className="left-part">
-                        <div className="user-pic">
-                          <img src={image} alt=""></img>
+        {messages?.messages?.length > 0 ? (
+          <>
+            <div className="info">
+              <div className="left-part">
+                <div className="user-pic">
+                  <img src={image} alt=""></img>
+                </div>
+                <div className="user-info">
+                  {conversations.map((conversation, user, index) => {
+                    console.log(conversation);
+
+                    const onlineStatus = isUserOnline(
+                      conversation.user.receiverId
+                    )
+                      ? "Online"
+                      : "Offline";
+
+                    if (conversations.length > 0) {
+                      return (
+                        <div className="left-info">
+                          <h1>{conversation.user.username}</h1>
+                          <p>{onlineStatus}</p>
                         </div>
-                        <div className="user-info">
-                        {
-                          conversations.map((conversation, user, index) => {
-
-                            console.log(conversation);
-
-                            const onlineStatus = isUserOnline(conversation.user.receiverId) ? 'Online': 'Offline'
-
-            
-                            if (conversations.length > 0) {
-                              return (
-                                    <div className="left-info">
-                                      <h1>
-                                        {conversation.user.username}
-                                      </h1>
-                                      <p>{onlineStatus}</p> 
-                                    </div>
-                              );
-                            }
-                          })
-                        }
-                          {/* <h1>John Doe</h1>*/}
-                          {/* <p>Online</p>  */}
+                      );
+                    }
+                  })}
+                  {/* <h1>John Doe</h1>*/}
+                  {/* <p>Online</p>  */}
+                </div>
+              </div>
+              <div className="right-part">
+                <CallRoundedIcon className="right-part-icon" />
+                <VideocamIcon className="right-part-icon" />
+                <MoreVertIcon
+                  className="right-part-icon"
+                  onClick={handleToggle}
+                />
+                {toggle ? (
+                  <div className="RightPopUpShow">
+                    <div className="PopUpBox">
+                      <div className="top">
+                        <img src={image} alt=""></img>
+                        <h1>John Doe</h1>
+                        <p>Online</p>
+                      </div>
+                      <div className="mid1">
+                        <CallRoundedIcon className="mid1-icon" />
+                        <VideocamIcon className="mid1-icon" />
+                      </div>
+                      <div className="mid2">
+                        <div className="userOpt">
+                          <CollectionsIcon className="right-part-icon" />
+                          <h2>Media</h2>
                         </div>
                       </div>
-                      <div className="right-part">
-                        <CallRoundedIcon className="right-part-icon" />
-                        <VideocamIcon className="right-part-icon" />
-                        <MoreVertIcon className="right-part-icon" onClick={handleToggle} />
-                        {toggle ? (
-                          <div className="RightPopUpShow">
-                            <div className="PopUpBox">
-                              <div className="top">
-                                <img src={image} alt=""></img>
-                                <h1>John Doe</h1>
-                                <p>Online</p>
-                              </div>
-                              <div className="mid1">
-                                <CallRoundedIcon className="mid1-icon" />
-                                <VideocamIcon className="mid1-icon" />
-                              </div>
-                              <div className="mid2">
-                                <div className="userOpt">
-                                  <CollectionsIcon className="right-part-icon" />
-                                  <h2>Media</h2>
-                                </div>
-                              </div>
-                              <div className="mid3">
-                                <div className="userOpt">
-                                  <VolumeOffIcon className="right-part-icon" />
-                                  <h2>Mute Chat</h2>
-                                </div>
-                              </div>
-                              <div className="mid4">
-                                <div className="userOpt">
-                                  <ArrowBackIosIcon className="right-part-icon" />
-                                  <h2>Close Chat</h2>
-                                </div>
-                              </div>
-                              <div className="mid5">
-                                <div className="userOpt">
-                                  <LockIcon className="right-part-icon" />
-                                  <h2>Chat Lock</h2>
-                                </div>
-                              </div>
-                              <div className="bottom">
-                                <div className="userOpt1">
-                                  <BlockIcon className="bottom-icon" />
-                                  <h2>Block</h2>
-                                </div>
-                                <div className="userOpt2">
-                                  <ReportIcon className="bottom-icon" />
-                                  <h2>Report</h2>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="RightPopUpDefault"></div>
-                        )}
+                      <div className="mid3">
+                        <div className="userOpt">
+                          <VolumeOffIcon className="right-part-icon" />
+                          <h2>Mute Chat</h2>
+                        </div>
+                      </div>
+                      <div className="mid4">
+                        <div className="userOpt">
+                          <ArrowBackIosIcon className="right-part-icon" />
+                          <h2>Close Chat</h2>
+                        </div>
+                      </div>
+                      <div className="mid5">
+                        <div className="userOpt">
+                          <LockIcon className="right-part-icon" />
+                          <h2>Chat Lock</h2>
+                        </div>
+                      </div>
+                      <div className="bottom">
+                        <div className="userOpt1">
+                          <BlockIcon className="bottom-icon" />
+                          <h2>Block</h2>
+                        </div>
+                        <div className="userOpt2">
+                          <ReportIcon className="bottom-icon" />
+                          <h2>Report</h2>
+                        </div>
                       </div>
                     </div>
-                    <div className="inner-container">
-                    {
-                      messages.messages.map(({ message, user: { id } = {} }, index) => {
-                        if (id === parsedId) {
-                          return (
-                            <div className="outgoing-msg" key={index}>
-                              {message}
-                            </div>
-                          );
-                        } else {
-                          return (
-                            <div className="incoming-msg" key={index}>
-                              {message}
-                            </div>
-                          );
-                        }
-                      })
-                    }
                   </div>
+                ) : (
+                  <div className="RightPopUpDefault"></div>
+                )}
+              </div>
+            </div>
+            <div className="inner-container">
+              {messages.messages.map(
+                ({ message, user: { id } = {} }, index) => {
+                  if (id === parsedId) {
+                    return (
+                      <div className="outgoing-msg" key={index}>
+                        {message}
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="incoming-msg" key={index}>
+                        {message}
+                      </div>
+                    );
+                  }
+                }
+              )}
+            </div>
 
-                  <div className="chat-bottom">
-          <div className="chat-input">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type a Message"
-            />
+            <div className="chat-bottom">
+              <div className="chat-input">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type a Message"
+                />
+              </div>
+              <div className="chat-options">
+                <input
+                  type="file"
+                  accept="image/*" // Accept only image files
+                  id="imageInput"
+                  style={{ display: "none" }}
+                  // onChange={handleImageSelect}
+                />
+                {/* <PhotoSizeSelectActualIcon className="chat-btn" /> */}
+                <label htmlFor="imageInput">
+                  <PhotoSizeSelectActualIcon className="chat-btn" />
+                </label>
+                <LocationOnIcon className="chat-btn" />
+                <MicNoneIcon className="chat-btn" />
+              </div>
+              <div className="submit-btn-class">
+                <button onClick={() => sendMessage()}>
+                  <TelegramIcon className="submit-btn" />
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div
+            className="no-conversations"
+            style={{ textAlign: "center", marginTop: "10px" }}
+          >
+            No Messages to show.Click on the conversation to see the messages
           </div>
-          <div className="chat-options">
-            <PhotoSizeSelectActualIcon className="chat-btn" />
-            <LocationOnIcon className="chat-btn" />
-            <MicNoneIcon className="chat-btn" />
-          </div>
-          <div className="submit-btn-class">
-            <button onClick={() => sendMessage()}>
-              <TelegramIcon className="submit-btn" />
-            </button>
-          </div>
-        </div>
-                  </>
-        ):(
-          <div className="no-conversations" style={{textAlign:"center" , marginTop:"10px"}}>No Messages to show.Click on the conversation to see the messages</div>
         )}
       </div>
     </div>
