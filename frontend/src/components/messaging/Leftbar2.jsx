@@ -395,7 +395,7 @@ export const Leftbar2 = () => {
               })
             }
 
-            <div className="mid-text3">
+            {/* <div className="mid-text3">
               <div className="left3">
                 <img src={image} alt=""></img>
                 <div className="left-info">
@@ -407,7 +407,7 @@ export const Leftbar2 = () => {
                 <p>9:26 PM</p>
                 <circle>2</circle>
               </div>
-            </div>
+            </div> */}
 
             <span>All Conversations</span>
 
@@ -445,121 +445,114 @@ export const Leftbar2 = () => {
       {/* main chat section */}
 
       <div className="main-chat-section">
-        <div className="info">
-          <div className="left-part">
-            <div className="user-pic">
-              <img src={image} alt=""></img>
-            </div>
-            <div className="user-info">
-              <h1>John Doe</h1>
-              <p>Online</p>
-            </div>
-          </div>
-          <div className="right-part">
-            <CallRoundedIcon className="right-part-icon" />
-            <VideocamIcon className="right-part-icon" />
-            <MoreVertIcon className="right-part-icon" onClick={handleToggle} />
-            {toggle ? (
-              <div className="RightPopUpShow">
-                <div className="PopUpBox">
-                  <div className="top">
-                    <img src={image} alt=""></img>
-                    <h1>John Doe</h1>
-                    <p>Online</p>
-                  </div>
-                  <div className="mid1">
-                    <CallRoundedIcon className="mid1-icon" />
-                    <VideocamIcon className="mid1-icon" />
-                  </div>
-                  <div className="mid2">
-                    <div className="userOpt">
-                      <CollectionsIcon className="right-part-icon" />
-                      <h2>Media</h2>
+        
+      {messages?.messages?.length > 0 ? (
+        <>
+                      <div className="info">
+                      <div className="left-part">
+                        <div className="user-pic">
+                          <img src={image} alt=""></img>
+                        </div>
+                        <div className="user-info">
+                        {
+                          conversations.map((conversation, user, index) => {
+                            console.log(user);
+            
+                            console.log(conversation.user);
+            
+                            if (conversations.length > 0) {
+                              return (
+                                    <div className="left-info">
+                                      <h1>
+                                        {conversation.user.username}
+                                      </h1>
+                                    </div>
+                              );
+                            }
+                          })
+                        }
+                          {/* <h1>John Doe</h1>*/}
+                          <p>Online</p> 
+                        </div>
+                      </div>
+                      <div className="right-part">
+                        <CallRoundedIcon className="right-part-icon" />
+                        <VideocamIcon className="right-part-icon" />
+                        <MoreVertIcon className="right-part-icon" onClick={handleToggle} />
+                        {toggle ? (
+                          <div className="RightPopUpShow">
+                            <div className="PopUpBox">
+                              <div className="top">
+                                <img src={image} alt=""></img>
+                                <h1>John Doe</h1>
+                                <p>Online</p>
+                              </div>
+                              <div className="mid1">
+                                <CallRoundedIcon className="mid1-icon" />
+                                <VideocamIcon className="mid1-icon" />
+                              </div>
+                              <div className="mid2">
+                                <div className="userOpt">
+                                  <CollectionsIcon className="right-part-icon" />
+                                  <h2>Media</h2>
+                                </div>
+                              </div>
+                              <div className="mid3">
+                                <div className="userOpt">
+                                  <VolumeOffIcon className="right-part-icon" />
+                                  <h2>Mute Chat</h2>
+                                </div>
+                              </div>
+                              <div className="mid4">
+                                <div className="userOpt">
+                                  <ArrowBackIosIcon className="right-part-icon" />
+                                  <h2>Close Chat</h2>
+                                </div>
+                              </div>
+                              <div className="mid5">
+                                <div className="userOpt">
+                                  <LockIcon className="right-part-icon" />
+                                  <h2>Chat Lock</h2>
+                                </div>
+                              </div>
+                              <div className="bottom">
+                                <div className="userOpt1">
+                                  <BlockIcon className="bottom-icon" />
+                                  <h2>Block</h2>
+                                </div>
+                                <div className="userOpt2">
+                                  <ReportIcon className="bottom-icon" />
+                                  <h2>Report</h2>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="RightPopUpDefault"></div>
+                        )}
+                      </div>
                     </div>
+                    <div className="inner-container">
+                    {
+                      messages.messages.map(({ message, user: { id } = {} }, index) => {
+                        if (id === parsedId) {
+                          return (
+                            <div className="outgoing-msg" key={index}>
+                              {message}
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div className="incoming-msg" key={index}>
+                              {message}
+                            </div>
+                          );
+                        }
+                      })
+                    }
                   </div>
-                  <div className="mid3">
-                    <div className="userOpt">
-                      <VolumeOffIcon className="right-part-icon" />
-                      <h2>Mute Chat</h2>
-                    </div>
-                  </div>
-                  <div className="mid4">
-                    <div className="userOpt">
-                      <ArrowBackIosIcon className="right-part-icon" />
-                      <h2>Close Chat</h2>
-                    </div>
-                  </div>
-                  <div className="mid5">
-                    <div className="userOpt">
-                      <LockIcon className="right-part-icon" />
-                      <h2>Chat Lock</h2>
-                    </div>
-                  </div>
-                  <div className="bottom">
-                    <div className="userOpt1">
-                      <BlockIcon className="bottom-icon" />
-                      <h2>Block</h2>
-                    </div>
-                    <div className="userOpt2">
-                      <ReportIcon className="bottom-icon" />
-                      <h2>Report</h2>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="RightPopUpDefault"></div>
-            )}
-          </div>
-        </div>
-        <div className="inner-container">
-          {messages?.messages?.length > 0 ? (
-            messages.messages.map(({ message, user: { id } = {} }, index) => {
-              if (id === parsedId) {
-                return (
-                  <div className="outgoing-msg" key={index}>
-                    {message}
-                  </div>
-                );
-              } else {
-                return (
-                  <div className="incoming-msg" key={index}>
-                    {message}
-                  </div>
-                );
-              }
-            })
-          ) : (
-            <div className="no-conversations">No Messages to show.</div>
-          )}
 
-          {/* <div className="incoming-msg">
-            I am fine. Glad to text you after a long time!
-          </div>
-          <div className="outgoing-msg">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
-          </div>
-          <div className="incoming-msg">Hi!</div>
-          <div className="outgoing-msg">How are you?</div>
-          <div className="incoming-msg">
-            I am fine. Glad to text you after a long time!
-          </div>
-          <div className="outgoing-msg">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
-          </div>
-          <div className="incoming-msg">Hi!</div>
-          <div className="outgoing-msg">How are you?</div>
-          <div className="incoming-msg">
-            I am fine. Glad to text you after a long time!
-          </div>
-          <div className="outgoing-msg">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
-          </div> */}
-        </div>
-        <div className="chat-bottom">
+                  <div className="chat-bottom">
           <div className="chat-input">
             <input
               type="text"
@@ -579,6 +572,10 @@ export const Leftbar2 = () => {
             </button>
           </div>
         </div>
+                  </>
+        ):(
+          <div className="no-conversations" style={{textAlign:"center" , marginTop:"10px"}}>No Messages to show.Click on the conversation to see the messages</div>
+        )}
       </div>
     </div>
   );
