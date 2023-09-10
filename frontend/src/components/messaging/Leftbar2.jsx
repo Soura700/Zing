@@ -30,6 +30,7 @@ export const Leftbar2 = () => {
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [activeUsers , setActiveUsers] = useState([]);
 
   // console.log(messages.length);
   console.log(typeof(messages));
@@ -64,6 +65,7 @@ export const Leftbar2 = () => {
       socket?.emit("addUser", parsedId);
       socket?.on("getUser", (activeUsers) => {
         console.log("Active Users", activeUsers);
+        setActiveUsers(activeUsers);
       });
       socket.on("getMessage", (data) => {
         console.log(data);
@@ -87,6 +89,24 @@ export const Leftbar2 = () => {
 
     }
   }, [socket, parsedId, isLoggedIn]);
+
+
+  console.log("ActiveUser" + activeUsers);
+  
+  console.log(activeUsers);
+
+  console.log(socket);
+
+
+
+  const isUserOnline = (userId) => {
+    // return activeUsers.find((user)=>user.userId ===  userId );
+    return activeUsers.some((user) => user.userId === userId);
+  };
+
+  console.log(isUserOnline());
+
+
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -456,9 +476,11 @@ export const Leftbar2 = () => {
                         <div className="user-info">
                         {
                           conversations.map((conversation, user, index) => {
-                            console.log(user);
-            
-                            console.log(conversation.user);
+
+                            console.log(conversation);
+
+                            const onlineStatus = isUserOnline(conversation.user.receiverId) ? 'Online': 'Offline'
+
             
                             if (conversations.length > 0) {
                               return (
@@ -466,13 +488,14 @@ export const Leftbar2 = () => {
                                       <h1>
                                         {conversation.user.username}
                                       </h1>
+                                      <p>{onlineStatus}</p> 
                                     </div>
                               );
                             }
                           })
                         }
                           {/* <h1>John Doe</h1>*/}
-                          <p>Online</p> 
+                          {/* <p>Online</p>  */}
                         </div>
                       </div>
                       <div className="right-part">
