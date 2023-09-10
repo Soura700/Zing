@@ -137,40 +137,138 @@ export const Leftbar2 = () => {
 
 
 
-  const sendMessage = async (e) => {
+  // const sendMessage = async (e) => {
+  //   const conversationId = messages?.conversationId;
+
+  //   console.log("Conversation Id" + conversationId);
+
+  //   // if (!conversationId) {
+  //   //   console.error('No conversation selected');
+  //   //   return;
+  //   // }
+
+
+  //   socket?.emit("sendMessage", {
+  //     conversationId: conversationId,
+  //     senderId: parsedId,
+  //     message: message,
+  //     receiverId: messages?.receiver?.receiverId,
+  //   });
+
+  //   // setMessage('');
+
+  //   try {
+  //     if (!messages?.messages || !messages?.messages.length) {
+  //       console.error("No conversation selected");
+  //       return;
+  //     }
+
+  //     setMessages((prev) => ({
+  //       ...prev,
+  //       messages: [
+  //         ...prev.messages,
+  //         { message: message, user: { id: parsedId } }, // Assume the sender is the logged-in user
+  //       ],
+  //     }));
+
+  //     const res = await fetch("http://localhost:5000/api/message/create", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         conversationId: conversationId,
+  //         senderId: parsedId,
+  //         message: message,
+  //         // receiverId:""
+  //       }),
+  //     });
+  //     if (res.status === 200) {
+  //       // Message sent successfully to the API, now emit it to the server
+  //       // socket?.emit("sendMessage", {
+  //       //   senderId: parsedId,
+  //       //   receiverId: /* Receiver's ID goes here */,
+  //       //   message: message,
+  //       // });
+
+  //       // Clear the input field after sending
+  //       setMessage("");
+  //     } else {
+  //       console.error("Failed to send message to the API");
+  //       // Handle error appropriately, e.g., show an error message to the user
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending message:", error);
+  //   }
+  // };
+
+
+  // const sendMessage = async () => {
+  //   const conversationId = messages?.conversationId;
+  
+  //   if (!conversationId) {
+  //     console.error("No conversation selected");
+  //     return;
+  //   }
+  
+  //   socket?.emit("sendMessage", {
+  //     conversationId: conversationId,
+  //     senderId: parsedId,
+  //     message: message,
+  //     receiverId: messages?.receiver?.receiverId,
+  //   });
+  
+  //   try {
+  //     const res = await fetch("http://localhost:5000/api/message/create", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         conversationId: conversationId,
+  //         senderId: parsedId,
+  //         message: message,
+  //       }),
+  //     });
+  
+  //     if (res.status === 200) {
+  //       // Clear the input field after sending
+  //       setMessage("");
+  //     } else {
+  //       console.error("Failed to send message to the API");
+  //       // Handle error appropriately, e.g., show an error message to the user
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending message:", error);
+  //   }
+  // };
+  
+
+  const sendMessage = async () => {
     const conversationId = messages?.conversationId;
-
-    console.log("Conversation Id" + conversationId);
-
-    // if (!conversationId) {
-    //   console.error('No conversation selected');
-    //   return;
-    // }
-
-
+  
+    if (!conversationId) {
+      console.error("No conversation selected");
+      return;
+    }
+  
+    // Update the local state immediately to show the message in the outgoing message div
+    setMessages((prev) => ({
+      ...prev,
+      messages: [
+        ...prev.messages,
+        { message: message, user: { id: parsedId } },
+      ],
+    }));
+  
     socket?.emit("sendMessage", {
       conversationId: conversationId,
       senderId: parsedId,
       message: message,
       receiverId: messages?.receiver?.receiverId,
     });
-
-    // setMessage('');
-
+  
     try {
-      if (!messages?.messages || !messages?.messages.length) {
-        console.error("No conversation selected");
-        return;
-      }
-
-      setMessages((prev) => ({
-        ...prev,
-        messages: [
-          // ...prev.messages,
-          { message: message, user: { id: parsedId } }, // Assume the sender is the logged-in user
-        ],
-      }));
-
       const res = await fetch("http://localhost:5000/api/message/create", {
         method: "POST",
         headers: {
@@ -180,17 +278,10 @@ export const Leftbar2 = () => {
           conversationId: conversationId,
           senderId: parsedId,
           message: message,
-          // receiverId:""
         }),
       });
+  
       if (res.status === 200) {
-        // Message sent successfully to the API, now emit it to the server
-        // socket?.emit("sendMessage", {
-        //   senderId: parsedId,
-        //   receiverId: /* Receiver's ID goes here */,
-        //   message: message,
-        // });
-
         // Clear the input field after sending
         setMessage("");
       } else {
@@ -201,6 +292,9 @@ export const Leftbar2 = () => {
       console.error("Error sending message:", error);
     }
   };
+  
+
+
 
   // Render loading indicator if still loading authentication data
   if (isLoading) {

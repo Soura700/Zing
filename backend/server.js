@@ -119,12 +119,26 @@ io.on('connection', (socket) => {
     }
   });
 
+  // socket.on('sendMessage', ({ senderId, message, receiverId, conversationId }) => {
+  //   const receiver = users.find((user) => user.userId === receiverId);
+  //   const sender = users.find((user) => user.userId === senderId);
+
+  //   if (receiver) {
+  //     io.to(receiver.socketId).to(sender.socketId).emit('getMessage', {
+  //       senderId,
+  //       message,
+  //       conversationId,
+  //       receiverId,
+  //     });
+  //   }
+  // });
+
   socket.on('sendMessage', ({ senderId, message, receiverId, conversationId }) => {
     const receiver = users.find((user) => user.userId === receiverId);
     const sender = users.find((user) => user.userId === senderId);
 
     if (receiver) {
-      io.to(receiver.socketId).to(sender.socketId).emit('getMessage', {
+      io.to(receiver.socketId).emit('getMessage', {
         senderId,
         message,
         conversationId,
