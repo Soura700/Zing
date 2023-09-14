@@ -216,6 +216,23 @@ span {
 .mid-part {
     margin: 20px 0px;
 }
+.CreateGrpIcon {
+    border: none;
+    background: #7745da;
+    color: white;
+    border-radius: 8px;
+    height: 30px;
+    width: 150px;
+    margin-left: 70px;
+    margin-top: 10px;
+}
+.CreateGrpIcon:hover {
+    cursor: pointer;
+    background: #723ae1;
+    border: none;
+    box-shadow: 0px 0px 9px #ae89ff;
+    color: white;
+}
 .mid-text {
     display: flex;
     flex-direction: row;
@@ -494,6 +511,7 @@ span {
     margin-left: 20px;
     display: flex;
     flex-direction: column;
+    position: relative;
     padding: 20px;
 }
 .info {
@@ -868,4 +886,165 @@ span {
     max-width: 40%;
     background: rgb(233, 210, 255);
     border-radius: 10px 0px 10px 10px;
+}
+
+
+/* group chat popup modal styles */
+.create-group-modal{
+    border: 0px solid rgb(142, 142, 142);
+    border-radius: 12px;
+    box-shadow: 5px 5px 12px rgb(147, 147, 147);
+    position: absolute;
+    margin-left: 40%;
+    margin-top: 10%;
+    padding: 20px;
+    height: 350px;
+}
+.modal-content h2 {
+    color: #5624ba;
+    font-weight: 500;
+}
+.modal-content h3 {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 10px;
+    margin-bottom: 3px;
+    color: #a2a2a2;
+}
+.modal-content .grp-name input {
+    border: 1px solid #c7b0f6;
+    height: 20px;
+    width: 96%;
+    border-radius: 8px;
+    padding: 5px;
+    padding-left: 10px;
+}
+.modal-content .grp-name input:focus {
+    outline: none;
+    border: 2px solid #5825c0;
+}
+/* add members input style */
+.modal-content .add-members input {
+    border: 1px solid #c7b0f6;
+    height: 30px;
+    border-radius: 8px;
+    padding-left: 10px;
+}
+.modal-content .add-members input:focus {
+    outline: none;
+    border: 2px solid #5825c0;
+}
+
+.membersLabel {
+    display: flex;
+    flex-direction: row;
+}
+
+.addMembersLabel {
+    width: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 4px;
+    margin-top: 5px;
+    gap: 5px;
+    background: #e3d5ff;
+    color: #402577;
+    margin-right: 8px;
+    border: 0px solid black;
+    border-radius: 8px;
+}
+.addMembersLabel p{
+    font-size: 15px;
+}
+.addMembersLabel:hover {
+    background: #6c3acf;
+    color: white;
+    cursor: pointer;
+}
+
+
+
+.user-list {
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.userListContainer {
+    display: flex;
+    flex-direction: column;
+    border: 0px solid #754acd;
+    box-shadow: 2px 2px 5px #949494;
+    padding: 8px;
+    background: #ffffff;
+    color: #402577;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+.userListContainer:hover {
+    cursor: pointer;
+    border: 0px solid #754acd;
+    box-shadow: 2px 2px 5px #949494;
+    padding: 8px;
+    background: #f0e9ff;
+    color: #402577;
+
+}
+.userLists {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 20px;
+    padding: 10px;
+
+}
+.userLists  .userListIconTick{
+    border: 0px solid red;
+    background: rgb(186, 255, 186);
+    color: rgb(42, 129, 42);
+    padding: 2px;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    margin-right: 8px;
+    font-size: 22px;
+}
+.userLists  .userListIconTick:hover {
+    cursor: pointer;
+    background: rgb(35, 142, 35);
+    color: rgb(255, 255, 255);
+}
+
+.userLists  .userListIconCross {
+    border: 0px solid red;
+    background: rgb(255, 164, 164);
+    color: rgb(175, 45, 45);
+    padding: 2px;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    margin-right: 8px;
+    font-size: 22px;
+}
+.userLists  .userListIconCross:hover {
+    cursor: pointer;
+    background: rgb(255, 53, 53);
+    color: rgb(255, 255, 255);
+}
+ .createGrpChatBtn {
+    border: none;
+    box-shadow: 2px 2px 5px #949494;
+    border-radius: 8px;
+    background: #4b229e;
+    font-size: 18px;
+    color: white;
+    padding: 5px;
+    height: 35px;
+    width: 95px;
+    margin-left: 83%;
+    margin-top: 40px;
+}
+.createGrpChatBtn:hover {
+    cursor: pointer;
+
 }
