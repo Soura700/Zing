@@ -17,15 +17,17 @@ import LockIcon from "@mui/icons-material/Lock";
 import BlockIcon from "@mui/icons-material/Block";
 import ReportIcon from "@mui/icons-material/Report";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { io } from "socket.io-client";
-import { useAuth } from "../../Contexts/authContext"; 
+import { useAuth } from "../../Contexts/authContext";
+import Peer from "simple-peer"; 
 import "./group.css"
 
 export const Group = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [toggle, setToggle] = useState(false);
-
 
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -34,15 +36,16 @@ export const Group = () => {
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [activeUsers, setActiveUsers] = useState([]);
 
-
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [availableUsers, setAvailableUsers] = useState([]); // You need to fetch and populate this list
-  const [searchResult , setSearchResult] = useState([]);
-  const [selectedUsers , setSelectedUsers] = useState([]);
+  const [groupChatName , setGroupChatName] = useState();
+  const [selectedUser , setSelectedUsers] = useState([]);
+  const [search , setSearch] = useState("");
+  const [searchResult , setSearchResult] = useState();
+  const [loading , setLoading] = useState(false);
 
 
-  console.log(selectedUsers);
 
   
 
@@ -55,7 +58,6 @@ export const Group = () => {
   // const handleSearchInputChange = (e) => {
   //   setSearchValue(e.target.value);
   // };
-  
 
   // Add this function to your React component
 const searchUserSuggestions = async (searchValue) => {
@@ -64,7 +66,7 @@ const searchUserSuggestions = async (searchValue) => {
     // console
     if (res.ok) {
       const data = await res.json();
-      // console.log(data)
+      console.log(data)
       // Update the state with the fetched user name suggestions
       setSearchResult(data); // Assuming `setSearchResult` is a state updater function
     } else {
@@ -75,17 +77,7 @@ const searchUserSuggestions = async (searchValue) => {
   }
 };
 
-
-// console.log(searchResult);
-
-const handleSearchIconClick = () => {
-  // Call the searchUserSuggestions function with the current searchValue
-  searchUserSuggestions(searchValue);
-};
-
 // Modify your handleSearchInputChange function to call the searchUserSuggestions function
-
-
 const handleSearchInputChange = (e) => {
   const value = e.target.value;
   setSearchValue(value);
@@ -93,7 +85,7 @@ const handleSearchInputChange = (e) => {
   searchUserSuggestions(value);
 };
 
-
+console.log("Search" + searchValue);
 
 
 
@@ -101,7 +93,6 @@ const handleSearchInputChange = (e) => {
   const filteredUsers = availableUsers.filter((user) =>
     user.username.toLowerCase().includes(searchValue.toLowerCase())
   );
-
 
   const parsedId = parseInt(id);
 
@@ -153,14 +144,10 @@ const handleSearchInputChange = (e) => {
     }
   }, [socket, parsedId, isLoggedIn]);
 
-
   const isUserOnline = (userId) => {
     // return activeUsers.find((user)=>user.userId ===  userId );
     return activeUsers.some((user) => user.userId === userId);
   };
-
-  
-
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -191,7 +178,6 @@ const handleSearchInputChange = (e) => {
       // setConversationId(id);
     }
   };
-
 
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
@@ -279,10 +265,7 @@ const handleSearchInputChange = (e) => {
             </div>
             <div className="item3">
               {/* <CallRoundedIcon fontSize="medium" className="icon3" /> */}
-              <CallRoundedIcon
-                fontSize="medium"
-                className="icon3"
-              />
+              <CallRoundedIcon fontSize="medium" className="icon3" />
             </div>
             <hr></hr>
             <div className="item4">
@@ -306,12 +289,10 @@ const handleSearchInputChange = (e) => {
           </div>
           <div className="mid-part">
             <span>Pinned Messages</span>
-            <button onClick={toggleCreateGroupModal}>Create Group</button>
+            <button className="CreateGrpIcon" onClick={toggleCreateGroupModal}>Create Group</button>
             {
               // conversations.length>0?
               conversations.map((conversation, user, index) => {
-
-
                 if (conversations.length > 0) {
                   return (
                     <div
@@ -415,7 +396,6 @@ const handleSearchInputChange = (e) => {
                 </div>
                 <div className="user-info">
                   {conversations.map((conversation, user, index) => {
-                    
                     const onlineStatus = isUserOnline(
                       conversation.user.receiverId
                     )
@@ -561,38 +541,29 @@ const handleSearchInputChange = (e) => {
         <div className="create-group-modal">
           <div className="modal-content">
             <h2>Create Group</h2>
-            <div className="top-search-bar">
-              <input
-                type="text"
-                name="search-bar"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search"
-              />
-              <div className="search-btn">
-                <SearchIcon className="search-icon" onClick={handleSearchIconClick} />
-              </div>
-            </div>
+            <input
+              type="text"
+              placeholder="Search for users..."
+              value={searchValue}
+              onChange={handleSearchInputChange}
+            />
             <div className="user-list">
-              {/* Render the filtered users here */}
-              {/* {
-                searchResult.map((user)=>{
-                  // <div>{user.username}</div>
-                  console.log(user.username);
-                  <div>{user.username}</div>
-                })
-              } */}
-              {searchResult.map((user) => (
-                <div key={user.id} className="user-item" onClick={handleGroup(user)}>
+              {filteredUsers.map((user) => (
+                <div key={user.id} className="user-item">
+                  <input
+                    type="checkbox"
+                    id={`user-${user.id}`}
+                    value={user.id}
+                  />
                   <label htmlFor={`user-${user.id}`}>{user.username}</label>
                 </div>
-              ))}
+              ))} */}
+              
             </div>
-            <button onClick={toggleCreateGroupModal}>Create</button>
+            <button className="createGrpChatBtn" onClick={toggleCreateGroupModal}>Create</button>
           </div>
         </div>
       )}
-
     </div>
   );
 };
