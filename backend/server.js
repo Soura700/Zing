@@ -106,6 +106,10 @@ let users = [];
 io.on('connection', (socket) => {
   console.log('User Connected', socket.id);
 
+  // 13/9/2023
+  socket.emit("me",socket.id);
+  // 13/9/2023
+
   socket.on('addUser', (userId) => {
     const userExists = users.find((user) => user.userId === userId);
 
@@ -147,6 +151,15 @@ io.on('connection', (socket) => {
     }
   });
 
+  // 13/9/2023
+  // socket.on("callUser",(data)=>{
+  //   io.to(data.userToCall).emit("callUser",{signal:data.signalData , from :data.from , name:data.name});
+  // })
+
+  // socket.on("answerCall",(data)=> io.to(data.to).emit("callAccepted") , data.signal);
+
+  // 9/13/2023
+  
   socket.on('disconnect', () => {
     users = users.filter((user) => user.socketId !== socket.id);
     io.emit('getUser', users);

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "./leftbar2.css";
 import image from "../../assets/jd-chow-gutlccGLXKI-unsplash.jpg";
 import SearchIcon from "@mui/icons-material/Search";
 import TextsmsIcon from "@mui/icons-material/Textsms";
@@ -22,10 +21,13 @@ import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
 import Peer from "simple-peer"; 
+import "./group.css"
 
-export const Leftbar2 = () => {
+export const Group = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [toggle, setToggle] = useState(false);
+
+
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -33,80 +35,66 @@ export const Leftbar2 = () => {
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [activeUsers, setActiveUsers] = useState([]);
 
-  const [isCalling, setIsCalling] = useState(false);
-  const [stream, setStream] = useState(null);
-  const [peer, setPeer] = useState(null);
 
-  const startVideoCall = async () => {
-    try {
-      // Get user's video and audio stream
-      const userMedia = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      setStream(userMedia);
+  const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [availableUsers, setAvailableUsers] = useState([]); // You need to fetch and populate this list
+  const [groupChatName , setGroupChatName] = useState();
+  const [selectedUser , setSelectedUsers] = useState([]);
+  const [search , setSearch] = useState("");
+  const [searchResult , setSearchResult] = useState();
+  const [loading , setLoading] = useState(false);
 
-      // Create a new Peer instance
-      const newPeer = new Peer({
-        initiator: true,
-        stream: userMedia,
-        trickle: false,
-      });
 
-      // Set up event handlers for the Peer instance
-      newPeer.on("signal", (data) => {
-        // Send the offer signal to the other user (you will need to define a function to send this signal via your socket)
-        // socket.emit("sendOfferSignal", { signalData: data, receiverId: receiverId });
-      });
 
-      newPeer.on("stream", (remoteStream) => {
-        // Display the remote user's video stream (you may need to create a video element to display it)
-        // remoteVideoRef.current.srcObject = remoteStream;
-      });
+  
 
-      setPeer(newPeer);
-      setIsCalling(true);
-    } catch (error) {
-      console.error("Error starting video call:", error);
-    }
+  // Function to toggle the Create Group modal
+  const toggleCreateGroupModal = () => {
+    setShowCreateGroupModal(!showCreateGroupModal);
   };
 
-  const answerVideoCall = async () => {
-    try {
-      // Get user's video and audio stream
-      const userMedia = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      setStream(userMedia);
+  // Function to handle search input change
+  // const handleSearchInputChange = (e) => {
+  //   setSearchValue(e.target.value);
+  // };
+  
 
-      // Create a new Peer instance to answer the call
-      const answeringPeer = new Peer({
-        initiator: false,
-        stream: userMedia,
-        trickle: false,
-      });
-
-      // Set up event handlers for the answering Peer instance
-      answeringPeer.on("signal", (data) => {
-        // Send the answer signal to the caller (you will need to define a function to send this signal via your socket)
-        // socket.emit("sendAnswerSignal", { signalData: data, callerId: callerId });
-      });
-
-      answeringPeer.on("stream", (remoteStream) => {
-        // Display the remote caller's video stream (you may need to create a video element to display it)
-        // remoteVideoRef.current.srcObject = remoteStream;
-      });
-
-      setPeer(answeringPeer);
-      setIsCalling(true);
-    } catch (error) {
-      console.error("Error answering video call:", error);
+  // Add this function to your React component
+const searchUserSuggestions = async (searchValue) => {
+  try {
+    const res = await fetch(`http://localhost:5000/api/conversation/get/conversation/`+searchValue);
+    // console
+    if (res.ok) {
+      const data = await res.json();
+      console.log(data)
+      // Update the state with the fetched user name suggestions
+      setSearchResult(data); // Assuming `setSearchResult` is a state updater function
+    } else {
+      console.error('Failed to fetch user name suggestions');
     }
-  };
+  } catch (error) {
+    console.error('Error fetching user name suggestions:', error);
+  }
+};
 
-  // console.log(messages.length);
-  console.log(typeof messages);
+// Modify your handleSearchInputChange function to call the searchUserSuggestions function
+const handleSearchInputChange = (e) => {
+  const value = e.target.value;
+  setSearchValue(value);
+  // Call the searchUserSuggestions function with the updated search value
+  searchUserSuggestions(value);
+};
+
+console.log("Search" + searchValue);
+
+
+
+  // Filter users based on search input
+  const filteredUsers = availableUsers.filter((user) =>
+    user.username.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
 
   const parsedId = parseInt(id);
 
@@ -137,11 +125,9 @@ export const Leftbar2 = () => {
     if (isLoggedIn) {
       socket?.emit("addUser", parsedId);
       socket?.on("getUser", (activeUsers) => {
-        console.log("Active Users", activeUsers);
         setActiveUsers(activeUsers);
       });
       socket.on("getMessage", (data) => {
-        console.log(data);
         setMessages((prev) => ({
           ...prev,
           messages: [...prev.messages, { message: data.message }],
@@ -160,18 +146,14 @@ export const Leftbar2 = () => {
     }
   }, [socket, parsedId, isLoggedIn]);
 
-  console.log("ActiveUser" + activeUsers);
-
-  console.log(activeUsers);
-
-  console.log(socket);
 
   const isUserOnline = (userId) => {
     // return activeUsers.find((user)=>user.userId ===  userId );
     return activeUsers.some((user) => user.userId === userId);
   };
 
-  console.log(isUserOnline());
+  
+
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -203,126 +185,6 @@ export const Leftbar2 = () => {
     }
   };
 
-  // console.log(conversationId);
-
-  // const fetchMessages = async (id) => {
-  //   if (isLoggedIn) {
-  //     const res = await fetch("http://localhost:5000/api/message/get_messages/" + id , {
-  //       method:"GET",
-  //       headers:{
-  //         'Content-Type':'application/json'
-  //       },
-  //       body:JS
-  //     });
-  //     const resJson = await res.json();
-  //     setMessages(resJson);
-  //     console.log(resJson);
-  //   }
-  // };
-
-  // const sendMessage = async (e) => {
-  //   const conversationId = messages?.conversationId;
-
-  //   console.log("Conversation Id" + conversationId);
-
-  //   // if (!conversationId) {
-  //   //   console.error('No conversation selected');
-  //   //   return;
-  //   // }
-
-  //   socket?.emit("sendMessage", {
-  //     conversationId: conversationId,
-  //     senderId: parsedId,
-  //     message: message,
-  //     receiverId: messages?.receiver?.receiverId,
-  //   });
-
-  //   // setMessage('');
-
-  //   try {
-  //     if (!messages?.messages || !messages?.messages.length) {
-  //       console.error("No conversation selected");
-  //       return;
-  //     }
-
-  //     setMessages((prev) => ({
-  //       ...prev,
-  //       messages: [
-  //         ...prev.messages,
-  //         { message: message, user: { id: parsedId } }, // Assume the sender is the logged-in user
-  //       ],
-  //     }));
-
-  //     const res = await fetch("http://localhost:5000/api/message/create", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         conversationId: conversationId,
-  //         senderId: parsedId,
-  //         message: message,
-  //         // receiverId:""
-  //       }),
-  //     });
-  //     if (res.status === 200) {
-  //       // Message sent successfully to the API, now emit it to the server
-  //       // socket?.emit("sendMessage", {
-  //       //   senderId: parsedId,
-  //       //   receiverId: /* Receiver's ID goes here */,
-  //       //   message: message,
-  //       // });
-
-  //       // Clear the input field after sending
-  //       setMessage("");
-  //     } else {
-  //       console.error("Failed to send message to the API");
-  //       // Handle error appropriately, e.g., show an error message to the user
-  //     }
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //   }
-  // };
-
-  // const sendMessage = async () => {
-  //   const conversationId = messages?.conversationId;
-
-  //   if (!conversationId) {
-  //     console.error("No conversation selected");
-  //     return;
-  //   }
-
-  //   socket?.emit("sendMessage", {
-  //     conversationId: conversationId,
-  //     senderId: parsedId,
-  //     message: message,
-  //     receiverId: messages?.receiver?.receiverId,
-  //   });
-
-  //   try {
-  //     const res = await fetch("http://localhost:5000/api/message/create", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         conversationId: conversationId,
-  //         senderId: parsedId,
-  //         message: message,
-  //       }),
-  //     });
-
-  //     if (res.status === 200) {
-  //       // Clear the input field after sending
-  //       setMessage("");
-  //     } else {
-  //       console.error("Failed to send message to the API");
-  //       // Handle error appropriately, e.g., show an error message to the user
-  //     }
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //   }
-  // };
 
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
@@ -400,17 +262,6 @@ export const Leftbar2 = () => {
               <CallRoundedIcon
                 fontSize="medium"
                 className="icon3"
-                onClick={() => {
-                  if (!isCalling) {
-                    startVideoCall();
-                  } else {
-                    // Handle hang up or end call
-                    // You can implement this by stopping the stream, closing the Peer connection, and updating the call status
-                    // stream.getTracks().forEach((track) => track.stop());
-                    // peer.destroy();
-                    // setIsCalling(false);
-                  }
-                }}
               />
             </div>
             <hr></hr>
@@ -435,13 +286,11 @@ export const Leftbar2 = () => {
           </div>
           <div className="mid-part">
             <span>Pinned Messages</span>
-
+            <button onClick={toggleCreateGroupModal}>Create Group</button>
             {
               // conversations.length>0?
               conversations.map((conversation, user, index) => {
-                console.log(user);
 
-                console.log(conversation.user);
 
                 if (conversations.length > 0) {
                   return (
@@ -546,8 +395,7 @@ export const Leftbar2 = () => {
                 </div>
                 <div className="user-info">
                   {conversations.map((conversation, user, index) => {
-                    console.log(conversation);
-
+                    
                     const onlineStatus = isUserOnline(
                       conversation.user.receiverId
                     )
@@ -687,6 +535,34 @@ export const Leftbar2 = () => {
           </div>
         )}
       </div>
+
+      {showCreateGroupModal && (
+        <div className="create-group-modal">
+          <div className="modal-content">
+            <h2>Create Group</h2>
+            <input
+              type="text"
+              placeholder="Search for users..."
+              value={searchValue}
+              onChange={handleSearchInputChange}
+            />
+            <div className="user-list">
+              {filteredUsers.map((user) => (
+                <div key={user.id} className="user-item">
+                  <input
+                    type="checkbox"
+                    id={`user-${user.id}`}
+                    value={user.id}
+                  />
+                  <label htmlFor={`user-${user.id}`}>{user.username}</label>
+                </div>
+              ))}
+            </div>
+            <button onClick={toggleCreateGroupModal}>Create</button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
