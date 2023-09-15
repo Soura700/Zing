@@ -9,8 +9,9 @@ const Group = require("../models/GroupChat")
 
 router.post("/create", async (req, res) => {
     try {
-      const { admin, members } = req.body;
+      const { admin, members , groupName } = req.body;
       const newGroup = new Group({
+        groupName:groupName,
         members: [ members ],
         groupAdmin:[admin]
       });

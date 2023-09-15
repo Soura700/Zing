@@ -241,37 +241,23 @@ export const Group = () => {
     }
   };
 
-  // const createGroup = async () => {
-  //   const res = await fetch("http://localhost:5000/api/conversation/get", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       senderId: parsedId,
-  //     }),
-  //   });
-  //   const data = await res.json();
-  //   setConversations(data);
-  // }
-
-  console.log(selectedUsers);
 
   const createGroup = async () => {
     try {
       // Create an array of member IDs including the logged-in user
       const memberIds = [parsedId, ...selectedUsers.map(user => user.userId)];
 
-      console.log(memberIds);
-
-      console.log(memberIds);
+      console.log(groupValue);
+      console.log(typeof groupValue);
   
       const res = await fetch("http://localhost:5000/api/group/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
+          groupName:groupValue,
           admin: id, // Set the logged-in user as the admin
           members: memberIds, // Add members including the logged-in user
         }),
