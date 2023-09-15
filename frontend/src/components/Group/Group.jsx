@@ -17,13 +17,12 @@ import LockIcon from "@mui/icons-material/Lock";
 import BlockIcon from "@mui/icons-material/Block";
 import ReportIcon from "@mui/icons-material/Report";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import DoneIcon from "@mui/icons-material/Done";
-import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
-import Peer from "simple-peer"; 
-import "./group.css"
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
+import "./group.css";
 
 export const Group = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
@@ -38,56 +37,54 @@ export const Group = () => {
 
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [groupValue, setGroupValue] = useState("");
   const [availableUsers, setAvailableUsers] = useState([]); // You need to fetch and populate this list
-  const [groupChatName , setGroupChatName] = useState();
-  const [selectedUser , setSelectedUsers] = useState([]);
-  const [search , setSearch] = useState("");
-  const [searchResult , setSearchResult] = useState();
-  const [loading , setLoading] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedUserNames, setSelectedUserNames] = useState([]);
 
 
-
-  
 
   // Function to toggle the Create Group modal
   const toggleCreateGroupModal = () => {
     setShowCreateGroupModal(!showCreateGroupModal);
   };
 
-  // Function to handle search input change
-  // const handleSearchInputChange = (e) => {
-  //   setSearchValue(e.target.value);
-  // };
-
   // Add this function to your React component
-const searchUserSuggestions = async (searchValue) => {
-  try {
-    const res = await fetch(`http://localhost:5000/api/conversation/get/conversation/`+searchValue);
-    // console
-    if (res.ok) {
-      const data = await res.json();
-      console.log(data)
-      // Update the state with the fetched user name suggestions
-      setSearchResult(data); // Assuming `setSearchResult` is a state updater function
-    } else {
-      console.error('Failed to fetch user name suggestions');
+  const searchUserSuggestions = async (searchValue) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/conversation/get/conversation/` + searchValue
+      );
+      // console
+      if (res.ok) {
+        const data = await res.json();
+        // console.log(data)
+        // Update the state with the fetched user name suggestions
+        setSearchResult(data); // Assuming `setSearchResult` is a state updater function
+      } else {
+        console.error("Failed to fetch user name suggestions");
+      }
+    } catch (error) {
+      console.error("Error fetching user name suggestions:", error);
     }
-  } catch (error) {
-    console.error('Error fetching user name suggestions:', error);
-  }
-};
+  };
 
-// Modify your handleSearchInputChange function to call the searchUserSuggestions function
-const handleSearchInputChange = (e) => {
-  const value = e.target.value;
-  setSearchValue(value);
-  // Call the searchUserSuggestions function with the updated search value
-  searchUserSuggestions(value);
-};
+  // console.log(searchResult);
 
-console.log("Search" + searchValue);
+  const handleSearchIconClick = () => {
+    // Call the searchUserSuggestions function with the current searchValue
+    searchUserSuggestions(searchValue);
+  };
 
+  // Modify your handleSearchInputChange function to call the searchUserSuggestions function
 
+  const handleSearchInputChange = (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    // Call the searchUserSuggestions function with the updated search value
+    searchUserSuggestions(value);
+  };
 
   // Filter users based on search input
   const filteredUsers = availableUsers.filter((user) =>
@@ -179,6 +176,22 @@ console.log("Search" + searchValue);
     }
   };
 
+  const handleDelete = (userToRemove) => {
+    console.log(userToRemove);
+
+    // const updatedUserNames = selectedUserNames.filter(
+    //   (user)=>user !== userToRemove
+    // )
+
+    const updatedUserNames = selectedUserNames.filter((user)=>user !== userToRemove
+    )
+
+    console.log(updatedUserNames);
+
+    setSelectedUserNames(updatedUserNames)
+  };
+
+
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
 
@@ -228,23 +241,95 @@ console.log("Search" + searchValue);
     }
   };
 
+  // const createGroup = async () => {
+  //   const res = await fetch("http://localhost:5000/api/conversation/get", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       senderId: parsedId,
+  //     }),
+  //   });
+  //   const data = await res.json();
+  //   setConversations(data);
+  // }
+
+  console.log(selectedUsers);
+
+  const createGroup = async () => {
+    try {
+      // Create an array of member IDs including the logged-in user
+      const memberIds = [parsedId, ...selectedUsers.map(user => user.userId)];
+
+      console.log(memberIds);
+
+      console.log(memberIds);
+  
+      const res = await fetch("http://localhost:5000/api/group/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          admin: id, // Set the logged-in user as the admin
+          members: memberIds, // Add members including the logged-in user
+        }),
+      });
+  
+      if (res.status === 200) {
+        // Clear any selected users and group name input
+        setSelectedUsers([]);
+        setGroupValue("");
+        
+        // Close the create group modal
+        toggleCreateGroupModal();
+  
+        // Optionally, you can update your local state or perform other actions if needed.
+      } else {
+        console.error("Failed to create group");
+        // Handle the error appropriately, e.g., show an error message to the user
+      }
+    } catch (error) {
+      console.error("Error creating group:", error);
+    }
+  };
+  
+
   // Render loading indicator if still loading authentication data
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   const handleGroup = (userToAdd) => {
-    const isUserAlreadyAdded = selectedUsers.some((user) => user.id === userToAdd.id);
+    const isUserAlreadyAdded = selectedUsers.some(
+      (user) => user.id === userToAdd.id
+    );
 
     if (isUserAlreadyAdded) {
       // User is already added, show an alert or handle it as needed
-      alert('User is already added to the group.');
+      alert("User is already added to the group.");
     } else {
       // User is not in the selectedUsers array, add them
       setSelectedUsers([...selectedUsers, userToAdd]);
     }
   };
 
+  const addUserToGroup = (userToAdd) => {
+    // alert("called");
+    // Check if the user is already added
+    const isUserAlreadyAdded = selectedUsers.some(
+      (user) => user.id === userToAdd.id
+    );
+
+    if (!isUserAlreadyAdded) {
+      // Add the user to the selectedUsers array
+      setSelectedUsers([...selectedUsers, userToAdd]);
+
+      // Add the user's name to the selectedUserNames array
+      setSelectedUserNames([...selectedUserNames, userToAdd.username]);
+    }
+  };
 
   // Render the rest of your component based on the authentication status
   return (
@@ -289,7 +374,10 @@ console.log("Search" + searchValue);
           </div>
           <div className="mid-part">
             <span>Pinned Messages</span>
-            <button className="CreateGrpIcon" onClick={toggleCreateGroupModal}>Create Group</button>
+            {/* <button onClick={toggleCreateGroupModal}>Create Group</button> */}
+            <button className="CreateGrpIcon" onClick={toggleCreateGroupModal}>
+              Create Group
+            </button>
             {
               // conversations.length>0?
               conversations.map((conversation, user, index) => {
@@ -541,26 +629,109 @@ console.log("Search" + searchValue);
         <div className="create-group-modal">
           <div className="modal-content">
             <h2>Create Group</h2>
-            <input
-              type="text"
-              placeholder="Search for users..."
-              value={searchValue}
-              onChange={handleSearchInputChange}
-            />
-            <div className="user-list">
-              {filteredUsers.map((user) => (
-                <div key={user.id} className="user-item">
-                  <input
-                    type="checkbox"
-                    id={`user-${user.id}`}
-                    value={user.id}
-                  />
-                  <label htmlFor={`user-${user.id}`}>{user.username}</label>
-                </div>
-              ))} */}
-              
+
+            {/* New */}
+
+            <div className="grp-name">
+              <h3>Enter group name</h3>
+              <input
+                type="text"
+                placeholder="Enter Group Name"
+                // value={searchValue}
+                // onChange={handleSearchInputChange}
+                value={groupValue}
+                onChange={(e) => setGroupValue(e.target.value)}
+              />
             </div>
-            <button className="createGrpChatBtn" onClick={toggleCreateGroupModal}>Create</button>
+
+            <div className="add-members">
+              <h3>Add members</h3>
+              <input
+                type="text"
+                name="search-bar"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search"
+              />
+              {/* <div className="search-btn">
+                <SearchIcon
+                  className="search-icon"
+                  onClick={handleSearchIconClick}
+                />
+              </div> */}
+            </div>
+            <div className="search-btn">
+              <SearchIcon
+                className="search-icon"
+                onClick={handleSearchIconClick}
+              />
+            </div>
+
+            {/* <div className="membersLabel">
+              <div className="addMembersLabel">
+                <p>Messi</p>
+                <CloseIcon fontSize="10px" className="membersLabel" />
+              </div>
+            </div> */}
+
+            <div className="membersLabel">
+              {selectedUserNames.length > 0 ? (
+                <div className="addMembersLabel">
+                  {/* Display the selected user names here */}
+                  {selectedUserNames.map((name, index) => (
+                    <><p key={index}>{name}</p><CloseIcon
+                      fontSize="10px"
+                      className="membersLabel"
+                      onClick={() => handleDelete(name)} /></>
+                  ))}
+                  {/* <CloseIcon
+                    fontSize="10px"
+                    className="membersLabel"
+                    onClick={ () =>handleDelete(id)}
+                  /> */}
+                </div>
+              ) : null}
+            </div>
+
+            <div className="user-list">
+              {/* <div className="userListContainer">
+                <div className="userLists">
+                  <p>Messi</p>
+                  <div className="userListIconContainer">
+                    <DoneIcon className="userListIconTick"/>
+                    <CloseIcon className="userListIconCross"/>
+                  </div>
+                </div>
+              </div> */}
+
+              {searchResult.map((user) => (
+                // <div
+                //   key={user.id}
+                //   className="user-item"
+                //   onClick={handleGroup(user)}
+                // >
+                //   <label htmlFor={`user-${user.id}`}>{user.username}</label>
+                // </div>
+                <div className="userListContainer">
+                  <div className="userLists" key={user.id}>
+                    <p>{user.username}</p>
+                    <div className="userListIconContainer">
+                      <DoneIcon
+                        className="userListIconTick"
+                        onClick={() => addUserToGroup(user)}
+                      />
+                      <CloseIcon className="userListIconCross" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="createGrpChatBtn"
+              onClick={ ()=>{createGroup();toggleCreateGroupModal()}}
+            >
+              Create
+            </button>
           </div>
         </div>
       )}

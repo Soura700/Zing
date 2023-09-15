@@ -9,6 +9,7 @@ var postRoute = require("./routes/post")
 const storiesRoute = require("./routes/stories")
 const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
+const groupRoute = require("./routes/group");
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
@@ -49,7 +50,6 @@ mongoose
   })
   .then(console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
-
 
 
 
@@ -173,6 +173,7 @@ app.use("/api/posts", postRoute);
 app.use("/api/stories",storiesRoute);
 app.use("/api/conversation" , conversationRoute);
 app.use("/api/message" , messageRoute);
+app.use("/api/group",groupRoute)
 
 console.log("hello");
 
