@@ -17,8 +17,10 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.2",
     "react-scripts": "^5.0.1",
+    "simple-peer": "^9.11.1",
     "socket.io-client": "^4.7.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zego-express-engine-webrtc": "^2.5.0"
   },
   "scripts": {
     "start": "react-scripts start",

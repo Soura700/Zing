@@ -91,6 +91,8 @@ import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import { Leftbar2 } from "./components/messaging/Leftbar2";
+import { Group } from "./components/Group/Group";
+
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -161,6 +163,10 @@ function App() {
     {
       path: "/message",
       element: <Leftbar2 />,
+    },
+    {
+      path: "/groupmessage",
+      element: <Group />,
     },
   ]);
 

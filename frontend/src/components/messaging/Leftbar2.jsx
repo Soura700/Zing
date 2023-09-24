@@ -21,16 +21,92 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
+import Peer from "simple-peer";
 
 export const Leftbar2 = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [toggle, setToggle] = useState(false);
   const [conversations, setConversations] = useState([]);
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState({});
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [activeUsers, setActiveUsers] = useState([]);
+
+  const [isCalling, setIsCalling] = useState(false);
+  const [stream, setStream] = useState(null);
+  const [peer, setPeer] = useState(null);
+
+  const [activeConversation, setActiveConversation] = useState(null);
+
+  const startVideoCall = async () => {
+    try {
+      // Get user's video and audio stream
+      const userMedia = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setStream(userMedia);
+
+      // Create a new Peer instance
+      const newPeer = new Peer({
+        initiator: true,
+        stream: userMedia,
+        trickle: false,
+      });
+
+      // Set up event handlers for the Peer instance
+      newPeer.on("signal", (data) => {
+        // Send the offer signal to the other user (you will need to define a function to send this signal via your socket)
+        // socket.emit("sendOfferSignal", { signalData: data, receiverId: receiverId });
+      });
+
+      newPeer.on("stream", (remoteStream) => {
+        // Display the remote user's video stream (you may need to create a video element to display it)
+        // remoteVideoRef.current.srcObject = remoteStream;
+      });
+
+      setPeer(newPeer);
+      setIsCalling(true);
+    } catch (error) {
+      console.error("Error starting video call:", error);
+    }
+  };
+
+  const answerVideoCall = async () => {
+    try {
+      // Get user's video and audio stream
+      const userMedia = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setStream(userMedia);
+
+      // Create a new Peer instance to answer the call
+      const answeringPeer = new Peer({
+        initiator: false,
+        stream: userMedia,
+        trickle: false,
+      });
+
+      // Set up event handlers for the answering Peer instance
+      answeringPeer.on("signal", (data) => {
+        // Send the answer signal to the caller (you will need to define a function to send this signal via your socket)
+        // socket.emit("sendAnswerSignal", { signalData: data, callerId: callerId });
+      });
+
+      answeringPeer.on("stream", (remoteStream) => {
+        // Display the remote caller's video stream (you may need to create a video element to display it)
+        // remoteVideoRef.current.srcObject = remoteStream;
+      });
+
+      setPeer(answeringPeer);
+      setIsCalling(true);
+    } catch (error) {
+      console.error("Error answering video call:", error);
+    }
+  };
 
   // console.log(messages.length);
   console.log(typeof messages);
@@ -127,6 +203,7 @@ export const Leftbar2 = () => {
       const resJson = await res.json();
       setMessages({ messages: resJson, receiver: user, conversationId: id });
       // setConversationId(id);
+      setActiveConversation(user);
     }
   };
 
@@ -323,7 +400,22 @@ export const Leftbar2 = () => {
               <PeopleRoundedIcon fontSize="medium" className="icon2" />
             </div>
             <div className="item3">
-              <CallRoundedIcon fontSize="medium" className="icon3" />
+              {/* <CallRoundedIcon fontSize="medium" className="icon3" /> */}
+              <CallRoundedIcon
+                fontSize="medium"
+                className="icon3"
+                onClick={() => {
+                  if (!isCalling) {
+                    startVideoCall();
+                  } else {
+                    // Handle hang up or end call
+                    // You can implement this by stopping the stream, closing the Peer connection, and updating the call status
+                    // stream.getTracks().forEach((track) => track.stop());
+                    // peer.destroy();
+                    // setIsCalling(false);
+                  }
+                }}
+              />
             </div>
             <hr></hr>
             <div className="item4">
@@ -457,7 +549,7 @@ export const Leftbar2 = () => {
                   <img src={image} alt=""></img>
                 </div>
                 <div className="user-info">
-                  {conversations.map((conversation, user, index) => {
+                  {/* {conversations.map((conversation, user, index) => {
                     console.log(conversation);
 
                     const onlineStatus = isUserOnline(
@@ -474,7 +566,20 @@ export const Leftbar2 = () => {
                         </div>
                       );
                     }
-                  })}
+                  })} */}
+                  <div className="user-info">
+                    {activeConversation && (
+                      <>
+                        <h1>{activeConversation.username}</h1>
+                        <p>
+                          {isUserOnline(activeConversation.receiverId)
+                            ? "Online"
+                            : "Offline"}
+                        </p>
+                      </>
+                    )}
+                  </div>
+
                   {/* <h1>John Doe</h1>*/}
                   {/* <p>Online</p>  */}
                 </div>

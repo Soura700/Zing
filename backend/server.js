@@ -9,6 +9,8 @@ var postRoute = require("./routes/post")
 const storiesRoute = require("./routes/stories")
 const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
+const groupRoute = require("./routes/group");
+const groupMessageRoute = require("./routes/groupmessage");
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
@@ -49,7 +51,6 @@ mongoose
   })
   .then(console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
-
 
 
 
@@ -102,9 +103,14 @@ mongoose
 // });
 
 let users = [];
+const activeGroups = [];
 
 io.on('connection', (socket) => {
   console.log('User Connected', socket.id);
+
+  // 13/9/2023
+  socket.emit("me",socket.id);
+  // 13/9/2023
 
   socket.on('addUser', (userId) => {
     const userExists = users.find((user) => user.userId === userId);
@@ -147,6 +153,25 @@ io.on('connection', (socket) => {
     }
   });
 
+  // 21/9/2023
+
+
+
+  socket.on("join chat" , (room) =>{
+    socket.join(room);
+    console.log("User Joined Room" + room);
+  })
+
+
+  socket.on("sendGroupMessage" , ( {senderId , message ,  conversationId , group_id })=>{
+    console.log(group_id + message + conversationId + senderId);
+    io.emit('groupMessage' , { senderId , message });
+  })
+
+  // // 27/09/2023
+
+
+  
   socket.on('disconnect', () => {
     users = users.filter((user) => user.socketId !== socket.id);
     io.emit('getUser', users);
@@ -160,8 +185,13 @@ app.use("/api/posts", postRoute);
 app.use("/api/stories",storiesRoute);
 app.use("/api/conversation" , conversationRoute);
 app.use("/api/message" , messageRoute);
+app.use("/api/group",groupRoute);
+app.use("/api/groupmessage",groupMessageRoute)
 
 console.log("hello");
 
 //step 5:
 app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
+
+
+

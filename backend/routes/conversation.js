@@ -6,7 +6,9 @@ const bcrypt = require("bcrypt");
 const connection = require("../connection");
 const Conversations = require("../models/Conversations");
 const Messages = require("../models/Messages");
+const GroupConversation = require("../models/GroupConversation");
 
+// Creating teh conversations
 router.post("/create/conversation", async (req, res) => {
   try {
     const { senderId, receiverId } = req.body;
@@ -60,6 +62,104 @@ router.post("/get", async (req, res) => {
     }
   });
 
+  
+
+  // router.get("/get/conversation/:username", async (req, res) => {
+
+  //   const username = req.params.username;
+
+
+  //   try{
+  //     connection.query('SELECT id from users where username = ? ', [username], async (err, result) => {
+  //       if (err) {
+  //         console.error(err);
+  //         return res.status(500).json({ error: 'Internal Server Error' });
+  //       } else {
+  //         if (result.length === 0) {
+  //           // No user found with the provided username
+  //           return res.status(404).json({ error: 'User not found' });
+  //         }
+          
+  //         const conversations = await Conversations.find({members: result[0].id});
+
+  //         console.log(conversations);
+  //         if(conversations){
+  //           // return res.status(200).json( user {result:result , username:username});
+  //           return res.status(200).json({ user : { userId : result[0].id , username: username  }  })
+  //         }
+
+  //       }
+  //     });
+      
+  //   }catch(error){
+  //     console.log(error)
+  //   }
+
+  // })
+
+
+  router.get("/get/conversation/:username", async (req, res) => {
+    const username = req.params.username;
+  
+    try {
+      connection.query('SELECT id from users where username = ? ', [username], async (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+          if (result.length === 0) {
+            // No user found with the provided username
+            return res.status(404).json({ error: 'User not found' });
+          }
+  
+          const conversations = await Conversations.find({ members: result[0].id });
+  
+          if (conversations) {
+            // Construct an array with the desired format
+            const responseArray = conversations.map(conversation => ({
+              userId: result[0].id,
+              username: username,
+              // Adjust this to match your conversation schema
+              // Add other properties from the conversation as needed
+            }));
+  
+            return res.status(200).json(responseArray);
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  // Creating group conversations
+// router.post("/create/group/conversation", async (req, res) => {
+//   try {
+//     const { senderId, receiverId } = req.body;
+//     const newConversation = new Conversations({
+//       members: [senderId, receiverId],
+//     });
+//     const conversation = await newConversation.save();
+//     res.status(200).json(conversation);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json(error);
+//   }
+// });
+
+router.post("/create/group/conversation", async (req, res) => {
+  try {
+    const { memberIds } = req.body;
+    const newConversation = new GroupConversation({
+      members: memberIds,
+    });
+    const conversation = await newConversation.save();
+    res.status(200).json(conversation);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
 
   
 
