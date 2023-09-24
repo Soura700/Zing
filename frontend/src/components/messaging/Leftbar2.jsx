@@ -21,13 +21,14 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
-import Peer from "simple-peer"; 
+import Peer from "simple-peer";
 
 export const Leftbar2 = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [toggle, setToggle] = useState(false);
   const [conversations, setConversations] = useState([]);
-  const [messages, setMessages] = useState([]);
+  // const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState({});
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
@@ -36,6 +37,8 @@ export const Leftbar2 = () => {
   const [isCalling, setIsCalling] = useState(false);
   const [stream, setStream] = useState(null);
   const [peer, setPeer] = useState(null);
+
+  const [activeConversation, setActiveConversation] = useState(null);
 
   const startVideoCall = async () => {
     try {
@@ -200,6 +203,7 @@ export const Leftbar2 = () => {
       const resJson = await res.json();
       setMessages({ messages: resJson, receiver: user, conversationId: id });
       // setConversationId(id);
+      setActiveConversation(user);
     }
   };
 
@@ -545,7 +549,7 @@ export const Leftbar2 = () => {
                   <img src={image} alt=""></img>
                 </div>
                 <div className="user-info">
-                  {conversations.map((conversation, user, index) => {
+                  {/* {conversations.map((conversation, user, index) => {
                     console.log(conversation);
 
                     const onlineStatus = isUserOnline(
@@ -562,7 +566,20 @@ export const Leftbar2 = () => {
                         </div>
                       );
                     }
-                  })}
+                  })} */}
+                  <div className="user-info">
+                    {activeConversation && (
+                      <>
+                        <h1>{activeConversation.username}</h1>
+                        <p>
+                          {isUserOnline(activeConversation.receiverId)
+                            ? "Online"
+                            : "Offline"}
+                        </p>
+                      </>
+                    )}
+                  </div>
+
                   {/* <h1>John Doe</h1>*/}
                   {/* <p>Online</p>  */}
                 </div>

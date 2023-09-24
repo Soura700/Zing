@@ -34,6 +34,7 @@ export const Group = () => {
   const [socket, setSocket] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [activeUsers, setActiveUsers] = useState([]);
+  const [groupMessages, setGroupMessages] = useState([]);
 
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -42,8 +43,9 @@ export const Group = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectedUserNames, setSelectedUserNames] = useState([]);
-
-
+  const [groupChat, setGroupChat] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [groupName, setGroupName] = useState("");
 
   // Function to toggle the Create Group modal
   const toggleCreateGroupModal = () => {
@@ -77,19 +79,9 @@ export const Group = () => {
     searchUserSuggestions(searchValue);
   };
 
-  // Modify your handleSearchInputChange function to call the searchUserSuggestions function
 
-  const handleSearchInputChange = (e) => {
-    const value = e.target.value;
-    setSearchValue(value);
-    // Call the searchUserSuggestions function with the updated search value
-    searchUserSuggestions(value);
-  };
 
-  // Filter users based on search input
-  const filteredUsers = availableUsers.filter((user) =>
-    user.username.toLowerCase().includes(searchValue.toLowerCase())
-  );
+
 
   const parsedId = parseInt(id);
 
@@ -115,36 +107,9 @@ export const Group = () => {
     setToggle(!toggle);
   };
 
-  useEffect(() => {
-    // Only perform socket-related operations if the user is authenticated
-    if (isLoggedIn) {
-      socket?.emit("addUser", parsedId);
-      socket?.on("getUser", (activeUsers) => {
-        setActiveUsers(activeUsers);
-      });
-      socket.on("getMessage", (data) => {
-        setMessages((prev) => ({
-          ...prev,
-          messages: [...prev.messages, { message: data.message }],
-        }));
-      });
 
-      // socket?.on('getMessage', (data) => {
-      //   console.log(data);
-      //   setMessages((prevMessages) => [...prevMessages, { message: data.message }]);
-      // });
 
-      // socket?.on('getMessage', (data) => {
-      //   console.log(data);
-      //   setMessages((prevMessages) => [...prevMessages, data]);
-      // });
-    }
-  }, [socket, parsedId, isLoggedIn]);
 
-  const isUserOnline = (userId) => {
-    // return activeUsers.find((user)=>user.userId ===  userId );
-    return activeUsers.some((user) => user.userId === userId);
-  };
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -165,16 +130,8 @@ export const Group = () => {
     }
   }, [isLoggedIn]);
 
-  const fetchMessages = async (id, user) => {
-    if (isLoggedIn) {
-      const res = await fetch(
-        "http://localhost:5000/api/message/get_messages/" + id
-      );
-      const resJson = await res.json();
-      setMessages({ messages: resJson, receiver: user, conversationId: id });
-      // setConversationId(id);
-    }
-  };
+
+
 
   const handleDelete = (userToRemove) => {
     console.log(userToRemove);
@@ -183,73 +140,169 @@ export const Group = () => {
     //   (user)=>user !== userToRemove
     // )
 
-    const updatedUserNames = selectedUserNames.filter((user)=>user !== userToRemove
-    )
+    const updatedUserNames = selectedUserNames.filter(
+      (user) => user !== userToRemove
+    );
 
     console.log(updatedUserNames);
 
-    setSelectedUserNames(updatedUserNames)
+    setSelectedUserNames(updatedUserNames);
   };
+
+
+  // 
+  useEffect(() => {
+
+    // Only perform socket-related operations if the user is authenticated
+    if (isLoggedIn) {
+
+      // socket?.emit("addUser", parsedId);
+      // socket?.on("getUser", (activeUsers) => {
+      //   console.log("Active Users", activeUsers);
+      //   setActiveUsers(activeUsers);
+      // });
+
+
+      // socket?.on("groupMessage", (data) => {
+      //   console.log(data);
+      //   setGroupMessages((prev) => ({
+      //     ...prev,
+      //     messages: [...prev.messages, { message: data.message }],
+      //   }));
+      // });
+
+      socket.on("groupMessage", (data) => {
+        console.log(data);
+        setGroupMessages((prev) => [
+          ...prev,
+          { message: data.message, user: data.user }, // Ensure each message has a user field
+        ]);
+      });
+    }
+    
+  }, [socket, parsedId, isLoggedIn]);
 
 
   const sendMessage = async () => {
-    const conversationId = messages?.conversationId;
 
-    if (!conversationId) {
-      console.error("No conversation selected");
-      return;
-    }
+    const messageIndex = 0;
 
-    // Update the local state immediately to show the message in the outgoing message div
-    setMessages((prev) => ({
-      ...prev,
-      messages: [
-        ...prev.messages,
-        { message: message, user: { id: parsedId } },
-      ],
-    }));
+    // setGroupMessages((prev) => ({
+    //   ...prev,
+    //   messages: [
+    //     ...prev.messages,
+    //     { message: message, user: { id: parsedId } },
+    //   ],
+    // }));
 
-    socket?.emit("sendMessage", {
-      conversationId: conversationId,
-      senderId: parsedId,
-      message: message,
-      receiverId: messages?.receiver?.receiverId,
-    });
+    // setGroupMessages((prev) => [
+    //   ...prev,
+    //   { message: message, user: {id:parsedId } }, // Ensure each message has a user field
+    // ]);
 
-    try {
-      const res = await fetch("http://localhost:5000/api/message/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          conversationId: conversationId,
-          senderId: parsedId,
-          message: message,
-        }),
-      });
 
-      if (res.status === 200) {
-        // Clear the input field after sending
-        setMessage("");
-      } else {
-        console.error("Failed to send message to the API");
-        // Handle error appropriately, e.g., show an error message to the user
+      setGroupMessages((prev) => [
+        ...prev,
+        { message: message, user: { id:parsedId } }, // Ensure each message has a user field
+      ])
+
+    if(groupMessages.length > 0 && groupMessages[messageIndex].conversationId){
+      const conversationId = groupMessages[messageIndex].conversationId;
+      const  groupId = groupMessages[messageIndex].groupId;
+
+      socket?.emit('sendGroupMessage' , {
+        senderId:parsedId,
+        message:message,
+        conversationId:conversationId,
+        group_id:groupId
+      })
+
+      try {
+        const res = await fetch(
+          
+          "http://localhost:5000/api/groupmessage/group/message_create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              conversationId: conversationId,
+              senderId: parsedId,
+              message: message,
+              group_id:groupId
+            }),
+          }
+        );
+  
+        if (res.status === 200) {
+          // Clear the input field after sending
+          setMessage("");
+        } else {
+          console.error("Failed to send message to the API");
+          // Handle error appropriately, e.g., show an error message to the user
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
       }
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
 
+    }
+
+    // const conversationId = groupMessages?.conversationId;
+
+    // const groupId = groupMessages.groupId;
+
+    // if (!conversationId) {
+    //   console.error("No conversation selected");
+    //   return;
+    // }
+
+    // socket?.emit("sendMessage", {
+    //   conversationId: conversationId,
+    //   senderId: parsedId,
+    //   message: message,
+    //   group_id: groupId,
+    // });
+
+
+
+    // try {
+    //   const res = await fetch(
+    //     "http://localhost:5000/api/groupmessage/group/message_create",
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         conversationId: conversationId,
+    //         senderId: parsedId,
+    //         message: message,
+    //         // groupId:
+    //       }),
+    //     }
+    //   );
+
+    //   if (res.status === 200) {
+    //     // Clear the input field after sending
+    //     setMessage("");
+    //   } else {
+    //     console.error("Failed to send message to the API");
+    //     // Handle error appropriately, e.g., show an error message to the user
+    //   }
+    // } catch (error) {
+    //   console.error("Error sending message:", error);
+    // }
+  };
 
   const createGroup = async () => {
     try {
       // Create an array of member IDs including the logged-in user
-      const memberIds = [parsedId, ...selectedUsers.map(user => user.userId)];
+      const memberIds = [parsedId, ...selectedUsers.map((user) => user.userId)];
 
       console.log(groupValue);
       console.log(typeof groupValue);
-  
+
       const res = await fetch("http://localhost:5000/api/group/create", {
         method: "POST",
         headers: {
@@ -257,20 +310,24 @@ export const Group = () => {
         },
 
         body: JSON.stringify({
-          groupName:groupValue,
+          groupName: groupValue,
           admin: id, // Set the logged-in user as the admin
           members: memberIds, // Add members including the logged-in user
         }),
       });
-  
+
+      const response = await res.json();
+      console.log(response);
+      setGroupChat(response.groupName);
+
       if (res.status === 200) {
         // Clear any selected users and group name input
         setSelectedUsers([]);
         setGroupValue("");
-        
+
         // Close the create group modal
         toggleCreateGroupModal();
-  
+
         // Optionally, you can update your local state or perform other actions if needed.
       } else {
         console.error("Failed to create group");
@@ -280,7 +337,15 @@ export const Group = () => {
       console.error("Error creating group:", error);
     }
   };
-  
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      const res = await fetch("http://localhost:5000/api/group/all_groups");
+      const data = await res.json();
+      setGroups(data);
+    };
+    fetchGroups();
+  }, []);
 
   // Render loading indicator if still loading authentication data
   if (isLoading) {
@@ -316,6 +381,50 @@ export const Group = () => {
       setSelectedUserNames([...selectedUserNames, userToAdd.username]);
     }
   };
+
+
+
+  
+
+  const handleGroupClick = async (groupId) => {
+
+    socket.emit( groupId , parsedId );
+  
+    socket.emit('join chat' , groupId);
+    
+    try {
+
+      // Make an API request to fetch group messages based on groupId
+      const res = await fetch(
+        `http://localhost:5000/api/groupmessage/get_group_messages/${groupId}`
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+
+        console.log("Data");
+        console.log(data);
+
+        // Create a new array with updated conversationId for each item
+        const updatedData = data.map((item) => ({
+          message: item.message,
+          user:item.user,
+          groupId: groupId,
+          conversationId: item.conversationId, // Assuming conversationId is a property in each item
+        }));
+
+        // Now you can set the updated data in your state
+        setGroupMessages(updatedData);
+
+      } else {
+        console.error("Failed to fetch group messages");
+      }
+    } catch (error) {
+      console.error("Error fetching group messages:", error);
+    }
+  };
+
+  console.log(groupMessages);
 
   // Render the rest of your component based on the authentication status
   return (
@@ -366,34 +475,41 @@ export const Group = () => {
             </button>
             {
               // conversations.length>0?
-              conversations.map((conversation, user, index) => {
-                if (conversations.length > 0) {
+              groups.map((group, user, index) => {
+                if (groups.length > 0) {
+                  console.log(group._id);
+                  console.log(group.groupName);
                   return (
                     <div
                       className="mid-text"
                       key={index}
-                      onClick={() =>
-                        fetchMessages(
-                          conversation.conversationId,
-                          conversation.user
-                        )
-                      }
+                      // onClick={() =>
+                      //   fetchMessages(
+                      //     conversation.conversationId,
+                      //     conversation.user
+                      //   )
+                      // }
+
+                      onClick={() => {
+                        handleGroupClick(group._id);
+                        setGroupName(group.groupName);
+                      }}
                     >
                       <div className="left">
                         <img
                           src={image}
                           alt=""
-                          onClick={() =>
-                            fetchMessages(
-                              conversation.conversationId,
-                              conversation.user
-                            )
-                          }
+                          // onClick={() =>
+                          //   fetchMessages(
+                          //     group.conversationId,
+                          //     conversation.user
+                          //   )
+                          // }
                         />
                         <div className="left-info">
                           <h2 onClick={() => console.log("Hello")}>
                             {/* {conversation.conversationUserData[0].username} */}
-                            {conversation.user.username}
+                            {group.groupName}
                           </h2>
                           <p className="activity">Lorem, ipsum dolor.</p>
                         </div>
@@ -461,97 +577,87 @@ export const Group = () => {
       {/* main chat section */}
 
       <div className="main-chat-section">
-        {messages?.messages?.length > 0 ? (
-          <>
-            <div className="info">
-              <div className="left-part">
-                <div className="user-pic">
-                  <img src={image} alt=""></img>
+        {/* {groupMessages?.message?.length > 0 ? ( */}
+         {groupMessages.length > 0 ? (
+          (console.log(groupMessages),
+          (
+            <>
+              <div className="info">
+                <div className="left-part">
+                  <div className="user-pic">
+                    <img src={image} alt=""></img>
+                  </div>
+                  <div className="user-info">
+                    <div className="left-info">
+                      <h1>{groupName}</h1>
+                      {/* Add the user names of the group  */}
+                    </div>
+                  </div>
                 </div>
-                <div className="user-info">
-                  {conversations.map((conversation, user, index) => {
-                    const onlineStatus = isUserOnline(
-                      conversation.user.receiverId
-                    )
-                      ? "Online"
-                      : "Offline";
-
-                    if (conversations.length > 0) {
-                      return (
-                        <div className="left-info">
-                          <h1>{conversation.user.username}</h1>
-                          <p>{onlineStatus}</p>
+                <div className="right-part">
+                  <CallRoundedIcon className="right-part-icon" />
+                  <VideocamIcon className="right-part-icon" />
+                  <MoreVertIcon
+                    className="right-part-icon"
+                    onClick={handleToggle}
+                  />
+                  {toggle ? (
+                    <div className="RightPopUpShow">
+                      <div className="PopUpBox">
+                        <div className="top">
+                          <img src={image} alt=""></img>
+                          <h1>John Doe</h1>
+                          <p>Online</p>
                         </div>
-                      );
-                    }
-                  })}
-                  {/* <h1>John Doe</h1>*/}
-                  {/* <p>Online</p>  */}
-                </div>
-              </div>
-              <div className="right-part">
-                <CallRoundedIcon className="right-part-icon" />
-                <VideocamIcon className="right-part-icon" />
-                <MoreVertIcon
-                  className="right-part-icon"
-                  onClick={handleToggle}
-                />
-                {toggle ? (
-                  <div className="RightPopUpShow">
-                    <div className="PopUpBox">
-                      <div className="top">
-                        <img src={image} alt=""></img>
-                        <h1>John Doe</h1>
-                        <p>Online</p>
-                      </div>
-                      <div className="mid1">
-                        <CallRoundedIcon className="mid1-icon" />
-                        <VideocamIcon className="mid1-icon" />
-                      </div>
-                      <div className="mid2">
-                        <div className="userOpt">
-                          <CollectionsIcon className="right-part-icon" />
-                          <h2>Media</h2>
+                        <div className="mid1">
+                          <CallRoundedIcon className="mid1-icon" />
+                          <VideocamIcon className="mid1-icon" />
                         </div>
-                      </div>
-                      <div className="mid3">
-                        <div className="userOpt">
-                          <VolumeOffIcon className="right-part-icon" />
-                          <h2>Mute Chat</h2>
+                        <div className="mid2">
+                          <div className="userOpt">
+                            <CollectionsIcon className="right-part-icon" />
+                            <h2>Media</h2>
+                          </div>
                         </div>
-                      </div>
-                      <div className="mid4">
-                        <div className="userOpt">
-                          <ArrowBackIosIcon className="right-part-icon" />
-                          <h2>Close Chat</h2>
+                        <div className="mid3">
+                          <div className="userOpt">
+                            <VolumeOffIcon className="right-part-icon" />
+                            <h2>Mute Chat</h2>
+                          </div>
                         </div>
-                      </div>
-                      <div className="mid5">
-                        <div className="userOpt">
-                          <LockIcon className="right-part-icon" />
-                          <h2>Chat Lock</h2>
+                        <div className="mid4">
+                          <div className="userOpt">
+                            <ArrowBackIosIcon className="right-part-icon" />
+                            <h2>Close Chat</h2>
+                          </div>
                         </div>
-                      </div>
-                      <div className="bottom">
-                        <div className="userOpt1">
-                          <BlockIcon className="bottom-icon" />
-                          <h2>Block</h2>
+                        <div className="mid5">
+                          <div className="userOpt">
+                            <LockIcon className="right-part-icon" />
+                            <h2>Chat Lock</h2>
+                          </div>
                         </div>
-                        <div className="userOpt2">
-                          <ReportIcon className="bottom-icon" />
-                          <h2>Report</h2>
+                        <div className="bottom">
+                          <div className="userOpt1">
+                            <BlockIcon className="bottom-icon" />
+                            <h2>Block</h2>
+                          </div>
+                          <div className="userOpt2">
+                            <ReportIcon className="bottom-icon" />
+                            <h2>Report</h2>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="RightPopUpDefault"></div>
-                )}
+                  ) : (
+                    <div className="RightPopUpDefault"></div>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="inner-container">
-              {messages.messages.map(
-                ({ message, user: { id } = {} }, index) => {
+              <div className="inner-container">
+                {/* {groupMessages?.message.map(({ message, user: { id } = {} }, index) => { */}
+                  {groupMessages.map(({ message, user: { id } = {} }, index) => {
+                  console.log(groupMessages);
                   if (id === parsedId) {
                     return (
                       <div className="outgoing-msg" key={index}>
@@ -565,41 +671,68 @@ export const Group = () => {
                       </div>
                     );
                   }
-                }
-              )}
-            </div>
+                })}
 
-            <div className="chat-bottom">
-              <div className="chat-input">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Type a Message"
-                />
+                {/* {groupMessages && groupMessages.length > 0 ? (
+                  groupMessages.map(({ message, user: { id } = {} }, index) => {
+                    console.log(groupMessages);
+                    if (id === parsedId) {
+                      return (
+                        <div className="outgoing-msg" key={index}>
+                          {message}
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div className="incoming-msg" key={index}>
+                          {message}
+                        </div>
+                      );
+                    }
+                  })
+                ) : (
+                  <div
+                    className="no-conversations"
+                    style={{ textAlign: "center", marginTop: "10px" }}
+                  >
+                    No Messages to show. Click on the conversation to see the
+                    messages
+                  </div>
+                )} */}
               </div>
-              <div className="chat-options">
-                <input
-                  type="file"
-                  accept="image/*" // Accept only image files
-                  id="imageInput"
-                  style={{ display: "none" }}
-                  // onChange={handleImageSelect}
-                />
-                {/* <PhotoSizeSelectActualIcon className="chat-btn" /> */}
-                <label htmlFor="imageInput">
-                  <PhotoSizeSelectActualIcon className="chat-btn" />
-                </label>
-                <LocationOnIcon className="chat-btn" />
-                <MicNoneIcon className="chat-btn" />
+
+              <div className="chat-bottom">
+                <div className="chat-input">
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Type a Message"
+                  />
+                </div>
+                <div className="chat-options">
+                  <input
+                    type="file"
+                    accept="image/*" // Accept only image files
+                    id="imageInput"
+                    style={{ display: "none" }}
+                    // onChange={handleImageSelect}
+                  />
+                  {/* <PhotoSizeSelectActualIcon className="chat-btn" /> */}
+                  <label htmlFor="imageInput">
+                    <PhotoSizeSelectActualIcon className="chat-btn" />
+                  </label>
+                  <LocationOnIcon className="chat-btn" />
+                  <MicNoneIcon className="chat-btn" />
+                </div>
+                <div className="submit-btn-class">
+                  <button onClick={() => sendMessage()}>
+                    <TelegramIcon className="submit-btn" />
+                  </button>
+                </div>
               </div>
-              <div className="submit-btn-class">
-                <button onClick={() => sendMessage()}>
-                  <TelegramIcon className="submit-btn" />
-                </button>
-              </div>
-            </div>
-          </>
+            </>
+          ))
         ) : (
           <div
             className="no-conversations"
@@ -665,10 +798,14 @@ export const Group = () => {
                 <div className="addMembersLabel">
                   {/* Display the selected user names here */}
                   {selectedUserNames.map((name, index) => (
-                    <><p key={index}>{name}</p><CloseIcon
-                      fontSize="10px"
-                      className="membersLabel"
-                      onClick={() => handleDelete(name)} /></>
+                    <>
+                      <p key={index}>{name}</p>
+                      <CloseIcon
+                        fontSize="10px"
+                        className="membersLabel"
+                        onClick={() => handleDelete(name)}
+                      />
+                    </>
                   ))}
                   {/* <CloseIcon
                     fontSize="10px"
@@ -714,7 +851,10 @@ export const Group = () => {
             </div>
             <button
               className="createGrpChatBtn"
-              onClick={ ()=>{createGroup();toggleCreateGroupModal()}}
+              onClick={() => {
+                createGroup();
+                toggleCreateGroupModal();
+              }}
             >
               Create
             </button>

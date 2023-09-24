@@ -10,6 +10,7 @@ const storiesRoute = require("./routes/stories")
 const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
 const groupRoute = require("./routes/group");
+const groupMessageRoute = require("./routes/groupmessage");
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
@@ -102,6 +103,7 @@ mongoose
 // });
 
 let users = [];
+const activeGroups = [];
 
 io.on('connection', (socket) => {
   console.log('User Connected', socket.id);
@@ -151,14 +153,24 @@ io.on('connection', (socket) => {
     }
   });
 
-  // 13/9/2023
-  // socket.on("callUser",(data)=>{
-  //   io.to(data.userToCall).emit("callUser",{signal:data.signalData , from :data.from , name:data.name});
-  // })
+  // 21/9/2023
 
-  // socket.on("answerCall",(data)=> io.to(data.to).emit("callAccepted") , data.signal);
 
-  // 9/13/2023
+
+  socket.on("join chat" , (room) =>{
+    socket.join(room);
+    console.log("User Joined Room" + room);
+  })
+
+
+  socket.on("sendGroupMessage" , ( {senderId , message ,  conversationId , group_id })=>{
+    console.log(group_id + message + conversationId + senderId);
+    io.emit('groupMessage' , { senderId , message });
+  })
+
+  // // 27/09/2023
+
+
   
   socket.on('disconnect', () => {
     users = users.filter((user) => user.socketId !== socket.id);
@@ -173,9 +185,13 @@ app.use("/api/posts", postRoute);
 app.use("/api/stories",storiesRoute);
 app.use("/api/conversation" , conversationRoute);
 app.use("/api/message" , messageRoute);
-app.use("/api/group",groupRoute)
+app.use("/api/group",groupRoute);
+app.use("/api/groupmessage",groupMessageRoute)
 
 console.log("hello");
 
 //step 5:
 app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
+
+
+

@@ -6,7 +6,9 @@ const bcrypt = require("bcrypt");
 const connection = require("../connection");
 const Conversations = require("../models/Conversations");
 const Messages = require("../models/Messages");
+const GroupConversation = require("../models/GroupConversation");
 
+// Creating teh conversations
 router.post("/create/conversation", async (req, res) => {
   try {
     const { senderId, receiverId } = req.body;
@@ -129,7 +131,36 @@ router.post("/get", async (req, res) => {
       console.log(error);
     }
   });
-  
+
+  // Creating group conversations
+// router.post("/create/group/conversation", async (req, res) => {
+//   try {
+//     const { senderId, receiverId } = req.body;
+//     const newConversation = new Conversations({
+//       members: [senderId, receiverId],
+//     });
+//     const conversation = await newConversation.save();
+//     res.status(200).json(conversation);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json(error);
+//   }
+// });
+
+router.post("/create/group/conversation", async (req, res) => {
+  try {
+    const { memberIds } = req.body;
+    const newConversation = new GroupConversation({
+      members: memberIds,
+    });
+    const conversation = await newConversation.save();
+    res.status(200).json(conversation);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
   
 
 module.exports = router;

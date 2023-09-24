@@ -15,6 +15,7 @@ router.use(
     cookie: {
       httpOnly: true,
       maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
+      // maxAge: 2 * 60 * 1000,
     },
   })
 );

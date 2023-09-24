@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
 const GroupSchema = new mongoose.Schema({
-
-
       groupName:{
         type:String,
         required:true
