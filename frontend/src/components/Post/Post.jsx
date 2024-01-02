@@ -6,13 +6,60 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 // import Comments from "../comments/Comments";
-import { useState } from "react";
+import { io } from "socket.io-client";
+import { useEffect, useState } from "react";
 
-const Post = ({ post }) => {
+const Post = ({ post , userId }) => {
 
+  const [likes, setLikes] = useState(post.likes);
 
-  console.log("Post" + post);
-  console.log(post.description);
+  useEffect(() => {
+    const socket = io('http://localhost:5500'); // Update the URL to match your server
+
+    // Listen for 'updateLikes' event
+    socket.on('updateLikes', ({ postId, updatedLikes }) => {
+      if (postId === post.id) {
+        alert("Hello");
+        alert(updatedLikes);
+        setLikes(updatedLikes);
+      }
+    });
+
+    // Clean up the socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, [post.id]);
+  
+  
+
+  const LikeHandler = async () => {
+    // Assuming you have a post ID
+    const postId = post.id;  
+    try {
+      const res = await fetch("http://localhost:5000/api/posts/like", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: postId,
+          userId: userId,
+        }),
+      });
+  
+      if (res.status === 200) {
+        
+      } else {
+        console.error("Failed to update likes");
+        // Handle error appropriately, e.g., show an error message to the user
+      }
+    } catch (error) {
+      console.log(error);
+      console.error("Error updating likes:", error);
+    }
+  };
+  
 
 
 
@@ -65,8 +112,8 @@ const Post = ({ post }) => {
         </div>
         <div className={styles.info}>
           <div className={styles.item}>
-            {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
-            13 Likes
+            {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon onClick={LikeHandler} />}
+            {likes}
           </div>
           <div
             className={styles.item}

@@ -46,6 +46,10 @@ export const Group = () => {
   const [groupChat, setGroupChat] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupName, setGroupName] = useState("");
+  var msg = "";
+
+  //25 Sep 2023 code
+  const [Image, setImage] = useState("");
 
   // Function to toggle the Create Group modal
   const toggleCreateGroupModal = () => {
@@ -79,10 +83,6 @@ export const Group = () => {
     searchUserSuggestions(searchValue);
   };
 
-
-
-
-
   const parsedId = parseInt(id);
 
   const styles = {
@@ -107,10 +107,6 @@ export const Group = () => {
     setToggle(!toggle);
   };
 
-
-
-
-
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {
@@ -130,9 +126,6 @@ export const Group = () => {
     }
   }, [isLoggedIn]);
 
-
-
-
   const handleDelete = (userToRemove) => {
     console.log(userToRemove);
 
@@ -149,28 +142,12 @@ export const Group = () => {
     setSelectedUserNames(updatedUserNames);
   };
 
+  console.log(groupMessages);
 
-  // 
+  //
   useEffect(() => {
-
     // Only perform socket-related operations if the user is authenticated
     if (isLoggedIn) {
-
-      // socket?.emit("addUser", parsedId);
-      // socket?.on("getUser", (activeUsers) => {
-      //   console.log("Active Users", activeUsers);
-      //   setActiveUsers(activeUsers);
-      // });
-
-
-      // socket?.on("groupMessage", (data) => {
-      //   console.log(data);
-      //   setGroupMessages((prev) => ({
-      //     ...prev,
-      //     messages: [...prev.messages, { message: data.message }],
-      //   }));
-      // });
-
       socket.on("groupMessage", (data) => {
         console.log(data);
         setGroupMessages((prev) => [
@@ -179,47 +156,32 @@ export const Group = () => {
         ]);
       });
     }
-    
   }, [socket, parsedId, isLoggedIn]);
 
-
   const sendMessage = async () => {
-
     const messageIndex = 0;
 
-    // setGroupMessages((prev) => ({
-    //   ...prev,
-    //   messages: [
-    //     ...prev.messages,
-    //     { message: message, user: { id: parsedId } },
-    //   ],
-    // }));
+    setGroupMessages((prev) => [
+      ...prev,
+      { message: message, user: { id: parsedId } }, // Ensure each message has a user field
+    ]);
 
-    // setGroupMessages((prev) => [
-    //   ...prev,
-    //   { message: message, user: {id:parsedId } }, // Ensure each message has a user field
-    // ]);
-
-
-      setGroupMessages((prev) => [
-        ...prev,
-        { message: message, user: { id:parsedId } }, // Ensure each message has a user field
-      ])
-
-    if(groupMessages.length > 0 && groupMessages[messageIndex].conversationId){
+    if (
+      groupMessages.length > 0 &&
+      groupMessages[messageIndex].conversationId
+    ) {
       const conversationId = groupMessages[messageIndex].conversationId;
-      const  groupId = groupMessages[messageIndex].groupId;
+      const groupId = groupMessages[messageIndex].groupId;
 
-      socket?.emit('sendGroupMessage' , {
-        senderId:parsedId,
-        message:message,
-        conversationId:conversationId,
-        group_id:groupId
-      })
+      socket?.emit("sendGroupMessage", {
+        senderId: parsedId,
+        message: message,
+        conversationId: conversationId,
+        group_id: groupId,
+      });
 
       try {
         const res = await fetch(
-          
           "http://localhost:5000/api/groupmessage/group/message_create",
           {
             method: "POST",
@@ -230,11 +192,11 @@ export const Group = () => {
               conversationId: conversationId,
               senderId: parsedId,
               message: message,
-              group_id:groupId
+              group_id: groupId,
             }),
           }
         );
-  
+
         if (res.status === 200) {
           // Clear the input field after sending
           setMessage("");
@@ -245,54 +207,7 @@ export const Group = () => {
       } catch (error) {
         console.error("Error sending message:", error);
       }
-
     }
-
-    // const conversationId = groupMessages?.conversationId;
-
-    // const groupId = groupMessages.groupId;
-
-    // if (!conversationId) {
-    //   console.error("No conversation selected");
-    //   return;
-    // }
-
-    // socket?.emit("sendMessage", {
-    //   conversationId: conversationId,
-    //   senderId: parsedId,
-    //   message: message,
-    //   group_id: groupId,
-    // });
-
-
-
-    // try {
-    //   const res = await fetch(
-    //     "http://localhost:5000/api/groupmessage/group/message_create",
-    //     {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         conversationId: conversationId,
-    //         senderId: parsedId,
-    //         message: message,
-    //         // groupId:
-    //       }),
-    //     }
-    //   );
-
-    //   if (res.status === 200) {
-    //     // Clear the input field after sending
-    //     setMessage("");
-    //   } else {
-    //     console.error("Failed to send message to the API");
-    //     // Handle error appropriately, e.g., show an error message to the user
-    //   }
-    // } catch (error) {
-    //   console.error("Error sending message:", error);
-    // }
   };
 
   const createGroup = async () => {
@@ -382,18 +297,12 @@ export const Group = () => {
     }
   };
 
-
-
-  
-
   const handleGroupClick = async (groupId) => {
+    socket.emit(groupId, parsedId);
 
-    socket.emit( groupId , parsedId );
-  
-    socket.emit('join chat' , groupId);
-    
+    socket.emit("join chat", groupId);
+
     try {
-
       // Make an API request to fetch group messages based on groupId
       const res = await fetch(
         `http://localhost:5000/api/groupmessage/get_group_messages/${groupId}`
@@ -408,14 +317,13 @@ export const Group = () => {
         // Create a new array with updated conversationId for each item
         const updatedData = data.map((item) => ({
           message: item.message,
-          user:item.user,
+          user: item.user,
           groupId: groupId,
           conversationId: item.conversationId, // Assuming conversationId is a property in each item
         }));
 
         // Now you can set the updated data in your state
         setGroupMessages(updatedData);
-
       } else {
         console.error("Failed to fetch group messages");
       }
@@ -425,6 +333,98 @@ export const Group = () => {
   };
 
   console.log(groupMessages);
+
+  //function for selecting only image files as media attachment in chat
+
+  function chooseImage() {
+    document.getElementById("imageInput").click();
+  }
+  function SendImage(e) {
+    var inputElement = document.getElementById("imageInput");
+    var file = inputElement.files[0];
+    console.log("yep");
+
+    if (!file.type.match("image.*")) {
+      alert("Please select  image only");
+    } else {
+      var reader = new FileReader();
+
+      reader.addEventListener(
+        "load",
+        function () {
+          // alert(reader.result);
+          setImage(reader.result);
+        },
+        false
+      );
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+    // console.log(e);
+  }
+
+  console.log(Image);
+
+  async function uploadImage() {
+    const messageIndex = 0;
+    alert("hi");
+    setGroupMessages((prev) => [
+      ...prev,
+      { message: message, user: { id: parsedId } }, // Ensure each message has a user field
+    ]);
+
+    if (
+      groupMessages.length > 0 &&
+      groupMessages[messageIndex].conversationId
+    ) {
+      const conversationId = groupMessages[messageIndex].conversationId;
+      const groupId = groupMessages[messageIndex].groupId;
+
+      socket?.emit("sendGroupMessage", {
+        senderId: parsedId,
+        message: message,
+        conversationId: conversationId,
+        group_id: groupId,
+      });
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/groupmessage/group/message_create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              conversationId: conversationId,
+              senderId: parsedId,
+              message: Image,
+              group_id: groupId,
+            }),
+          }
+        );
+
+        if (res.status === 200) {
+          // Clear the input field after sending
+          setMessage("");
+        } else {
+          console.error("Failed to send message to the API");
+          // Handle error appropriately, e.g., show an error message to the user
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    }
+  }
+
+  function loadChatImg() {
+    var msg = "";
+    if (Image.indexOf("base64") !== -1) {
+      msg = `<img src='${Image}' alt="" />`;
+      return msg;
+    }
+  }
 
   // Render the rest of your component based on the authentication status
   return (
@@ -578,7 +578,7 @@ export const Group = () => {
 
       <div className="main-chat-section">
         {/* {groupMessages?.message?.length > 0 ? ( */}
-         {groupMessages.length > 0 ? (
+        {groupMessages.length > 0 ? (
           (console.log(groupMessages),
           (
             <>
@@ -656,9 +656,18 @@ export const Group = () => {
               </div>
               <div className="inner-container">
                 {/* {groupMessages?.message.map(({ message, user: { id } = {} }, index) => { */}
-                  {groupMessages.map(({ message, user: { id } = {} }, index) => {
+                {/* {groupMessages.map(({ message, user: { id } = {} }, index) => {
                   console.log(groupMessages);
                   if (id === parsedId) {
+
+                    if(message.startsWith("data:image/")){
+                      return (
+                        <div className="senders-photo">
+                          <img src={message} alt="" />
+                      </div>
+                      )
+                    }
+                    
                     return (
                       <div className="outgoing-msg" key={index}>
                         {message}
@@ -667,6 +676,36 @@ export const Group = () => {
                   } else {
                     return (
                       <div className="incoming-msg" key={index}>
+                        {message}
+                      </div>
+                    );
+                  }
+                })} */}
+                {groupMessages.map(({ message, user: { id } = {} }, index) => {
+                  console.log(groupMessages);
+
+                  // Check if the message starts with "data:image/"
+                  if (message.startsWith("data:image/")) {
+                    // If it's an image, render it as an img element
+                    return (
+                      <div
+                        className={
+                          id === parsedId ? "outgoing-msg" : "incoming-msg"
+                        }
+                        key={index}
+                      >
+                        <img src={message} alt="Sent Image" />
+                      </div>
+                    );
+                  } else {
+                    // If it's not an image, render it as a text message
+                    return (
+                      <div
+                        className={
+                          id === parsedId ? "outgoing-msg" : "incoming-msg"
+                        }
+                        key={index}
+                      >
                         {message}
                       </div>
                     );
@@ -699,6 +738,17 @@ export const Group = () => {
                     messages
                   </div>
                 )} */}
+                {/* // Inside your component's render function */}
+                <div className="senders-photo">
+                  {Image && Image.startsWith("data:image/") ? (
+                    <img src={Image} alt="" />
+                  ) : null}
+                </div>
+                <div className="recievers-photo">
+                  {Image && Image.startsWith("data:image/") ? (
+                    <img src={Image} alt="" />
+                  ) : null}
+                </div>
               </div>
 
               <div className="chat-bottom">
@@ -717,18 +767,36 @@ export const Group = () => {
                     id="imageInput"
                     style={{ display: "none" }}
                     // onChange={handleImageSelect}
+                    onChange={SendImage}
                   />
                   {/* <PhotoSizeSelectActualIcon className="chat-btn" /> */}
-                  <label htmlFor="imageInput">
+                  <label htmlFor="imageInput" onClick={chooseImage}>
                     <PhotoSizeSelectActualIcon className="chat-btn" />
                   </label>
                   <LocationOnIcon className="chat-btn" />
                   <MicNoneIcon className="chat-btn" />
                 </div>
                 <div className="submit-btn-class">
-                  <button onClick={() => sendMessage()}>
+                  {/* <button onClick={() => sendMessage()}>
                     <TelegramIcon className="submit-btn" />
-                  </button>
+                  </button> */}
+                  {!message && Image ? (
+                    <div className="addMembersLabel">
+                      {/* Display the selected user names here */}
+                      <button onClick={() => uploadImage()}>
+                        <TelegramIcon className="submit-btn" />
+                      </button>
+                      {/* <CloseIcon
+                    fontSize="10px"
+                    className="membersLabel"
+                    onClick={ () =>handleDelete(id)}
+                  /> */}
+                    </div>
+                  ) : (
+                    <button onClick={() => sendMessage()}>
+                      <TelegramIcon className="submit-btn" />
+                    </button>
+                  )}
                 </div>
               </div>
             </>

@@ -3,8 +3,25 @@ import Post from "../Post/Post";
 import styles from "./posts.module.css"
 import axios from "axios";
 
+import { useAuth } from "../../Contexts/authContext";
+
+
 
 const Posts = () => {
+
+  const { isLoggedIn, id, checkAuthentication } = useAuth();
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+
+
+  useEffect(() => {
+    checkAuthentication().then(() => {
+      setIsLoading(false); // Mark loading as complete when authentication data is available
+    });
+  }, [checkAuthentication]);
+
+  const parsedId = parseInt(id);
+
+
 
   const [postData, setPostData] = useState([]);
   //TEMPORARY
@@ -55,7 +72,7 @@ const Posts = () => {
 
   return <div className={styles.posts}>
     {postData.map(post=>(
-      <Post post={post} key={post.id}/>
+      <Post post={post} userId={parsedId} key={post.id}/>
     ))}
   </div>;
 };
