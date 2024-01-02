@@ -22,6 +22,8 @@ import styles from "./navbar.module.css"
 
 const Navbar = ( {toggleMenu} ) => {
 
+
+
     const [ toggle , setToggle ] = useState(false)
 
 
