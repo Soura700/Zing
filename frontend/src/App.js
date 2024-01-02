@@ -92,6 +92,7 @@ import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import { Leftbar2 } from "./components/messaging/Leftbar2";
 import { Group } from "./components/Group/Group";
+import  Video  from "./components/Video/Video.jsx";
 
 // import Posts from "../src/components/Posts/Posts"
 
@@ -108,6 +109,10 @@ import RightBar from "./components/RightBar/RightBar";
 import { useState } from "react";
 import SignInSignUpForm from "./components/SignInSignUpForm/SignInSignUpForm";
 import { AuthProvider } from "./Contexts/authContext";
+import Posts from "./components/Posts/Posts.jsx";
+
+
+
 
 function App() {
   const Layout = function () {
@@ -154,6 +159,10 @@ function App() {
           path: "/profile/:userId",
           element: <Profile />,
         },
+        {
+          path:"/posts",
+          element:<Posts/>
+        }
       ],
     },
     {
@@ -168,6 +177,10 @@ function App() {
       path: "/groupmessage",
       element: <Group />,
     },
+    {
+      path:"/call",
+      element:<Video/>
+    }
   ]);
 
   return (

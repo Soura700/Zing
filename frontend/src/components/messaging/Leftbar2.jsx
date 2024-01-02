@@ -22,12 +22,15 @@ import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
 import Peer from "simple-peer";
+import CallUI from "../../components/CallUi/CallUi";
+import ringtone from "../../assets/Chaleya.mp3";
+import IncomingCallUi from "../IncomingCallUi/IncomingCallUi";
 
 export const Leftbar2 = () => {
+
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [toggle, setToggle] = useState(false);
   const [conversations, setConversations] = useState([]);
-  // const [messages, setMessages] = useState([]);
   const [messages, setMessages] = useState({});
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
@@ -40,78 +43,72 @@ export const Leftbar2 = () => {
 
   const [activeConversation, setActiveConversation] = useState(null);
 
-  const startVideoCall = async () => {
-    try {
-      // Get user's video and audio stream
-      const userMedia = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      setStream(userMedia);
+  const [isCallActive, setIsCallActive] = useState(false);
 
-      // Create a new Peer instance
-      const newPeer = new Peer({
-        initiator: true,
-        stream: userMedia,
-        trickle: false,
-      });
-
-      // Set up event handlers for the Peer instance
-      newPeer.on("signal", (data) => {
-        // Send the offer signal to the other user (you will need to define a function to send this signal via your socket)
-        // socket.emit("sendOfferSignal", { signalData: data, receiverId: receiverId });
-      });
-
-      newPeer.on("stream", (remoteStream) => {
-        // Display the remote user's video stream (you may need to create a video element to display it)
-        // remoteVideoRef.current.srcObject = remoteStream;
-      });
-
-      setPeer(newPeer);
-      setIsCalling(true);
-    } catch (error) {
-      console.error("Error starting video call:", error);
-    }
-  };
-
-  const answerVideoCall = async () => {
-    try {
-      // Get user's video and audio stream
-      const userMedia = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      setStream(userMedia);
-
-      // Create a new Peer instance to answer the call
-      const answeringPeer = new Peer({
-        initiator: false,
-        stream: userMedia,
-        trickle: false,
-      });
-
-      // Set up event handlers for the answering Peer instance
-      answeringPeer.on("signal", (data) => {
-        // Send the answer signal to the caller (you will need to define a function to send this signal via your socket)
-        // socket.emit("sendAnswerSignal", { signalData: data, callerId: callerId });
-      });
-
-      answeringPeer.on("stream", (remoteStream) => {
-        // Display the remote caller's video stream (you may need to create a video element to display it)
-        // remoteVideoRef.current.srcObject = remoteStream;
-      });
-
-      setPeer(answeringPeer);
-      setIsCalling(true);
-    } catch (error) {
-      console.error("Error answering video call:", error);
-    }
-  };
-
-  // console.log(messages.length);
-  console.log(typeof messages);
+  const [incomingCall, setIncomingCall] = useState(null);
 
   const parsedId = parseInt(id);
+
+
+  // RingTone
+  const [callAccepted, setCallAccepted] = useState(false);
+  const [audio] = useState(new Audio(ringtone));
+  const [userRole, setUserRole] = useState(""); // Initialize with null
+
+
+  
+  useEffect(() => {
+    const socket = io("http://localhost:5500");
+
+    setSocket(io("http://localhost:5500"));
+
+    // Add event listeners here
+    socket.on("incomingCall", ({ callerId }) => {
+      console.log("CallerId" + callerId);
+      setIncomingCall({ callerId });
+    });
+    // Cleanup: Disconnect the socket when the component is unmounted
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const handleCallClick = () => {
+    if (!activeConversation) {
+      console.error("No conversation selected for the call.");
+      return;
+    }
+    const isCaller = activeConversation.receiverId !== parsedId;
+    // Emit a "callUser" event to the server with the receiver's ID
+    socket.emit("callUser", { receiverId: activeConversation.receiverId });
+    // You can add your logic here to start the call
+    // For example, call the startAudioCall or startVideoCall function
+    // and set the isCallActive state to true
+    startAudioCall(activeConversation.receiverId); // Adjust as needed
+    setIsCallActive(true);
+  };
+
+  const acceptCall = () => {
+    console.log(incomingCall.callerId);
+    // Implement logic to accept the call
+    // Create a new Peer instance and send the answer signal
+    // You can use the incomingCall.callerId and incomingCall.signalData
+    // Example
+    startAudioCall(incomingCall.callerId);
+    // audio.play();
+    // Clear the incoming call state
+    // setIncomingCall(null);
+    setCallAccepted(true);
+  };
+
+  console.log("Call Accepted : " + callAccepted);
+
+  const rejectCall = () => {
+    // Implement logic to reject the call
+    // For example, send a signal to inform the caller
+    // Clear the incoming call state
+    setIncomingCall(null);
+  };
 
   const styles = {
     "*": {
@@ -120,10 +117,6 @@ export const Leftbar2 = () => {
       boxSizing: "border-box",
     },
   };
-
-  useEffect(() => {
-    setSocket(io("http://localhost:5500"));
-  }, []);
 
   useEffect(() => {
     checkAuthentication().then(() => {
@@ -207,127 +200,6 @@ export const Leftbar2 = () => {
     }
   };
 
-  // console.log(conversationId);
-
-  // const fetchMessages = async (id) => {
-  //   if (isLoggedIn) {
-  //     const res = await fetch("http://localhost:5000/api/message/get_messages/" + id , {
-  //       method:"GET",
-  //       headers:{
-  //         'Content-Type':'application/json'
-  //       },
-  //       body:JS
-  //     });
-  //     const resJson = await res.json();
-  //     setMessages(resJson);
-  //     console.log(resJson);
-  //   }
-  // };
-
-  // const sendMessage = async (e) => {
-  //   const conversationId = messages?.conversationId;
-
-  //   console.log("Conversation Id" + conversationId);
-
-  //   // if (!conversationId) {
-  //   //   console.error('No conversation selected');
-  //   //   return;
-  //   // }
-
-  //   socket?.emit("sendMessage", {
-  //     conversationId: conversationId,
-  //     senderId: parsedId,
-  //     message: message,
-  //     receiverId: messages?.receiver?.receiverId,
-  //   });
-
-  //   // setMessage('');
-
-  //   try {
-  //     if (!messages?.messages || !messages?.messages.length) {
-  //       console.error("No conversation selected");
-  //       return;
-  //     }
-
-  //     setMessages((prev) => ({
-  //       ...prev,
-  //       messages: [
-  //         ...prev.messages,
-  //         { message: message, user: { id: parsedId } }, // Assume the sender is the logged-in user
-  //       ],
-  //     }));
-
-  //     const res = await fetch("http://localhost:5000/api/message/create", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         conversationId: conversationId,
-  //         senderId: parsedId,
-  //         message: message,
-  //         // receiverId:""
-  //       }),
-  //     });
-  //     if (res.status === 200) {
-  //       // Message sent successfully to the API, now emit it to the server
-  //       // socket?.emit("sendMessage", {
-  //       //   senderId: parsedId,
-  //       //   receiverId: /* Receiver's ID goes here */,
-  //       //   message: message,
-  //       // });
-
-  //       // Clear the input field after sending
-  //       setMessage("");
-  //     } else {
-  //       console.error("Failed to send message to the API");
-  //       // Handle error appropriately, e.g., show an error message to the user
-  //     }
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //   }
-  // };
-
-  // const sendMessage = async () => {
-  //   const conversationId = messages?.conversationId;
-
-  //   if (!conversationId) {
-  //     console.error("No conversation selected");
-  //     return;
-  //   }
-
-  //   socket?.emit("sendMessage", {
-  //     conversationId: conversationId,
-  //     senderId: parsedId,
-  //     message: message,
-  //     receiverId: messages?.receiver?.receiverId,
-  //   });
-
-  //   try {
-  //     const res = await fetch("http://localhost:5000/api/message/create", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         conversationId: conversationId,
-  //         senderId: parsedId,
-  //         message: message,
-  //       }),
-  //     });
-
-  //     if (res.status === 200) {
-  //       // Clear the input field after sending
-  //       setMessage("");
-  //     } else {
-  //       console.error("Failed to send message to the API");
-  //       // Handle error appropriately, e.g., show an error message to the user
-  //     }
-  //   } catch (error) {
-  //     console.error("Error sending message:", error);
-  //   }
-  // };
-
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
 
@@ -377,6 +249,100 @@ export const Leftbar2 = () => {
     }
   };
 
+  const startAudioCall = async (receiverId) => {
+    alert("Audio Called");
+
+    try {
+      // Get user's audio stream
+      const userMedia = await navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+        })
+        .then((stream) => {
+          console.log("Stream Soura" + stream);
+          console.log(stream);
+        })
+        .catch((error) => {
+          console.log("Get User Media Error" + error);
+        });
+      setStream(userMedia);
+
+      console.log("User Media");
+      console.log(userMedia);
+
+      // Create a new Peer instance
+      const newPeer = new Peer({
+        initiator: true,
+        stream: userMedia,
+        trickle: false,
+      });
+
+      // Set up event handlers for the Peer instance
+      newPeer.on("signal", (data) => {
+        // Send the offer signal to the other user
+        console.log(data);
+        socket.emit("sendOfferSignal", {
+          signalData: data,
+          receiverId: receiverId,
+          isAudioCall: true,
+        });
+      });
+
+      // newPeer.on("stream", (remoteStream) => {
+      //   alert("Executed 2");
+      //   // Display the remote user's audio stream
+      //   // Create an audio element and set its srcObject to remoteStream to play the audio
+      //   const audioElement = new Audio();
+      //   audioElement.srcObject = remoteStream;
+      //   audioElement.play();
+
+      //   console.log(remoteStream);
+      //   alert("Remote Stream" + remoteStream)
+      // });
+
+      newPeer.on("stream", (remoteStream) => {
+        console.log("Stream received:", remoteStream);
+        const audioElement = new Audio();
+        audioElement.srcObject = remoteStream;
+        audioElement.play();
+      });
+
+      newPeer.on("error", (error) => {
+        console.error("Peer error:", error);
+      });
+
+      console.log(newPeer);
+
+      setPeer(newPeer);
+      setIsCalling(true);
+
+      navigator.mediaDevices.enumerateDevices().then((devices) => {
+        devices.forEach(device => {
+          console.log(device);
+        });
+      })
+
+
+    } catch (error) {
+      console.error("Error starting audio call:", error);
+    }
+  };
+
+  const endCall = () => {
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    // Reset the audio to the beginning
+
+    // Set the callAccepted state to false
+    setCallAccepted(false);
+
+    stream.getTracks().forEach((track) => track.stop());
+    peer.destroy();
+    setIsCalling(false);
+  };
+
   // Render loading indicator if still loading authentication data
   if (isLoading) {
     return <div>Loading...</div>;
@@ -401,21 +367,7 @@ export const Leftbar2 = () => {
             </div>
             <div className="item3">
               {/* <CallRoundedIcon fontSize="medium" className="icon3" /> */}
-              <CallRoundedIcon
-                fontSize="medium"
-                className="icon3"
-                onClick={() => {
-                  if (!isCalling) {
-                    startVideoCall();
-                  } else {
-                    // Handle hang up or end call
-                    // You can implement this by stopping the stream, closing the Peer connection, and updating the call status
-                    // stream.getTracks().forEach((track) => track.stop());
-                    // peer.destroy();
-                    // setIsCalling(false);
-                  }
-                }}
-              />
+              <CallRoundedIcon fontSize="medium" className="icon3" />
             </div>
             <hr></hr>
             <div className="item4">
@@ -491,20 +443,6 @@ export const Leftbar2 = () => {
               })
             }
 
-            {/* <div className="mid-text3">
-              <div className="left3">
-                <img src={image} alt=""></img>
-                <div className="left-info">
-                  <h2>John Doe</h2>
-                  <p className="activity">whats up</p>
-                </div>
-              </div>
-              <div className="right3">
-                <p>9:26 PM</p>
-                <circle>2</circle>
-              </div>
-            </div> */}
-
             <span>All Conversations</span>
 
             <div className="mid-text4">
@@ -549,24 +487,6 @@ export const Leftbar2 = () => {
                   <img src={image} alt=""></img>
                 </div>
                 <div className="user-info">
-                  {/* {conversations.map((conversation, user, index) => {
-                    console.log(conversation);
-
-                    const onlineStatus = isUserOnline(
-                      conversation.user.receiverId
-                    )
-                      ? "Online"
-                      : "Offline";
-
-                    if (conversations.length > 0) {
-                      return (
-                        <div className="left-info">
-                          <h1>{conversation.user.username}</h1>
-                          <p>{onlineStatus}</p>
-                        </div>
-                      );
-                    }
-                  })} */}
                   <div className="user-info">
                     {activeConversation && (
                       <>
@@ -585,7 +505,10 @@ export const Leftbar2 = () => {
                 </div>
               </div>
               <div className="right-part">
-                <CallRoundedIcon className="right-part-icon" />
+                <CallRoundedIcon
+                  onClick={handleCallClick}
+                  className="right-part-icon"
+                />
                 <VideocamIcon className="right-part-icon" />
                 <MoreVertIcon
                   className="right-part-icon"
@@ -681,7 +604,7 @@ export const Leftbar2 = () => {
                   accept="image/*" // Accept only image files
                   id="imageInput"
                   style={{ display: "none" }}
-                  // onChange={handleImageSelect}
+                // onChange={handleImageSelect}
                 />
                 {/* <PhotoSizeSelectActualIcon className="chat-btn" /> */}
                 <label htmlFor="imageInput">
@@ -706,6 +629,66 @@ export const Leftbar2 = () => {
           </div>
         )}
       </div>
+
+      {/* {isCallActive &&   (
+        <CallUI
+          caller={activeConversation} // Pass the active conversation data as the caller
+          onAccept={() => {
+            // Implement the logic to accept the call
+          }}
+          onReject={() => {
+            // Implement the logic to reject the call
+          }}
+          onEndCall={() => {
+            // Implement the logic to end the call
+            // This function should stop the audio call and set isCallActive to false
+          }}
+          isCalling={true} // You can pass the call status to the CallUI component
+        />
+      )}
+
+      {incomingCall && !callAccepted  && parsedId != activeConversation && (
+        // <div className="incoming-call">
+        //   <p>Incoming Call from User {incomingCall.callerId}</p>
+        //   <button onClick={acceptCall}>Accept</button>
+        //   <button onClick={rejectCall}>Reject</button>
+        // </div>
+        console.log("activeConversation"),
+        console.log(activeConversation.receiverId),
+        <CallUI
+        caller={activeConversation} // Pass the active conversation data as the caller
+        onAccept={acceptCall}
+        onReject={rejectCall}
+        onEndCall={endCall}
+        isCalling={false} // You can pass the call status to the CallUI component
+      />
+      )} */}
+      {isCallActive ? (
+        <CallUI
+          caller={activeConversation}
+          onAccept={() => {
+            // Implement the logic to accept the call
+          }}
+          onReject={() => {
+            // Implement the logic to reject the call
+          }}
+          onEndCall={() => {
+            // Implement the logic to end the call
+            // This function should stop the audio call and set isCallActive to false
+          }}
+          isCalling={true}
+        />
+      ) : incomingCall &&
+        !callAccepted &&
+        parsedId !== activeConversation.receiverId ? (
+        <CallUI
+          caller={activeConversation}
+          onAccept={acceptCall}
+          onReject={rejectCall}
+          onEndCall={endCall}
+          isCalling={false}
+        />
+      ) : null}
     </div>
   );
 };

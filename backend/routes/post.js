@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt");
 const connection = require("../connection")
 const multer = require("multer");
 
+const io = require("../socket");
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -159,6 +161,126 @@ router.put("/update_post/:userId/:postId", (req,res) => {
   }
 })
 
+// Like Change(update)
+// router.put('/api/posts/:postId/like', async (req, res) => {
+//   const postId = req.body.postId;
+//   const userId = req.body.userId;
+
+//   try {
+//     // Update the like count in the database using a SQL query
+//     connection.query(
+//       'UPDATE post_likes SET likes = likes + 1 WHERE id = ? ',
+//       [postId],
+//       (err,result)=>{
+//         if(err){
+//           res.status(500).json(err)
+//         }else{
+//           res.status(200).json("Like updated successfully");
+//         }
+//       }
+//     );
+
+//     // Return the updated post data (including the new like count)
+//     res.json(result.rows[0]);
+//   } catch (error) {
+//     console.error('Error updating like count:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+// Update Like (Increamenet or decreament)
+router.post('/like', (req, res) => {
+  const postId = req.body.postId;
+  const userId = req.body.userId; // Assuming userId is sent in the request body
+  var likeStatus ;
+  // = req.body.likeStatus; // true for like, false for dislike
+
+  // Check if the user has already liked the post
+  connection.query(
+    'SELECT id FROM post_likes WHERE post_id = ? AND user_id = ?',
+    [postId, userId],
+    (error, results) => {
+      if (error) {
+        console.error('Error checking existing like:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        if (results.length === 0) {
+          console.log("User has no like on the post");
+          likeStatus = true;
+          // User has not liked the post, insert a new like
+          connection.query(
+            'INSERT INTO post_likes (post_id, user_id) VALUES (?, ?)',
+            [postId, userId],
+            (error) => {
+              if (error) {
+                console.error('Error inserting like:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+              } else {
+                // Update like count in the posts table
+                updateLikeCount(postId, likeStatus, res, true); // Pass true indicating user has liked the post
+              }
+            }
+          );
+        } else {
+          // User has already liked the post, update the existing like
+          likeStatus = false;
+          connection.query(
+            'DELETE FROM post_likes WHERE post_id = ? AND user_id = ?',
+            [postId, userId],
+            (error) => {
+              if (error) {
+                console.error('Error deleting like:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+              } else {
+                // Update like count in the posts table
+                updateLikeCount(postId, likeStatus, res, false); // Pass false indicating user has disliked the post
+              }
+            }
+          );
+        }
+      }
+    }
+  );
+});
+
+
+
+
+function updateLikeCount(postId, likeStatus, res, userLiked) {
+  const incrementValue = likeStatus ? 1 : -1;
+
+  console.log(likeStatus);
+  console.log('Increament Value'+incrementValue)
+  // Update like count in the posts table
+  connection.query(
+    'UPDATE posts SET likes = likes + ? WHERE id = ?',
+    [incrementValue, postId],
+    (error, results) => {
+      if (error) {
+        console.error('Error updating like count:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        connection.query(
+          'SELECT likes from posts where id = ?',
+          [postId],
+          (err,result)=>{
+            if (err) {
+              console.error('Error updating like count:', error);
+              res.status(500).json({ error: 'Internal Server Error' });
+            }else{
+              console.log(result);
+                // Emit an event to notify clients about the like change
+                io.emit('updateLikes', { postId: postId, updatedLikes: result[0].likes });
+            }
+          }
+        )
+        res.json({ success: true, message: 'Like updated successfully', userLiked });
+      }
+    }
+  );
+}
+
+
 
 // Get Post by Id
 router.get("/:userId", (req, res) => {
@@ -181,7 +303,9 @@ router.get("/:userId", (req, res) => {
 });
 
 
+// Create Post
 
+// router.post
 
 
 module.exports = router;
