@@ -10,7 +10,7 @@
     border-bottom: 1px solid lightgray;
     position: sticky;
     top: 0;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     z-index: 999;
 
 }
@@ -50,6 +50,7 @@ input {
     display: flex;
     align-items: center;
     gap: 15px;
+    position: relative;
 }
 
 .user {
@@ -74,6 +75,132 @@ input {
 .menuIcon {
     visibility: hidden;
 }
+
+/* 2-1-24 code
+friendlist popup menu styles below */
+
+/* maximum shows upto 7 friend requests
+if upto 7 adds a vertical scrollbar */
+
+.popup_menu {
+    position: absolute;
+    top: 60px; 
+    left: -190px;
+    max-height: 430px;
+    padding: 10px 20px;
+    width: 390px;
+    background-color: #ffffff;
+    border: 0px solid #000000;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0, 5, 5, 0.7);
+    z-index: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .popup_menu ul {
+    list-style: none;
+    padding: 8px 10px;
+    
+  }
+
+  .popup_menu .request {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .popup_menu .request .right {
+    display: flex;
+  }
+  .popup_menu .request .right button {
+    margin-left: 10px;
+    padding: 5px 8px;
+  }
+  .popup_menu .request .right .acceptBtn {
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background: rgba(164, 121, 250, 1);
+    transition: 0.2s ease;
+  }
+  .popup_menu .request .right .acceptBtn:hover {
+    background: rgb(102, 68, 169);
+    cursor: pointer;
+  }
+  .popup_menu .request .right .declineBtn {
+    border: 1px solid rgb(123, 123, 123);
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
+    background: rgb(255, 255, 255);
+    transition: 0.2s ease;
+  }
+  .popup_menu .request .right .declineBtn:hover {
+    background: rgb(255, 89, 80);
+    border: 1px solid rgb(255, 89, 80);
+    color: #ffffff;
+    cursor: pointer;
+  }
+  .request p{
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(94, 94, 94);
+    margin-left: 15px;
+  }
+  .request p span {
+    color: rgb(34, 34, 34);
+    font-size: 16px;
+  }
+ .request .left img {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+ }
+
+
+/* scrollbar styles  */
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #A479FA #F2FDFF;
+  }
+  
+  /* Chrome, Edge and Safari */
+  *::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    border-radius: 9px;
+    background-color: #F2FDFF;
+  }
+  
+  *::-webkit-scrollbar-track:hover {
+    background-color: #F2FCFF;
+  }
+  
+  *::-webkit-scrollbar-track:active {
+    background-color: #F2FCFF;
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: #A479FA;
+  }
+  
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: #815FC5;
+  }
+  
+  *::-webkit-scrollbar-thumb:active {
+    background-color: #815FC5;
+  }
+  
+
+/* scrollbar styles end */
+
 
 
 /* working fine upto 324px */
