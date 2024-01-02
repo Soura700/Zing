@@ -13,6 +13,7 @@ const groupRoute = require("./routes/group");
 const groupMessageRoute = require("./routes/groupmessage");
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const friendRequestRoute = require("./routes/friend");
 
 const io = require("./socket");
 
@@ -206,6 +207,7 @@ app.use("/api/conversation" , conversationRoute);
 app.use("/api/message" , messageRoute);
 app.use("/api/group",groupRoute);
 app.use("/api/groupmessage",groupMessageRoute);
+app.use("/api/friendrequest",friendRequestRoute);
 
 
 console.log("hello");

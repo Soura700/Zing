@@ -16,16 +16,21 @@ import { Link } from "react-router-dom";
 // import styles from  "./navbar.module.css"
 
 // import "./navbar.css"
-import styles from "./navbar.module.css";
+import styles from "./navbar.module.css"
 
-const Navbar = ({ toggleMenu }) => {
-  const [toggle, setToggle] = useState(false);
 
-  const handleToggle = () => {
-    setToggle(!toggle);
-  };
 
-  const [isMenuVisible, setMenuVisible] = useState(false);
+const Navbar = ( {toggleMenu} ) => {
+
+    const [ toggle , setToggle ] = useState(false)
+
+
+
+    const handleToggle =  ()=> {
+        setToggle(!toggle);
+    }
+
+    const [isMenuVisible, setMenuVisible] = useState(false);
 
   const handleIconClick = () => {
     setMenuVisible(!isMenuVisible);
