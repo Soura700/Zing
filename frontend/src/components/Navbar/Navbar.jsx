@@ -33,7 +33,8 @@ const Navbar = ( {toggleMenu} ) => {
     const [friendRequestNotifications, setFriendRequestNotifications] = useState([]);
     const [friendRequestNotificationsName,setFriendRequestNotificationsName] = useState([]);
     const [friendRequests,setFriendRequests] = useState([]);
-    
+    const [realTimeFriendRequests, setRealTimeFriendRequests] = useState([]);
+
 
 
     useEffect(() => {
@@ -49,26 +50,62 @@ const Navbar = ( {toggleMenu} ) => {
     
 
     // Socket connection....
-    useEffect(() => {
-        const socket = io('http://localhost:5500'); // Update the URL to match your server
-        // Listen for 'updateLikes' event
-        socket.on('sendRequest', async ({from}) => {
-            console.log(from);
-            setFriendRequestNotifications(from);
-                // const fetchData = async () => {
-                  const res = await fetch("http://localhost:5000/api/auth/", + from);
-                  const data = await res.json();
-                  setFriendRequestNotificationsName(data);
-                  console.log("Data" + data);
-                // };            
-            // console.log(friendRequestNotifications);
-        });
+    // useEffect(() => {
+    //     const socket = io('http://localhost:5500'); // Update the URL to match your server
+    //     // Listen for 'updateLikes' event
+    //     socket.on('sendRequest', async ({from}) => {
+    //         console.log(from);
+    //         setFriendRequestNotifications(from);
+    //             // const fetchData = async () => {
+    //               const res = await fetch("http://localhost:5000/api/auth/", + from);
+    //               const data = await res.json();
+    //               setFriendRequestNotificationsName(data);
+    //               setRealTimeFriendRequests(prevRequests => [
+    //                 {
+    //                     from,
+    //                     userDetails: userData,
+    //                 },
+    //                 ...prevRequests,
+    //             ]);
+    //               console.log("Data" + data);
+    //             // };            
+    //         // console.log(friendRequestNotifications);
+    //     });
     
-        // Clean up the socket connection on component unmount
-        return () => {
+    //     // Clean up the socket connection on component unmount
+    //     return () => {
+    //       socket.disconnect();
+    //     };
+    //   }, []);
+
+    useEffect(() => {
+      const socket = io('http://localhost:5500');
+      socket.on('sendRequest', async ({ from }) => {
+          // Fetch user details for the new request
+          const userRes = await fetch("http://localhost:5000/api/auth/" + from, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+          });
+          const userData = await userRes.json();
+  
+          // Update the real-time friend requests with new data
+          setRealTimeFriendRequests(prevRequests => [
+              {
+                  from,
+                  userDetails: userData,
+              },
+              ...prevRequests,
+          ]);
+      });
+  
+      // Clean up the socket connection on component unmount
+      return () => {
           socket.disconnect();
-        };
-      }, []);
+      };
+  }, []);
+  
 
 
       // Fetching the freinds requests
