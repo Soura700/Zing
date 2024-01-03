@@ -30,6 +30,12 @@ const Navbar = ( {toggleMenu} ) => {
     
     const [isLoading, setIsLoading] = useState(true); // Add loading state
 
+    const [friendRequestNotifications, setFriendRequestNotifications] = useState([]);
+    const [friendRequestNotificationsName,setFriendRequestNotificationsName] = useState([]);
+    const [friendRequests,setFriendRequests] = useState([]);
+    
+
+
     useEffect(() => {
       checkAuthentication().then(() => {
         setIsLoading(false); // Mark loading as complete when authentication data is available
@@ -40,11 +46,6 @@ const Navbar = ( {toggleMenu} ) => {
 
     const parsedId = parseInt(id);
 
-    console.log(parsedId);
-
-    const [friendRequestNotifications, setFriendRequestNotifications] = useState([]);
-    const [friendRequestNotificationsName,setFriendRequestNotificationsName] = useState([]);
-    const [friendRequests,setFriendRequests] = useState([]);
     
 
     // Socket connection....
@@ -55,7 +56,7 @@ const Navbar = ( {toggleMenu} ) => {
             console.log(from);
             setFriendRequestNotifications(from);
                 // const fetchData = async () => {
-                  const res = await fetch("http://localhost:5000/api/auth:userId", + from);
+                  const res = await fetch("http://localhost:5000/api/auth/", + from);
                   const data = await res.json();
                   setFriendRequestNotificationsName(data);
                   console.log("Data" + data);
