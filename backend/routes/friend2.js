@@ -54,51 +54,29 @@ const createUserNode = async (userId, username) => {
 };
 
 
-// Function to create friend relationship in Neo4j
-// const createFriendRelationship = async (senderUserId, receiverUserId, status = 'Not Accepted') => {
-//   const neo4jSession = neo4jDriver.session();
-
-//   let createRelationshipQuery;
-
-//   if (status === 'Accepted') {
-//     createRelationshipQuery = `
-//       MATCH (sender:User {userId: $senderUserId}), (receiver:User {userId: $receiverUserId})
-//       MERGE (sender)-[r:FRIENDS_WITH]->(receiver)
-//       ON CREATE SET r.status = $status
-//     `;
-//   } else {
-//     createRelationshipQuery = `
-//       MATCH (sender:User {userId: $senderUserId}), (receiver:User {userId: $receiverUserId})
-//       CREATE (sender)-[r:FRIENDS_WITH {status: $status}]->(receiver)
-//     `;
-//   }
-
-//   try {
-//     await neo4jSession.run(createRelationshipQuery, { senderUserId, receiverUserId, status });
-//     console.log(`Friend relationship created in Neo4j with status: ${status}`);
-//   } catch (error) {
-//     console.error('Error creating friend relationship in Neo4j:', error);
-//   } finally {
-//     neo4jSession.close();
-//   }
-// };
 
 
-// Function to create friend relationship in Neo4j
+
+
+
+// Function to create or update friend relationship in Neo4j
 const createFriendRelationship = async (senderUserId, receiverUserId, status = 'Not Accepted') => {
   const neo4jSession = neo4jDriver.session();
 
   let createRelationshipQuery;
 
   if (status === 'Accepted') {
+    // Update existing relationship if status is 'Accepted'
     createRelationshipQuery = `
-      MATCH (sender:User {userId: $senderUserId}), (receiver:User {userId: $receiverUserId})
-      CREATE (sender)-[r:FRIENDS_WITH {status: $status}]->(receiver)
+      MATCH (sender:User {userId: $senderUserId})-[r:FRIENDS_WITH]->(receiver:User {userId: $receiverUserId})
+      SET r.status = $status
       RETURN r
     `;
   } else {
+    // Create new relationship if status is 'Not Accepted'
     createRelationshipQuery = `
-      MATCH (sender:User {userId: $senderUserId})-[r:FRIENDS_WITH]->(receiver:User {userId: $receiverUserId})
+      MATCH (sender:User {userId: $senderUserId}), (receiver:User {userId: $receiverUserId})
+      MERGE (sender)-[r:FRIENDS_WITH]->(receiver)
       SET r.status = $status
       RETURN r
     `;
@@ -106,7 +84,7 @@ const createFriendRelationship = async (senderUserId, receiverUserId, status = '
 
   try {
     const result = await neo4jSession.run(createRelationshipQuery, { senderUserId, receiverUserId, status });
-    
+
     if (!result.records.length) {
       console.log('Friend relationship not found.');
     } else {
@@ -120,6 +98,8 @@ const createFriendRelationship = async (senderUserId, receiverUserId, status = '
 };
 
 
+
+// 
 
 // API endpoint to send friend request
 router.post('/sendFriendRequest', async (req, res) => {
@@ -153,8 +133,6 @@ router.post('/sendFriendRequest', async (req, res) => {
     };
 
         // Emit a specific event for friend request
-        // io.emit('friendRequest', friendRequestData , senderUsername);
-
         io.emit('friendRequest',{friendRequestData:friendRequestData,from:senderUsername})
 
     return res.status(200).json({ success: true });
@@ -182,6 +160,48 @@ const getUserIdByUsername = async (username) => {
 };
 
 
+
+
+
+// API to fetch friend requests
+//Api to fetch the friend requests that are been send from the sender 
+router.get("/get_friend_requests", async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    // Get receiver's user ID
+    const receiverUserId = await getUserIdByUsername(username);
+
+    if (!receiverUserId) {
+      return res.status(404).json({ error: 'Receiver not found' });
+    }
+
+    const neo4jSession = neo4jDriver.session();
+
+    // Query Neo4j for friend requests directed towards the receiver
+    const getFriendRequestsQuery = `
+      MATCH (sender:User)-[r:FRIENDS_WITH {status: 'Not Accepted'}]->(receiver:User {userId: $receiverUserId})
+      RETURN sender.userId AS senderUserId, sender.username AS senderUsername
+    `;
+
+    const result = await neo4jSession.run(getFriendRequestsQuery, { receiverUserId });
+
+    const friendRequests = result.records.map(record => ({
+      senderUserId: record.get('senderUserId'),
+      senderUsername: record.get('senderUsername'),
+    }));
+
+    neo4jSession.close();
+
+    return res.status(200).json({ success: true, friendRequests });
+  } catch (error) {
+    console.error('Error fetching friend requests:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// Api to get accpet the friend requets...(Status will be true from false) 
 router.post('/acceptFriendRequest', async (req, res) => {
   const { senderUsername, receiverUsername } = req.body;
 

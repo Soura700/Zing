@@ -61,7 +61,7 @@ const Navbar = ( {toggleMenu} ) => {
           socket.on('friendRequest', ({friendRequestData , from}) => {
             alert(friendRequestData , from);
             console.log(from);
-            console.log(friendRequestData);
+            console.log(friendRequestData)
             setRealTimeFriendRequests((prevRequests) => [friendRequestData, ...prevRequests]);
           });
         }
@@ -74,6 +74,49 @@ const Navbar = ( {toggleMenu} ) => {
       }, [socket]);
 
 
+      useEffect(() => {
+        const fetchData = async () => {
+          const res = await fetch("http://localhost:5000/api/friendrequest/getRequests", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              // userId: id
+              
+              userId:3 //Problem
+            }),
+          });
+          const data = await res.json();
+          console.log(data);
+      
+          // Create an array to store promises of fetching user details
+          const userDetailPromises = data.map(async (friendRequest) => {
+            const userRes = await fetch("http://localhost:5000/api/auth/" + friendRequest.from ,{
+              method:"POST",
+              headers:{
+                "Content-Type": "application/json",
+              }
+            });
+            const userData = await userRes.json();
+            console.log("UserData" + userData);
+            console.log(userData)
+            return {
+              ...friendRequest,
+              userDetails: userData,
+            };
+          });
+                // Wait for all promises to resolve
+                const friendRequestsWithDetails = await Promise.all(userDetailPromises);
+      
+                // Set the state with friend requests and user details
+                
+      
+                setFriendRequests(friendRequestsWithDetails);
+              };
+            
+              fetchData();
+            }, []);
 
       
     const parsedId = parseInt(id);
