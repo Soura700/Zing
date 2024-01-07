@@ -15,6 +15,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const friendRequestRoute = require("./routes/friend");
 const friend_Request_Route = require("./routes/friend2");
+const interest_Route = require("./routes/interest");
 var neo4j = require('neo4j-driver');
 const io = require("./socket");
 
@@ -235,7 +236,7 @@ app.use("/api/group",groupRoute);
 app.use("/api/groupmessage",groupMessageRoute);
 app.use("/api/friendrequest",friendRequestRoute);
 app.use("/api/friend_request" , friend_Request_Route)
-
+app.use("/api" , interest_Route)
 
 console.log("hello");
 
