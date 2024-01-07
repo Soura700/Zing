@@ -19,6 +19,9 @@ const Posts = () => {
     });
   }, [checkAuthentication]);
 
+
+  console.log()
+
   const parsedId = parseInt(id);
 
 

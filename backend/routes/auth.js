@@ -210,7 +210,7 @@ router.delete("/logout", (req, res) => {
   // Delete Api (Session Delete);
 });
 
-router.get("/:userId", (req, res) => {
+router.post("/:userId", (req, res) => {
   const userId = req.params.userId;
   try {
     connection.query(

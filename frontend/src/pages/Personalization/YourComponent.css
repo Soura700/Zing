@@ -1,0 +1,117 @@
+/* YourComponent.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.Yourcomponentbody {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+header {
+    margin: 5px 30px;
+    font-size: 25px;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 10px;
+}
+
+#profile {
+    display: flex;
+    flex-direction: column;
+}
+
+#profilePic h2 {
+    font-size: 25px;
+}
+
+#profilePic img {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    margin: 20px;
+}
+
+#profileBio #Name {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+#profileBio input {
+    height: 50px;
+    width: 250px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+#interests {
+    display: flex;
+    flex-direction: column;
+}
+
+#interests h2 {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+#interests h4 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+#interestsList ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 540px;
+}
+
+#interestsList li {
+    border: 1px solid rgb(163, 163, 163);
+    color: rgb(47, 47, 47);
+    padding: 10px;
+    border-radius: 50px;
+    min-width: 80px;
+    cursor: pointer;
+}
+
+#interestsList li.selected {
+    background-color: rgba(164, 121, 250, 1);
+    border: none;
+    color: white;
+}
+
+#btn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+button {
+    margin-top: 20px;
+    width: 20%;
+    padding: 5px 10px;
+    background: white;
+    border: 1px solid rgb(152, 152, 152);
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+button.selected {
+    background-color: rgba(164, 116, 250, 1);
+    border: none;
+    color: white;
+}
