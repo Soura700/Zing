@@ -54,11 +54,6 @@ const createUserNode = async (userId, username) => {
 };
 
 
-
-
-
-
-
 // Function to create or update friend relationship in Neo4j
 const createFriendRelationship = async (senderUserId, receiverUserId, status = 'Not Accepted') => {
   const neo4jSession = neo4jDriver.session();

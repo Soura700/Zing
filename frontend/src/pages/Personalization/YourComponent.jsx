@@ -22,7 +22,7 @@ const YourComponent = () => {
   };
 
   return (
-    <div>
+    <div className='Yourcomponentbody'>
       <header>
         <h1>Hi John Doe,</h1>
         <h2>Personalize your Profile</h2>

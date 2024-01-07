@@ -93,6 +93,7 @@ import Home from "./pages/Home/Home";
 import { Leftbar2 } from "./components/messaging/Leftbar2";
 import { Group } from "./components/Group/Group";
 import  Video  from "./components/Video/Video.jsx";
+import Personalization from "./pages/Personalization/YourComponent.jsx"
 
 // import Posts from "../src/components/Posts/Posts"
 
@@ -165,22 +166,38 @@ function App() {
         }
       ],
     },
+
+
     {
       path: "/login",
       element: <SignInSignUpForm />,
     },
+
+
+
+    {
+      path:"/profile_setting/:userId",
+      element:<Personalization/>
+    },
+
+
     {
       path: "/message",
       element: <Leftbar2 />,
     },
+
+
     {
       path: "/groupmessage",
       element: <Group />,
     },
+
+
     {
       path:"/call",
       element:<Video/>
     }
+
   ]);
 
   return (
