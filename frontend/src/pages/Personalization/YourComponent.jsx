@@ -55,22 +55,18 @@ const YourComponent = () => {
   };
 
   return (
-    <div>
+    <div className="whole">
       <header>
         <h1>Hi John Doe,</h1>
         <h2>Personalize your Profile</h2>
       </header>
       <section id="profile">
-        <div id="profilePic">
-          <h2>Setup your profile picture</h2>
-          <label htmlFor="fileInput">
-            <div className="image-container">
-              {profilePicture ? (
-                <img src={URL.createObjectURL(profilePicture)} alt="Profile" />
-              ) : (
-                <div className="add-icon">+</div>
-              )}
-            </div>
+            <div id="profilePic">
+              <h2>Setup your profile picture</h2>
+              <label htmlFor="fileInput">
+                <div className="image-container">
+                  <img src="https://previews.123rf.com/images/alekseyvanin/alekseyvanin1807/alekseyvanin180701556/104886082-add-user-outline-icon-linear-style-sign-for-mobile-concept-and-web-design-follower-user-simple-line.jpg" alt="" /> 
+                </div>
           </label>
           <input
             type="file"
@@ -81,15 +77,17 @@ const YourComponent = () => {
           />
           <span></span>
         </div>
-        <div id="profileBio">
-          <input
+        <div id="profileBio" className="auto-size-text-box" contenteditable="true" >
+          {/* <input
+          className="input-box"
             type="text"
             name=""
             id=""
+            
             placeholder="Write about yourself"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-          />
+          /> */}
         </div>
       </section>
       <div id="interests">
