@@ -132,9 +132,9 @@ const Navbar = ( {toggleMenu} ) => {
   };
 
     // Render loading indicator if still loading authentication data
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
+    // if (isLoading) {
+    //   return <div>Loading...</div>;
+    // }
 
   return (
     <div className={styles.navbar}>
@@ -178,7 +178,7 @@ const Navbar = ( {toggleMenu} ) => {
         {isMenuVisible && (
           <div className={styles.popup_menu}>
             <ul className={styles.requests}>
-              {friendRequests.map((user,index)=>{
+              {/* {friendRequests.map((user,index)=>{
 
                 return(
                                 <li className={styles.request}>
@@ -199,7 +199,61 @@ const Navbar = ( {toggleMenu} ) => {
                                 </div>
                               </li>
                 );
-              })}
+              })} */}
+
+                <li className={styles.request}>
+                <div className={styles.left}>
+                  <img
+                    className={styles.ig}
+                    src="https://images.pexels.com/photos/19555765/pexels-photo-19555765/free-photo-of-portrait-of-egret-bird.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                    alt="john doe"
+                  />
+                </div>
+                <p className={styles.middle}>
+                  <span>c dcdc d</span>  requested to follow you
+                </p>
+
+                <div className={styles.right}>
+                  <button className={styles.acceptBtn}>Accept</button>
+                  <button className={styles.declineBtn}>Decline</button>
+                </div>
+              </li>
+
+              <li className={styles.request}>
+                <div className={styles.left}>
+                  <img
+                    className={styles.ig}
+                    src="https://images.pexels.com/photos/19555765/pexels-photo-19555765/free-photo-of-portrait-of-egret-bird.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                    alt="john doe"
+                  />
+                </div>
+                <p className={styles.middle}>
+                  <span>c dcdc d</span>  requested to follow you
+                </p>
+
+                <div className={styles.right}>
+                  <button className={styles.acceptBtn}>Accept</button>
+                  <button className={styles.declineBtn}>Decline</button>
+                </div>
+              </li>
+
+              <li className={styles.request}>
+                <div className={styles.left}>
+                  <img
+                    className={styles.ig}
+                    src="https://images.pexels.com/photos/19555765/pexels-photo-19555765/free-photo-of-portrait-of-egret-bird.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                    alt="john doe"
+                  />
+                </div>
+                <p className={styles.middle}>
+                  <span>c dcdc d</span>  requested to follow you
+                </p>
+
+                <div className={styles.right}>
+                  <button className={styles.acceptBtn}>Accept</button>
+                  <button className={styles.declineBtn}>Decline</button>
+                </div>
+              </li>
             </ul>
           </div>
         )}

@@ -4,33 +4,10 @@ const neo4j = require('neo4j-driver');
 const connection = require("../connection");
 const io = require("../socket");
 
+
 var router = express();
 
-// Neo4j connection
-(async () => {
-  var neo4j = require('neo4j-driver')
 
-  // URI examples: 'neo4j://localhost', 'neo4j+s://xxx.databases.neo4j.io'
-  const URI = 'neo4j+s://78208b1f.databases.neo4j.io'
-  const USER = 'neo4j'
-  const PASSWORD = '7Ip5WHgdheXTisuYy9VB959wyzzbXzYkuTjCbQWviN8'
-  let driver
-
-  try {
-    driver = neo4j.driver(URI,  neo4j.auth.basic(USER, PASSWORD))
-    const serverInfo = await driver.getServerInfo()
-    console.log('Connection estabilished')
-    console.log(serverInfo)
-  } catch(err) {
-    console.log(`Connection error\n${err}\nCause: ${err.cause}`)
-    await driver.close()
-    return
-  }
-
-  // Use the driver to run queries
-
-  await driver.close()
-})();
 
 const neo4jDriver = neo4j.driver('neo4j+s://78208b1f.databases.neo4j.io', neo4j.auth.basic('neo4j', '7Ip5WHgdheXTisuYy9VB959wyzzbXzYkuTjCbQWviN8'));
 
