@@ -6,21 +6,26 @@
     box-sizing: border-box;
 }
 
-.Yourcomponentbody {
+body {
     display: flex;
     flex-direction: column;
     text-align: center;
     align-items: center;
 }
 
+
 header {
     margin: 5px 30px;
     font-size: 25px;
+    text-align: left;
+}
+header h2{
     text-align: center;
 }
 
 header h1 {
     margin-bottom: 10px;
+    text-align: center;
 }
 
 #profile {
@@ -30,14 +35,17 @@ header h1 {
 
 #profilePic h2 {
     font-size: 25px;
+    align-items:center ;
 }
 
-#profilePic img {
+.image-container img {
     height: 150px;
     width: 150px;
     border-radius: 50%;
     margin: 20px;
+    border: solid gray;
 }
+
 
 #profileBio #Name {
     font-size: 30px;
@@ -45,14 +53,18 @@ header h1 {
 }
 
 #profileBio input {
-    height: 50px;
-    width: 250px;
+    height: auto;
+    width: 50px;
     background: white;
     border: 1px solid black;
     border-radius: 12px;
     padding: 10px;
     font-size: 15px;
     margin-bottom: 20px;
+    resize: vertical;
+}
+input::placeholder {
+    text-align: center;
 }
 
 #interests {
@@ -63,11 +75,13 @@ header h1 {
 #interests h2 {
     font-size: 30px;
     margin-bottom: 30px;
+    text-align: center;
 }
 
 #interests h4 {
     font-size: 20px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 #interestsList ul {
@@ -79,6 +93,28 @@ header h1 {
     gap: 20px;
     width: 540px;
 }
+.auto-size-text-box {
+    width: auto;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center; 
+    line-height: auto;
+    justify-content: center;
+    margin-left: 25%;
+    margin-right: 25%;
+    border-radius: 10px;
+}
+/* .input-box{
+    width: auto;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center; 
+    line-height: auto;
+} */
+
+
 
 #interestsList li {
     border: 1px solid rgb(163, 163, 163);
@@ -87,6 +123,9 @@ header h1 {
     border-radius: 50px;
     min-width: 80px;
     cursor: pointer;
+}
+#interestsList li:hover{
+    background-color: rgb(196, 196, 196);
 }
 
 #interestsList li.selected {
@@ -109,9 +148,96 @@ button {
     border-radius: 8px;
     font-size: 15px;
 }
+button:hover{
+    background-color: rgb(196, 196, 196);
+}
 
 button.selected {
     background-color: rgba(164, 116, 250, 1);
     border: none;
     color: white;
+}
+
+
+@media only screen and (max-width: 600px) {
+    header {
+        font-size: 20px;
+    }
+
+    #profile h2,
+    #profilePic h2 {
+        font-size: 20px;
+    }
+
+    .image-container img {
+        height: 90px;
+        width: 90px;
+        margin: 10px;
+    }
+
+    #profileBio input {
+        width: 80%;
+    }
+
+    #interestsList ul {
+        width: 100%;
+    }
+
+    #interestsList li {
+        min-width: 60px;
+        padding: 8px;
+    }
+
+    button {
+        width: 50%;
+    }
+    .whole{
+        padding: 10px;
+    }
+    header h1 {
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 30px;
+    }
+    header h2{
+        text-align: center;
+        font-size: 21px;
+    }
+    #profilePic h2 {
+        font-size: 15px;
+        align-items:center ;
+    }
+    #profileBio input {
+        height: 30px;
+        width: 250px;
+        background: white;
+        border: 1px solid black;
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 15px;
+        margin-bottom: 20px;
+    }
+    #interests h2{
+        font-size: 15px;
+    }
+    #interests h4{
+        font-size: 12px;
+    }
+    #interestsList li {
+        border: 1px solid rgb(163, 163, 163);
+        color: rgb(47, 47, 47);
+        padding: 5px;
+        border-radius: 30px;
+        min-width: 40px;
+        cursor: pointer;
+    }
+    #interestsList ul {
+        font-size: 13px;
+    }
+    button{
+        width: 80px;
+    }
+    .auto-size-text-box{
+        font-size: 10px;
+    }
 }
