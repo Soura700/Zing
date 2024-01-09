@@ -8,7 +8,7 @@ import Share from "../../components/Share/Share";
 const Home = () => {
   return (
     <div className='home'>
-      {/* <Stories/> */}
+      <Stories/>
       {/* <Share/> */}
       <Posts/>
     </div>
