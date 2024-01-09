@@ -6,7 +6,7 @@
     box-sizing: border-box;
 }
 
-.Yourcomponentbody {
+body {
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -16,7 +16,7 @@
 header {
     margin: 5px 30px;
     font-size: 25px;
-    text-align: center;
+    text-align: left;
 }
 
 header h1 {
