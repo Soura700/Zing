@@ -1,65 +1,86 @@
-// Function to calculate Euclidean distance between two arrays of features
-function euclideanDistance(features1, features2) {
-  if (features1.length !== features2.length) {
-    throw new Error('Feature arrays must have the same length');
-  }
+const express = require('express');
+var router = express();
+const neo4j = require('neo4j-driver');
 
-  let sumSquaredDiff = 0;
-  for (let i = 0; i < features1.length; i++) {
-    sumSquaredDiff += Math.pow(features1[i] - features2[i], 2);
-  }
+const neo4jDriver = neo4j.driver('neo4j+s://78208b1f.databases.neo4j.io', neo4j.auth.basic('neo4j', '7Ip5WHgdheXTisuYy9VB959wyzzbXzYkuTjCbQWviN8'));
 
-  return Math.sqrt(sumSquaredDiff);
+
+
+
+// router.get('/api/friendsOfFriends/:userId', async (req, res) => {
+//   const userId = parseFloat(req.params.userId);
+
+//   const session = neo4jDriver.session();
+
+//   try {
+//     const result = await session.run(
+
+//       //       // `MATCH (u:User {userId: $userId})-[:FRIENDS_WITH*2..]-(fof:User)
+// //       // WHERE fof <> u AND NOT (u)-[:FRIENDS_WITH]-(fof)
+// //       // RETURN DISTINCT fof`
+// //       // ,
+//       `
+//       MATCH (u:User {userId: $userId})-[:FRIENDS_WITH]-(fof:User)-[:FRIENDS_WITH]-(fofof:User)
+//       WHERE fof <> u AND NOT (u)-[:FRIENDS_WITH]-(fofof) AND (u)-[:FRIENDS_WITH]-(fof)
+//       RETURN DISTINCT fofof;
+//       `,
+//       { userId: userId }
+//     );
+
+//     const friendsOfFriends = result.records.map(record => record.get('fofof').properties);
+//     res.json({ friendsOfFriends });
+//   } catch (error) {
+//     console.error('Error:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   } finally {
+//     await session.close();
+//   }
+// });
+
+
+async function friendsOfFriendsDFS(session, userId, visited = new Set()) {
+  visited.add(userId);
+
+  const result = await session.run(
+    `
+    MATCH (u:User {userId: $userId})-[:FRIENDS_WITH]-(fof:User)
+    RETURN fof;
+    `,
+    { userId: userId }
+  );
+
+  const friendsOfFriends = [];
+  for (const record of result.records) {
+
+    const friendId = record.get('fof').properties.userId;
+    if (!visited.has(friendId)) {
+      friendsOfFriends.push(friendId);
+      const nestedFriends = await friendsOfFriendsDFS(session, friendId, visited);
+      friendsOfFriends.push(...nestedFriends);
+    }
+  }
+  return friendsOfFriends;
 }
 
-// Function to find k-nearest neighbors
-function kNearestNeighbors(data, query, k) {
-  const distances = [];
 
-  for (const point of data) {
-    const distance = euclideanDistance(query, point.features);
-    distances.push({ label: point.label, distance });
-  }
 
-  distances.sort((a, b) => a.distance - b.distance);
 
-  return distances.slice(0, k);
-}
+router.get('/api/friendsOfFriends/:userId', async (req, res) => {
+  const userId = parseFloat(req.params.userId);
 
-// Function to fetch data from MongoDB and run KNN algorithm
-async function getDataFromMongoDBAndRunKNN() {
-  const mongoURI = 'mongodb://localhost:27017';
-  const dbName = 'yourDatabaseName';
-  const collectionName = 'yourCollectionName';
-
-  const client = new MongoClient(mongoURI, { useUnifiedTopology: true });
+  const session = neo4jDriver.session();
 
   try {
-    await client.connect();
-    console.log('Connected to the MongoDB database');
-
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
-
-    // Fetch data from MongoDB
-    const data = await collection.find({}).toArray();
-    console.log('Data fetched from MongoDB:', data);
-
-    // Replace this with the actual interests for User A
-    const userAFeatures = [/* User A's interests array */];
-
-    // Run KNN algorithm
-    const k = 3;
-    const nearestNeighbors = kNearestNeighbors(data, userAFeatures, k);
-
-    // Display suggested friends
-    const suggestedFriends = nearestNeighbors.map(neighbor => neighbor.label);
-    console.log('Suggested friends:', suggestedFriends);
+    const result = await friendsOfFriendsDFS(session, userId);
+    res.json({ friendsOfFriends: result });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   } finally {
-    await client.close();
-    console.log('Closed the MongoDB connection');
+    await session.close();
   }
-}
+});
 
-// Call the function to fetch data from MongoDB and run the KNN algorithm
-getDataFromMongoDBAndRunKNN();
+
+
+module.exports = router;

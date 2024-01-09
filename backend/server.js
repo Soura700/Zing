@@ -15,8 +15,11 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const friendRequestRoute = require("./routes/friend");
 const friend_Request_Route = require("./routes/friend2");
-var neo4j = require('neo4j-driver');
 const io = require("./socket");
+const suggestion = require("./routes/suggestion"); 
+const suggestion2 = require("./routes/suggestion2"); 
+
+const fof = require("./routes/suggestion"); 
 
 // const io = require("socket.io")(5500,{
 //   cors:{
@@ -57,30 +60,30 @@ mongoose
 
 
 
-  // (async () => {
-  //   var neo4j = require('neo4j-driver')
+  (async () => {
+    var neo4j = require('neo4j-driver')
   
-  //   // URI examples: 'neo4j://localhost', 'neo4j+s://xxx.databases.neo4j.io'
-  //   const URI = 'neo4j+s://78208b1f.databases.neo4j.io'
-  //   const USER = 'neo4j'
-  //   const PASSWORD = '7Ip5WHgdheXTisuYy9VB959wyzzbXzYkuTjCbQWviN8'
-  //   let driver
+    // URI examples: 'neo4j://localhost', 'neo4j+s://xxx.databases.neo4j.io'
+    const URI = 'neo4j+s://78208b1f.databases.neo4j.io'
+    const USER = 'neo4j'
+    const PASSWORD = '7Ip5WHgdheXTisuYy9VB959wyzzbXzYkuTjCbQWviN8'
+    let driver
   
-  //   try {
-  //     driver = neo4j.driver(URI,  neo4j.auth.basic(USER, PASSWORD))
-  //     const serverInfo = await driver.getServerInfo()
-  //     console.log('Connection estabilished')
-  //     console.log(serverInfo)
-  //   } catch(err) {
-  //     console.log(`Connection error\n${err}\nCause: ${err.cause}`)
-  //     await driver.close()
-  //     return
-  //   }
+    try {
+      driver = neo4j.driver(URI,  neo4j.auth.basic(USER, PASSWORD))
+      const serverInfo = await driver.getServerInfo()
+      console.log('Connection estabilished')
+      console.log(serverInfo)
+    } catch(err) {
+      console.log(`Connection error\n${err}\nCause: ${err.cause}`)
+      await driver.close()
+      return
+    }
   
-  //   // Use the driver to run queries
+    // Use the driver to run queries
   
-  //   await driver.close()
-  // })();
+    await driver.close()
+  })();
 
 let users = [];
 const activeGroups = [];
@@ -235,7 +238,12 @@ app.use("/api/group",groupRoute);
 app.use("/api/groupmessage",groupMessageRoute);
 app.use("/api/friendrequest",friendRequestRoute);
 app.use("/api/friend_request" , friend_Request_Route)
+app.use("/api" , fof)
 
+
+// console.log(suggestion2());
+
+console.log(suggestion2);
 
 console.log("hello");
 
