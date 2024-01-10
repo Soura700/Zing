@@ -6,12 +6,19 @@
     box-sizing: border-box;
 }
 
-body {
+/* body {
     display: flex;
     flex-direction: column;
     text-align: center;
     align-items: center;
-}
+} */
+
+.yourComponentBody {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
 
 
 header {

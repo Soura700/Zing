@@ -1,25 +1,14 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const mysql = require('mysql');
+const connection = require("../connection");
 
-const app = express();
 
-// MySQL database connection
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root123",
-  database: "nodejs",
-});
 
-db.connect((err) => {
-  if (err) {
-    console.error('MySQL connection error:', err);
-  } else {
-    console.log('Connected to MySQL database');
-  }
-});
+const router = express();
+
+
+
 
 // Multer configuration
 const storage = multer.diskStorage({
@@ -34,16 +23,22 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Route to handle file upload and store data in MySQL
-app.post('/upload', upload.single('profilePicture'), (req, res) => {
+router.post('/upload', upload.single('profilePicture'), (req, res) => {
+
+
+  const {userId} = req.body;
   const { bio, interests } = req.body;
+  console.log("Bio" +bio);
+  console.log("iNTERESTS" + interests);
   const profilePicturePath = req.file.path;
+  console.log("Profilepicture path" + profilePicturePath);
 
   // Convert the interests array to a comma-separated string
   const interestsString = interests.join(', ');
 
   // Insert data into MySQL table
-  const insertQuery = 'INSERT INTO user_profiles (profile_picture, bio, interests) VALUES (?, ?, ?)';
-  db.query(insertQuery, [profilePicturePath, bio, interestsString], (err, result) => {
+  const insertQuery = 'UPDATE users SET (profile_picture, bio) VALUES (?, ?) WHERE id = ? ';
+  connection.query(insertQuery, [profilePicturePath, bio, userId], (err, result) => {
     if (err) {
       console.error('Error inserting data into MySQL:', err);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -53,7 +48,4 @@ app.post('/upload', upload.single('profilePicture'), (req, res) => {
   });
 });
 
-const port = 3001;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = router;

@@ -4,6 +4,7 @@ const neo4j = require('neo4j-driver');
 
 const neo4jDriver = neo4j.driver('neo4j+s://78208b1f.databases.neo4j.io', neo4j.auth.basic('neo4j', '7Ip5WHgdheXTisuYy9VB959wyzzbXzYkuTjCbQWviN8'));
 
+const Interests = require("../models/Interests");
 
 
 
@@ -37,6 +38,16 @@ const neo4jDriver = neo4j.driver('neo4j+s://78208b1f.databases.neo4j.io', neo4j.
 //   }
 // });
 
+async function fetchInterestsFromMongoDB(userId) {
+  try {
+    const userInterests = await Interests.findOne({ userId }).exec();
+    return userInterests ? userInterests.interests : [];
+  } catch (error) {
+    console.error('Error fetching interests from MongoDB:', error);
+    return [];
+  }
+}
+
 
 async function friendsOfFriendsDFS(session, userId, visited = new Set()) {
   visited.add(userId);
@@ -54,16 +65,25 @@ async function friendsOfFriendsDFS(session, userId, visited = new Set()) {
 
     const friendId = record.get('fof').properties.userId;
     if (!visited.has(friendId)) {
-      friendsOfFriends.push(friendId);
+
+    // Fetch interests from MongoDB for the current friendId
+    const interests = await fetchInterestsFromMongoDB(friendId);
+
+
+      // friendsOfFriends.push(friendId);
+
+      friendsOfFriends.push({ userId: friendId, interests });
+
+
       const nestedFriends = await friendsOfFriendsDFS(session, friendId, visited);
       friendsOfFriends.push(...nestedFriends);
     }
+  
   }
+
   return friendsOfFriends;
+  
 }
-
-
-
 
 router.get('/api/friendsOfFriends/:userId', async (req, res) => {
   const userId = parseFloat(req.params.userId);
@@ -72,7 +92,13 @@ router.get('/api/friendsOfFriends/:userId', async (req, res) => {
 
   try {
     const result = await friendsOfFriendsDFS(session, userId);
+
+    console.log("result");
+    console.log(result);
+
+
     res.json({ friendsOfFriends: result });
+    
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -81,6 +107,92 @@ router.get('/api/friendsOfFriends/:userId', async (req, res) => {
   }
 });
 
+class MinHash {
+  constructor() {
+    this.hashValues = [];
+  }
+
+  update(value) {
+    this.hashValues.push(hash(value));
+  }
+
+  jaccard(otherMinHash) {
+    const intersection = this.hashValues.filter((hashValue) =>
+      otherMinHash.hashValues.includes(hashValue)
+    );
+    const union = Array.from(new Set([...this.hashValues, ...otherMinHash.hashValues]));
+
+    return intersection.length / union.length;
+  }
+}
+
+function hash(value) {
+  return value.toString().split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+}
+
+async function generateRankedSuggestionsFromNeo4jAndMongoDB(targetUserId, targetUserInterests) {
+  const session = neo4jDriver.session();
+
+  try {
+    const result = await friendsOfFriendsDFS(session, targetUserId);
+    const allUsers = {};
+
+    // Populate allUsers with data obtained from Neo4j and MongoDB
+    for (const friendData of result) {
+      const friendId = friendData.userId;
+      const friendInterests = await fetchInterestsFromMongoDB(friendId);
+      allUsers[friendId] = friendInterests;
+    }
+
+    // Add the target user's data
+    allUsers[targetUserId] = targetUserInterests;
+
+    const targetMinHash = new MinHash();
+    targetUserInterests.forEach((interest) => targetMinHash.update(interest));
+
+    const rankedSuggestions = [];
+
+    for (const user in allUsers) {
+      if (user !== targetUserId) {
+        const userMinHash = new MinHash();
+        allUsers[user].forEach((interest) => userMinHash.update(interest));
+
+        const similarity = targetMinHash.jaccard(userMinHash);
+        rankedSuggestions.push({ user, similarity });
+      }
+    }
+
+    return rankedSuggestions.sort((a, b) => b.similarity - a.similarity);
+  } catch (error) {
+    console.error('Error generating ranked suggestions:', error);
+    throw error;
+  } finally {
+    await session.close();
+  }
+}
+
+// Example usage:
+async function main() {
+  const targetUserId = 1; // Replace with the actual target user ID
+  const targetUserInterests = await fetchInterestsFromMongoDB(targetUserId);
+
+  try {
+    const rankedSuggestions = await generateRankedSuggestionsFromNeo4jAndMongoDB(
+      targetUserId,
+      targetUserInterests
+    );
+
+    // Print ranked suggestions
+    console.log(`Ranked suggestions for User ${targetUserId}:`);
+    rankedSuggestions.forEach((suggestion) =>
+      console.log(`${suggestion.user} + Hello +  (Jaccard Similarity: ${suggestion.similarity.toFixed(2)})`)
+    );
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+main();
 
 
 module.exports = router;

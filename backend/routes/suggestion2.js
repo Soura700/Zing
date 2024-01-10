@@ -68,25 +68,24 @@ class MinHash {
   const allUsers = {
 
 
-    User1: ['interest1', 'interest2', 'interest3'],
+    User1: ['football', 'photography'],
 
-    User2: ['interest4', 'interest5'],
-    User3: ['interest2', 'interest1', 'interest5'],
-    User4: ['interest2', 'interest4', 'interest5'],
+    User2: ['football'],
+    User3: ['football', 'coding', 'photography'],
+    User4: ['football', 'coding', 'photography' , "cooking"],
 
-    User5: ['interest4', 'interest5'],
-    User6: ['interest2', 'interest1', 'interest5'],
-    User7: ['interest2', 'interest4', 'interest5'],
+    User5: ['gardening', 'cycling'],
+    // User6: ['interest2', 'interest1', 'interest5'],
+    // User7: ['interest2', 'interest4', 'interest5'],
 
-    User8: ['interest1', 'interest2', 'interest3'],
-
+    // User8: ['interest1', 'interest2', 'interest3'],
 
     // Add more users and interests obtained through DFS
   };
   
   // Example target user and their interests
   const targetUser = 'User1';
-  const targetUserInterests = ['interest1', 'interest2', 'interest3'];
+  const targetUserInterests = ['football', 'photography'];
   
   // Example usage:
   const rankedSuggestions = generateRankedSuggestions(targetUser, targetUserInterests, allUsers);
@@ -96,8 +95,9 @@ class MinHash {
   rankedSuggestions.forEach((suggestion) =>
     console.log(`${suggestion.user} (Jaccard Similarity: ${suggestion.similarity.toFixed(2)})`)
   );
+
+
+
+
   
-  
-  
-  
-  module.exports = router;
+module.exports = router;
