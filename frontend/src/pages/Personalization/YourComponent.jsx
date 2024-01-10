@@ -1,7 +1,18 @@
 import React, { useState } from "react";
 import "./YourComponent.css"; // Import your CSS file
+import { useParams } from "react-router-dom";
+
 
 const YourComponent = () => {
+  
+
+  const {userId} = useParams();
+
+  alert(userId);
+
+
+
+
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [profilePicture, setProfilePicture] = useState(null);
   const [bio, setBio] = useState("");
@@ -33,7 +44,9 @@ const YourComponent = () => {
       const formData = new FormData();
       formData.append("profilePicture", profilePicture);
       formData.append("bio", bio);
-      formData.append("interests", JSON.stringify(selectedInterests));
+      // formData.append("interests", JSON.stringify(selectedInterests));
+
+      formData.append("")
 
       fetch("http://localhost:3001/upload", {
         method: "POST",
@@ -55,7 +68,8 @@ const YourComponent = () => {
   };
 
   return (
-    <div className="whole">
+    <body className="yourComponentBody">
+     <div className="whole">
       <header>
         <h1>Hi John Doe,</h1>
         <h2>Personalize your Profile</h2>
@@ -77,7 +91,7 @@ const YourComponent = () => {
           />
           <span></span>
         </div>
-        <div id="profileBio" className="auto-size-text-box" contenteditable="true" >
+        <div id="profileBio" placeholder="Bio" className="auto-size-text-box" contenteditable="true" >
           {/* <input
           className="input-box"
             type="text"
@@ -117,6 +131,7 @@ const YourComponent = () => {
         </div>
       </div>
     </div>
+  </body>
   );
 };
 

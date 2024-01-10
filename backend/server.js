@@ -19,6 +19,7 @@ var neo4j = require('neo4j-driver');
 const io = require("./socket");
 const suggestion = require("./routes/suggestion"); 
 const suggestion2 = require("./routes/suggestion2"); 
+const personalization = require("./routes/personalization");
 
 const fof = require("./routes/suggestion"); 
 
@@ -239,8 +240,8 @@ app.use("/api/group",groupRoute);
 app.use("/api/groupmessage",groupMessageRoute);
 app.use("/api/friendrequest",friendRequestRoute);
 app.use("/api/friend_request" , friend_Request_Route)
-
-
+app.use("/api" , fof)
+app.use("/bio_profile_img" , personalization)
 console.log("hello");
 
 //step 5:
