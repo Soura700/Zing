@@ -192,6 +192,84 @@ async function main() {
   }
 }
 
+
+function filterRankedSuggestionsDynamicThreshold(rankedSuggestions, percentageThreshold) {
+
+  if (!rankedSuggestions.length) {
+    return {}; // Return an empty object if there are no suggestions
+  }
+
+  // Calculate the dynamic threshold as a percentage of the maximum similarity
+  console.log("maxSimilarity 11111");
+  console.log(rankedSuggestions[0]);
+  const maxSimilarity = rankedSuggestions[0].similarity;
+  console.log("maxSimilarity");
+  console.log(maxSimilarity)
+  const dynamicThreshold = maxSimilarity * (percentageThreshold / 100);
+
+  const filteredResults = {};
+
+  for (const suggestion of rankedSuggestions) {
+
+    if (suggestion.similarity >= dynamicThreshold) {
+      filteredResults[suggestion.user] = suggestion.similarity;
+    } else {
+      // Break the loop if the similarity falls below the threshold
+      break;
+    }
+  }
+
+  return filteredResults;
+}
+
+function calculateDynamicPercentageThreshold(numSuggestions) {
+  // Adjust the threshold based on the number of suggestions
+  if (numSuggestions <= 5) {
+    return 80; // High threshold if few suggestions
+  } else {
+    return 60; // Lower threshold if more suggestions
+  }
+}
+
+
+// // Example usage:
+// const targetUserId = 1; // Replace with the actual target user ID
+// const targetUserInterests = await fetchInterestsFromMongoDB(targetUserId);
+(async () => {
+  const targetUserId = 1; // Replace with the actual target user ID
+  const targetUserInterests = await fetchInterestsFromMongoDB(targetUserId);
+
+  try {
+    const rankedSuggestions = await generateRankedSuggestionsFromNeo4jAndMongoDB(
+      targetUserId,
+      targetUserInterests
+    );
+
+    // Set the percentage threshold dynamically
+    // const percentageThreshold = 75; // Adjust the percentage as needed
+
+        // Calculate the dynamic percentage threshold based on the number of suggestions
+
+        console.log(rankedSuggestions.length);
+    const dynamicPercentageThreshold = calculateDynamicPercentageThreshold(rankedSuggestions.length);
+
+
+    // Use the filter function with the dynamic threshold
+    // const filteredResults = filterRankedSuggestionsDynamicThreshold(rankedSuggestions, percentageThreshold);
+
+    const filteredResults = filterRankedSuggestionsDynamicThreshold(rankedSuggestions, dynamicPercentageThreshold);
+
+
+    // Print the filtered results
+    console.log(`Filtered results for User ${targetUserId} above dynamic similarity threshold:`);
+    console.log(filteredResults);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+})();
+
+
+
 main();
 
 

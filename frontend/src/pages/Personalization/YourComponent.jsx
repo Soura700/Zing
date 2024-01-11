@@ -8,10 +8,6 @@ const YourComponent = () => {
 
   const {userId} = useParams();
 
-  alert(userId);
-
-
-
 
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [profilePicture, setProfilePicture] = useState(null);
@@ -41,16 +37,21 @@ const YourComponent = () => {
     const selectedCount = selectedInterests.length;
 
     if (selectedCount >= 2) {
+      
       const formData = new FormData();
       formData.append("profilePicture", profilePicture);
       formData.append("bio", bio);
       // formData.append("interests", JSON.stringify(selectedInterests));
 
-      formData.append("")
+      formData.append("userId" , userId);
 
-      fetch("http://localhost:3001/upload", {
+      fetch("http://localhost:5000/api/bio_profile_img/upload", {
         method: "POST",
         body: formData,
+        // body: JSON.stringify({
+        //   formData,
+        //   userId: userId,
+        // }),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -66,6 +67,8 @@ const YourComponent = () => {
       alert("Please select two or more choices");
     }
   };
+
+  console.log(profilePicture);
 
   return (
     <body className="yourComponentBody">

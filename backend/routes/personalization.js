@@ -3,8 +3,6 @@ const multer = require('multer');
 const path = require('path');
 const connection = require("../connection");
 
-
-
 const router = express();
 
 
@@ -34,13 +32,15 @@ router.post('/upload', upload.single('profilePicture'), (req, res) => {
   console.log("Profilepicture path" + profilePicturePath);
 
   // Convert the interests array to a comma-separated string
-  const interestsString = interests.join(', ');
+  // const interestsString = interests.join(', ');
 
   // Insert data into MySQL table
-  const insertQuery = 'UPDATE users SET (profile_picture, bio) VALUES (?, ?) WHERE id = ? ';
+  const insertQuery = 'UPDATE users SET profileImg = ?, bio = ? WHERE id = ?';
+  // 'UPDATE users SET (profile_picture, bio) VALUES (?, ?) WHERE id = ? ';
   connection.query(insertQuery, [profilePicturePath, bio, userId], (err, result) => {
     if (err) {
       console.error('Error inserting data into MySQL:', err);
+      console.log(err);
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
       res.json({ message: 'Data stored successfully!' });

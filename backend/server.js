@@ -242,6 +242,9 @@ app.use("/api/friendrequest",friendRequestRoute);
 app.use("/api/friend_request" , friend_Request_Route)
 app.use("/api" , fof)
 app.use("/bio_profile_img" , personalization)
+app.use("/api/bio_profile_img" , personalization)
+// console.log(suggestion2);
+// suggestion2;
 console.log("hello");
 
 //step 5:
