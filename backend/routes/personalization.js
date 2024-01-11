@@ -25,14 +25,9 @@ router.post('/upload', upload.single('profilePicture'), (req, res) => {
 
 
   const {userId} = req.body;
-  const { bio, interests } = req.body;
-  console.log("Bio" +bio);
-  console.log("iNTERESTS" + interests);
-  const profilePicturePath = req.file.path;
-  console.log("Profilepicture path" + profilePicturePath);
+  const { bio } = req.body;
 
-  // Convert the interests array to a comma-separated string
-  // const interestsString = interests.join(', ');
+  const profilePicturePath = req.file.path;
 
   // Insert data into MySQL table
   const insertQuery = 'UPDATE users SET profileImg = ?, bio = ? WHERE id = ?';

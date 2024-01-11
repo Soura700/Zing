@@ -27,7 +27,7 @@ router.use(
 router.post(
   "/register",
   [
-    check("username", "The usernme must be +3 characters long")
+    check("username","Username must be +3 characters long")
       .exists()
       .isLength({ min: 3 }),
     check("email", "Email is not valid")
@@ -75,7 +75,7 @@ router.post(
           if (results.length > 0) {
             // User already exists, handle the error
             console.log("User already registered");
-            return res.status(401).json({ errors: "User already registered" });
+            return res.status(409).json({ errors: "User already registered" });
           }
         });
 
@@ -183,7 +183,7 @@ router.post(
             }
 
             if (result.length === 0) {
-              return res.status(400).json({ error: "User Not Found" });
+              return res.status(404).json({ error: "User Not Found" });
             }
 
             const user = result[0];
