@@ -102,6 +102,12 @@ form.sign-in-form {
   font-weight: 500;
 }
 
+/* .input-field input{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+} */
+
 .social-text {
   padding: 0.7rem 0;
   font-size: 1rem;

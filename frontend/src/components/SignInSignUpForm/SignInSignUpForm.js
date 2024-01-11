@@ -1,6 +1,8 @@
 import axios from "axios";
 import img from "../../assets/img.svg";
 import img2 from "../../assets/img1svg.svg";
+import './sign.css';
+// import styles from "./sign.module.css";
 import "./sign.css";
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -217,7 +219,9 @@ const SignInSignUpForm = () => {
 
             <div class="input-field">
               <i class="fas fa-user"></i>
+              <input type="email" name='email' placeholder="Email"/>
               <input type="email" name="email" placeholder="Email" />
+
             </div>
 
             {signInemailError && (
@@ -251,16 +255,13 @@ const SignInSignUpForm = () => {
             <p class="social-text">Or Sign in with social platforms</p>
             <div class="social-media">
               <a href="#" class="social-icon">
-                <i class="fab fa-facebook-f"></i>
+              <i class="fa-brands fa-facebook"></i>
               </a>
               <a href="#" class="social-icon">
                 <i class="fab fa-twitter"></i>
               </a>
               <a href="#" class="social-icon">
                 <i class="fab fa-google"></i>
-              </a>
-              <a href="#" class="social-icon">
-                <i class="fab fa-linkedin-in"></i>
               </a>
             </div>
           </form>
@@ -322,9 +323,6 @@ const SignInSignUpForm = () => {
               </a>
               <a href="#" class="social-icon">
                 <i class="fab fa-google"></i>
-              </a>
-              <a href="#" class="social-icon">
-                <i class="fab fa-linkedin-in"></i>
               </a>
             </div>
           </form>
