@@ -159,7 +159,29 @@
 
 /* 1170px
   1026px */
-@media (max-width: 1170px) {
+
+
+@media (max-width: 427px) {
+
+  .post {
+    -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    border-radius: 20px;
+    /* background-color: themed("bg"); */
+    background: rgb(255, 255, 255);
+    color: themed("textColor");
+    /* background: red; */
+    /* width: 500px; */
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 0px;
+
+  }
+
+  }  
+
+/* @media (max-width: 1170px) {
   .post .content p {
     color: rgb(54, 54, 54);
     font-size: 17px;
@@ -181,11 +203,10 @@
     -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     border-radius: 20px;
-    /* background-color: themed("bg"); */
+
     background: rgb(255, 255, 255);
     color: themed("textColor");
-    /* background: red; */
-    /* width: 500px; */
+
     margin-left: 0px;
     margin-right: 0px;
     margin-top: 0px;
@@ -209,7 +230,7 @@
 
 
 /* media query for tablet, refer to rightbar css media queries for better info */
-@media (min-width: 768px) and (max-width: 950px) {
+/* @media (min-width: 768px) and (max-width: 950px) {
   .post {
     -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
@@ -217,7 +238,7 @@
     border-radius: 20px;
     background-color: themed("bg");
     color: themed("textColor");
-    /* background: red; */
+
     margin-left: 0px;
     margin-right: 0px;
     margin-top: 0px;
@@ -251,5 +272,4 @@
     gap: 5px;
     cursor: pointer;
     font-size: 12px;
-  }
-}
+  } */

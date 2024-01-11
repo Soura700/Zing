@@ -1,109 +1,228 @@
-import React from 'react';
-import styles from  "./rightbar.module.css";
-import { ClassNames } from '@emotion/react';
+import React from "react";
+import styles from "./rightbar.module.css";
+import CloseIcon from '@mui/icons-material/Close';
+import { ClassNames } from "@emotion/react";
+import { useEffect, useState } from "react";
 
 const RightBar = () => {
-    return (
-        <div className={styles.container}>
-            <div className={styles.RightBar}>
-                {/* box1 content starts here */}
-                <div className={styles.item}>
-                    <h1 className={styles.header}>Suggestions For You</h1>
-                    <div className={styles.user}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                        </div>
-                        <div className={styles.buttons}>
-                            <button className={styles.btn1}>Follow</button>
-                            <button className={styles.btn2}>Dismiss</button>
-                        </div>
-                    </div>
-                    <div className={styles.user}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                        </div>
-                        <div className={styles.buttons}>
-                            <button className={styles.btn1}>Follow</button>
-                            <button className={styles.btn2}>Dismiss</button>
-                        </div>
-                    </div>
-                </div>
-          
-                {/* box1 content ends here */}
-          
-                {/* box2 content starts here */}
-                <div className={styles.item2}>
-                    <h1 className={styles.header}>Latest Activities</h1>
-                    <div className={styles.user2}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                        </div>
-                        <p>changed their cover picture</p>
-                    </div>
-                    <div className={styles.user3}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                        </div>
-                        <p>liked a post</p>
-                    </div>
-                    <div className={styles.user4}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                        </div>
-                        <p>commented on your post</p>
-                    </div>
-                    <div className={styles.user5}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                        </div>
-                        <p>shared a post</p>
-                    </div>
-                    <div className={styles.more}>More</div>
-                </div>
-                {/* box2 content ends here */}
+  const [toggle, setToggle] = useState(false);
 
-                {/* box3 content starts here */}
-                <div className={styles.item3}>
-                    <h1 className={styles.header}>Online Friends</h1>
-                    <div className={styles.user6}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                            <circle></circle>
-                        </div>
-                    </div>
-                    <div className={styles.user7}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                            <circle></circle>
-                        </div>
-                    </div>
-                    <div className={styles.user8}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                            <circle></circle>
-                        </div>
-                    </div>
-                    <div className={styles.user9}>
-                        <div className={styles.userInfo}>
-                            {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                            <h3>John Doe</h3>
-                            <circle></circle>
-                        </div>
-                    </div>
-                </div>
-                {/* box3 content ends here */}
+  const showSuggestedUsers = () => {
+    setToggle(!toggle);
+  };
+  const closeSuggestedUsers = () => {
+    setToggle(!toggle);
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.RightBar}>
+        {/* box1 content starts here */}
+        <div className={styles.item}>
+          <h1 className={styles.header}>Suggestions For You</h1>
+          <div className={styles.user}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
             </div>
-  
+            <div className={styles.buttons}>
+              <button className={styles.btn1}>Follow</button>
+              <button className={styles.btn2}>Dismiss</button>
+            </div>
+          </div>
+          <div className={styles.user}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+            </div>
+            <div className={styles.buttons}>
+              <button className={styles.btn1}>Follow</button>
+              <button className={styles.btn2}>Dismiss</button>
+            </div>
+          </div>
+          <div className={styles.more} onClick={showSuggestedUsers}>
+            More
+          </div>
+          {toggle ? (
+            <div className={styles.suggestedUsers}>
+              <ul>
+
+                {/* the data below is dummy data. each user class denotes a dummy data of a single user. they are pasted multiple times. modify these to insert data dynamically - anurag c 10.1.24 */}
+                
+                <div className={styles.heading}>
+                    <h2>All Suggestions</h2>
+                    <CloseIcon onClick={closeSuggestedUsers} className={styles.closeIcon}/>
+                </div>
+
+                <div className={styles.user}>
+                  <div className={styles.userInfo}>
+                    {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                    <h3>John Doe</h3>
+                  </div>
+                  <div className={styles.buttons}>
+                    <button className={styles.btn1}>Follow</button>
+                    <button className={styles.btn2}>Dismiss</button>
+                  </div>
+                </div>
+
+                <div className={styles.user}>
+                  <div className={styles.userInfo}>
+                    {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                    <h3>John Doe</h3>
+                  </div>
+                  <div className={styles.buttons}>
+                    <button className={styles.btn1}>Follow</button>
+                    <button className={styles.btn2}>Dismiss</button>
+                  </div>
+                </div>
+
+                <div className={styles.user}>
+                  <div className={styles.userInfo}>
+                    {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                    <h3>John Doe</h3>
+                  </div>
+                  <div className={styles.buttons}>
+                    <button className={styles.btn1}>Follow</button>
+                    <button className={styles.btn2}>Dismiss</button>
+                  </div>
+                </div>
+
+                <div className={styles.user}>
+                  <div className={styles.userInfo}>
+                    {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                    <h3>John Doe</h3>
+                  </div>
+                  <div className={styles.buttons}>
+                    <button className={styles.btn1}>Follow</button>
+                    <button className={styles.btn2}>Dismiss</button>
+                  </div>
+                </div>
+
+                <div className={styles.user}>
+                  <div className={styles.userInfo}>
+                    {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                    <h3>John Doe</h3>
+                  </div>
+                  <div className={styles.buttons}>
+                    <button className={styles.btn1}>Follow</button>
+                    <button className={styles.btn2}>Dismiss</button>
+                  </div>
+                </div>
+
+                <div className={styles.user}>
+                  <div className={styles.userInfo}>
+                    {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                    <h3>John Doe</h3>
+                  </div>
+                  <div className={styles.buttons}>
+                    <button className={styles.btn1}>Follow</button>
+                    <button className={styles.btn2}>Dismiss</button>
+                  </div>
+                </div>
+
+                <div className={styles.user}>
+                  <div className={styles.userInfo}>
+                    {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                    <h3>John Doe</h3>
+                  </div>
+                  <div className={styles.buttons}>
+                    <button className={styles.btn1}>Follow</button>
+                    <button className={styles.btn2}>Dismiss</button>
+                  </div>
+                </div>
+
+                <div className={styles.user}>
+                  <div className={styles.userInfo}>
+                    {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                    <h3>John Doe</h3>
+                  </div>
+                  <div className={styles.buttons}>
+                    <button className={styles.btn1}>Follow</button>
+                    <button className={styles.btn2}>Dismiss</button>
+                  </div>
+                </div>
+
+              </ul>
+            </div>
+          ) : (
+            <div className={styles.postOpt}></div>
+          )}
         </div>
-    )
-}
-export default RightBar
+
+        {/* box1 content ends here */}
+
+        {/* box2 content starts here */}
+        <div className={styles.item2}>
+          <h1 className={styles.header}>Latest Activities</h1>
+          <div className={styles.user2}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+            </div>
+            <p>changed their cover picture</p>
+          </div>
+          <div className={styles.user3}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+            </div>
+            <p>liked a post</p>
+          </div>
+          <div className={styles.user4}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+            </div>
+            <p>commented on your post</p>
+          </div>
+          <div className={styles.user5}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+            </div>
+            <p>shared a post</p>
+          </div>
+          <div className={styles.more}>More</div>
+        </div>
+        {/* box2 content ends here */}
+
+        {/* box3 content starts here */}
+        <div className={styles.item3}>
+          <h1 className={styles.header}>Online Friends</h1>
+          <div className={styles.user6}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+              <circle></circle>
+            </div>
+          </div>
+          <div className={styles.user7}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+              <circle></circle>
+            </div>
+          </div>
+          <div className={styles.user8}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+              <circle></circle>
+            </div>
+          </div>
+          <div className={styles.user9}>
+            <div className={styles.userInfo}>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              <h3>John Doe</h3>
+              <circle></circle>
+            </div>
+          </div>
+
+          
+        </div>
+        {/* box3 content ends here */}
+      </div>
+    </div>
+  );
+};
+export default RightBar;

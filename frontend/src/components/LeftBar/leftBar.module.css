@@ -25,6 +25,8 @@
     border-radius: 12px;
     background: #a479fa;
     display: flex;
+    justify-content: left;
+    text-align: left;
     height: 45px;
     flex-direction: row;
     padding-left: 10px;
@@ -35,6 +37,9 @@
 
 .item .header {
     background: #a479fa;
+    display: flex;
+    text-align: center;
+    align-items: center;
 }
 
 .item .header h1 {
@@ -67,6 +72,9 @@
 
 .item2 .header {
     background: #a479fa;
+    display: flex;
+    text-align: center;
+    align-items: center;
 }
 
 .item2 .header h1 {
@@ -99,6 +107,9 @@
 
 .item3 .header {
     background: #a479fa;
+    display: flex;
+    text-align: center;
+    align-items: center;
 }
 
 .item3 .header h1 {
@@ -131,6 +142,9 @@
 
 .item4 .header {
     background: #a479fa;
+    display: flex;
+    text-align: center;
+    align-items: center;
 }
 
 .item4 .header h1 {
@@ -164,6 +178,9 @@
 
 .item5 .header {
     background: #a479fa;
+    display: flex;
+    text-align: center;
+    align-items: center;
 }
 
 .item5 .header h1 {
@@ -196,6 +213,9 @@
 
 .item6 .header {
     background: #a479fa;
+    display: flex;
+    text-align: center;
+    align-items: center;
 }
 
 .item6 .header h1 {
@@ -228,6 +248,9 @@
 
 .item7 .header {
     background: #a479fa;
+    display: flex;
+    text-align: center;
+    align-items: center;
 }
 
 .item7 .header h1 {
@@ -811,8 +834,10 @@
         display: block;
         position: absolute;
         transition: top 1s ease-in-out;
-        top: 100px;
+        /* top: 100px; */
+        background: red;
         z-index: -999;
+        display: none;
     }
 
     .container {
@@ -822,8 +847,9 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        margin-top: 15px;
-        transition: 0.35s ease-in;
+        margin-top: 0;
+        margin-left: 2rem;
+        /* transition: 0.35s ease-in; */
         transform: translateY(20%);
         /* backdrop-filter: blur(20px) saturate(180%);
         -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -1087,22 +1113,23 @@
     }
 
     /* rgb(25, 151, 255) */
+    /*anurag c changed 10 jan 24 */
     .leftbar_show {
         position: absolute;
         border: 1px solid rgb(135, 135, 135);
-        border-radius: 35px 35px 35px 35px;
+        /* border-radius: 35px 35px 35px 35px; */
         background: rgb(255, 255, 255);
         z-index: 999;
-        left: 40px;
-        width: 106vw;
+        left: 0px;
+        width: 115vw;
         height: 65vh;
         /* New */
-        left: 40px;
-        margin-top: -40px;
-        transition: 0.35s ease-in;
+        margin-top: -60px;
+        /* transition: 0.35s ease-in; */
         transform: translateY(15%);
-        background: transparent;
-        backdrop-filter: blur(10px) saturate(180%);
+        background: white;
+        /* background: transparent; */
+        /* backdrop-filter: blur(10px) saturate(180%); */
     }
 
 

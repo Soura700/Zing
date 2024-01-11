@@ -1,6 +1,7 @@
 @import "../../style.css";
 
 .home{
-    padding: 20px 70px;
+    /* padding: 20px 70px; */
     background-color: themed("bgSoft");
+    background: red;
  }

@@ -59,7 +59,7 @@ header h1 {
     margin-bottom: 20px;
 }
 
-#profileBio input {
+/* #profileBio input {
     height: auto;
     width: 50px;
     background: white;
@@ -72,7 +72,7 @@ header h1 {
 }
 input::placeholder {
     text-align: center;
-}
+} */
 
 #interests {
     display: flex;
