@@ -1,28 +1,35 @@
 import React, { useState } from "react";
 import "./YourComponent.css"; // Import your CSS file
 import { useParams } from "react-router-dom";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const YourComponent = () => {
-  
-
   const {userId} = useParams();
-
-  alert(userId);
-
-
 
 
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [profilePicture, setProfilePicture] = useState(null);
   const [bio, setBio] = useState("");
 
+  const [selectedImage, setSelectedImage] = useState(
+    "https://previews.123rf.com/images/alekseyvanin/alekseyvanin1807/alekseyvanin180701556/104886082-add-user-outline-icon-linear-style-sign-for-mobile-concept-and-web-design-follower-user-simple-line.jpg"
+  );
+  
+
   // Function to handle file input change
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setProfilePicture(file);
+
+      // Create a URL for the selected image and set it in the state
+  const imageURL = URL.createObjectURL(file);
+  setSelectedImage(imageURL);
+
+
   };
 
+  // Handling the interests edge case
   const handleOptionClick = (interest) => {
     const isSelected = selectedInterests.includes(interest);
 
@@ -37,18 +44,23 @@ const YourComponent = () => {
     }
   };
 
+
+
+
+  // Selecting the interests and hadling the edge cases 
+
   const handleConfirmClick = () => {
     const selectedCount = selectedInterests.length;
 
     if (selectedCount >= 2) {
+      
       const formData = new FormData();
       formData.append("profilePicture", profilePicture);
       formData.append("bio", bio);
-      // formData.append("interests", JSON.stringify(selectedInterests));
+      formData.append("interests", JSON.stringify(selectedInterests));
+      formData.append("userId" , userId);
 
-      formData.append("")
-
-      fetch("http://localhost:3001/upload", {
+      fetch("http://localhost:5000/api/bio_profile_img/upload", {
         method: "POST",
         body: formData,
       })
@@ -61,11 +73,41 @@ const YourComponent = () => {
           console.error("Error uploading file:", error);
         });
 
-      alert("Confirmed!");
+        // Store the interests in the mongodb 
+        // Store interests in MongoDB
+
+    fetch('http://localhost:5000/api/user/sendInterest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userId,
+        userInterest: selectedInterests,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        // Handle the response as needed
+      })
+      .catch((error) => {
+        console.log(error);
+        console.error('Error storing interests:', error);
+      });
+
+      // alert("Confirmed!");
+
+      toast.success("Confirmed!");
+
     } else {
-      alert("Please select two or more choices");
+      // alert("Please select two or more choices");
+
+      toast.error("Please select two or more choices");
     }
   };
+
+
 
   return (
     <body className="yourComponentBody">
@@ -79,7 +121,9 @@ const YourComponent = () => {
               <h2>Setup your profile picture</h2>
               <label htmlFor="fileInput">
                 <div className="image-container">
-                  <img src="https://previews.123rf.com/images/alekseyvanin/alekseyvanin1807/alekseyvanin180701556/104886082-add-user-outline-icon-linear-style-sign-for-mobile-concept-and-web-design-follower-user-simple-line.jpg" alt="" /> 
+                  <img src={selectedImage} alt="profileImg"></img>
+                  {/* <img  src="https://previews.123rf.com/images/alekseyvanin/alekseyvanin1807/alekseyvanin180701556/104886082-add-user-outline-icon-linear-style-sign-for-mobile-concept-and-web-design-follower-user-simple-line.jpg" alt="" />  */}
+                  {/* + */}
                 </div>
           </label>
           <input
@@ -91,7 +135,7 @@ const YourComponent = () => {
           />
           <span></span>
         </div>
-        <div id="profileBio" placeholder="Bio" className="auto-size-text-box" contenteditable="true" >
+        <div id="profileBio" placeholder="Bio" className="auto-size-text-box" contenteditable="true" onInput={(e)=>setBio(e.target.innerText)} >
           {/* <input
           className="input-box"
             type="text"
@@ -131,6 +175,7 @@ const YourComponent = () => {
         </div>
       </div>
     </div>
+    <ToastContainer/>
   </body>
   );
 };

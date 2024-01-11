@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt");
 const connection = require("../connection");
 const session = require("express-session");
 
+const { check, validationResult } = require("express-validator");
+
 router.use(
   session({
     name: "user",
@@ -22,40 +24,78 @@ router.use(
 
 // register api // all working
 
-router.post("/register", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.user_password;
-  const email = req.body.email;
+router.post(
+  "/register",
+  [
+    check("username","Username must be +3 characters long")
+      .exists()
+      .isLength({ min: 3 }),
+    check("email", "Email is not valid")
+      .notEmpty()
+      .withMessage("Email cannot be empty"),
+    check("user_password", "")
+      .isLength({ min: 8, max: 32 })
+      .withMessage("Password must be in range of 8 to 32")
+      .matches(/[a-z]/)
+      .withMessage("Password must contain at least one lowercase letter")
+      .matches(/[A-Z]/)
+      .withMessage("Password must contain at least one uppercase letter")
+      .matches(/[0-9]/)
+      .withMessage("Password must contain at least one numeric character")
+      .matches(/[!@#$%^&*(),.?":{}|<>]/)
+      .withMessage("Password must contain at least one special character"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  const salt = await bcrypt.genSalt(12);
-  const hashedPass = await bcrypt.hash(password, salt);
+    const errorMessages = errors
+      .array()
+      .map((error) => `${error.msg}`)
+      .join("@");
 
-  try {
-    //check if the user already exists or not(by email)
-    const userExistsQuery = "SELECT email FROM users WHERE email = ?";
-    connection.query(userExistsQuery, [email], (error, results) => {
-      if (results.length > 0) {
-        // User already exists, handle the error
-        console.log("User already registered");
-        return res.status(400).json({ errors: "User already registered" });
+    // const errorMessages = errors.array().map(error => {error.msg}).join('');
+
+    if (!errors.isEmpty()) {
+      // return res.status(422).json({
+      //     errors:errors.array()
+      // });
+      return res.status(400).send(errorMessages);
+    } else {
+      const username = req.body.username;
+      const password = req.body.user_password;
+      const email = req.body.email;
+
+      const salt = await bcrypt.genSalt(12);
+      const hashedPass = await bcrypt.hash(password, salt);
+
+      try {
+        //check if the user already exists or not(by email)
+        const userExistsQuery = "SELECT email FROM users WHERE email = ?";
+        connection.query(userExistsQuery, [email], (error, results) => {
+          if (results.length > 0) {
+            // User already exists, handle the error
+            console.log("User already registered");
+            return res.status(409).json({ errors: "User already registered" });
+          }
+        });
+
+        connection.query(
+          "INSERT INTO users (username, email, user_password) VALUES (?, ?, ?)",
+          [username, email, hashedPass],
+          (error, results) => {
+            if (error) {
+              // res.status(500).json(error);
+            } else {
+              res.status(200).json(results);
+            }
+          }
+        );
+      } catch (error) {
+        res.status(500).json(error);
       }
-    });
-
-    connection.query(
-      "INSERT INTO users (username, email, user_password) VALUES (?, ?, ?)",
-      [username, email, hashedPass],
-      (error, results) => {
-        if (error) {
-          // res.status(500).json(error);
-        } else {
-          res.status(200).json(results);
-        }
-      }
-    );
-  } catch (error) {
-    res.status(500).json(error);
+    }
   }
-});
+);
 
 // router.post("/login", async (req, res) => {
 //     const username = req.body.username;
@@ -102,103 +142,115 @@ router.get("/", (req, res) => {
 
 router.post(
   "/login",
+  [
+    check("email", "Email is not valid")
+      .notEmpty()
+      .withMessage("Email cannot be empty"),
+    check("user_password", "")
+      .notEmpty()
+      .withMessage("Password cannot be empty"),
+  ],
+
   async (req, res) => {
-    try {
-      const email = req.body.email;
 
-      const userIP =
-        req.headers["cf-connecting-ip"] ||
-        req.headers["x-real-ip"] ||
-        req.headers["x-forwarded-for"] ||
-        req.socket.remoteAddress ||
-        "";
+    const errors = validationResult(req);
 
-      connection.query(
-        "SELECT * FROM users WHERE email = ?",
-        [email],
-        async (err, result) => {
-          if (err) {
-            return res.status(500).json({ error: "Internal Server Error" });
-          }
 
-          if (result.length === 0) {
-            return res.status(400).json({ error: "User Not Found" });
-          }
+    const errorMessages = errors.array().map((error) => `${error.msg}`).join("@");
 
-          const user = result[0];
+    if (!errors.isEmpty()) {
+      // return res.status(422).json({
+      //     errors:errors.array()
+      // });
+      return res.status(400).send(errorMessages);
+    } else {
+      try {
+        const email = req.body.email;
 
-          var password = req.body.user_password;
+        const userIP =
+          req.headers["cf-connecting-ip"] ||
+          req.headers["x-real-ip"] ||
+          req.headers["x-forwarded-for"] ||
+          req.socket.remoteAddress ||
+          "";
 
-          const isPasswordValid = await bcrypt.compare(
-            password,
-            user.user_password
-          );
-
-          if (!isPasswordValid) {
-            return res.status(400).json({ error: "Wrong Credentials" });
-          }
-
-          req.session.userId = user.id;
-
-          const userId = user.id.toString();
-          const customValue = `custom_${userId}`;
-
-          res.cookie("session_token", customValue, {
-            httpOnly: true,
-            expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-          });
-
-          // Update current_login_time
-          connection.query(
-            "UPDATE users SET ip_addresses = ? WHERE email = ?",
-            [userIP, email],
-            (error, results) => {
-              if (error) {
-                console.error("Error updating IP:", error);
-                return res.status(500).json(error);
-              } else {
-                console.log("IP updated in database");
-                // return res.status(200).json(results);
-              }
+        connection.query(
+          "SELECT * FROM users WHERE email = ?",
+          [email],
+          async (err, result) => {
+            if (err) {
+              return res.status(500).json({ error: "Internal Server Error" });
             }
-          );
 
-          res.status(200).json(user);
-        }
-      );
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
+            if (result.length === 0) {
+              return res.status(404).json({ error: "User Not Found" });
+            }
+
+            const user = result[0];
+
+            var password = req.body.user_password;
+
+            const isPasswordValid = await bcrypt.compare(
+              password,
+              user.user_password
+            );
+
+            if (!isPasswordValid) {
+              return res.status(401).json({ error: "Wrong Credentials" });
+            }
+
+            req.session.userId = user.id;
+
+            const userId = user.id.toString();
+            const customValue = `custom_${userId}`;
+
+            res.cookie("session_token", customValue, {
+              httpOnly: true,
+              expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+            });
+
+            // Update current_login_time
+            connection.query(
+              "UPDATE users SET ip_addresses = ? WHERE email = ?",
+              [userIP, email],
+              (error, results) => {
+                if (error) {
+                  console.error("Error updating IP:", error);
+                  return res.status(500).json(error);
+                } else {
+                  console.log("IP updated in database");
+                  // return res.status(200).json(results);
+                }
+              }
+            );
+
+            res.status(200).json(user);
+          }
+        );
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+      }
     }
   }
-  // }
 );
-
-
 
 router.get("/check-cookie", (req, res) => {
   // Check if the session_token cookie exists
   if (req.cookies.user) {
-
-    if(req.cookies.session_token){
-
-    
+    if (req.cookies.session_token) {
       const session_cookie = req.cookies.session_token;
-      const [customPart , userId] = session_cookie.split('_');
+      const [customPart, userId] = session_cookie.split("_");
 
-      if(customPart === 'custom' && userId ){
-
+      if (customPart === "custom" && userId) {
         res.status(200).json(userId);
-        
+
         // res.status(200).json({ message: "Cookie exists" + " " +  userId  });
+      } else {
+        res
+          .status(400)
+          .json({ message: "Cookie does not exist or has expired" });
       }
-
-      else{
-
-        res.status(400).json({ message: "Cookie does not exist or has expired" });
-
-      }
-        
     }
   } else {
     res.status(400).json({ message: "Cookie does not exist or has expired" });

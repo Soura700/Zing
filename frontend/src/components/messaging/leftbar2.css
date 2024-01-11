@@ -869,3 +869,29 @@ span {
     background: rgb(233, 210, 255);
     border-radius: 10px 0px 10px 10px;
 }
+
+.senders-photo{
+    display: flex;
+    justify-content: center;
+    box-shadow: 5px 5px 7px rgb(193, 192, 192);
+    border: 5px solid white;
+    margin-bottom: 10px;
+    margin-right: auto;
+    height: 70%;
+    width: fit-content;
+    max-width: 40%;
+    overflow: hidden;
+}
+
+.recievers-photo{
+    display: flex;
+    justify-content: center;
+    box-shadow: 5px 5px 7px rgb(193, 192, 192);
+    border: 5px solid white;
+    margin-bottom: 10px;
+    margin-left: auto;
+    height: 70%;
+    width: fit-content;
+    max-width: 40%;
+    overflow: hidden;
+}

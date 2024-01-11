@@ -7,7 +7,7 @@ const InterestSchema = new mongoose.Schema({
         required : true,
     },//Stores the userId who is logged in ...and the another user with whom i have done the text
     interests:{
-        type:Array,
+        type: Array,
         required:true,
     }
 
