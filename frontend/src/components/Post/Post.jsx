@@ -4,6 +4,7 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { Link } from "react-router-dom";
 // import Comments from "../comments/Comments";
 import { io } from "socket.io-client";
@@ -205,9 +206,14 @@ const Post = ({ post , userId }) => {
             12 Comments
           </div>
           <div className={styles.item}>
+            <BookmarkBorderIcon />
+            Save
+          </div>
+          <div className={styles.item}>
             <ShareOutlinedIcon />
             Share
           </div>
+          
         </div>
         {/* {commentOpen && <Comments />} */}
       </div>
