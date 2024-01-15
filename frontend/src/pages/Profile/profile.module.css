@@ -7,11 +7,11 @@
 
 .profileContainer {
   padding: 0px 20px;
-  background: #e4e8fb;
+  /* background: #e4e8fb; */
 }
 
 .uInfo {
-  height: 250px;
+  height: fit-content;
   -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
   -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
   box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
@@ -24,7 +24,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 
@@ -32,7 +32,7 @@
   flex: 1;
   display: flex;
   background: rgb(255, 255, 255);
-  margin-top: 40px;
+  margin-top: 20px;
   flex-direction: column;
   align-items: center;
   gap: 10px;
@@ -48,8 +48,9 @@
 
 .btn {
   margin-top: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   align-items: center;
+  height: fit-content;
 }
 
 .btn .btn1 {
@@ -60,6 +61,7 @@
   border: none;
   background-color: #a479fa;
   color: white;
+  width: fit-content;
   font-size: 20px;
   margin-top: 10px;
   padding: 10px 20px;
@@ -70,13 +72,18 @@
 .btn .btn1:hover {
   box-shadow: 2px 2px 12px #a479fa;
   background-color: #8363c2;
+  outline: none;
 }
-
+.btn .btn1:active {
+  border: 0px;
+  outline: none;
+}
 .btn .btn2 {
   border: none;
   background-color: rgb(255, 255, 255);
-  border: 1px solid #a479fa;
+  border: 1px solid #a7a7a7;
   color: rgb(104, 104, 104);
+  width: fit-content;
   font-size: 20px;
   /* margin-top: 10px; */
   padding: 10px 20px;
@@ -87,6 +94,7 @@
 .btn .settings {
   margin-left: 30px;
   color: rgb(163, 163, 163);
+  cursor: pointer;
 }
 
 .links {
@@ -96,10 +104,14 @@
   flex: 1;
   display: flex;
   gap: 10px;
+  margin-bottom: 10px;
 }
 
 .links a {
-  color: rgb(181, 181, 181);
+  color: #bcb4cc;
+}
+.links a:hover {
+  color: #8363c2;
 }
 
 .right {
@@ -120,7 +132,7 @@
   left: 0;
   right: 0;
   margin: auto;
-  top: 100px;
+  top: 60px;
   /* box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62);
   -webkit-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62);
   -moz-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62); */
@@ -166,6 +178,201 @@ span {
 a {
   color: themed("textColorSoft");
 }
+
+/* profile friends section styles */
+
+.profileFriendsContainer {
+  padding: 1rem 0rem;
+  position: relative;
+}
+.profileFriendsContainer .profileFriendsHeader {
+  border: 0px solid red;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+
+}
+.profileFriendsContainer .profileFriendsHeader h2{
+  font-size: 30px;
+  margin: 0;
+  
+}
+.profileFriendsContainer .profileFriendsHeader button {
+  margin: 0;
+  width: fit-content;
+  border: 1px solid rgb(206, 206, 206);
+  border-radius: 20px;
+}
+.profileFriendsContainer .profileFriendsHeader button:hover {
+  background: #a479fa;
+  color: white;
+  cursor: pointer;
+}
+.profileFriends{
+  border: 0px solid #eae2ff;
+  /* background: rgba(239, 232, 250, 1); */
+  /* box-shadow: 0px 0px 20px 1px rgb(188, 188, 188); */
+  width: fit-content;
+  padding: 1rem;
+  border-radius: 20px;
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0rem;
+  max-width: 924px;
+  overflow-y: hidden;
+  overflow-x: auto;
+ 
+}
+.profileFriends .friendCard {
+  border: 1px solid rgb(225, 225, 225);
+  background: white;
+  border-radius: 12px;
+  height: 210px;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  justify-content: space-between;
+  align-items: center;
+
+}
+.profileFriends .friendCard:hover {
+  box-shadow: 0px 0px 10px 1px rgb(170, 170, 170);
+  cursor: pointer;
+}
+.friendCard .cardImg img{
+  height: 130px;
+  width: 130px;
+  border-radius: 8px;
+}
+.friendCard .cardName h3{
+  font-size: 1.3rem;
+  width: fit-content;
+}
+
+/* Hide the default scrollbar for WebKit browsers */
+.profileFriends::-webkit-scrollbar {
+  width: 1rem;
+  height: 3px;
+}
+
+.profileFriends::-webkit-scrollbar-thumb {
+  background-color: #a479fa;
+}
+
+.profileFriends::-webkit-scrollbar-track {
+  background-color: #ffffff;
+}
+
+/* ... rest of your styles ... */
+
+
+
+.profileFriendsContainer .suggestedUsers {
+  height: 24rem;
+  width: 57rem;
+  border: 1px solid rgb(212, 212, 212);
+  border-radius: 8px;
+  /* position: absolute; */
+  z-index: 999;
+  background: white;
+  margin-top: 1rem;
+  top: 30%;
+  right: 150%;
+  padding: 10px;
+  /* box-shadow: 0px 0px 10px 1px rgb(170, 170, 170); */
+  overflow-y: auto;
+}
+
+.suggestedUsers .heading {
+  display: flex;
+  justify-content: space-between;
+}
+.suggestedUsers .users {
+  display: flex;
+  flex-direction: row;
+  border: 0px solid blue;
+  height: 17rem;
+  padding: 0.5rem;
+  width: 54rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 1rem;
+}
+.profileFriendsContainer .suggestedUsers .user {
+  border: 1px solid rgb(188, 188, 188);
+  border-radius: 8px;
+  min-width: 12rem;
+  height: 15rem;
+  padding: 1rem;
+  padding-bottom: 1rem;
+  /* box-shadow: 0px 0px 10px 1px rgb(170, 170, 170); */
+}
+.profileFriendsContainer .suggestedUsers .user .userInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.profileFriendsContainer .suggestedUsers .user .userInfo img {
+  height: 130px;
+  width: 130px;
+  border-radius: 12px;
+  margin-bottom: 5px;
+}
+.profileFriendsContainer .suggestedUsers .user .buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  height: fit-content;
+}
+.profileFriendsContainer .suggestedUsers .user .buttons button{
+  width: fit-content;
+  font-size: 14px;
+  height: fit-content;
+  margin-top: 8px;
+  cursor: pointer;
+}
+.profileFriendsContainer .suggestedUsers .user .buttons .btn1 {
+  background: #a27cee;
+  color: #ffffff;
+}
+.profileFriendsContainer .suggestedUsers .user .buttons .btn1:hover {
+  background: #7557b0;
+  cursor: pointer;
+}
+.profileFriendsContainer .suggestedUsers .user .userInfo h3 {
+  font-size: 23px;
+}
+.suggestedUsers .closeIcon {
+  cursor: pointer;
+}
+.suggestedUsers h2 {
+  font-weight: 600;
+  margin-bottom: 30px;
+  font-size: 22px;
+}
+
+/* Hide the default scrollbar for WebKit browsers */
+.suggestedUsers .users::-webkit-scrollbar {
+  width: 1rem;
+  height: 0px;
+}
+.suggestedUsers::-webkit-scrollbar-thumb {
+  background-color: #a479fa;
+}
+
+.suggestedUsers::-webkit-scrollbar-track {
+  background-color: #ffffff;
+}
+
+/* ... rest of your styles ... */
+
+
+
+
+
 
 
 @media (max-width: 1026px) {
@@ -294,7 +501,7 @@ a {
   }
 
   .uInfo {
-    height: 165px;
+    height: fit-content;
     -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
@@ -341,12 +548,12 @@ a {
 
   .profileContainer {
     padding: 0px 10px;
-    width: 100%;
-    background: rgb(223, 232, 236);
+    width: 99%;
+    /* background: rgb(223, 232, 236); */
   }
 
   .uInfo {
-    height: 160px;
+    height: fit-content;
     -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
@@ -366,7 +573,7 @@ a {
   .images {
     width: 100%;
     height: 200px;
-    left: 10px;
+    left: 0px;
     position: relative;
     display: flex;
     align-content: center;
@@ -374,11 +581,82 @@ a {
   }
 
   .cover {
-    width: 90%;
+    width: 100%;
     height: 100%;
-    margin-left: 5px;
+    margin-left: 0px;
     object-fit: cover;
   }
+
+  .profileFriendsContainer .profileFriendsHeader h2{
+    font-size: 25px;
+    margin: 0;
+  }
+  .profileFriends{
+    border: 0px solid #eae2ff;
+    /* background: rgba(239, 232, 250, 1); */
+    /* box-shadow: 0px 0px 20px 1px rgb(188, 188, 188); */
+    width: fit-content;
+    padding: 1rem;
+    border-radius: 20px;
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0rem;
+    max-width: 460px;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+
+  .profileFriendsContainer .suggestedUsers {
+    height: 24rem;
+    max-width: 460px;
+    border: 1px solid rgb(212, 212, 212);
+    border-radius: 8px;
+    /* position: absolute; */
+    z-index: 999;
+    background: white;
+    margin-top: 1rem;
+    top: 30%;
+    right: 150%;
+    padding: 10px;
+    /* box-shadow: 0px 0px 10px 1px rgb(170, 170, 170); */
+    overflow-y: auto;
+  }
+
+  .suggestedUsers .users {
+    display: flex;
+    flex-direction: row;
+    border: 0px solid blue;
+    max-width: 460px;
+    height: 17rem;
+    padding: 0.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 1rem;
+  }
+  .profileFriendsContainer .suggestedUsers .user {
+    border: 1px solid rgb(188, 188, 188);
+    border-radius: 8px;
+    min-width: 12rem;
+    height: 15rem;
+    padding: 1rem;
+    padding-bottom: 1rem;
+    /* box-shadow: 0px 0px 10px 1px rgb(170, 170, 170); */
+  }
+
+  /* Hide the default scrollbar for WebKit browsers */
+.suggestedUsers::-webkit-scrollbar {
+  width: 1rem;
+  height: 0px;
+}
+.suggestedUsers::-webkit-scrollbar-thumb {
+  background-color: #a479fa;
+}
+
+.suggestedUsers::-webkit-scrollbar-track {
+  background-color: #ffffff;
+}
+
+/* ... rest of your styles ... */
 
   /* .uInfo {
     flex-direction: column;

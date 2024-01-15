@@ -165,13 +165,57 @@
     justify-content: space-between;
     width: 300px;
     align-items: center;
+    position: relative;
 }
 .top-part-opt h1 {
     color: #8552ec;
 }
-.top-part-opt .gear-icon {
+.top-part-opt svg{
     color: #7643dc;
+    cursor: pointer;
 }
+
+
+.showAllGroups{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px 10px;
+    border: 1px solid red;
+    position: absolute;
+    background: white;
+    top: 90px;
+    width: 20rem;
+    left: 6.2rem;
+    cursor: pointer;
+    border: 0px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 9px #cacaca;
+}
+.groupHeading {
+    display: flex;
+    flex-direction: column;
+}
+.groupHeading h3{
+    font-size: 13px;
+    color: rgb(177, 177, 177);
+    font-weight: 400;
+}
+.groupHeading .groups {
+    display: flex;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px 10px;
+    width: 18rem;
+}
+.mid-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px 10px;
+}
+
 
 .top-search-bar {
     margin-top: 20px;
@@ -507,6 +551,10 @@ span {
     display: flex;
     flex-direction: row;
     gap: 20px;
+}
+
+.info .left-part .backIcon {
+    display: none;
 }
 .info .left-part .user-pic{
    margin: 0px 0px;
@@ -894,4 +942,62 @@ span {
     width: fit-content;
     max-width: 40%;
     overflow: hidden;
+}
+
+
+/* show full menu styles */
+
+
+
+.lft-menu {
+    display: none;
+}
+.showFullMenu {
+    border: 1px solid blue;
+    display: none;
+}
+
+
+@media (max-width: 427px) {
+
+    .info .left-part .backIcon {
+        display: flex;
+        align-items: center;
+    }
+    .lft-menu {
+        display: none;
+    }
+   
+    .showFullMenu {
+        border: 1px solid blue;
+        display: block;
+        position: absolute;
+        z-index: 999;
+        top: 100px;
+        background: white;
+        padding: 10px;
+        width: 96vw;
+ /* Initially set to be transparent */
+
+
+    }
+    
+    .container .left-menu {
+       display: none;
+    }
+  
+    .main-chat-section {
+        border-radius: 12px;
+        box-shadow: 0px 0px 5px 3px #e8e8e8;
+        width: 100%;
+        height: 90%;
+        z-index: 1;
+        margin-left: 0px;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        position: relative;
+        
+    }
+    
 }

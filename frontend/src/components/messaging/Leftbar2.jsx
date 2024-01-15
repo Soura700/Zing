@@ -18,6 +18,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import BlockIcon from "@mui/icons-material/Block";
 import ReportIcon from "@mui/icons-material/Report";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import GroupsIcon from '@mui/icons-material/Groups';
 import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
@@ -48,6 +49,22 @@ export const Leftbar2 = () => {
   const [incomingCall, setIncomingCall] = useState(null);
 
   const parsedId = parseInt(id);
+
+
+
+//this edited1 
+  const [showMenu, setShowMenu] = useState(false);
+
+  const showSidebarMenu = () => {
+    setShowMenu(!showMenu);
+  };
+
+
+  const [showGroup, setShowGroup] = useState(false);
+
+  const showAllGroups = () => {
+    setShowGroup(!showGroup);
+  };
 
 
   // RingTone
@@ -378,11 +395,272 @@ export const Leftbar2 = () => {
       </div>
 
       {/* left - activity bar */}
+
+      {showMenu ? (
+             <div className="showFullMenu">
+             <div className="top-part">
+               <div className="top-part-opt">
+                 <h1>Messages</h1>
+               </div>
+               <div className="top-search-bar">
+                 <input type="text" name="search-bar" placeholder="Search" />
+                 <div className="search-btn">
+                   <SearchIcon className="search-icon" />
+                 </div>
+               </div>
+               <div className="mid-part">
+                 <span>Pinned Messages</span>
+     
+                 {
+                   // conversations.length>0?
+                   conversations.map((conversation, user, index) => {
+                     console.log(user);
+     
+                     console.log(conversation.user);
+     
+                     if (conversations.length > 0) {
+                       return (
+                         <div
+                           className="mid-text"
+                           key={index}
+                           onClick={() =>
+                             fetchMessages(
+                               conversation.conversationId,
+                               conversation.user
+                             )
+                           }
+                         >
+                           <div className="left">
+                             <img
+                               src={image}
+                               alt=""
+                               onClick={() =>
+                                 fetchMessages(
+                                   conversation.conversationId,
+                                   conversation.user
+                                 )
+                               }
+                             />
+                             <div className="left-info">
+                               <h2 onClick={() => console.log("Hello")}>
+                                 {/* {conversation.conversationUserData[0].username} */}
+                                 {conversation.user.username}
+                               </h2>
+                               <p className="activity">Lorem, ipsum dolor.</p>
+                             </div>
+                           </div>
+                           <div className="right">
+                             <p>9:26 PM</p>
+                           </div>
+                         </div>
+                       );
+                     } else {
+                       <div className="no-conversations">
+                         No conversations to show.
+                       </div>;
+                     }
+                   })
+                 }
+     
+                 <span>All Conversations</span>
+     
+                 <div className="mid-text4">
+                   <div className="left4">
+                     <img src={image} alt=""></img>
+                     <div className="left-info">
+                       <h2>John Doe</h2>
+                       <p className="activity">whats up</p>
+                     </div>
+                   </div>
+                   <div className="right4">
+                     <p>9:26 PM</p>
+                     <circle>11</circle>
+                   </div>
+                 </div>
+     
+                 <div className="mid-text5">
+                   <div className="left5">
+                     <img src={image} alt=""></img>
+                     <div className="left-info">
+                       <h2>John Doe</h2>
+                       <p className="activity">typing...</p>
+                     </div>
+                   </div>
+                   <div className="right5">
+                     <p>9:26 PM</p>
+                     <circle>1</circle>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+          ) : (
+            <div className="lft-menu">
+            <div className="top-part">
+              <div className="top-part-opt">
+                <h1>Messages</h1>
+              </div>
+              <div className="top-search-bar">
+                <input type="text" name="search-bar" placeholder="Search" />
+                <div className="search-btn">
+                  <SearchIcon className="search-icon" />
+                </div>
+              </div>
+              <div className="mid-part">
+                <span>Pinned Messages</span>
+    
+                {
+                  // conversations.length>0?
+                  conversations.map((conversation, user, index) => {
+                    console.log(user);
+    
+                    console.log(conversation.user);
+    
+                    if (conversations.length > 0) {
+                      return (
+                        <div
+                          className="mid-text"
+                          key={index}
+                          onClick={() =>
+                            fetchMessages(
+                              conversation.conversationId,
+                              conversation.user
+                            )
+                          }
+                        >
+                          <div className="left">
+                            <img
+                              src={image}
+                              alt=""
+                              onClick={() =>
+                                fetchMessages(
+                                  conversation.conversationId,
+                                  conversation.user
+                                )
+                              }
+                            />
+                            <div className="left-info">
+                              <h2 onClick={() => console.log("Hello")}>
+                                {/* {conversation.conversationUserData[0].username} */}
+                                {conversation.user.username}
+                              </h2>
+                              <p className="activity">Lorem, ipsum dolor.</p>
+                            </div>
+                          </div>
+                          <div className="right">
+                            <p>9:26 PM</p>
+                          </div>
+                        </div>
+                      );
+                    } else {
+                      <div className="no-conversations">
+                        No conversations to show.
+                      </div>;
+                    }
+                  })
+                }
+    
+                <span>All Conversations</span>
+    
+                <div className="mid-text4">
+                  <div className="left4">
+                    <img src={image} alt=""></img>
+                    <div className="left-info">
+                      <h2>John Doe</h2>
+                      <p className="activity">whats up</p>
+                    </div>
+                  </div>
+                  <div className="right4">
+                    <p>9:26 PM</p>
+                    <circle>11</circle>
+                  </div>
+                </div>
+    
+                <div className="mid-text5">
+                  <div className="left5">
+                    <img src={image} alt=""></img>
+                    <div className="left-info">
+                      <h2>John Doe</h2>
+                      <p className="activity">typing...</p>
+                    </div>
+                  </div>
+                  <div className="right5">
+                    <p>9:26 PM</p>
+                    <circle>1</circle>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          )}
+            {/* delete this maybe */}
       <div className="left-menu">
         <div className="top-part">
           <div className="top-part-opt">
             <h1>Messages</h1>
+            <GroupsIcon className="group-icon" onClick={showAllGroups}/>
           </div>
+          {showGroup ? (
+                    <div className="showAllGroups">
+                      {
+              // conversations.length>0?
+              conversations.map((conversation, user, index) => {
+                console.log(user);
+                console.log(conversation.user);
+
+                if (conversations.length > 0) {
+                  return (
+                    <div
+                      className="mid-text"
+                      key={index}
+                      onClick={() =>
+                        fetchMessages(
+                          conversation.conversationId,
+                          conversation.user
+                        )
+                      }
+                    >
+                    <div className="groupHeading">
+                      <h3>Your Groups</h3>
+                      <div className="groups">
+                      <div className="left">
+                        <img
+                          src={image}
+                          alt=""
+                          onClick={() =>
+                            fetchMessages(
+                              conversation.conversationId,
+                              conversation.user
+                            )
+                          }
+                        />
+                        <div className="left-info">
+                          <h2 onClick={() => console.log("Hello")}>
+                            {/* {conversation.conversationUserData[0].username} */}
+                            {conversation.user.username}
+                          </h2>
+                          <p className="activity">Lorem, ipsum dolor.</p>
+                        </div>
+                      </div>
+                      <div className="right">
+                        <p>9:26 PM</p>
+                      </div>
+                      </div>
+                    </div>
+                     
+                    </div>
+                  );
+                } else {
+                  <div className="no-conversations">
+                    No conversations to show.
+                  </div>;
+                }
+              })
+            }
+                    </div>
+                  ) : (
+                    <div className="RightPopUpDefault"></div>
+                  )}
           <div className="top-search-bar">
             <input type="text" name="search-bar" placeholder="Search" />
             <div className="search-btn">
@@ -483,6 +761,9 @@ export const Leftbar2 = () => {
           <>
             <div className="info">
               <div className="left-part">
+                <div className="backIcon">
+                <ArrowBackIosIcon  onClick={showSidebarMenu}/>
+                </div>
                 <div className="user-pic">
                   <img src={image} alt=""></img>
                 </div>

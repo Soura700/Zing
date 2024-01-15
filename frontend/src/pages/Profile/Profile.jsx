@@ -36,6 +36,12 @@ const Profile = () => {
     fetchUser();
   }, []);
 
+  const [toggle, setToggle] = useState(false);
+
+  const showSuggestedUsers = () => {
+    setToggle(!toggle);
+  };
+
   // console.log(user[0].username);
 
   return (
@@ -58,17 +64,6 @@ const Profile = () => {
             {user.map((slide, index) => (
               <h1 key={index}>{slide.username}</h1>
             ))}
-            {/* <h1>{user.username}</h1> */}
-            {/* <div className={styles.info}>
-              <div className={styles.item}>
-                <PlaceIcon />
-                <span>USA</span>
-              </div>
-              <div className={styles.item}>
-                <LanguageIcon />
-                <span>lama.dev</span>
-              </div>
-            </div> */}
             <div className={styles.btn}>
               <button className={styles.btn1}>follow</button>
               <button className={styles.btn2}>
@@ -106,6 +101,226 @@ const Profile = () => {
             <MoreVertIcon />
           </div> */}
         </div>
+        <div className={styles.profileFriendsContainer}>
+          <div className={styles.profileFriendsHeader}>
+            <h2>Your Friends</h2>
+            <button onClick={showSuggestedUsers}>Add friends </button>
+          </div>
+          {toggle ? (
+            <div className={styles.suggestedUsers}>
+              <ul>
+                {/* the data below is dummy data. each user class denotes a dummy data of a single user. they are pasted multiple times. modify these to insert data dynamically - anurag c 10.1.24 */}
+
+                <div className={styles.heading}>
+                  <h2>Suggested for you</h2>
+                  {/* <CloseIcon onClick={closeSuggestedUsers} className={styles.closeIcon}/> */}
+                </div>
+
+                <div className={styles.users}>
+                  <div className={styles.user}>
+                    <div className={styles.userInfo}>
+                      <img
+                        src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                        alt=""
+                        className={styles.userPic}
+                      />
+                      <h3>John Doe</h3>
+                    </div>
+                    <div className={styles.buttons}>
+                      <button className={styles.btn1}>Follow</button>
+                      <button className={styles.btn2}>Dismiss</button>
+                    </div>
+                  </div>
+
+                  <div className={styles.user}>
+                    <div className={styles.userInfo}>
+                      <img
+                        src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                        alt=""
+                        className={styles.userPic}
+                      />
+                      <h3>John Doe</h3>
+                    </div>
+                    <div className={styles.buttons}>
+                      <button className={styles.btn1}>Follow</button>
+                      <button className={styles.btn2}>Dismiss</button>
+                    </div>
+                  </div>
+
+                  <div className={styles.user}>
+                    <div className={styles.userInfo}>
+                      <img
+                        src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                        alt=""
+                        className={styles.userPic}
+                      />
+                      <h3>John Doe</h3>
+                    </div>
+                    <div className={styles.buttons}>
+                      <button className={styles.btn1}>Follow</button>
+                      <button className={styles.btn2}>Dismiss</button>
+                    </div>
+                  </div>
+
+                  <div className={styles.user}>
+                    <div className={styles.userInfo}>
+                      <img
+                        src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                        alt=""
+                        className={styles.userPic}
+                      />
+                      <h3>John Doe</h3>
+                    </div>
+                    <div className={styles.buttons}>
+                      <button className={styles.btn1}>Follow</button>
+                      <button className={styles.btn2}>Dismiss</button>
+                    </div>
+                  </div>
+
+                  <div className={styles.user}>
+                    <div className={styles.userInfo}>
+                      <img
+                        src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                        alt=""
+                        className={styles.userPic}
+                      />
+                      <h3>John Doe</h3>
+                    </div>
+                    <div className={styles.buttons}>
+                      <button className={styles.btn1}>Follow</button>
+                      <button className={styles.btn2}>Dismiss</button>
+                    </div>
+                  </div>
+
+                  <div className={styles.user}>
+                    <div className={styles.userInfo}>
+                      <img
+                        src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                        alt=""
+                        className={styles.userPic}
+                      />
+                      <h3>John Doe</h3>
+                    </div>
+                    <div className={styles.buttons}>
+                      <button className={styles.btn1}>Follow</button>
+                      <button className={styles.btn2}>Dismiss</button>
+                    </div>
+                  </div>
+                </div>
+              </ul>
+            </div>
+          ) : (
+            <div className={styles.postOpt}></div>
+          )}
+          <div className={styles.profileFriends}>
+            {/* friendcard div means particular friend's profile card  */}
+            <div className={styles.friendCard}>
+              <div className={styles.cardImg}>
+                <img
+                  src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                  alt=""
+                  className={styles.friendPic}
+                />
+              </div>
+              <div className={styles.cardName}>
+                <h3>John Doe</h3>
+              </div>
+            </div>
+            {/* upto this one particular friend's profile card ends */}
+
+            <div className={styles.friendCard}>
+              <div className={styles.cardImg}>
+                <img
+                  src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                  alt=""
+                  className={styles.friendPic}
+                />
+              </div>
+              <div className={styles.cardName}>
+                <h3>John Doe</h3>
+              </div>
+            </div>
+
+            <div className={styles.friendCard}>
+              <div className={styles.cardImg}>
+                <img
+                  src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                  alt=""
+                  className={styles.friendPic}
+                />
+              </div>
+              <div className={styles.cardName}>
+                <h3>John Doe</h3>
+              </div>
+            </div>
+
+            <div className={styles.friendCard}>
+              <div className={styles.cardImg}>
+                <img
+                  src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                  alt=""
+                  className={styles.friendPic}
+                />
+              </div>
+              <div className={styles.cardName}>
+                <h3>John Doe</h3>
+              </div>
+            </div>
+
+            <div className={styles.friendCard}>
+              <div className={styles.cardImg}>
+                <img
+                  src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                  alt=""
+                  className={styles.friendPic}
+                />
+              </div>
+              <div className={styles.cardName}>
+                <h3>John Doe</h3>
+              </div>
+            </div>
+
+            <div className={styles.friendCard}>
+              <div className={styles.cardImg}>
+                <img
+                  src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                  alt=""
+                  className={styles.friendPic}
+                />
+              </div>
+              <div className={styles.cardName}>
+                <h3>John Doe</h3>
+              </div>
+            </div>
+
+            <div className={styles.friendCard}>
+              <div className={styles.cardImg}>
+                <img
+                  src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                  alt=""
+                  className={styles.friendPic}
+                />
+              </div>
+              <div className={styles.cardName}>
+                <h3>John Doe</h3>
+              </div>
+            </div>
+
+            <div className={styles.friendCard}>
+              <div className={styles.cardImg}>
+                <img
+                  src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                  alt=""
+                  className={styles.friendPic}
+                />
+              </div>
+              <div className={styles.cardName}>
+                <h3>John Doe</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Post will be here */}
         <Posts />
       </div>
