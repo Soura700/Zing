@@ -49,5 +49,22 @@ router.post('/getRequests', async (req, res) => {
     }
   });
 
+  // Get Details of the friend by the user id that is send by the emit from the above code .
+
+router.post('/getFriends', async (req, res) => {
+  const userId = req.body.userId;
+
+  try {
+    // Find friend requests where the specified user is the recipient (to)
+    const friendRequests = await FriendRequest.find({ to: userId, status: 'Accepted' })
+
+    res.status(200).json(friendRequests);
+  } catch (error) {
+      // console.log(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 module.exports = router;

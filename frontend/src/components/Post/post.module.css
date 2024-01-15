@@ -157,6 +157,18 @@
   display: none;
 }
 
+
+.imageContainer {
+  display: flex;
+  gap: 10px; /* Adjust the gap as needed */
+}
+
+/* .imageContainer img {
+  flex: 1;
+  max-width: 100%;
+  height: auto;
+} */
+
 /* 1170px
   1026px */
 

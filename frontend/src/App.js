@@ -111,6 +111,7 @@ import { useState } from "react";
 import SignInSignUpForm from "./components/SignInSignUpForm/SignInSignUpForm";
 import { AuthProvider } from "./Contexts/authContext";
 import Posts from "./components/Posts/Posts.jsx";
+import { ToastContainer } from "react-toastify";
 
 
 
@@ -129,6 +130,7 @@ function App() {
 
     return (
       <div>
+        <ToastContainer/>
         <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
           <LeftBar isVisible={toggle} />
