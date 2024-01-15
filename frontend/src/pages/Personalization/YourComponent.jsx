@@ -25,8 +25,6 @@ const YourComponent = () => {
       // Create a URL for the selected image and set it in the state
   const imageURL = URL.createObjectURL(file);
   setSelectedImage(imageURL);
-
-
   };
 
   // Handling the interests edge case

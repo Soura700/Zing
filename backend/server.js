@@ -18,11 +18,11 @@ const friend_Request_Route = require("./routes/friend2");
 var neo4j = require('neo4j-driver');
 const io = require("./socket");
 const suggestion = require("./routes/suggestion"); 
-const suggestion2 = require("./routes/suggestion2"); 
+// const suggestion2 = require("./routes/suggestion2"); 
 const personalization = require("./routes/personalization");
 const interests_route = require("./routes/interest");
-
 const fof = require("./routes/suggestion"); 
+const path = require("path");
 
 // const io = require("socket.io")(5500,{
 //   cors:{
@@ -231,6 +231,9 @@ io.on('connection', (socket) => {
 
 
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 PORT = 5000;
 app.use("/api/auth", registerAuth);
 app.use("/api/posts", postRoute);
@@ -243,6 +246,7 @@ app.use("/api/friendrequest",friendRequestRoute);
 app.use("/api/friend_request" , friend_Request_Route)
 app.use("/api" , fof);
 app.use("/api/user" , interests_route);
+
 
 app.use("/bio_profile_img" , personalization)
 app.use("/api/bio_profile_img" , personalization)
