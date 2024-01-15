@@ -17,6 +17,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import BlockIcon from "@mui/icons-material/Block";
 import ReportIcon from "@mui/icons-material/Report";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import GroupsIcon from '@mui/icons-material/Groups';
 import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
@@ -460,6 +461,7 @@ export const Group = () => {
         <div className="top-part">
           <div className="top-part-opt">
             <h1>Messages</h1>
+            <GroupsIcon />
           </div>
           <div className="top-search-bar">
             <input type="text" name="search-bar" placeholder="Search" />

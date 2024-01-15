@@ -10,6 +10,7 @@
     flex-direction: row;
     padding: 10px;
     height: 100vh;
+    margin: 0;
 }
 
 /* left-options bar styles */
@@ -20,6 +21,7 @@
     border-radius: 12px;
     margin: 0px 5px;
     display: flex;
+    height: 95vh;
     flex-direction: column;
 }
 
@@ -146,7 +148,7 @@
 .container .left-menu {
     border: 0px solid red;
     border-radius: 12px;
-    height: 100vh;
+    height: 95vh;
     margin-left: 20px;
     margin-bottom: 20px;
     padding: 10px;
@@ -507,7 +509,7 @@ span {
     border-radius: 12px;
     box-shadow: 0px 0px 5px 3px #e8e8e8;
     width: 100%;
-    height: 90%;
+    height: 95vh;
     margin-left: 20px;
     display: flex;
     flex-direction: column;
@@ -515,8 +517,8 @@ span {
     padding: 20px;
 }
 .info {
-
-    margin-bottom: 20px;
+    height: 4rem;
+    margin-bottom: 0px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -528,10 +530,8 @@ span {
 }
 .info .left-part .user-pic{
    margin: 0px 0px;
-
    display: flex;
-   justify-content: center;
-   align-items: center;
+   align-items: start;
 }
 .info .left-part .user-pic img {
     height: 50px;
@@ -565,7 +565,7 @@ span {
     position: relative;
 }
 .info .right-part .RightPopUpShow .PopUpBox {
-    height: 93%;
+    height: fit-content;
     width: 30%;
     top: 1%;
     display: flex;
@@ -585,14 +585,18 @@ span {
     align-items: center;
     border: 0px solid red;
 }
+.info .right-part .RightPopUpShow .PopUpBox .top h1 {
+    font-size: 25px;
+}
 .info .right-part .RightPopUpShow .PopUpBox .top p {
     color: rgb(42, 191, 42);
+    font-size: 15px;
 }
 .info .right-part .RightPopUpShow .PopUpBox img {
-    height: 150px;
+    height: 100px;
     border-radius: 50%;
-    margin-top: 30px;
-    width: 150px;
+    margin-top: 20px;
+    width: 100px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid1 {
     border: 0px solid red;
@@ -602,7 +606,7 @@ span {
     align-items: center;
     gap: 20px;
     margin: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 9px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid1 .mid1-icon {
     border: 0px solid blue;
@@ -610,7 +614,7 @@ span {
     color: #5825c0;
     border-radius: 50%;
     padding: 10px;
-    font-size: 30px;
+    font-size: 40px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid1 .mid1-icon:hover {
     border: 0px solid blue;
@@ -618,7 +622,8 @@ span {
     color: #e6daff;
     border-radius: 50%;
     padding: 10px;
-    font-size: 30px;
+    font-size: 40px;
+    cursor: pointer;
 }
 
 
@@ -631,7 +636,7 @@ span {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 10px;
+    margin: 5px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid2:hover {
     border: 1px solid #d7c4ff;
@@ -643,12 +648,18 @@ span {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 10px;
+    margin: 5px;
+    cursor: pointer;
 }
 .info .right-part .RightPopUpShow .PopUpBox  .userOpt {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
+.info .right-part .RightPopUpShow .PopUpBox  .userOpt svg {
+    font-size: 20px;
+}
+
 .info .right-part .RightPopUpShow .PopUpBox  .userOpt h2 {
     font-size: 15px;
     margin-top: 5px;
@@ -663,7 +674,7 @@ span {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 10px;
+    margin: 5px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid3:hover {
     border: 1px solid #d7c4ff;
@@ -675,7 +686,8 @@ span {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 10px;
+    margin: 5px;
+    cursor: pointer;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid4 {
     border: 1px solid rgb(206, 206, 206);
@@ -686,7 +698,7 @@ span {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 10px;
+    margin: 5px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid4:hover {
     border: 1px solid #d7c4ff;
@@ -698,7 +710,8 @@ span {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 10px;
+    margin: 5px;
+    cursor: pointer;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid5 {
     border: 1px solid rgb(206, 206, 206);
@@ -709,7 +722,7 @@ span {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 10px;
+    margin: 5px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid5:hover {
     border: 1px solid #d7c4ff;
@@ -721,7 +734,8 @@ span {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 10px;
+    margin: 5px;
+    cursor: pointer;
 }
 .info .right-part .RightPopUpShow .PopUpBox .bottom {
     border: 0px solid red;
@@ -737,10 +751,11 @@ span {
     border: 0px solid red;
     background: rgb(255, 199, 199);
     color: rgb(186, 0, 0);
-    border-radius: 16px;
+    border-radius: 12px;
+    width: fit-content;
     display: flex;
     flex-direction: row;
-    padding: 10px;
+    padding: 5px 8px;
 }
 .info .right-part .RightPopUpShow .PopUpBox  .userOpt1 h2 {
     font-size: 15px;
@@ -757,17 +772,19 @@ span {
     border-radius: 16px;
     display: flex;
     flex-direction: row;
-    padding: 10px;
+    padding: 5px 8px;
+    cursor: pointer;
 }
 
 .info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt2{
     border: 0px solid red;
     background: rgb(255, 199, 199);
     color: rgb(186, 0, 0);
-    border-radius: 16px;
+    border-radius: 12px;
+    width: fit-content;
     display: flex;
     flex-direction: row;
-    padding: 10px;
+    padding: 5px 8px;
 }
 .info .right-part .RightPopUpShow .PopUpBox  .userOpt2 h2 {
     font-size: 15px;
@@ -784,7 +801,8 @@ span {
     border-radius: 16px;
     display: flex;
     flex-direction: row;
-    padding: 10px;
+    padding: 5px 8px;
+    cursor: pointer;
 }
 
 
@@ -799,15 +817,29 @@ span {
     border-radius: 12px;
     width: 100%;
     height: 90%;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-
+.inner-container::-webkit-scrollbar {
+    width: 5px;
+    height: 3px;
+  }
+  
+  .inner-container::-webkit-scrollbar-thumb {
+    background-color: #a479fa;
+  }
+  
+  .inner-container::-webkit-scrollbar-track {
+    background-color: #ffffff;
+  }
+  
 .chat-bottom {
     border: 0px solid red;
-    margin-top: 10px;
+    margin-top: 0px;
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 .chat-bottom .chat-input {
     display: flex;
@@ -821,7 +853,8 @@ span {
     background :#eadbff;
     color: #402577;
     height: 40px;
-    width: 800px;
+    width: 50rem;
+    max-width: 100%;
 }
 .chat-bottom .chat-input input[type=text]:focus{
     outline: none;
@@ -832,20 +865,32 @@ span {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: fit-content;
 }
-
+.chat-bottom .chat-options label {
+    margin: 0;
+    margin-left: 5px;
+}
+.chat-bottom .chat-options svg {
+    margin: 5px;
+}
 .chat-bottom .chat-btn {
     font-size: 30px;
     margin: 0px 10px;
     color: #451e93;
 }
-
+.chat-bottom .submit-btn-class {
+    padding: 0;
+    margin-top: 9px;
+    margin-left: 10px;
+}
 .chat-bottom .submit-btn-class button{
     padding: 5px;
-    margin-left: 10px;
+    margin: 0px;
     border: 0px solid #652ed3;
     background: #dccbff;
     border-radius: 12px;
+    width: fit-content;
 }
 .chat-bottom .submit-btn {
     font-size: 40px;
@@ -1048,3 +1093,135 @@ span {
     cursor: pointer;
 
 }
+
+@media (max-width: 427px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        height: 100vh;
+        margin: 0;
+    }
+    .chat-bottom .chat-input input[type=text] {
+        border: 0px solid blue;
+        font-size: 16px;
+        border-radius: 12px;
+        background :#eadbff;
+        color: #402577;
+        height: 40px;
+        width: 15rem;
+        max-width: 100%;
+        padding-left: 10px;
+    } 
+.left-opt-menu {
+
+    display: none;
+
+}
+.top-part {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+}
+.top-search-bar input[type=text]{
+    width: 300px;
+    height: 35px;
+    padding: 0px 15px;
+    margin: 0px 10px;
+    border-radius: 10px;
+    background: #eee7ff;
+    border: 0px solid  rgb(165, 165, 165);
+}
+.right4 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 0px;
+    gap: 10px;
+ }
+ .right5 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 0px;
+    gap: 10px;
+ }
+.top-search-bar {
+    margin-top: 20px;
+    width: 350px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info .right-part {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+   margin: 0px 5px 0px 0px;
+   gap: 20px;
+}
+.info .left-part .user-info h1{
+    font-size: 20px;
+    font-weight: 600;
+}
+.info .left-part .user-info p {
+    color: rgb(27, 184, 27);
+    font-size: 13px;
+}
+.inner-container{
+    width: auto;
+    padding: 10px;
+}
+.incoming-msg{
+    display: flex;
+    justify-content: center;
+    text-align: left;
+    font-size: small;
+    font-family: sans-serif;
+    margin-bottom: 10px;
+    padding: 10px;
+    height: auto;
+    width: fit-content;
+    max-width: 40%;
+    background: white;
+    border-radius: 0px 10px 10px 10px;
+}
+.main-chat-section {
+    border-radius: 12px;
+    box-shadow: 0px 0px 5px 3px #e8e8e8;
+    width: 100%;
+    height: 95vh;
+    margin-left: 0px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 20px;
+}
+.chat-bottom .chat-options svg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    font-size: 15px;
+}
+.chat-bottom .submit-btn-class button {
+    height: fit-content;
+}
+.chat-bottom .submit-btn-class svg{
+    padding: 0;
+    font-size: 30px;
+}
+.container .left-menu {
+
+    /* position: absolute; */
+    z-index: 999;
+}
+.main-chat-section {
+
+    position: relative;
+    z-index: 1;
+}
+
+}    
