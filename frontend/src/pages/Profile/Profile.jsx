@@ -5,7 +5,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Posts from "../../components/Posts/Posts";
+import LoggedUserPosts from "../../components/Posts/LoggedUserPosts";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -322,7 +322,7 @@ const Profile = () => {
         </div>
 
         {/* Post will be here */}
-        <Posts />
+        <LoggedUserPosts userId = {userId}/>
       </div>
     </div>
   );

@@ -286,7 +286,7 @@ router.get("/:userId", (req, res) => {
   const userId = req.params.userId;
   try {
     connection.query(
-      "SELECT * FROM posts WHERE userId = ?",
+      "SELECT * FROM posts WHERE userId = ? ORDER BY createdAt DESC",
       [userId], // Add a comma here to separate the query string from the parameter array
       (error, results) => {
         if (error) {
