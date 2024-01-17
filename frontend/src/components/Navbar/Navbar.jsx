@@ -199,6 +199,9 @@ const Navbar = ({ toggleMenu, user }) => {
     setToggle(!toggle);
   };
 
+  const openNotifPanel = ()=>{
+    setNotifMenu(!notifMenu);
+  }
   const [isMenuVisible, setMenuVisible] = useState(false);
 
   const handleIconClick = () => {
@@ -286,7 +289,6 @@ const Navbar = ({ toggleMenu, user }) => {
       </div>
     );
   }
-
 
   return (
     <div className={styles.navbar}>
