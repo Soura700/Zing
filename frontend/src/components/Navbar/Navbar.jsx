@@ -32,6 +32,8 @@ const Navbar = ({ toggleMenu, user }) => {
   const parsedID = parseInt(id);
 
   useEffect(() => {
+
+
     const fetchData = async () => {
       try {
         await checkAuthentication();
@@ -117,6 +119,8 @@ const Navbar = ({ toggleMenu, user }) => {
 
   console.log("Previous");
   console.log(friendRequests);
+
+
 
   useEffect(() => {
     if (socket) {

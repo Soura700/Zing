@@ -187,8 +187,10 @@ router.put("/update_post/:userId/:postId", (req, res) => {
 
 // Update Like (Increamenet or decreament)
 router.post("/like", (req, res) => {
+
   const postId = req.body.postId;
-  const userId = req.body.userId; // Assuming userId is sent in the request body
+  const userId = req.body.userId; // Assuming userId is sent in the request body (The user whi is liking or disliking the post ) 
+  console.log("UserId" + userId)
   var likeStatus;
   // = req.body.likeStatus; // true for like, false for dislike
 
@@ -230,8 +232,9 @@ router.post("/like", (req, res) => {
                       // This is emitting the like event in the socket for the recent activity...
 
                       io.emit("like", {
-                        postId: postId,
+                        postId: postId, //The 
                         userid: res[0].userId,
+                        likeUser:userId
                       });
                     }
                   }
@@ -275,6 +278,7 @@ router.post("/like", (req, res) => {
                       io.emit("dislike", {
                         postId: postId,
                         userid: res[0].userId,
+                        dislikeUser:userId
                       });
                     }
                   }
