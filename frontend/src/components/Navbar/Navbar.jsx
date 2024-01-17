@@ -25,12 +25,12 @@ const Navbar = ({ toggleMenu, user }) => {
   const [isLoading, setIsLoading] = useState(true); //Setting the loading
   const [friendRequests, setFriendRequests] = useState([]); //Sets the friends requets spreading with the old requests with the new requests in realtime
   const [senderName, setSenderName] = useState(null); //Setting the current / logged user name in the state
-  const [username, setUsername] = useState(null)//Setting the current / logged user name in the state
-  const [userPhoto, setUserPhoto] = useState(null);//Setting the userprofile image from the database
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);//It is for unreadnotification (use case : like facebook notification..)
-  const [message,setMessage] = useState([]); //This is for the all kind of messages..(example :User A has accepted the friend request e.t.c);
+  const [username, setUsername] = useState(null); //Setting the current / logged user name in the state
+  const [userPhoto, setUserPhoto] = useState(null); //Setting the userprofile image from the database
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0); //It is for unreadnotification (use case : like facebook notification..)
+  const [message, setMessage] = useState([]); //This is for the all kind of messages..(example :User A has accepted the friend request e.t.c);
   const parsedID = parseInt(id);
-
+  const [notifMenu, setNotifMenu] = useState(false); //for notif panel
   useEffect(() => {
 
 
@@ -120,8 +120,6 @@ const Navbar = ({ toggleMenu, user }) => {
   console.log("Previous");
   console.log(friendRequests);
 
-
-
   useEffect(() => {
     if (socket) {
       // socket.on('friendRequest', ({friendRequestData,from})=>{
@@ -180,16 +178,12 @@ const Navbar = ({ toggleMenu, user }) => {
           console.log("Accepted the friedn Request");
           console.log(acceptFriendRequestData);
 
-          if (from === parsedID) {
-            alert("Entered");
-            console.log("Received friend request from the sender");
-            console.log(acceptFriendRequestData);
-            alert("Receiver Socket Id ");
-          }
+        if(from === parsedID){
+          alert("Entered");
+          console.log("Received friend request from the sender");
+          console.log(acceptFriendRequestData);
+          alert("Receiver Socket Id ");
         }
-      );
-      socket.on('deleteFriendRelationship',({ senderUsername, receiverUsername })=>{
-        alert(`${senderUsername} has rejected your friend request for the receiver ${receiverUsername}`);
       })
     }
 
@@ -243,13 +237,10 @@ const Navbar = ({ toggleMenu, user }) => {
     setMenuVisible(!isMenuVisible);
   };
 
-  // Function to confirm the request
-  const handleConfirm = async (senderName, receiverName) => {
-    alert(senderName);
-    alert(receiverName)
-  };
-
-
+  // Function to confirm the request 
+  const handleConfirm = async (senderName,receiverName)=>{
+    
+  }
   // Function to decline the friend request
   const handleDelete = async (senderName, receiverName) => {
     try {
@@ -269,21 +260,14 @@ const Navbar = ({ toggleMenu, user }) => {
       );
       const data = await res.json();
 
-      if (data) {
-        alert("ENTERED");
-        setFriendRequests((prevRequests) =>
-          prevRequests
-            ? prevRequests.filter(
-                (request) => request.senderUsername !== senderName
-              )
-            : []
-        );
-
-        if(friendRequests.length === 1){
-          setMenuVisible(false);
-        }
-      } else {
-        toast.error("Failed to decline friend requets");
+      if(res.ok){
+        setFriendRequests((prevRequests)=>{
+          prevRequests.filter(
+            (request)=>request.senderUsername!==senderName
+          )
+        })
+      }else{
+        toast.error("Failed to decline friend requets")
       }
       // console.log(data);
       // console.log(typeof data);
@@ -302,6 +286,7 @@ const Navbar = ({ toggleMenu, user }) => {
       </div>
     );
   }
+
 
   return (
     <div className={styles.navbar}>
@@ -344,9 +329,9 @@ const Navbar = ({ toggleMenu, user }) => {
         {/* <PersonOutlinedIcon onClick={handleIconClick} /> */}
         {/* PersonOutlinedIcon with unread notification count badge */}
         <div className={styles.profileIconContainer}>
-          <PersonOutlinedIcon onClick={handleIconClick} />
+          <PersonOutlinedIcon onClick={handleIconClick} className={styles.friendsBadgeIcon}/>
           {unreadNotificationCount > 0 && (
-            <div className={styles.badge}>{unreadNotificationCount}</div>
+            <div className={styles.friendsBadge}>{unreadNotificationCount}</div>
           )}
         </div>
         {isMenuVisible && (
@@ -403,9 +388,71 @@ const Navbar = ({ toggleMenu, user }) => {
             </ul>
           </div>
         )}
-        <EmailOutlinedIcon />
-        <NotificationsOutlinedIcon />
+        <EmailOutlinedIcon className={styles.messagesBadgeIcon}/>
+        <div className={styles.messagesBadge}>{unreadNotificationCount}</div>
+        <NotificationsOutlinedIcon onClick={openNotifPanel} className={styles.notifBadgeIcon}/>
+        {notifMenu ? (
+          <div className={styles.notifPanel}>
+            <div className={styles.notifPanelHeader}>
+              <h1>Notification Panel</h1>
+            </div>
+            <div className={styles.notifcontainer}>
+              <ul className={styles.requests}>
+                {friendRequests.map((user, index) => {
+                  console.log(user);
+                  const username =
+                    user.userDetails && user.userDetails.length > 0
+                      ? user.userDetails[0].username
+                      : "";
+                  return (
+                    <li className={styles.request} key={index}>
+                      <div className={styles.left}>
+                        {/* <img
+                        className={styles.ig}
+                        src="https://images.pexels.com/photos/19555765/pexels-photo-19555765/free-photo-of-portrait-of-egret-bird.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+                        alt="john doe"
+                      /> */}
+                        <img src={userPhoto} />
+                      </div>
+                      <p className={styles.middle}>
+                        <a
+                          style={{ textDecoration: "none" }}
+                          href={`/profile/${user.senderUserId}`}
+                          className={styles.userNameLink}
+                        >
+                          <span>{user.senderUsername}</span>
+                        </a>
+                        requested to follow you
+                      </p>
 
+                      <div className={styles.right}>
+                        <button
+                          onClick={() =>
+                            handleConfirm(user.senderUsername, senderName)
+                          }
+                          className={styles.acceptBtn}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleDelete(user.senderUsername, senderName)
+                          }
+                          className={styles.declineBtn}
+                        >
+                          Decline
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.closedNotifPanel}></div>
+        )}
+        <div className={styles.notifBadge}>{unreadNotificationCount}</div>
         <div className={styles.user}>
           <a
             style={{ textDecoration: "none" }}
