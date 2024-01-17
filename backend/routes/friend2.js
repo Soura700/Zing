@@ -284,7 +284,7 @@ router.delete('/deleteFriendRelationship', async (req, res) => {
     await deleteFriendRelationship(senderUserId, receiverUserId);
 
     // You may also want to emit an event to inform clients about the deletion
-    io.emit("deleteFriendRelationship", { senderUsername, receiverUsername });
+    io.emit("deleteFriendRelationship", { senderUsername:senderUsername, receiverUsername:receiverUsername });
 
     return res.status(200).json({ success: true, message: 'Friend relationship deleted' });
   } catch (error) {

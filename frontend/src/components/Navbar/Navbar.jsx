@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = ({ toggleMenu, user }) => {
-  const [toggle, setToggle] = useState(false); 
+  const [toggle, setToggle] = useState(false);
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); //Setting the loading
@@ -107,7 +107,7 @@ const Navbar = ({ toggleMenu, user }) => {
   }, [id, parsedID, checkAuthentication]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5500");
+    const newSocket = io("http://localhost:5500")
     setSocket(newSocket);
 
     return () => {
@@ -118,65 +118,74 @@ const Navbar = ({ toggleMenu, user }) => {
   console.log("Previous");
   console.log(friendRequests);
 
-
-
   useEffect(() => {
     if (socket) {
-
       // socket.on('friendRequest', ({friendRequestData,from})=>{
       //   console.log("Received friend request from the sender");
       //   console.log(friendRequestData);
-        
+
       //   // setFriendRequests((prevRequests)=>[...prevRequests , friendRequestData]);
       //   // setRealTimeFriendRequests(friendRequestData);
       //   // console.log("New");
       //   // console.log(friendRequestData);
       // })
 
-     
-
-
-      socket.on('friendRequest', ({ friendRequestData, from , to }) => {
-
+      socket.on("friendRequest", ({ friendRequestData, from, to }) => {
         console.log(friendRequestData);
 
         // console.log(friendRequestData.receiverUserId);
         // console.log(friendRequestData);
 
-        if(to === parsedID){
+        if (to === parsedID) {
           alert("Entered");
           console.log("Received friend request from the sender");
           console.log(friendRequestData);
           alert("Receiver Socket Id ");
-    
+
           // Check if the friend request is not already in the state
-          if (!friendRequests.some(request => request.senderUserId === friendRequestData.senderUserId)) {
+          if (
+            !friendRequests.some(
+              (request) =>
+                request.senderUserId === friendRequestData.senderUserId
+            )
+          ) {
             // Using the callback function to avoid race conditions
-            setFriendRequests(prevRequests => {
+            setFriendRequests((prevRequests) => {
               // Check again inside the callback to ensure no race conditions
-              if (!prevRequests.some(request => request.senderUserId === friendRequestData.senderUserId)) {
+              if (
+                !prevRequests.some(
+                  (request) =>
+                    request.senderUserId === friendRequestData.senderUserId
+                )
+              ) {
                 return [...prevRequests, friendRequestData];
               }
               return prevRequests;
             });
-            setUnreadNotificationCount(prevCount => prevCount + 1);
+            setUnreadNotificationCount((prevCount) => prevCount + 1);
           }
         }
       });
 
       // Get Friend Request
 
-      socket.on('acceptFriendRequest' , ({acceptFriendRequestData ,from , to })=>{
-        alert("Entered 2 ");
-        console.log("Accepted the friedn Request");
-        console.log(acceptFriendRequestData);
-
-        if(from === parsedID){
-          alert("Entered");
-          console.log("Received friend request from the sender");
+      socket.on(
+        "acceptFriendRequest",
+        ({ acceptFriendRequestData, from, to }) => {
+          alert("Entered 2 ");
+          console.log("Accepted the friedn Request");
           console.log(acceptFriendRequestData);
-          alert("Receiver Socket Id ");
+
+          if (from === parsedID) {
+            alert("Entered");
+            console.log("Received friend request from the sender");
+            console.log(acceptFriendRequestData);
+            alert("Receiver Socket Id ");
+          }
         }
+      );
+      socket.on('deleteFriendRelationship',({ senderUsername, receiverUsername })=>{
+        alert(`${senderUsername} has rejected your friend request for the receiver ${receiverUsername}`);
       })
     }
 
@@ -217,23 +226,28 @@ const Navbar = ({ toggleMenu, user }) => {
       return;
     }
 
-      // Check for duplicate entries and update the state accordingly
-  const uniqueFriendRequests = friendRequests.reduce((unique, request) => {
-    const isDuplicate = unique.some((uniqueRequest) => uniqueRequest.senderUserId === request.senderUserId);
-    return isDuplicate ? unique : [...unique, request];
-  }, []);
+    // Check for duplicate entries and update the state accordingly
+    const uniqueFriendRequests = friendRequests.reduce((unique, request) => {
+      const isDuplicate = unique.some(
+        (uniqueRequest) => uniqueRequest.senderUserId === request.senderUserId
+      );
+      return isDuplicate ? unique : [...unique, request];
+    }, []);
 
     setUnreadNotificationCount(0);
     setFriendRequests(uniqueFriendRequests);
     setMenuVisible(!isMenuVisible);
   };
 
-  // Function to confirm the request 
-  const handleConfirm = async (senderName,receiverName)=>{
-    
-  }
+  // Function to confirm the request
+  const handleConfirm = async (senderName, receiverName) => {
+    alert(senderName);
+    alert(receiverName)
+  };
+
+
   // Function to decline the friend request
-  const handleDelete = async (senderName,receiverName)=>{
+  const handleDelete = async (senderName, receiverName) => {
     try {
       console.log(parsedID);
       const res = await fetch(
@@ -244,21 +258,28 @@ const Navbar = ({ toggleMenu, user }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-              senderUsername:senderName,
-              receiverUsername:receiverName
+            senderUsername: senderName,
+            receiverUsername: receiverName,
           }),
         }
       );
       const data = await res.json();
 
-      if(res.ok){
-        setFriendRequests((prevRequests)=>{
-          prevRequests.filter(
-            (request)=>request.senderUsername!==senderName
-          )
-        })
-      }else{
-        toast.error("Failed to decline friend requets")
+      if (data) {
+        alert("ENTERED");
+        setFriendRequests((prevRequests) =>
+          prevRequests
+            ? prevRequests.filter(
+                (request) => request.senderUsername !== senderName
+              )
+            : []
+        );
+
+        if(friendRequests.length === 1){
+          setMenuVisible(false);
+        }
+      } else {
+        toast.error("Failed to decline friend requets");
       }
       // console.log(data);
       // console.log(typeof data);
@@ -268,7 +289,7 @@ const Navbar = ({ toggleMenu, user }) => {
       console.error("Error fetching friend requests:", error);
       toast.error("An error occurred while declining friend request");
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -277,7 +298,6 @@ const Navbar = ({ toggleMenu, user }) => {
       </div>
     );
   }
-
 
   return (
     <div className={styles.navbar}>
@@ -356,8 +376,22 @@ const Navbar = ({ toggleMenu, user }) => {
                     </p>
 
                     <div className={styles.right}>
-                      <button onClick={()=>handleConfirm(user.senderUsername, senderName)} className={styles.acceptBtn}>Accept</button>
-                      <button onClick={() => handleDelete(user.senderUsername, senderName)} className={styles.declineBtn}>Decline</button>
+                      <button
+                        onClick={() =>
+                          handleConfirm(user.senderUsername, senderName)
+                        }
+                        className={styles.acceptBtn}
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDelete(user.senderUsername, senderName)
+                        }
+                        className={styles.declineBtn}
+                      >
+                        Decline
+                      </button>
                     </div>
                   </li>
                 );
@@ -382,7 +416,6 @@ const Navbar = ({ toggleMenu, user }) => {
       </div>
       {/* <ToastContainer/> */}
     </div>
-    
   );
 };
 
