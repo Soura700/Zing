@@ -26,7 +26,71 @@
   font-size: 20px;
   margin: 0px;
 }
+.post .content .gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+  grid-gap: 30px;
+  margin: 20px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.post .content .gallery img {
+  height: fit-content;
+  width: 300px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.post .content .gallery div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 
+.post .content .gallery .showFullImg{
+  border: 0px solid red;
+  position: absolute;
+  background: rgb(255, 255, 255);
+  border-radius: 20px;
+  height: fit-content;
+  width: auto;
+  padding: 5px;
+  top: 0px;
+  left: 50px;
+  box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
+}
+.post .content .gallery .showFullImg img {
+  position: relative;
+  height: 80%;
+  width: 80%;
+}
+.post .content .gallery .showFullImg button {
+  position: absolute;
+  width: fit-content;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 1px solid rgb(197, 197, 197);
+  padding: 4px;
+}
+.post .content .gallery .showFullImg button:hover {
+  background: rgb(233, 232, 232);
+}
+.post .content .gallery .showFullImg .prevImgBtn {
+  left: 5px;
+}
+.post .content .gallery .showFullImg .nextImgBtn {
+  right: 5px;
+}
+.post .content .gallery .showFullImg .closeImgBtn {
+  top: -10px;
+  right: 5px;
+  border: 0px;
+}
 .user {
   display: flex;
   align-items: center;

@@ -252,6 +252,7 @@ const Navbar = ({ toggleMenu, user }) => {
     setNotifMenu(!notifMenu);
   }
 
+
   const [isMenuVisible, setMenuVisible] = useState(false);
 
   console.log('Message');
@@ -354,7 +355,6 @@ const Navbar = ({ toggleMenu, user }) => {
       </div>
     );
   }
-
 
   return (
     <div className={styles.navbar}>

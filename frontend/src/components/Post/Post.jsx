@@ -4,22 +4,24 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import CloseIcon from '@mui/icons-material/Close';
+
 import { Link } from "react-router-dom";
 // import Comments from "../comments/Comments";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../Contexts/authContext";
 
-
-const Post = ({ post , userId }) => {
-
+const Post = ({ post, userId }) => {
   console.log(post);
 
-  if(post.image){
+  if (post.image) {
     console.log("Entered");
-    console.log(post.image)
-    console.log(typeof post.image)
+    console.log(post.image);
+    console.log(typeof post.image);
   }
 
   const [socket, setSocket] = useState(null); //For setting the socket connection
@@ -29,19 +31,14 @@ const Post = ({ post , userId }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
   const parsedID = parseInt(id);
-
-  
+  const [showImg, setShowImg] = useState(false);
   // Parse the JSON string into an array
-  const images =  JSON.parse(post.image);
-
+  const images = JSON.parse(post.image);
 
   console.log(typeof images);
-  
-
 
   // const imageUrls = images.map((image) => `http://localhost:5000/uploads/${image}`);
   const liked = false;
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,12 +58,12 @@ const Post = ({ post , userId }) => {
       }
     };
 
-
     const fetchFriendRequests = async () => {
       try {
         console.log(parsedID);
         const res = await fetch(
-          "http://localhost:5000/api/friend_request/getFriends/" + parsedID);
+          "http://localhost:5000/api/friend_request/getFriends/" + parsedID
+        );
         const data = await res.json();
         // console.log(data);
         // console.log(typeof data);
@@ -93,13 +90,12 @@ const Post = ({ post , userId }) => {
     };
   }, []);
 
-
-// This is for the like system (for updating the socket)
+  // This is for the like system (for updating the socket)
   useEffect(() => {
-    const socket = io('http://localhost:5500'); // Update the URL to match your server
+    const socket = io("http://localhost:5500"); // Update the URL to match your server
 
     // Listen for 'updateLikes' event
-    socket.on('updateLikes', ({ postId, updatedLikes }) => {
+    socket.on("updateLikes", ({ postId, updatedLikes }) => {
       if (postId === post.id) {
         alert("Hello");
         alert(updatedLikes);
@@ -112,12 +108,11 @@ const Post = ({ post , userId }) => {
       socket.disconnect();
     };
   }, [post.id]);
-  
-  
-// This function os for handling the like in the realtime for the posts
+
+  // This function os for handling the like in the realtime for the posts
   const LikeHandler = async () => {
     // Assuming you have a post ID
-    const postId = post.id;  
+    const postId = post.id;
     try {
       const res = await fetch("http://localhost:5000/api/posts/like", {
         method: "POST",
@@ -129,9 +124,8 @@ const Post = ({ post , userId }) => {
           userId: userId,
         }),
       });
-  
+
       if (res.status === 200) {
-        
       } else {
         console.error("Failed to update likes");
         // Handle error appropriately, e.g., show an error message to the user
@@ -141,13 +135,35 @@ const Post = ({ post , userId }) => {
       console.error("Error updating likes:", error);
     }
   };
-  
-
 
   //Post Option toggle
   const handleToggle = () => {
     setToggle(!toggle);
   };
+  // const showPostImg = () => {
+  //   setShowImg(!showImg);
+  // };
+
+    const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  
+    const showPostImg = (index) => {
+      setSelectedImageIndex(index);
+    };
+  
+    const closeFullImg = () => {
+      setSelectedImageIndex(null);
+    };
+
+
+    const navigateImage = (direction) => {
+      if (selectedImageIndex !== null) {
+        const newIndex =
+          direction === 'next'
+            ? (selectedImageIndex + 1) % images.length
+            : (selectedImageIndex - 1 + images.length) % images.length;
+        setSelectedImageIndex(newIndex);
+      }
+    };
 
   return (
     <div className={styles.post}>
@@ -174,7 +190,7 @@ const Post = ({ post , userId }) => {
               <ul>
                 <li className={styles.opt1}>Update Post</li>
                 <div className={styles.opt2}>
-                    <li>Delete Post</li>
+                  <li>Delete Post</li>
                 </div>
               </ul>
             </div>
@@ -186,16 +202,39 @@ const Post = ({ post , userId }) => {
           <p>{post.description}</p>
           {/* Render images */}
           {/* <div className={(images && images.length && images.length <= 2) ? styles.gridTwo : styles.gridMore}> */}
-          {/* <div className={styles.imageContainer}> */}
-            {images && images.map((image, index) => (
-              console.log(image),
-              <img key={index} src={`http://localhost:5000/uploads/${image}`} alt={`Image ${index}`} />
-            ))}
-        {/* </div> */}
+          <div className={styles.gallery}>
+      {images &&
+        images.map((image, index) => (
+          <div className={styles.imgContainer} key={index}>
+            <img
+              src={`http://localhost:5000/uploads/${image}`}
+              alt={`Image ${index}`}
+              onClick={() => showPostImg(index)}
+            />
+            {selectedImageIndex === index && (
+              <div className={styles.showFullImg}>
+                  <img
+              src={`http://localhost:5000/uploads/${image}`}
+              alt={`Image ${index}`}
+              onClick={() => showPostImg(index)}
+            />
+                {/* Add the full-size image or any other content here */}
+                <button onClick={() => navigateImage('prev')} className={styles.prevImgBtn}><KeyboardArrowLeftIcon/> </button>
+                <button onClick={() => navigateImage('next')} className={styles.nextImgBtn}><KeyboardArrowRightIcon /></button>
+                <button onClick={closeFullImg} className={styles.closeImgBtn}><CloseIcon /></button>
+              </div>
+            )}
+          </div>
+        ))}
+    </div>
         </div>
         <div className={styles.info}>
           <div className={styles.item}>
-            {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon onClick={LikeHandler} />}
+            {liked ? (
+              <FavoriteOutlinedIcon />
+            ) : (
+              <FavoriteBorderOutlinedIcon onClick={LikeHandler} />
+            )}
             {likes}
           </div>
           <div
@@ -213,7 +252,6 @@ const Post = ({ post , userId }) => {
             <ShareOutlinedIcon />
             Share
           </div>
-          
         </div>
         {/* {commentOpen && <Comments />} */}
       </div>
