@@ -19,6 +19,10 @@ const UnreadMessageSchema = new mongoose.Schema({
     },
     message_type:{
         type:String
+    },
+    status:{
+        type:String,
+        default:"Unread"
     }
 
 },{timestamps : true})
