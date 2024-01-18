@@ -184,7 +184,7 @@ function App() {
 
 
     {
-      path: "/message",
+      path: "/message/:userId",
       element: <Leftbar2 />,
     },
 

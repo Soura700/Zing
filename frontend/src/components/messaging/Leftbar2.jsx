@@ -21,104 +21,31 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useState } from "react";
 import { io } from "socket.io-client";
-import { useAuth } from "../../Contexts/authContext";
 import Peer from "simple-peer";
 import CallUI from "../../components/CallUi/CallUi";
 import ringtone from "../../assets/Chaleya.mp3";
 import IncomingCallUi from "../IncomingCallUi/IncomingCallUi";
+import { useParams } from "react-router-dom";
 
 export const Leftbar2 = () => {
-  const { isLoggedIn, id, checkAuthentication } = useAuth();
-  const [toggle, setToggle] = useState(false);
+  const [socket, setSocket] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState({});
   const [message, setMessage] = useState("");
-  const [socket, setSocket] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [activeUsers, setActiveUsers] = useState([]);
-
   const [isCalling, setIsCalling] = useState(false);
   const [stream, setStream] = useState(null);
   const [peer, setPeer] = useState(null);
-
   const [activeConversation, setActiveConversation] = useState(null);
-
   const [isCallActive, setIsCallActive] = useState(false);
-
   const [incomingCall, setIncomingCall] = useState(null);
-
-  const parsedId = parseInt(id);
-
-  //this edited1
+  const { userId } = useParams();
   const [showMenu, setShowMenu] = useState(false);
-
-  const showSidebarMenu = () => {
-    setShowMenu(!showMenu);
-  };
-
   const [showGroup, setShowGroup] = useState(false);
-
-  const showAllGroups = () => {
-    setShowGroup(!showGroup);
-  };
-
-  // RingTone
   const [callAccepted, setCallAccepted] = useState(false);
+  const [toggle, setToggle] = useState(false);
   const [audio] = useState(new Audio(ringtone));
-  const [userRole, setUserRole] = useState(""); // Initialize with null
-
-  useEffect(() => {
-    const socket = io("http://localhost:5500");
-
-    setSocket(io("http://localhost:5500"));
-
-    // Add event listeners here
-    socket.on("incomingCall", ({ callerId }) => {
-      console.log("CallerId" + callerId);
-      setIncomingCall({ callerId });
-    });
-    // Cleanup: Disconnect the socket when the component is unmounted
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-  const handleCallClick = () => {
-    if (!activeConversation) {
-      console.error("No conversation selected for the call.");
-      return;
-    }
-    const isCaller = activeConversation.receiverId !== parsedId;
-    // Emit a "callUser" event to the server with the receiver's ID
-    socket.emit("callUser", { receiverId: activeConversation.receiverId });
-    // You can add your logic here to start the call
-    // For example, call the startAudioCall or startVideoCall function
-    // and set the isCallActive state to true
-    startAudioCall(activeConversation.receiverId); // Adjust as needed
-    setIsCallActive(true);
-  };
-
-  const acceptCall = () => {
-    console.log(incomingCall.callerId);
-    // Implement logic to accept the call
-    // Create a new Peer instance and send the answer signal
-    // You can use the incomingCall.callerId and incomingCall.signalData
-    // Example
-    startAudioCall(incomingCall.callerId);
-    // audio.play();
-    // Clear the incoming call state
-    // setIncomingCall(null);
-    setCallAccepted(true);
-  };
-
-  console.log("Call Accepted : " + callAccepted);
-
-  const rejectCall = () => {
-    // Implement logic to reject the call
-    // For example, send a signal to inform the caller
-    // Clear the incoming call state
-    setIncomingCall(null);
-  };
+  const userid = parseInt(userId);
 
   const styles = {
     "*": {
@@ -129,19 +56,60 @@ export const Leftbar2 = () => {
   };
 
   useEffect(() => {
-    checkAuthentication().then(() => {
-      setIsLoading(false); // Mark loading as complete when authentication data is available
+    const newSocket = io("http://localhost:5500");
+
+    setSocket(newSocket);
+
+    newSocket.on("incomingCall", ({ callerId }) => {
+      console.log("CallerId" + callerId);
+      setIncomingCall({ callerId });
     });
-  }, [checkAuthentication]);
+
+    newSocket.on("getUser", (activeUsers) => {
+      console.log("Active Users", activeUsers);
+      setActiveUsers(activeUsers);
+    });
+
+    newSocket.on("getMessage", (data) => {
+      console.log(data);
+      setMessages((prev) => ({
+        ...prev,
+        messages: [...prev.messages, { message: data.message }],
+      }));
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const handleCallClick = () => {
+    if (!activeConversation) {
+      console.error("No conversation selected for the call.");
+      return;
+    }
+    const isCaller = activeConversation.receiverId !== userid;
+    socket.emit("callUser", { receiverId: activeConversation.receiverId });
+    startAudioCall(activeConversation.receiverId);
+    setIsCallActive(true);
+  };
+
+  const acceptCall = () => {
+    startAudioCall(incomingCall.callerId);
+    setCallAccepted(true);
+  };
+
+  const rejectCall = () => {
+    setIncomingCall(null);
+  };
 
   const handleToggle = () => {
     setToggle(!toggle);
   };
 
   useEffect(() => {
-    // Only perform socket-related operations if the user is authenticated
-    if (isLoggedIn) {
-      socket?.emit("addUser", parsedId);
+    if (userid && socket) {
+      socket?.emit("addUser", userid);
       socket?.on("getUser", (activeUsers) => {
         console.log("Active Users", activeUsers);
         setActiveUsers(activeUsers);
@@ -153,59 +121,43 @@ export const Leftbar2 = () => {
           messages: [...prev.messages, { message: data.message }],
         }));
       });
-
-      // socket?.on('getMessage', (data) => {
-      //   console.log(data);
-      //   setMessages((prevMessages) => [...prevMessages, { message: data.message }]);
-      // });
-
-      // socket?.on('getMessage', (data) => {
-      //   console.log(data);
-      //   setMessages((prevMessages) => [...prevMessages, data]);
-      // });
     }
-  }, [socket, parsedId, isLoggedIn]);
-
-  console.log("ActiveUser" + activeUsers);
-
-  console.log(activeUsers);
-
-  console.log(socket);
-
-  const isUserOnline = (userId) => {
-    // return activeUsers.find((user)=>user.userId ===  userId );
-    return activeUsers.some((user) => user.userId === userId);
-  };
-
-  console.log(isUserOnline());
+  }, [userid, socket]);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (userid) {
       const fetchData = async () => {
-        const res = await fetch("http://localhost:5000/api/conversation/get", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            senderId: parsedId,
-          }),
-        });
+        const res = await fetch(
+          "http://localhost:5000/api/conversation/get",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              senderId: userid,
+            }),
+          }
+        );
         const data = await res.json();
+        console.log("Data", data);
         setConversations(data);
       };
       fetchData();
     }
-  }, [isLoggedIn]);
+  }, [userid]);
 
   const fetchMessages = async (id, user) => {
-    if (isLoggedIn) {
+    if (userid) {
       const res = await fetch(
         "http://localhost:5000/api/message/get_messages/" + id
       );
       const resJson = await res.json();
-      setMessages({ messages: resJson, receiver: user, conversationId: id });
-      // setConversationId(id);
+      setMessages({
+        messages: resJson,
+        receiver: user,
+        conversationId: id,
+      });
       setActiveConversation(user);
     }
   };
@@ -218,41 +170,41 @@ export const Leftbar2 = () => {
       return;
     }
 
-    // Update the local state immediately to show the message in the outgoing message div
     setMessages((prev) => ({
       ...prev,
       messages: [
         ...prev.messages,
-        { message: message, user: { id: parsedId } },
+        { message: message, user: { id: userid } },
       ],
     }));
 
     socket?.emit("sendMessage", {
       conversationId: conversationId,
-      senderId: parsedId,
+      senderId: userid,
       message: message,
       receiverId: messages?.receiver?.receiverId,
     });
 
     try {
-      const res = await fetch("http://localhost:5000/api/message/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          conversationId: conversationId,
-          senderId: parsedId,
-          message: message,
-        }),
-      });
+      const res = await fetch(
+        "http://localhost:5000/api/message/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            conversationId: conversationId,
+            senderId: userid,
+            message: message,
+          }),
+        }
+      );
 
       if (res.status === 200) {
-        // Clear the input field after sending
         setMessage("");
       } else {
         console.error("Failed to send message to the API");
-        // Handle error appropriately, e.g., show an error message to the user
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -263,33 +215,21 @@ export const Leftbar2 = () => {
     alert("Audio Called");
 
     try {
-      // Get user's audio stream
-      const userMedia = await navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-        })
-        .then((stream) => {
-          console.log("Stream Soura" + stream);
-          console.log(stream);
-        })
-        .catch((error) => {
-          console.log("Get User Media Error" + error);
-        });
+      const userMedia = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+
       setStream(userMedia);
 
-      console.log("User Media");
-      console.log(userMedia);
+      console.log("User Media", userMedia);
 
-      // Create a new Peer instance
       const newPeer = new Peer({
         initiator: true,
         stream: userMedia,
         trickle: false,
       });
 
-      // Set up event handlers for the Peer instance
       newPeer.on("signal", (data) => {
-        // Send the offer signal to the other user
         console.log(data);
         socket.emit("sendOfferSignal", {
           signalData: data,
@@ -297,18 +237,6 @@ export const Leftbar2 = () => {
           isAudioCall: true,
         });
       });
-
-      // newPeer.on("stream", (remoteStream) => {
-      //   alert("Executed 2");
-      //   // Display the remote user's audio stream
-      //   // Create an audio element and set its srcObject to remoteStream to play the audio
-      //   const audioElement = new Audio();
-      //   audioElement.srcObject = remoteStream;
-      //   audioElement.play();
-
-      //   console.log(remoteStream);
-      //   alert("Remote Stream" + remoteStream)
-      // });
 
       newPeer.on("stream", (remoteStream) => {
         console.log("Stream received:", remoteStream);
@@ -341,9 +269,7 @@ export const Leftbar2 = () => {
       audio.pause();
       audio.currentTime = 0;
     }
-    // Reset the audio to the beginning
 
-    // Set the callAccepted state to false
     setCallAccepted(false);
 
     stream.getTracks().forEach((track) => track.stop());
@@ -351,12 +277,20 @@ export const Leftbar2 = () => {
     setIsCalling(false);
   };
 
-  // Render loading indicator if still loading authentication data
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const showSidebarMenu = () => {
+    setShowMenu(!showMenu);
+  };
 
-  // Render the rest of your component based on the authentication status
+  const showAllGroups = () => {
+    setShowGroup(!showGroup);
+  };
+
+  const isUserOnline = (userId) => {
+    // return activeUsers.find((user)=>user.userId ===  userId );
+    return activeUsers.some((user) => user.userId === userId);
+  };
+
+  console.log("Call Accepted : " + callAccepted);
   return (
     <div style={styles} className="container">
       {/* left-options bar */}
@@ -849,7 +783,7 @@ export const Leftbar2 = () => {
             <div className="inner-container">
               {messages.messages.map(
                 ({ message, user: { id } = {} }, index) => {
-                  if (id === parsedId) {
+                  if (id === userid) {
                     return (
                       <div className="outgoing-msg" key={index}>
                         {message}
@@ -969,7 +903,7 @@ export const Leftbar2 = () => {
         />
       ) : incomingCall &&
         !callAccepted &&
-        parsedId !== activeConversation.receiverId ? (
+        userid !== activeConversation.receiverId ? (
         <CallUI
           caller={activeConversation}
           onAccept={acceptCall}
