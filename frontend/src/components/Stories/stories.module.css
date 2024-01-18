@@ -10,16 +10,388 @@
    margin-bottom: 30px;
    overflow-y: hidden;
    overflow-x: auto;
+   position: relative;
  }
 
  .story {
    flex: 1;
    border-radius: 10px;
    overflow: hidden;
-   position: relative;
+   cursor: pointer;
    min-width: 120px;
  }
+ /* .story .showFullStory {
+ }
+ .story .showFullStory img{
+  height: fit-content;
+  width: fit-content;
+  object-fit: cover;
+  position: absolute;
+  z-index: 9999;
+  top: 30px;
+ } */
 
+
+.story .showFullStory {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); /* bg black overlay */
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.story .showFullStory .userNameStory {
+  display: flex;
+  height: fit-content;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+  margin-top: 15px;
+ /* @import "../../style.css"; */
+
+ .stories {
+   display: flex;
+   margin-top: 20px;
+   margin: 20px 20px;
+   gap: 10px;
+   width: 60rem;
+   height: 230px;
+   margin-bottom: 30px;
+   overflow-y: hidden;
+   overflow-x: auto;
+   position: relative;
+ }
+
+ .story {
+   flex: 1;
+   border-radius: 10px;
+   overflow: hidden;
+   
+   min-width: 120px;
+ }
+ /* .story .showFullStory {
+ }
+ .story .showFullStory img{
+  height: fit-content;
+  width: fit-content;
+  object-fit: cover;
+  position: absolute;
+  z-index: 9999;
+  top: 30px;
+ } */
+
+
+.story .showFullStory {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); /* bg black overlay */
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.story .showFullStory .userNameStory {
+  display: flex;
+  height: fit-content;
+  text-align: center;
+  justify-content: center;
+  width: 100%;
+  gap: 20px;
+
+}
+
+.story .showFullStory .userNameStory p {
+  color: rgb(238, 0, 0);
+  font-weight: 400;
+  font-size: 16px;
+}
+.story .showFullStory .userNameStory img {
+  border: 1px solid rgb(104, 25, 194);
+  height: 40px;
+  width: 40px;
+  border-radius: 50px;
+}
+.story .showFullStory h1 {
+  color: white;
+  font-weight: 400;
+  margin: 0;
+  height: fit-content;
+  font-size: 25px;
+}
+.story .showFullStory img {
+  height: 100%; 
+  width: auto;
+  object-fit: contain; 
+  max-width: 100%;
+  max-height: 80%; 
+  z-index: 10000; 
+  border-radius: 12px;
+}
+.story .showFullStory .userStoryOpt {
+  display: flex;
+  gap: 40px;
+}
+.story .showFullStory .userStoryOpt .userOpt{
+  color: aliceblue;
+  font-size: 40px;
+}
+
+ .story h2 {
+  color: red;
+ }
+ .story>span {
+   position: absolute;
+   bottom: 10px;
+   left: 10px;
+   color: white;
+   font-weight: 500;
+ }
+
+
+ .story>img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+ }
+
+
+ .story>button {
+   position: absolute;
+   bottom: 40px;
+   left: 10px;
+   color: white;
+   background-color: #5271ff;
+   border: none;
+   border-radius: 50%;
+   width: 30px;
+   height: 30px;
+   cursor: pointer;
+   font-size: 30px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+
+
+ .stories {
+  display: flex;
+  margin-top: 20px;
+  margin: 20px 20px;
+  gap: 10px;
+  height: 230px;
+  margin-bottom: 30px;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+/* Hide the default scrollbar for WebKit browsers */
+.stories::-webkit-scrollbar {
+  width: 0.1em;
+  height: 14px;
+}
+
+.stories::-webkit-scrollbar-thumb {
+  background-color: #6c0909;
+}
+
+.stories::-webkit-scrollbar-track {
+  background-color: #c52b2b;
+}
+
+/* ... rest of your styles ... */
+
+
+
+
+ @media (max-width: 427px) {
+   .stories {
+     height: fit-content;
+     width: 28rem;
+     margin-bottom: 0;
+     gap: 12px;
+     justify-content: space-between;
+     position: relative;
+     /* border: 1px solid red; */
+     margin-bottom: 50px;
+   }
+
+   .story {
+     flex: none;
+     width: 20px;
+     height: 160px;
+     /* border-radius: 50%; */
+   }
+
+   .stories .story>span {
+     position: absolute;
+     top: 30px;
+     left: 10px;
+     color: rgb(255, 255, 255);
+     font-weight: 500;
+
+     top: auto; /* Change 'top' to 'auto' */
+     bottom: 10px;
+   }
+ }
+
+ .stories::-webkit-scrollbar {
+  width: 0.1em;
+  height: 0px;
+}
+
+
+ /*     
+    @media (max-width: 960px) {
+
+      .stories{
+        height: 150px;
+        gap: 20px;
+      }
+    }  */
+}
+.story .showFullStory .userNameStory p {
+  color: rgb(150, 150, 150);
+  font-weight: 400;
+  font-size: 13px;
+}
+.story .showFullStory .userNameStory img {
+  border: 1px solid rgb(104, 25, 194);
+  height: 40px;
+  width: 40px;
+  border-radius: 50px;
+  margin: 0;
+}
+.story .showFullStory h1 {
+  color: white;
+  font-weight: 400;
+  font-size: 22px;
+  margin: 0;
+  height: fit-content;
+
+}
+.story .showFullStory img {
+  height: 100%; 
+  /* width: auto;
+  object-fit: contain;  */
+  max-width: 100%;
+  max-height: 90%; 
+  z-index: 10000; 
+  border-radius: 12px;
+  margin-top: 30px;
+}
+
+.story .showFullStory .userStoryContent {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  position: relative;
+}
+.story .showFullStory .userStoryContent .userStoryContentLeftOpt {
+  position: absolute;
+  left: -30px;
+  top: 230px;
+  border: 1px solid white;
+  font-size: 30px;
+  border-radius: 50%;
+}  
+.story .showFullStory .userStoryContent .userStoryContentRightOpt {
+  position: absolute;
+  right: -30px;
+  top: 230px;
+  border: 1px solid white;
+  font-size: 30px;
+  border-radius: 50%;
+}  
+  
+.story .showFullStory .userStoryOpt {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  position: relative;
+}
+.story .showFullStory .userStoryOpt .userOpt{
+  color: rgb(255, 255, 255);
+  font-size: 35px;
+}
+.story .showFullStory .storyCommentShow{
+  position: absolute;
+  z-index: 20000; 
+  border: 0px solid red;
+  padding: 25px;
+  border-radius: 20px;
+  background: rgb(46, 46, 46);
+  width: 30rem;
+  height: 25rem;
+  bottom: 4rem;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.story .showFullStory .storyCommentShow .storyCommentHeader {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+.story .showFullStory .storyCommentShow .storyCommentContent {
+  display: flex;
+  height: fit-content;
+  align-items: center;
+  justify-content: center;
+}
+.story .showFullStory .storyCommentShow .storyCommentContent textarea {
+  border: 1px solid rgb(199, 199, 199);
+  border-radius: 12px;
+  height: 40px; 
+  width: 20rem;
+  margin-right: 10px;
+  background: transparent;
+  color: white;
+  padding: 10px; 
+  resize: none; 
+  overflow: hidden; 
+  line-height: 20px; 
+  text-align: left;
+}
+::placeholder {
+  margin: 0;
+}
+.story .showFullStory .storyCommentShow .storyCommentContent input {
+  border: 1px solid rgb(199, 199, 199);
+  border-radius: 12px;
+  height: 40px;
+  width: 20rem;
+  margin-right: 10px;
+  color: white;
+  padding-left: 20px;
+}
+
+.story .showFullStory .storyCommentShow .storyCommentContent button {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  width: fit-content;
+  background: transparent;
+  color: white;
+}
+.story .showFullStory .storyCommentShow .storyCommentContent button:hover {
+  background: white;
+  color: black;
+}
+ .story h2 {
+  color: red;
+ }
  .story>span {
    position: absolute;
    bottom: 10px;
