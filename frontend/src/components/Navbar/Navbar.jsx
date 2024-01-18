@@ -19,7 +19,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = ({ toggleMenu, user }) => {
-
   const [toggle, setToggle] = useState(false);
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const { isLoggedIn, id, checkAuthentication } = useAuth();
@@ -34,13 +33,9 @@ const Navbar = ({ toggleMenu, user }) => {
   const [notifMenu, setNotifMenu] = useState(false); //for notif panel
   const [deletedAcceptedRequests, setdeletedAcceptedRequests] = useState([]); //Sets the friends requets spreading with the old requests with the new requests in realtime
   const [unreadMessageCount, setunreadMessageCount] = useState(0); //It is for unreadnotification (use case : like facebook notification..)
-
-
-
+  const [lastCheckedTimestamp, setLastCheckedTimestamp] = useState(null);
 
   useEffect(() => {
-
-
     const fetchData = async () => {
       try {
         await checkAuthentication();
@@ -107,50 +102,58 @@ const Navbar = ({ toggleMenu, user }) => {
 
     const fetchUnreadNotificationCount = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/get/get_unread_friend_message/" + parsedID);
+        const response = await fetch(
+          "http://localhost:5000/api/get/get_unread_friend_message/" + parsedID
+        );
         const data = await response.json();
         // Assuming data is an array of user objects with a 'name' property
-        const userNames = data.map(user => user.senderName);
+        const userNames = data.map((user) => user.senderName);
         setUnreadNotificationCount(data.length);
         // setUnreadNotificationCount(data.unreadNotificationCount);
       } catch (error) {
-        console.error('Error fetching unread notification count:', error);
+        console.error("Error fetching unread notification count:", error);
       }
     };
 
     const fetchUnreadMessages = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/get/get_unread_message/" + parsedID);
+        const response = await fetch(
+          "http://localhost:5000/api/get/get_unread_read_message/" + parsedID
+        );
         const data = await response.json();
-        console.log(data);
-        // Assuming data is an array of user objects with a 'name' property
-        const userNames = data.map(user => user.senderName);
         setdeletedAcceptedRequests(data);
         setMessage(data);
-        setunreadMessageCount(data.length);
-        // setUnreadNotificationCount(data.unreadNotificationCount);
+        // Count the number of unread messages
+        const unreadMessages = data.filter(
+          (message) => message.status === "Unread"
+        );
+        setunreadMessageCount(unreadMessages.length);
       } catch (error) {
-        console.error('Error fetching unread notification count:', error);
+        console.error("Error fetching unread notification count:", error);
       }
     };
 
     if (id && parsedID) {
-      Promise.all([fetchData(), fetchSenderName(), fetchFriendRequests(),fetchUnreadNotificationCount(),fetchUnreadMessages()])
+      Promise.all([
+        fetchData(),
+        fetchSenderName(),
+        fetchFriendRequests(),
+        fetchUnreadNotificationCount(),
+        fetchUnreadMessages(),
+      ])
         .then(() => setIsLoading(false))
         .catch((error) => console.error("Error during data fetching:", error));
     }
   }, [id, parsedID, checkAuthentication]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5500")
+    const newSocket = io("http://localhost:5500");
     setSocket(newSocket);
 
     return () => {
       newSocket.disconnect();
     };
   }, []);
-
-
 
   useEffect(() => {
     if (socket) {
@@ -182,59 +185,56 @@ const Navbar = ({ toggleMenu, user }) => {
       });
 
       // Get Friend Request
-
       socket.on(
         "acceptFriendRequest",
         ({ acceptFriendRequestData, from, to }) => {
-          alert("Entered 2 ");
           console.log("Accepted the friedn Request");
           console.log(acceptFriendRequestData);
 
-        if(from === parsedID){
-          alert("Entered");
-          console.log("Received friend request from the sender");
-          console.log(acceptFriendRequestData);
-          alert("Receiver Socket Id ");
+          if (from === parsedID) {
+            console.log("Received friend request from the sender");
+            console.log(acceptFriendRequestData);
+          }
         }
-      })
+      );
 
 
       socket.on(
         "deleteFriendRelationship",
         ({ deleteFriendRequestData, from, to }) => {
+          if (from === parsedID && socket) {
+            if (
+              !deletedAcceptedRequests.some(
+                (request) =>
+                  request.senderUserId === deleteFriendRequestData.senderUserId
+              )
+            ) {
+              // Using the callback function to avoid race conditions
+              setMessage((prevRequests) => {
+                // Check again inside the callback to ensure no race conditions
+                if (
+                  !prevRequests.some(
+                    (request) =>
+                      request.senderUserId ===
+                      deleteFriendRequestData.senderUserId
+                  )
+                ) {
+                  // Modify the message to include the declined information
+                  const declinedMessage = {
+                    ...deleteFriendRequestData,
+                    message: `${deleteFriendRequestData.receiverUsername} has declined your friend request`,
+                  };
 
-
-        if( deleteFriendRequestData.senderUserId === parsedID){
-          
-          if (
-            !deletedAcceptedRequests.some(
-              (request) =>
-                request.senderUserId === deleteFriendRequestData.senderUserId
-            )
-          ) {
-            // Using the callback function to avoid race conditions
-            setdeletedAcceptedRequests((prevRequests) => {
-              // Check again inside the callback to ensure no race conditions
-              if (
-                !prevRequests.some(
-                  (request) =>
-                    request.senderUserId === deleteFriendRequestData.senderUserId
-                )
-              ) {
-                return [...prevRequests, deleteFriendRequestData];
-              }
-              return prevRequests;
-            });
-            setunreadMessageCount((prevCount) => prevCount + 1);
+                  // return [...prevRequests, deleteFriendRequestData];
+                  return [...prevRequests, declinedMessage];
+                }
+                return prevRequests;
+              });
+              setunreadMessageCount((prevCount) => prevCount + 1);
+            }
           }
-          alert("Entered Declined");
-          alert(`${from} has declined the friend request`);
-          console.log("Received friend request from the sender");
-          console.log(deleteFriendRequestData);
-          alert("Receiver Socket Id ");
         }
-      })
-
+      );
     }
     return () => {
       if (socket) {
@@ -248,44 +248,65 @@ const Navbar = ({ toggleMenu, user }) => {
     setToggle(!toggle);
   };
 
-  const openNotifPanel = ()=>{
-    setNotifMenu(!notifMenu);
-  }
+  const openNotifPanel = async () => {
 
+    if(message.length === 0){
+      toast("No messages to show!!!!");
+      return;
+    }
+
+    try {
+      // Call the API to mark messages as "Read"
+      const response = await fetch(
+        "http://localhost:5000/api/get/markMessagesAsRead/" + parsedID,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("Messages marked as Read successfully");
+      } else {
+        console.error("Failed to mark messages as Read");
+      }
+    } catch (error) {
+      console.error("Error marking messages as Read:", error);
+    }
+
+    setNotifMenu(!notifMenu);
+    setunreadMessageCount(0);
+  };
 
   const [isMenuVisible, setMenuVisible] = useState(false);
 
-  console.log('Message');
-  console.log(message);
-
   const handleIconClick = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/get/delete_unread_friend_message/" + parsedID, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-  
+      const response = await fetch(
+        "http://localhost:5000/api/get/delete_unread_friend_message/" +
+          parsedID,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       if (response.ok) {
-        console.log('Unread friend messages deleted successfully');
+        console.log("Unread friend messages deleted successfully");
         // Additional logic if needed
       } else {
-        console.error('Failed to delete unread friend messages');
-        // Handle the error, show a toast, etc.
+        console.error("Failed to delete unread friend messages");
       }
     } catch (error) {
-      console.error('Error while deleting unread friend messages:', error);
-      // Handle the error, show a toast, etc.
+      console.error("Error while deleting unread friend messages:", error);
     }
 
-
     if (friendRequests.length === 0) {
-      // Show a toast or perform any other action to notify the user
-
-      
       toast("No friend requests to show!!!!");
-      console.log("No friend requests");
       return;
     }
 
@@ -302,14 +323,11 @@ const Navbar = ({ toggleMenu, user }) => {
     setMenuVisible(!isMenuVisible);
   };
 
-  // Function to confirm the request 
-  const handleConfirm = async (senderName,receiverName)=>{
-    
-  }
+  // Function to confirm the request
+  const handleConfirm = async (senderName, receiverName) => {};
 
   const handleDelete = async (senderName, receiverName) => {
     try {
-      console.log(parsedID);
       const res = await fetch(
         "http://localhost:5000/api/friend_request/deleteFriendRelationship",
         {
@@ -324,15 +342,16 @@ const Navbar = ({ toggleMenu, user }) => {
         }
       );
       const data = await res.json();
-  
+
       if (res.ok) {
         // Use a callback function to ensure proper updating of state
         setFriendRequests((prevRequests) =>
-          prevRequests.filter((request) => request.senderUsername !== senderName)
+          prevRequests.filter(
+            (request) => request.senderUsername !== senderName
+          )
         );
         // Check if there are no more friend requests, then close the notification panel
         if (friendRequests.length === 1) {
-          alert("Done");
           setMenuVisible(false);
         }
         // Close the friend request menu
@@ -341,12 +360,9 @@ const Navbar = ({ toggleMenu, user }) => {
         toast.error("Failed to decline friend request");
       }
     } catch (error) {
-      console.error("Error fetching friend requests:", error);
       toast.error("An error occurred while declining friend request");
     }
   };
-  
-  
 
   if (isLoading) {
     return (
@@ -397,7 +413,10 @@ const Navbar = ({ toggleMenu, user }) => {
         {/* <PersonOutlinedIcon onClick={handleIconClick} /> */}
         {/* PersonOutlinedIcon with unread notification count badge */}
         <div className={styles.profileIconContainer}>
-          <PersonOutlinedIcon onClick={handleIconClick} className={styles.friendsBadgeIcon}/>
+          <PersonOutlinedIcon
+            onClick={handleIconClick}
+            className={styles.friendsBadgeIcon}
+          />
           {unreadNotificationCount > 0 && (
             <div className={styles.friendsBadge}>{unreadNotificationCount}</div>
           )}
@@ -456,9 +475,15 @@ const Navbar = ({ toggleMenu, user }) => {
             </ul>
           </div>
         )}
-        <EmailOutlinedIcon className={styles.messagesBadgeIcon} onClick={openNotifPanel} />
+        <EmailOutlinedIcon
+          className={styles.messagesBadgeIcon}
+          onClick={openNotifPanel}
+        />
         <div className={styles.messagesBadge}>{unreadMessageCount}</div>
-        <NotificationsOutlinedIcon onClick={openNotifPanel} className={styles.notifBadgeIcon}/>
+        <NotificationsOutlinedIcon
+          onClick={openNotifPanel}
+          className={styles.notifBadgeIcon}
+        />
         <div className={styles.messagesBadge}>{unreadMessageCount}</div>
         {notifMenu ? (
           <div className={styles.notifPanel}>
@@ -477,11 +502,6 @@ const Navbar = ({ toggleMenu, user }) => {
                   return (
                     <li className={styles.request} key={index}>
                       <div className={styles.left}>
-                        {/* <img
-                        className={styles.ig}
-                        src="https://images.pexels.com/photos/19555765/pexels-photo-19555765/free-photo-of-portrait-of-egret-bird.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-                        alt="john doe"
-                      /> */}
                         <img src={userPhoto} />
                       </div>
                       <p className={styles.middle}>
@@ -490,9 +510,11 @@ const Navbar = ({ toggleMenu, user }) => {
                           href={`/profile/${user.senderUserId}`}
                           className={styles.userNameLink}
                         >
-                          <span>{user.senderName}</span>
+                          <span>{user.receiverUserName}</span>
                         </a>
-                        {user.message_type === "Declined" ? "declined your request" : "accepted your request"}
+                        {/* {} */}
+                        {/* {user.status === "Declined" ? "declined your request" : "accepted your request"} */}
+                        {user.message}
                       </p>
                     </li>
                   );
