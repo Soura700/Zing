@@ -3,6 +3,7 @@ const mysql = require("mysql");
 const neo4j = require('neo4j-driver');
 const connection = require("../connection");
 const io = require("../socket");
+const UnreadMessages = require('../models/UnreadMessages');
 
 
 var router = express();
@@ -97,6 +98,17 @@ router.post('/sendFriendRequest', async (req, res) => {
 
     // Create friend relationship in Neo4j
     await createFriendRelationship(senderUserId, receiverUserId);
+
+    const newUnreadMessage = new UnreadMessages({
+      senderId:senderUserId,
+      receiverId:receiverUserId,
+      receiverName:receiverUsername,
+      senderName:senderUsername,
+      message:`${senderUsername} has requested to follow`,
+      message_type:'Friend Request'
+    })
+
+    await newUnreadMessage.save();
 
      // Emit friend request to Socket.IO clients
     const friendRequestData = {
@@ -283,8 +295,28 @@ router.delete('/deleteFriendRelationship', async (req, res) => {
     // Delete the friend relationship and nodes in Neo4j
     await deleteFriendRelationship(senderUserId, receiverUserId);
 
+    const newUnreadMessage = new UnreadMessages({
+      senderId:senderUserId,
+      receiverId:receiverUserId,
+      receiverName:receiverUsername,
+      senderName:senderUsername,
+      message:`${receiverUsername} has declined`,
+      message_type:'Declined'
+    });
+
+    await newUnreadMessage.save();
+
+    const deleteFriendRequestData = {
+      senderUserId,
+      senderUsername,
+      receiverUserId,
+      receiverUsername,
+      status: 'Declined', // Or 'Pending', etc.
+    };
+
     // You may also want to emit an event to inform clients about the deletion
-    io.emit("deleteFriendRelationship", { senderUsername, receiverUsername });
+    io.emit("deleteFriendRelationship" , {deleteFriendRequestData : deleteFriendRequestData , from:senderUsername , to : receiverUsername});
+    // io.emit("deleteFriendRelationship", { senderUsername:senderUsername, receiverUsername:receiverUsername , message: `${senderUsername} has declined your friendship` });
 
     return res.status(200).json({ success: true, message: 'Friend relationship deleted' });
   } catch (error) {

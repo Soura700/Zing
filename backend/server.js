@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const app = express();
 const cors = require("cors");
@@ -15,14 +14,15 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const friendRequestRoute = require("./routes/friend");
 const friend_Request_Route = require("./routes/friend2");
-var neo4j = require('neo4j-driver');
 const io = require("./socket");
 const suggestion = require("./routes/suggestion"); 
 // const suggestion2 = require("./routes/suggestion2"); 
 const personalization = require("./routes/personalization");
 const interests_route = require("./routes/interest");
+const unread_message_route = require("./routes/unreadmessages");
 const fof = require("./routes/suggestion"); 
 const path = require("path");
+
 
 // const io = require("socket.io")(5500,{
 //   cors:{
@@ -250,6 +250,7 @@ app.use("/api/user" , interests_route);
 
 app.use("/bio_profile_img" , personalization)
 app.use("/api/bio_profile_img" , personalization)
+app.use("/api/get" , unread_message_route);
 // console.log(suggestion2);
 // suggestion2;
 console.log("hello");

@@ -182,7 +182,7 @@ import {
           <div className="shareTop">
             <img src={userPhoto} alt="" className="shareProfileImg" /> 
             {/* The image url in thw above line should be given dynamically */}
-            <textarea
+            <input
               type="text"
               rows={2}
               style={{ resize: "none", overflow: "hidden" }}
@@ -192,6 +192,12 @@ import {
               onChange={(e) => setInput(e.target.value)}
             //   onKeyDown={handleKey}
             />
+             <div className="shareIcon">
+          {/* ... (Your existing JSX) */}
+          <button className="shareButton" onClick={handlePost}>
+            Post
+          </button>
+        </div>
           </div>
           <hr className="shareHr" />
           {img && (
@@ -240,12 +246,12 @@ import {
               {/* <Picker onEmojiSelect={addEmoji} /> */}
             </div>
           )}
-           <div className="shareBottom">
-          {/* ... (Your existing JSX) */}
+           {/* <div className="shareBottom">
+          
           <button className="shareButton" onClick={handlePost}>
             Post
           </button>
-        </div>
+        </div> */}
         </div>
       </div>
     );

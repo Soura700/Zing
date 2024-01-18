@@ -37,7 +37,17 @@
                     outline: none;
                 }
             }
-
+            .shareTop input {
+                padding-left: 50px;
+            }
+            .shareIcon button{
+                width: fit-content;
+                padding: 5px 20px;
+            }
+            .shareIcon button:hover {
+                background: #a479fa;
+                color: white;
+            }
         }
         .shareHr{
             margin: 10px;

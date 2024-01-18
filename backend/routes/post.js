@@ -81,7 +81,7 @@ router.post("/create", upload.array("images", 5), (req, res) => {
   const insertPostQuery =
     "INSERT INTO posts (userId, description , image) VALUES (?, ? , ?)";
 
-  const values = [userId, description,JSON.stringify(images)];
+  const values = [userId, description, JSON.stringify(images)];
 
   // Check if the user exists
   connection.query(checkUserQuery, [userId], (err, results) => {
@@ -187,8 +187,10 @@ router.put("/update_post/:userId/:postId", (req, res) => {
 
 // Update Like (Increamenet or decreament)
 router.post("/like", (req, res) => {
+
   const postId = req.body.postId;
-  const userId = req.body.userId; // Assuming userId is sent in the request body
+  const userId = req.body.userId; // Assuming userId is sent in the request body (The user whi is liking or disliking the post ) 
+  console.log("UserId" + userId)
   var likeStatus;
   // = req.body.likeStatus; // true for like, false for dislike
 
@@ -213,6 +215,32 @@ router.post("/like", (req, res) => {
                 console.error("Error inserting like:", error);
                 res.status(500).json({ error: "Internal Server Error" });
               } else {
+                connection.query(
+                  "SELECT userId FROM posts where id=?",
+                  [postId],
+                  (err, res) => {
+                    if (err) {
+                      console.log(
+                        "Error in fetching the userid from the posts"
+                      );
+                      res
+                        .status(500)
+                        .json({
+                          error: "Error in fetching the userdid from the posts",
+                        });
+                    } else {
+                      // This is emitting the like event in the socket for the recent activity...
+
+                      io.emit("like", {
+                        postId: postId, //The 
+                        userid: res[0].userId,
+                        likeUser:userId
+                      });
+                    }
+                  }
+                );
+                // Liking the post socket event for the recent activities  to the userId
+                // io.emit('like',{postId,userId});
                 // Update like count in the posts table
                 updateLikeCount(postId, likeStatus, res, true); // Pass true indicating user has liked the post
               }
@@ -229,6 +257,34 @@ router.post("/like", (req, res) => {
                 console.error("Error deleting like:", error);
                 res.status(500).json({ error: "Internal Server Error" });
               } else {
+                connection.query(
+                  "SELECT userId FROM posts where id=?",
+                  [postId],
+                  (err, res) => {
+                    if (err) {
+                      console.log(
+                        "Error in fetching the userid from the posts"
+                      );
+                      res
+                        .status(500)
+                        .json({
+                          error: "Error in fetching the userdid from the posts",
+                        });
+                    } else {
+                      console.log("User", res[0].userId);
+                      console.log("Dislike")
+                      console.log(results);
+                      // This is emitting the dislike event in the socket for the recent activity status ... fro the user is is logged...Means i will check condition then will the the message...
+                      io.emit("dislike", {
+                        postId: postId,
+                        userid: res[0].userId,
+                        dislikeUser:userId
+                      });
+                    }
+                  }
+                );
+                // Emit a 'like' event with the user ID
+                // io.emit('disLike', { postId, userId });
                 // Update like count in the posts table
                 updateLikeCount(postId, likeStatus, res, false); // Pass false indicating user has disliked the post
               }
@@ -255,7 +311,7 @@ function updateLikeCount(postId, likeStatus, res, userLiked) {
         res.status(500).json({ error: "Internal Server Error" });
       } else {
         connection.query(
-          "SELECT likes from posts where id = ?",
+          "SELECT likes,userId from posts where id = ?",
           [postId],
           (err, result) => {
             if (err) {
@@ -263,8 +319,10 @@ function updateLikeCount(postId, likeStatus, res, userLiked) {
               res.status(500).json({ error: "Internal Server Error" });
             } else {
               console.log(result);
+
               // Emit an event to notify clients about the like change
               io.emit("updateLikes", {
+                userid: result[0].userId,
                 postId: postId,
                 updatedLikes: result[0].likes,
               });
@@ -301,32 +359,29 @@ router.get("/:userId", (req, res) => {
   }
 });
 
-
-
-
 // Fetching the posts by the timestamp and the userId
 router.get("/posts_by_timestamp/:userId/:createdAt", async (req, res) => {
   const { userId, createdAt } = req.params;
   try {
-     connection.query(
+    connection.query(
       "SELECT * FROM posts WHERE createdAt >= ? AND userId = ?  ORDER BY createdAt DESC",
-      [createdAt,userId],
-      (error,results)=>{
-        if(error){
-          res.status(500).json({error})
-        }else{
-          const posts = results.map((result)=>({...result}));
-          if(posts.length === 0){
-            res.status(401).json({error:"No posts are there to show"});
-          }else{
-            res.status(200).json(posts)
+      [createdAt, userId],
+      (error, results) => {
+        if (error) {
+          res.status(500).json({ error });
+        } else {
+          const posts = results.map((result) => ({ ...result }));
+          if (posts.length === 0) {
+            res.status(401).json({ error: "No posts are there to show" });
+          } else {
+            res.status(200).json(posts);
           }
         }
       }
     );
   } catch (error) {
-    console.error('Error fetching posts by timestamp:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error("Error fetching posts by timestamp:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
