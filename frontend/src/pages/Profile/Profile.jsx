@@ -7,9 +7,10 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import SettingsIcon from "@mui/icons-material/Settings";
 // import LoggedUserPosts from '../../components/Posts/LoggedUserPosts';
 import { useAuth } from "../../Contexts/authContext";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams , useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Posts from "../../components/Posts/Posts";
 
 const Profile = () => {
   const [user, setUser] = useState([]);
@@ -24,6 +25,7 @@ const Profile = () => {
   const { userId } = useParams();
   // Assuming loggedInUserId is the ID of the logged-in user
   const loggedInUserId = parseInt(id);
+  const navigate = useNavigate();
   // Condition to check if the current user is viewing their own profile
   const isOwnProfile = userId == loggedInUserId;
   const profileHeaderText = isOwnProfile ? "Your Friends" : `${username}'s Friends`;
@@ -138,6 +140,12 @@ const Profile = () => {
       (friend) => friend.friendId === loggedInUserId
     );
 
+    const handleMessageButtonClick = ()=>{
+      alert(userId);
+      alert(username);
+      navigate('/message',  { state: { userId: userId , userName : username }});
+    }
+
   return (
     <div className={styles.profile}>
       <div className={styles.images}>
@@ -171,10 +179,10 @@ const Profile = () => {
               {!isOwnProfile && !isFriendWithCurrentUser && <button className={styles.btn1}>Follow</button>}
               {/* <button className={styles.btn1}>follow</button> */}
               {!isOwnProfile && (
-                <button className={styles.btn2}>
-                  <Link to={`/message/${userId}`} style={{ textDecoration: "none" }}>
+                <button className={styles.btn2} onClick={handleMessageButtonClick}>
+                  {/* <Link to={`/message/${userId}`} style={{ textDecoration: "none" }}> */}
                     message
-                  </Link>
+                  {/* </Link> */}
                 </button>
               )}
               {/* <button className={styles.btn2}>
@@ -285,6 +293,7 @@ const Profile = () => {
         </div>
         {/* Post will be here */}
         {/* <LoggedUserPosts userId={userId} /> */}
+        <Posts/>
       </div>
     </div>
   );
