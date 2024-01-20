@@ -112,6 +112,7 @@ import SignInSignUpForm from "./components/SignInSignUpForm/SignInSignUpForm";
 import { AuthProvider } from "./Contexts/authContext";
 import Posts from "./components/Posts/Posts.jsx";
 import { ToastContainer } from "react-toastify";
+import CreateStory from "./components/Stories/CreateStory.jsx";
 
 
 
@@ -198,6 +199,11 @@ function App() {
     {
       path:"/call",
       element:<Video/>
+    },
+
+    {
+      path:"/create_story",
+      element:<CreateStory/>
     }
 
   ]);

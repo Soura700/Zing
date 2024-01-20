@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 
 
 const StorySchema = new mongoose.Schema({
-    userId : {
-        type : Number,
-        //type : mongoose.Schema.Types.ObjectId,
-        required : true,
-        //ref : 'users',
-    },
+    // userId : {
+    //     type : Number,
+    //     //type : mongoose.Schema.Types.ObjectId,
+    //     required : true,
+    //     //ref : 'users',
+    // },
 
-    userName : {
-        type : String,
-        required : true,
-    },
+    // userName : {
+    //     type : String,
+    //     required : true,
+    // },
 
     views : {
         type : Number,

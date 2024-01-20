@@ -90,6 +90,7 @@ mongoose
 
 let users = [];
 const activeGroups = [];
+const connectedUsers= [];
 
 io.on('connection', (socket) => {
   console.log('User Connected', socket.id);
@@ -141,44 +142,27 @@ io.on('connection', (socket) => {
   })
 
   // // 27/09/2023
+  socket.on('callUser', ({ receiverId }) => {
+    console.log("Called 2 ");
+    // Find the receiver's socket by ID
+    // const receiverSocket = /* Logic to find the receiver's socket by ID */;
+    console.log(receiverId);
 
-  // socket.on('callUser', ({ signalData, callerId }) => {
-  //   // Emit this event to the specific user (callerId) or broadcast it to all users
-  //   // You can emit this event to the caller and provide the signal data for the call
-  //   // Example: 
-  //   io.to(callerId).emit('incomingCall', { signalData });
-  // })
-
-  // socket.on('callUser', ({ receiverId }) => {
-  //   // Find the receiver's socket by ID
-  //   // const receiverSocket = /* Logic to find the receiver's socket by ID */;
-
-  //   console.log(receiverId);
-
-  //   const receiverSocket = users.find(user => user.userId === receiverId);
+    const receiverSocket = users.find(user => user.userId === receiverId);
 
 
-  //   if (receiverSocket) {
-  //     // Emit an "incomingCall" event to the receiver's socket
-  //     io.emit('incomingCall', { callerId: socket.id });
-  //   }
-  //   else {
-  //     // Handle the case where the receiver with the specified ID is not found
-  //     console.log(`Receiver with ID ${receiverId} not found.`);
-  //     // You can emit an error event or take appropriate action here
-  //   }
-
-  // });
-
-  socket.on('callUser', ({ receiverId, isVideoCall }) => {
-    const receiverSocketId = connectedUsers[receiverId];
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit('incomingCall', {
-        callerId: socket.id,
-        isVideoCall,
-      });
+    if (receiverSocket) {
+      // Emit an "incomingCall" event to the receiver's socket
+      io.emit('incomingCall', { callerId: socket.id });
     }
+    else {
+      // Handle the case where the receiver with the specified ID is not found
+      console.log(`Receiver with ID ${receiverId} not found.`);
+      // You can emit an error event or take appropriate action here
+    }
+
   });
+
 
   // Event to handle sending the offer signal
   socket.on('sendOfferSignal', ({ signalData, receiverId, isVideoCall }) => {

@@ -42,15 +42,12 @@ export const Leftbar2 = () => {
   const [showMessageBox, setShowMessageBox] = useState(false);
   //this edited1
   const [showMenu, setShowMenu] = useState(false);
-
   const showSidebarMenu = () => {
     setShowMenu(!showMenu);
   };
-
   const showAllGroups = () => {
     setShowGroup(!showGroup);
   };
-
   // RingTone
   const [callAccepted, setCallAccepted] = useState(false);
   const [audio] = useState(new Audio(ringtone));
@@ -72,7 +69,6 @@ export const Leftbar2 = () => {
 
   useEffect(() => {
     //19/1/2024
-
     if (clicked) {
       let isMounted = true;
       setShowMessageBox(true);
@@ -157,21 +153,50 @@ export const Leftbar2 = () => {
 
   // ... (rest of your component code)
 
-  const handleCallClick = () => {
+  const handleCallClick = async () => {
     if (!activeConversation) {
       console.error("No conversation selected for the call.");
       return;
     }
-    const isCaller = activeConversation.receiverId !== parsedId;
-    // Emit a "callUser" event to the server with the receiver's ID
-    socket.emit("callUser", { receiverId: activeConversation.receiverId });
-    // You can add your logic here to start the call
-    // For example, call the startAudioCall or startVideoCall function
-    // and set the isCallActive state to true
-    startAudioCall(activeConversation.receiverId); // Adjust as needed
-    setIsCallActive(true);
+  
+    try {
+      // Get user's audio stream
+      const userMedia = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setStream(userMedia);
+  
+      // Create a new Peer instance
+      const newPeer = new Peer({
+        initiator: true,
+        stream: userMedia,
+        trickle: false,
+      });
+  
+      // Set up event handlers for the Peer instance
+      newPeer.on("signal", (data) => {
+        // Send the offer signal to the other user
+        socket.emit("callUser", {
+          receiverId: activeConversation.receiverId,
+          signalData: data,
+        });
+      });
+  
+      newPeer.on("stream", (remoteStream) => {
+        // Handle the remote stream, e.g., play it through an audio element
+        const audioElement = new Audio();
+        audioElement.srcObject = remoteStream;
+        audioElement.play();
+      });
+  
+      newPeer.on("error", (error) => {
+        console.error("Peer error:", error);
+      });
+  
+      setPeer(newPeer);
+      setIsCalling(true);
+    } catch (error) {
+      console.error("Error starting audio call:", error);
+    }
   };
-
   const acceptCall = () => {
     console.log(incomingCall.callerId);
     // Implement logic to accept the call
@@ -184,16 +209,13 @@ export const Leftbar2 = () => {
     // setIncomingCall(null);
     setCallAccepted(true);
   };
-
   console.log("Call Accepted : " + callAccepted);
-
   const rejectCall = () => {
     // Implement logic to reject the call
     // For example, send a signal to inform the caller
     // Clear the incoming call state
     setIncomingCall(null);
   };
-
   const styles = {
     "*": {
       margin: 0,
@@ -201,7 +223,6 @@ export const Leftbar2 = () => {
       boxSizing: "border-box",
     },
   };
-
   useEffect(() => {
     checkAuthentication().then(() => {
       setIsLoading(false); // Mark loading as complete when authentication data is available
@@ -212,7 +233,6 @@ export const Leftbar2 = () => {
     alert("Clicked");
     setToggle(!toggle);
   };
-
   useEffect(() => {
     // Only perform socket-related operations if the user is authenticated
     if (isLoggedIn && socket) {
@@ -230,14 +250,11 @@ export const Leftbar2 = () => {
       });
     }
   }, [socket, parsedId, isLoggedIn]);
-
   const isUserOnline = (userId) => {
     // return activeUsers.find((user)=>user.userId ===  userId );
     return activeUsers.some((user) => user.userId === userId);
   };
-
   console.log(isUserOnline());
-
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {
@@ -284,7 +301,6 @@ export const Leftbar2 = () => {
       fetchData();
     }
   }, [isLoggedIn]);
-
   const fetchMessages = async (id, user) => {
     if (isLoggedIn) {
       // Fetch user image along with other conversation details
@@ -312,7 +328,6 @@ export const Leftbar2 = () => {
       setActiveConversation(user);
     }
   };
-
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
 
@@ -320,7 +335,6 @@ export const Leftbar2 = () => {
       console.error("No conversation selected");
       return;
     }
-
     // Update the local state immediately to show the message in the outgoing message div
     setMessages((prev) => ({
       ...prev,
@@ -412,7 +426,6 @@ export const Leftbar2 = () => {
       });
 
       console.log(newPeer);
-
       setPeer(newPeer);
       setIsCalling(true);
 
@@ -425,7 +438,6 @@ export const Leftbar2 = () => {
       console.error("Error starting audio call:", error);
     }
   };
-
   const endCall = () => {
     if (audio) {
       audio.pause();
@@ -440,11 +452,6 @@ export const Leftbar2 = () => {
     peer.destroy();
     setIsCalling(false);
   };
-  // // Render loading indicator if still loading authentication data
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-  // Render loading indicator if still loading authentication data
   if (isLoading || socket === null) {
     return <CircularProgress />; // Use CircularProgress for a loading spinner
   }
@@ -860,7 +867,6 @@ export const Leftbar2 = () => {
             No Messages to show. Click on the conversation to see the messages
           </div>
         )}
-
         {isCallActive ? (
           <CallUI
             caller={activeConversation}
