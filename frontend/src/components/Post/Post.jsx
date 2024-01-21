@@ -18,6 +18,8 @@ import { useAuth } from "../../Contexts/authContext";
 const Post = ({ post, userId }) => {
   console.log(post);
 
+  
+
   if (post.image) {
     console.log("Entered");
     console.log(post.image);
@@ -32,10 +34,24 @@ const Post = ({ post, userId }) => {
   const [toggle, setToggle] = useState(false);
   const parsedID = parseInt(id);
   const [showImg, setShowImg] = useState(false);
-  // Parse the JSON string into an array
-  const images = JSON.parse(post.image);
+  
 
-  console.log(typeof images);
+  // const images = post.image === null ? JSON.parse(post.image) : [];
+
+  const images = Array.isArray(post.image)
+  ? post.image
+  : post.image && post.image !== '[]'
+  ? JSON.parse(post.image)
+  : [];
+
+  
+  // console.log(images);
+
+
+  // Parse the JSON string into an array
+  // const images = JSON.parse(post.image);
+
+  // console.log(typeof images);
 
   // const imageUrls = images.map((image) => `http://localhost:5000/uploads/${image}`);
   const liked = false;

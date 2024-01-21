@@ -1,80 +1,35 @@
-import styles from "./stories.module.css"
+// stories.jsx
+
+import { useState, useEffect } from "react";
+import styles from "./stories.module.css";
 
 const Stories = () => {
+  const [stories, setStories] = useState([]);
 
-  //TEMPORARY
-  const stories = [
-    {
-      id: 1,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 2,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-
-    {
-      id: 5,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-    {
-      id: 4,
-      name: "John Doe",
-      img: "https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load",
-    },
-  ];
+  useEffect(() => {
+    fetch("http://localhost:5000/api/stories/allStories")
+      .then((response) => response.json())
+      .then((data) => setStories(data))
+      .catch((error) => console.error("Error fetching stories:", error));
+  }, []);
 
   return (
     <div className={styles.stories}>
       <div className={styles.story}>
-          <img src="" alt="" />
-          <span>Soura Bose</span>
-          <button>+</button>
-        </div>
-      {stories.map(story=>(
-        <div className={styles.story} key={story.id}>
-          <img src={story.img} alt="" />
+        <img src="" alt="" />
+        <span>Soura Bose</span>
+        <button>
+          <a href="/create_story">+</a>
+        </button>
+      </div>
+      {stories.map((story) => (
+        <div className={styles.story} key={story._id}>
+          <img src={story.mediaUrl} alt="" />
           <span>{story.name}</span>
         </div>
       ))}
-      
     </div>
-  )
-}
+  );
+};
 
 export default Stories;

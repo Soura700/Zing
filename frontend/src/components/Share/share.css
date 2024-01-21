@@ -6,13 +6,14 @@
     border-radius: 10px;
     -webkit-box-shadow: 2px 4px 10px 1px rgba(0,0,0,0.47);
     box-shadow: 2px 4px 10px 1px rgba(134, 134, 134, 0.744);
-
+    z-index: 1;
     .shareWrapper{
         padding: 20px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-
+        position: relative;
+        z-index: 1;
         .shareTop{
             display: flex;
             align-items: center;

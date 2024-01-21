@@ -90,6 +90,8 @@ const Posts = () => {
       const sortedPosts = validPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   
+      
+
         setPostofFriendsData(sortedPosts);
       } catch (err) {
         console.log(err);
@@ -118,9 +120,10 @@ const Posts = () => {
       console.log('Entered');
       socket.on('newPost', ({newPost}) => {
         alert(newPost);
+        console.log("newPost");
         console.log(newPost);
         setPostofFriendsData((prevPosts)=>[newPost,...prevPosts]);
-      });
+      });      
     }
     // Cleanup on unmount
     return () => {
@@ -129,6 +132,9 @@ const Posts = () => {
       }
     };
   }, [socket]);
+
+  console.log("Post Of Friends");
+  console.log(postofFriendsData);
 
   // console.log(postData);
 
@@ -156,12 +162,12 @@ const Posts = () => {
 
   console.log(postofFriendsData)
   return <div className={styles.posts}>
-    {/* {postofFriendsData.map(post=>(
-      <Post post={post} userId={parsedID} key={post.id}/>
-    ))} */}
-        {postData.map(post=>(
+    {postofFriendsData.map(post=>(
       <Post post={post} userId={parsedID} key={post.id}/>
     ))}
+        {/* {postData.map(post=>(
+      <Post post={post} userId={parsedID} key={post.id}/>
+    ))} */}
   </div>;
 };
 
