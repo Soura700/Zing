@@ -170,9 +170,7 @@ const Story = () => {
                       />
                     </div>
                     <div className={styles.storyCommentContent}>
-                      <textarea
-                        rows="4"
-                      ></textarea>
+                      <textarea rows="4"></textarea>
                       <button>Post</button>
                     </div>
                   </div>
@@ -185,12 +183,14 @@ const Story = () => {
         ) : (
           <div className={styles.closeFullStory}></div>
         )}
-        <img src="" alt="" />
+        <div className={styles.storyImg} onClick={(e) => { e.stopPropagation(); e.target.tagName !== 'IMG' && showFullStory(null); }}>
+          <img src="https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load" alt="" className={styles.storyImgClass} />
+        </div>
 
         <span>Soura Bose</span>
         <button>+</button>
       </div>
-      {stories.map((story) => (
+      {stories.map((story, index) => (
         <div
           className={styles.story}
           key={story.id}

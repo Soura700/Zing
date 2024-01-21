@@ -94,7 +94,7 @@ import { Leftbar2 } from "./components/messaging/Leftbar2";
 import { Group } from "./components/Group/Group";
 import  Video  from "./components/Video/Video.jsx";
 import Personalization from "./pages/Personalization/YourComponent.jsx"
-
+import Saved from "./pages/Saved/Saved.jsx";
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -165,7 +165,11 @@ function App() {
         {
           path:"/posts",
           element:<Posts/>
-        }
+        },
+        {
+          path: "/saved",
+          element: <Saved />,
+        },
       ],
     },
 
