@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from React Router Navigate
-import "./createStories.css";
+import { useLocation } from "react-router-dom";
+import "./CreateStory.css";
 
 const CreateStory = () => {
+  const location = useLocation();
+
   const navigate = useNavigate(); // Initialize navigate from React Router Navigate
 
+  var { userId, userName, clicked } = location.state || {};
+
+  console.log(userId + userName);
+
+  const parsedId = parseInt(userId);
+
   const [formData, setFormData] = useState({
+    userId: userId || "", // Use the passed userId, if available
+    userName: userName || "", // Use the passed userName, if available
     media: "", // 'photo' or 'video'
     mediaFile: null,
   });
@@ -36,9 +47,11 @@ const CreateStory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { media, mediaFile } = formData;
+    const { userId, userName, media, mediaFile } = formData;
 
     const storyData = new FormData();
+    storyData.append("userId", userId);
+    storyData.append("userName", userName);
     storyData.append("media", media);
     storyData.append("mediaFile", mediaFile);
 
@@ -48,6 +61,11 @@ const CreateStory = () => {
         {
           method: "POST",
           body: storyData,
+          // body: JSON.stringify({
+          //     storyData,
+          //     userId:parsedId,
+          //     userName: userName,
+          //   }),
         }
       );
 
@@ -85,7 +103,7 @@ const CreateStory = () => {
           <input
             type="file"
             name="mediaFile"
-            accept="image/, video/"
+            accept="image/*, video/*"
             onChange={handleFileChange}
             required
           />

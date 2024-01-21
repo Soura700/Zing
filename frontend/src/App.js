@@ -196,16 +196,14 @@ function App() {
       element: <Group />,
     },
 
-
+ {
+        path: "/create_story",
+        element:<CreateStory/>,
+      },
     {
       path:"/call",
       element:<Video/>
-    },
-
-    {
-      path:"/create_story",
-      element:<CreateStory/>
-    }
+        }
 
   ]);
 

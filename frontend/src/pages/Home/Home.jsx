@@ -2,13 +2,14 @@ import React from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import Posts from '../../components/Posts/Posts';
 import styles from './home.module.css';
-import Stories from '../../components/Stories/Story';
 import Share from "../../components/Share/Share";
+import Story from '../../components/Stories/Story';
+
 
 const Home = () => {
   return (
     <div className='home'>
-      <Stories/>
+      <Story/>
       <Share/>
       <Posts/>
     </div>
