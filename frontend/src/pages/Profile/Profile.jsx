@@ -7,9 +7,10 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import SettingsIcon from "@mui/icons-material/Settings";
 // import LoggedUserPosts from '../../components/Posts/LoggedUserPosts';
 import { useAuth } from "../../Contexts/authContext";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams , useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Posts from "../../components/Posts/Posts";
 
 const Profile = () => {
   const [user, setUser] = useState([]);
@@ -22,9 +23,9 @@ const Profile = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [userPhoto, setUserPhoto] = useState(null); //Setting the userprofile image from the database
   const { userId } = useParams();
-
   // Assuming loggedInUserId is the ID of the logged-in user
   const loggedInUserId = parseInt(id);
+  const navigate = useNavigate();
   // Condition to check if the current user is viewing their own profile
   const isOwnProfile = userId == loggedInUserId;
   const profileHeaderText = isOwnProfile ? "Your Friends" : `${username}'s Friends`;
@@ -45,8 +46,6 @@ const Profile = () => {
           }
         );
         const userResJson = await userRes.json();
-        console.log("Profile Image");
-        console.log(userResJson);
         setUser(userResJson);
         setUsername(userResJson[0].username);
         setUserPhoto(userResJson[0].profileImg);
@@ -62,7 +61,6 @@ const Profile = () => {
         );
         const friends = friendsRes.data;
         setFriend(friends);
-
         // Fetch details for each friend
         const friendDetails = await Promise.all(
           friends.friends.map(async (friend) => {
@@ -84,16 +82,10 @@ const Profile = () => {
         const filteredUserRes = await fetch(
           "http://localhost:5000/api/api/filteredSuggestions/" + loggedInUserId
         );
-
         if (!filteredUserRes.ok) {
           throw new Error("Failed to fetch filtered suggestions");
         }
-
         const filteredData = await filteredUserRes.json();
-
-        console.log("Filtered Data");
-        console.log(filteredData);
-
         const formattedResults = Object.entries(
           filteredData.filteredResults
         ).map(([userId]) => ({ userId }));
@@ -112,17 +104,10 @@ const Profile = () => {
           if (!userRes.ok) {
             throw new Error(`Failed to fetch user data for user ID ${userId}`);
           }
-
           const userData = await userRes.json();
-
-          console.log("User Data");
-          console.log(userData);
           return { ...userData, userId };
         });
-
         const result = await Promise.all(promises);
-        console.log("Result");
-        console.log(result);
         setFriendSuggestion(result);
         return result;
       } catch (error) {
@@ -155,7 +140,11 @@ const Profile = () => {
       (friend) => friend.friendId === loggedInUserId
     );
 
-    
+    const handleMessageButtonClick = ()=>{
+      alert(userId);
+      alert(username);
+      navigate('/message',  { state: { userId: userId , userName : username , clicked:true }});
+    }
 
   return (
     <div className={styles.profile}>
@@ -190,10 +179,10 @@ const Profile = () => {
               {!isOwnProfile && !isFriendWithCurrentUser && <button className={styles.btn1}>Follow</button>}
               {/* <button className={styles.btn1}>follow</button> */}
               {!isOwnProfile && (
-                <button className={styles.btn2}>
-                  <Link to="/message/${}" style={{ textDecoration: "none" }}>
+                <button className={styles.btn2} onClick={handleMessageButtonClick}>
+                  {/* <Link to={`/message/${userId}`} style={{ textDecoration: "none" }}> */}
                     message
-                  </Link>
+                  {/* </Link> */}
                 </button>
               )}
               {/* <button className={styles.btn2}>
@@ -276,8 +265,6 @@ const Profile = () => {
             {uniqueFriendDetails.length > 0 ? (
               uniqueFriendDetails.map(
                 (friend, index) => (
-                  console.log("Friend"),
-                  console.log(friend.username),
                   (
                     <div key={index} className={styles.friendCard}>
                       <div className={styles.cardImg}>
@@ -306,6 +293,7 @@ const Profile = () => {
         </div>
         {/* Post will be here */}
         {/* <LoggedUserPosts userId={userId} /> */}
+        <Posts/>
       </div>
     </div>
   );

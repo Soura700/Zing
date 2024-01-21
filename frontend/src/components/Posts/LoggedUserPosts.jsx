@@ -4,10 +4,13 @@ import styles from "./posts.module.css"
 import axios from "axios";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
+import LoggedUserPost from "../Post/LoggedUserPost";
 
 
 
-const Posts = () => {
+const LoggedUserPosts = ( {userId} ) => {
+
+
 
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); // Add loading state
@@ -73,33 +76,33 @@ const Posts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const promises = friends.friends.map(async (friend) => {
-          const id = friend.friendId;
-          const res1 = await fetch(`http://localhost:5000/api/posts/posts_by_timestamp/${id}/${encodeURIComponent(createdAt)}`);
-          return res1.json();
-        });
+        // const promises = friends.friends.map(async (friend) => {
+        //   const id = friend.friendId;
+        //   const res1 = await fetch(`http://localhost:5000/api/posts/posts_by_timestamp/${id}/${encodeURIComponent(createdAt)}`);
+        const res = await fetch('http://localhost:5000/api/posts/'+userId); //Fetching the posts by the userId which is currently logged in...
+        //   return 
+          const data = await res.json();
+        // });
   
-        const postDataArray = await Promise.all(promises);
+        // const postDataArray = await Promise.all(promises);
   
         // Filter out the error objects from the array means the objects thta have error like no posts available with status code 401
-        const validPosts = postDataArray
-          .reduce((acc, data) => acc.concat(data), [])
-          .filter((post) => !post.error);
+    //     const validPosts = re
+    //       .reduce((acc, data) => acc.concat(data), [])
+    //       .filter((post) => !post.error);
 
-      // Sort the validPosts array based on the createdAt property in descending order
-      const sortedPosts = validPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    //   // Sort the validPosts array based on the createdAt property in descending order
+    //   const sortedPosts = validPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   
-      
-
-        setPostofFriendsData(sortedPosts);
+        setPostData(data);
       } catch (err) {
         console.log(err);
       }
     };
   
     fetchPosts();
-  }, [createdAt, friends]);
+  }, []);
 
 
   // Setting the socket
@@ -120,10 +123,9 @@ const Posts = () => {
       console.log('Entered');
       socket.on('newPost', ({newPost}) => {
         alert(newPost);
-        console.log("newPost");
         console.log(newPost);
         setPostofFriendsData((prevPosts)=>[newPost,...prevPosts]);
-      });      
+      });
     }
     // Cleanup on unmount
     return () => {
@@ -132,9 +134,6 @@ const Posts = () => {
       }
     };
   }, [socket]);
-
-  console.log("Post Of Friends");
-  console.log(postofFriendsData);
 
   // console.log(postData);
 
@@ -162,13 +161,13 @@ const Posts = () => {
 
   console.log(postofFriendsData)
   return <div className={styles.posts}>
-    {postofFriendsData.map(post=>(
-      <Post post={post} userId={parsedID} key={post.id}/>
-    ))}
-        {/* {postData.map(post=>(
+    {/* {postofFriendsData.map(post=>(
       <Post post={post} userId={parsedID} key={post.id}/>
     ))} */}
+        {postData.map(post=>(
+      <LoggedUserPost post={post} userId={parsedID} key={post.id}/>
+    ))}
   </div>;
 };
 
-export default Posts;
+export default LoggedUserPosts;

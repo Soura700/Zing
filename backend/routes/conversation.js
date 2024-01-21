@@ -46,7 +46,55 @@ router.post("/get", async (req, res) => {
                 //   conversationId: conversation._id, // Assuming _id is a property of the conversation object
                 // };
 
-                const dataToSend = { user : { receiverId : result[0].id , username: result[0].username , email:result[0].email }  , conversationId: conversation._id,}
+                const dataToSend = { user : { receiverId : result[0]?.id , username: result[0]?.username , email:result[0]?.email }  , conversationId: conversation?._id,}
+
+                resolve(dataToSend);
+              }
+            });
+          });
+        })
+      );
+  
+      res.status(200).json(conversationUserData);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(error);
+    }
+  });
+
+
+  // Get Conversation by senderId and the receiverId
+
+  router.post("/getConversation_by_sender_receiverId", async (req, res) => {
+    try {
+      // const {senderId} = req.params;
+      const {senderId} = req.body;
+
+      const {receiverId} = req.body;
+
+
+      const conversations = await Conversations.find({
+        members:{
+          $all:[senderId,receiverId],
+        }
+      });
+
+      const conversationUserData = await Promise.all(
+        conversations.map(async (conversation) => {
+          const receiverData = conversation.members.find((member) => member !== senderId);
+  
+          return new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM users WHERE id IN (?)', [receiverData], (err, result) => {
+              if (err) {
+                console.error(err);
+                reject(err);
+              } else {
+                // const dataToSend = {
+                //   conversationUserData: result,
+                //   conversationId: conversation._id, // Assuming _id is a property of the conversation object
+                // };
+
+                const dataToSend = { user : { receiverId : result[0]?.id , username: result[0]?.username , email:result[0]?.email }  , conversationId: conversation?._id,}
 
                 resolve(dataToSend);
               }
