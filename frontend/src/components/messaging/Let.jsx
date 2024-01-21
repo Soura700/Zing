@@ -18,7 +18,7 @@ import ringtone from "../../assets/Chaleya.mp3";
 import IncomingCallUi from "../IncomingCallUi/IncomingCallUi";
 import ChatUI from "../Chat-main/ChatUi";
 
-export const Leftbar2 = () => {
+export const Let= () => {
   const location = useLocation();
   var { userId, userName, clicked } = location.state || {};
   const parsedUserId = parseInt(userId);
@@ -42,28 +42,17 @@ export const Leftbar2 = () => {
   const [showMessageBox, setShowMessageBox] = useState(false);
   //this edited1
   const [showMenu, setShowMenu] = useState(false);
-
   const showSidebarMenu = () => {
     setShowMenu(!showMenu);
   };
-
   const showAllGroups = () => {
     setShowGroup(!showGroup);
   };
 
-  // RingTone
-  const [callAccepted, setCallAccepted] = useState(false);
-  const [audio] = useState(new Audio(ringtone));
-  const [userRole, setUserRole] = useState(""); // Initialize with null
 
   useEffect(() => {
     const socket = io("http://localhost:5500");
     setSocket(io("http://localhost:5500"));
-    // Add event listeners here
-    socket.on("incomingCall", ({ callerId }) => {
-      console.log("CallerId" + callerId);
-      setIncomingCall({ callerId });
-    });
     // Cleanup: Disconnect the socket when the component is unmounted
     return () => {
       socket.disconnect();
@@ -72,7 +61,6 @@ export const Leftbar2 = () => {
 
   useEffect(() => {
     //19/1/2024
-
     if (clicked) {
       let isMounted = true;
       setShowMessageBox(true);
@@ -157,42 +145,7 @@ export const Leftbar2 = () => {
 
   // ... (rest of your component code)
 
-  const handleCallClick = () => {
-    if (!activeConversation) {
-      console.error("No conversation selected for the call.");
-      return;
-    }
-    const isCaller = activeConversation.receiverId !== parsedId;
-    // Emit a "callUser" event to the server with the receiver's ID
-    socket.emit("callUser", { receiverId: activeConversation.receiverId });
-    // You can add your logic here to start the call
-    // For example, call the startAudioCall or startVideoCall function
-    // and set the isCallActive state to true
-    startAudioCall(activeConversation.receiverId); // Adjust as needed
-    setIsCallActive(true);
-  };
 
-  const acceptCall = () => {
-    console.log(incomingCall.callerId);
-    // Implement logic to accept the call
-    // Create a new Peer instance and send the answer signal
-    // You can use the incomingCall.callerId and incomingCall.signalData
-    // Example
-    startAudioCall(incomingCall.callerId);
-    // audio.play();
-    // Clear the incoming call state
-    // setIncomingCall(null);
-    setCallAccepted(true);
-  };
-
-  console.log("Call Accepted : " + callAccepted);
-
-  const rejectCall = () => {
-    // Implement logic to reject the call
-    // For example, send a signal to inform the caller
-    // Clear the incoming call state
-    setIncomingCall(null);
-  };
 
   const styles = {
     "*": {
@@ -201,7 +154,6 @@ export const Leftbar2 = () => {
       boxSizing: "border-box",
     },
   };
-
   useEffect(() => {
     checkAuthentication().then(() => {
       setIsLoading(false); // Mark loading as complete when authentication data is available
@@ -212,7 +164,6 @@ export const Leftbar2 = () => {
     alert("Clicked");
     setToggle(!toggle);
   };
-
   useEffect(() => {
     // Only perform socket-related operations if the user is authenticated
     if (isLoggedIn && socket) {
@@ -230,14 +181,11 @@ export const Leftbar2 = () => {
       });
     }
   }, [socket, parsedId, isLoggedIn]);
-
   const isUserOnline = (userId) => {
     // return activeUsers.find((user)=>user.userId ===  userId );
     return activeUsers.some((user) => user.userId === userId);
   };
-
   console.log(isUserOnline());
-
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {
@@ -284,7 +232,6 @@ export const Leftbar2 = () => {
       fetchData();
     }
   }, [isLoggedIn]);
-
   const fetchMessages = async (id, user) => {
     if (isLoggedIn) {
       // Fetch user image along with other conversation details
@@ -312,7 +259,6 @@ export const Leftbar2 = () => {
       setActiveConversation(user);
     }
   };
-
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
 
@@ -320,7 +266,6 @@ export const Leftbar2 = () => {
       console.error("No conversation selected");
       return;
     }
-
     // Update the local state immediately to show the message in the outgoing message div
     setMessages((prev) => ({
       ...prev,
@@ -361,90 +306,6 @@ export const Leftbar2 = () => {
       console.error("Error sending message:", error);
     }
   };
-
-  const startAudioCall = async (receiverId) => {
-    alert("Audio Called");
-    try {
-      // Get user's audio stream
-      const userMedia = await navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-        })
-        .then((stream) => {
-          console.log("Stream Soura" + stream);
-          console.log(stream);
-        })
-        .catch((error) => {
-          console.log("Get User Media Error" + error);
-        });
-      setStream(userMedia);
-
-      console.log("User Media");
-      console.log(userMedia);
-
-      // Create a new Peer instance
-      const newPeer = new Peer({
-        initiator: true,
-        stream: userMedia,
-        trickle: false,
-      });
-
-      // Set up event handlers for the Peer instance
-      newPeer.on("signal", (data) => {
-        // Send the offer signal to the other user
-        console.log(data);
-        socket.emit("sendOfferSignal", {
-          signalData: data,
-          receiverId: receiverId,
-          isAudioCall: true,
-        });
-      });
-
-      newPeer.on("stream", (remoteStream) => {
-        console.log("Stream received:", remoteStream);
-        const audioElement = new Audio();
-        audioElement.srcObject = remoteStream;
-        audioElement.play();
-      });
-
-      newPeer.on("error", (error) => {
-        console.error("Peer error:", error);
-      });
-
-      console.log(newPeer);
-
-      setPeer(newPeer);
-      setIsCalling(true);
-
-      navigator.mediaDevices.enumerateDevices().then((devices) => {
-        devices.forEach((device) => {
-          console.log(device);
-        });
-      });
-    } catch (error) {
-      console.error("Error starting audio call:", error);
-    }
-  };
-
-  const endCall = () => {
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-    // Reset the audio to the beginning
-
-    // Set the callAccepted state to false
-    setCallAccepted(false);
-
-    stream.getTracks().forEach((track) => track.stop());
-    peer.destroy();
-    setIsCalling(false);
-  };
-  // // Render loading indicator if still loading authentication data
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-  // Render loading indicator if still loading authentication data
   if (isLoading || socket === null) {
     return <CircularProgress />; // Use CircularProgress for a loading spinner
   }
@@ -839,7 +700,6 @@ export const Leftbar2 = () => {
         {activeConversation ? (
           <ChatUI
             showSidebarMenu={() => setShowMenu(!showMenu)}
-            handleCallClick={handleCallClick}
             handleToggle={handleToggle}
             toggle={toggle}
             activeConversation={activeConversation}
@@ -860,33 +720,6 @@ export const Leftbar2 = () => {
             No Messages to show. Click on the conversation to see the messages
           </div>
         )}
-
-        {isCallActive ? (
-          <CallUI
-            caller={activeConversation}
-            onAccept={() => {
-              // Implement the logic to accept the call
-            }}
-            onReject={() => {
-              // Implement the logic to reject the call
-            }}
-            onEndCall={() => {
-              // Implement the logic to end the call
-              // This function should stop the audio call and set isCallActive to false
-            }}
-            isCalling={true}
-          />
-        ) : incomingCall &&
-          !callAccepted &&
-          parsedId !== activeConversation.receiverId ? (
-          <CallUI
-            caller={activeConversation}
-            onAccept={acceptCall}
-            onReject={rejectCall}
-            onEndCall={endCall}
-            isCalling={false}
-          />
-        ) : null}
       </div>
     </div>
   );

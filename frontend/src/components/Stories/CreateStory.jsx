@@ -4,17 +4,15 @@ import { useLocation } from "react-router-dom";
 import "./CreateStory.css";
 
 const CreateStory = () => {
-    const location = useLocation();
-
+  const location = useLocation();
 
   const navigate = useNavigate(); // Initialize navigate from React Router Navigate
 
-    var { userId, userName, clicked } = location.state || {};
+  var { userId, userName, clicked } = location.state || {};
 
-    console.log(userId+userName)
+  console.log(userId + userName);
 
-    const parsedId = parseInt(userId);
-
+  const parsedId = parseInt(userId);
 
   const [formData, setFormData] = useState({
     userId: userId || "", // Use the passed userId, if available
@@ -49,10 +47,10 @@ const CreateStory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const {userId, userName, media, mediaFile } = formData;
+    const { userId, userName, media, mediaFile } = formData;
 
     const storyData = new FormData();
- storyData.append("userId", userId);
+    storyData.append("userId", userId);
     storyData.append("userName", userName);
     storyData.append("media", media);
     storyData.append("mediaFile", mediaFile);
@@ -63,11 +61,11 @@ const CreateStory = () => {
         {
           method: "POST",
           body: storyData,
-            // body: JSON.stringify({
-            //     storyData,
-            //     userId:parsedId,
-            //     userName: userName,
-            //   }),
+          // body: JSON.stringify({
+          //     storyData,
+          //     userId:parsedId,
+          //     userName: userName,
+          //   }),
         }
       );
 

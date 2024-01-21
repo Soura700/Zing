@@ -143,7 +143,7 @@ const Profile = () => {
     const handleMessageButtonClick = ()=>{
       alert(userId);
       alert(username);
-      navigate('/message',  { state: { userId: userId , userName : username }});
+      navigate('/message',  { state: { userId: userId , userName : username , clicked:true }});
     }
 
   return (
