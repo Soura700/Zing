@@ -18,7 +18,7 @@ import ringtone from "../../assets/Chaleya.mp3";
 import IncomingCallUi from "../IncomingCallUi/IncomingCallUi";
 import ChatUI from "../Chat-main/ChatUi";
 
-export const Leftbar2 = () => {
+export const Let= () => {
   const location = useLocation();
   var { userId, userName, clicked } = location.state || {};
   const parsedUserId = parseInt(userId);
@@ -48,19 +48,11 @@ export const Leftbar2 = () => {
   const showAllGroups = () => {
     setShowGroup(!showGroup);
   };
-  // RingTone
-  const [callAccepted, setCallAccepted] = useState(false);
-  const [audio] = useState(new Audio(ringtone));
-  const [userRole, setUserRole] = useState(""); // Initialize with null
+
 
   useEffect(() => {
     const socket = io("http://localhost:5500");
     setSocket(io("http://localhost:5500"));
-    // Add event listeners here
-    socket.on("incomingCall", ({ callerId }) => {
-      console.log("CallerId" + callerId);
-      setIncomingCall({ callerId });
-    });
     // Cleanup: Disconnect the socket when the component is unmounted
     return () => {
       socket.disconnect();
@@ -153,69 +145,8 @@ export const Leftbar2 = () => {
 
   // ... (rest of your component code)
 
-  const handleCallClick = async () => {
-    if (!activeConversation) {
-      console.error("No conversation selected for the call.");
-      return;
-    }
-  
-    try {
-      // Get user's audio stream
-      const userMedia = await navigator.mediaDevices.getUserMedia({ audio: true });
-      setStream(userMedia);
-  
-      // Create a new Peer instance
-      const newPeer = new Peer({
-        initiator: true,
-        stream: userMedia,
-        trickle: false,
-      });
-  
-      // Set up event handlers for the Peer instance
-      newPeer.on("signal", (data) => {
-        // Send the offer signal to the other user
-        socket.emit("callUser", {
-          receiverId: activeConversation.receiverId,
-          signalData: data,
-        });
-      });
-  
-      newPeer.on("stream", (remoteStream) => {
-        // Handle the remote stream, e.g., play it through an audio element
-        const audioElement = new Audio();
-        audioElement.srcObject = remoteStream;
-        audioElement.play();
-      });
-  
-      newPeer.on("error", (error) => {
-        console.error("Peer error:", error);
-      });
-  
-      setPeer(newPeer);
-      setIsCalling(true);
-    } catch (error) {
-      console.error("Error starting audio call:", error);
-    }
-  };
-  const acceptCall = () => {
-    console.log(incomingCall.callerId);
-    // Implement logic to accept the call
-    // Create a new Peer instance and send the answer signal
-    // You can use the incomingCall.callerId and incomingCall.signalData
-    // Example
-    startAudioCall(incomingCall.callerId);
-    // audio.play();
-    // Clear the incoming call state
-    // setIncomingCall(null);
-    setCallAccepted(true);
-  };
-  console.log("Call Accepted : " + callAccepted);
-  const rejectCall = () => {
-    // Implement logic to reject the call
-    // For example, send a signal to inform the caller
-    // Clear the incoming call state
-    setIncomingCall(null);
-  };
+
+
   const styles = {
     "*": {
       margin: 0,
@@ -374,83 +305,6 @@ export const Leftbar2 = () => {
     } catch (error) {
       console.error("Error sending message:", error);
     }
-  };
-
-  const startAudioCall = async (receiverId) => {
-    alert("Audio Called");
-    try {
-      // Get user's audio stream
-      const userMedia = await navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-        })
-        .then((stream) => {
-          console.log("Stream Soura" + stream);
-          console.log(stream);
-        })
-        .catch((error) => {
-          console.log("Get User Media Error" + error);
-        });
-      setStream(userMedia);
-
-      console.log("User Media");
-      console.log(userMedia);
-
-      // Create a new Peer instance
-      const newPeer = new Peer({
-        initiator: true,
-        stream: userMedia,
-        trickle: false,
-      });
-
-      // Set up event handlers for the Peer instance
-      newPeer.on("signal", (data) => {
-        // Send the offer signal to the other user
-        console.log(data);
-        socket.emit("sendOfferSignal", {
-          signalData: data,
-          receiverId: receiverId,
-          isAudioCall: true,
-        });
-      });
-
-      newPeer.on("stream", (remoteStream) => {
-        console.log("Stream received:", remoteStream);
-        const audioElement = new Audio();
-        audioElement.srcObject = remoteStream;
-        audioElement.play();
-      });
-
-      newPeer.on("error", (error) => {
-        console.error("Peer error:", error);
-      });
-
-      console.log(newPeer);
-      setPeer(newPeer);
-      setIsCalling(true);
-
-      navigator.mediaDevices.enumerateDevices().then((devices) => {
-        devices.forEach((device) => {
-          console.log(device);
-        });
-      });
-    } catch (error) {
-      console.error("Error starting audio call:", error);
-    }
-  };
-  const endCall = () => {
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
-    // Reset the audio to the beginning
-
-    // Set the callAccepted state to false
-    setCallAccepted(false);
-
-    stream.getTracks().forEach((track) => track.stop());
-    peer.destroy();
-    setIsCalling(false);
   };
   if (isLoading || socket === null) {
     return <CircularProgress />; // Use CircularProgress for a loading spinner
@@ -846,7 +700,6 @@ export const Leftbar2 = () => {
         {activeConversation ? (
           <ChatUI
             showSidebarMenu={() => setShowMenu(!showMenu)}
-            handleCallClick={handleCallClick}
             handleToggle={handleToggle}
             toggle={toggle}
             activeConversation={activeConversation}
@@ -867,32 +720,6 @@ export const Leftbar2 = () => {
             No Messages to show. Click on the conversation to see the messages
           </div>
         )}
-        {isCallActive ? (
-          <CallUI
-            caller={activeConversation}
-            onAccept={() => {
-              // Implement the logic to accept the call
-            }}
-            onReject={() => {
-              // Implement the logic to reject the call
-            }}
-            onEndCall={() => {
-              // Implement the logic to end the call
-              // This function should stop the audio call and set isCallActive to false
-            }}
-            isCalling={true}
-          />
-        ) : incomingCall &&
-          !callAccepted &&
-          parsedId !== activeConversation.receiverId ? (
-          <CallUI
-            caller={activeConversation}
-            onAccept={acceptCall}
-            onReject={rejectCall}
-            onEndCall={endCall}
-            isCalling={false}
-          />
-        ) : null}
       </div>
     </div>
   );

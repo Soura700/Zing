@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
+import Peer from "simple-peer";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import VideocamIcon from "@mui/icons-material/Videocam";
@@ -7,12 +9,10 @@ import PhotoSizeSelectActualIcon from "@mui/icons-material/PhotoSizeSelectActual
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MicNoneIcon from "@mui/icons-material/MicNone";
 import TelegramIcon from "@mui/icons-material/Telegram";
-import CircularProgress from "@mui/material/CircularProgress";
 import "./chatui.css";
 
 const ChatUI = ({
   showSidebarMenu,
-  handleCallClick,
   handleToggle,
   toggle,
   activeConversation,
@@ -23,11 +23,146 @@ const ChatUI = ({
   isUserOnline,
   activeUsers,
   profileImg,
-  showMessageBox
+  showMessageBox,
 }) => {
+  const [socket, setSocket] = useState(/* Your socket instance */);
+  const [peer, setPeer] = useState(null);
+  const [callerSignal, setCallerSignal] = useState();
+  const [callAccepted, setCallAccepted] = useState(false);
+  const [mediaStream, setMediaStream] = useState(null);
+  const [incomingCall, setIncomingCall] = useState(false);
+  const userVideo = useRef();
+  const partnerVideo = useRef();
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:5500");
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      console.log("Connected to the server");
+    });
+
+    return () => {
+      if (newSocket) {
+        newSocket.disconnect();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      // Listen for incoming calls
+      socket.on("incomingCall", (data) => {
+        setIncomingCall(true);
+        setCallerSignal(data.signal);
+      });
+    }
+  }, [socket]);
+
+  const callUser = (id) => {
+
+    const newPeer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream: mediaStream,
+    });
+
+    newPeer.on("signal", (data) => {
+      // Send call signal to the other user
+      socket.emit("callUser", {
+        userToCall: id,
+        signalData: data,
+        from: parsedId,
+      });
+    });
+
+    newPeer.on("stream", (stream) => {
+      // Display caller's video
+      partnerVideo.current.srcObject = stream;
+    });
+
+    socket.on("callAccepted", (data) => {
+      // Set the signal from the callee
+      setCallAccepted(true);
+      newPeer.signal(data.signal);
+    });
+
+    setPeer(newPeer);
+  };
+
+  const answerCall = () => {
+    alert("Called");
+    const newPeer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: mediaStream,
+    });
+
+    newPeer.on("signal", (data) => {
+      // Send answer signal to the caller
+      console.log("Data");
+      console.log(data);
+      socket.emit("answerCall", { signal: data, to: parsedId });
+    });
+
+    // newPeer.on("stream", (stream) => {
+    //   // Display caller's video
+
+    //   partnerVideo.current.srcObject = stream;
+    // });
+
+      // Ensure that partnerVideo.current is defined before setting srcObject
+  if (partnerVideo.current) {
+    newPeer.on("stream", (stream) => {
+      // Display receiver's's video
+      partnerVideo.current.srcObject = stream;
+    });
+  } else {
+    console.error("partnerVideo.current is undefined or null");
+  }
+
+    newPeer.signal(callerSignal);
+
+    setPeer(newPeer);
+  };
+
+  console.log(partnerVideo);
+
+  const handleCallButtonClick = () => {
+    // Call logic here
+    const friendId = messages.receiver.receiverId;
+    if (!peer) {
+      callUser(friendId);
+    }
+  };
 
 
-  // alert(showMessageBox);
+
+  const handleAcceptButtonClick = () => {
+    // Answer the incoming call
+    answerCall();
+    setIncomingCall(false);
+  };
+
+  useEffect(() => {
+    // Fetch and set media stream here
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        setMediaStream(stream);
+        userVideo.current.srcObject = stream;
+      })
+      .catch((error) => console.error("Error accessing media devices:", error));
+
+    return () => {
+      if (peer) {
+        peer.destroy();
+        setPeer(null);
+      }
+    };
+  }, [peer]);
+
+
 
   return (
     <div className="main-chat-section">
@@ -37,8 +172,7 @@ const ChatUI = ({
             <ArrowBackIosIcon onClick={showSidebarMenu} />
           </div>
           <div className="user-pic">
-            {/* <img src={activeConversation?.userImage} alt="User" /> */}
-            <img src={`http://localhost:5000/${profileImg}`} alt="User"/>
+            <img src={`http://localhost:5000/${profileImg}`} alt="User" />
           </div>
           <div className="user-info">
             {activeConversation && (
@@ -55,8 +189,8 @@ const ChatUI = ({
         </div>
         <div className="right-part">
           <CallRoundedIcon
-            onClick={handleCallClick}
             className="right-part-icon"
+            onClick={handleCallButtonClick}
           />
           <VideocamIcon className="right-part-icon" />
           <MoreVertIcon className="right-part-icon" onClick={handleToggle} />
@@ -71,6 +205,8 @@ const ChatUI = ({
       </div>
 
       <div className="inner-container">
+        <video ref={userVideo} autoPlay />
+        {callAccepted && <video ref={partnerVideo} autoPlay />}
         {messages?.messages?.map(({ message, user: { id } = {} }, index) => (
           <div
             key={index}
@@ -108,6 +244,9 @@ const ChatUI = ({
           </label>
           <LocationOnIcon className="chat-btn" />
           <MicNoneIcon className="chat-btn" />
+          {incomingCall &&
+            (alert("Button"),
+            (<button onClick={handleAcceptButtonClick}>Accept</button>))}
         </div>
         <div className="submit-btn-class">
           <button onClick={() => sendMessage()}>
