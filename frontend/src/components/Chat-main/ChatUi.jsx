@@ -31,6 +31,7 @@ const ChatUI = ({
   const [callAccepted, setCallAccepted] = useState(false);
   const [mediaStream, setMediaStream] = useState(null);
   const [incomingCall, setIncomingCall] = useState(false);
+  const [callerStream, setCallerStream] = useState(null);
   const userVideo = useRef();
   const partnerVideo = useRef();
 
@@ -60,7 +61,6 @@ const ChatUI = ({
   }, [socket]);
 
   const callUser = (id) => {
-
     const newPeer = new Peer({
       initiator: true,
       trickle: false,
@@ -79,6 +79,7 @@ const ChatUI = ({
     newPeer.on("stream", (stream) => {
       // Display caller's video
       partnerVideo.current.srcObject = stream;
+      setCallerStream(stream);
     });
 
     socket.on("callAccepted", (data) => {
@@ -104,25 +105,23 @@ const ChatUI = ({
       console.log(data);
       socket.emit("answerCall", { signal: data, to: parsedId });
     });
+    // Ensure that partnerVideo.current is defined before setting srcObject
+    if (partnerVideo.current) {
+      newPeer.on("stream", (stream) => {
+        // Display receiver's's video
+        partnerVideo.current.srcObject = stream;
+      });
+    } else {
+      console.error("partnerVideo.current is undefined or null");
+    }
 
-    // newPeer.on("stream", (stream) => {
-    //   // Display caller's video
-
-    //   partnerVideo.current.srcObject = stream;
-    // });
-
-      // Ensure that partnerVideo.current is defined before setting srcObject
-  if (partnerVideo.current) {
-    newPeer.on("stream", (stream) => {
-      // Display receiver's's video
-      partnerVideo.current.srcObject = stream;
-    });
-  } else {
-    console.error("partnerVideo.current is undefined or null");
-  }
+    if (userVideo.current) {
+      userVideo.current.srcObject = callerStream;
+    } else {
+      console.error("userVideo.current is undefined or null");
+    }
 
     newPeer.signal(callerSignal);
-
     setPeer(newPeer);
   };
 
@@ -136,11 +135,9 @@ const ChatUI = ({
     }
   };
 
-
-
   const handleAcceptButtonClick = () => {
     // Answer the incoming call
-    answerCall();
+    answerCall(callerStream);
     setIncomingCall(false);
   };
 
@@ -161,8 +158,6 @@ const ChatUI = ({
       }
     };
   }, [peer]);
-
-
 
   return (
     <div className="main-chat-section">
@@ -206,6 +201,7 @@ const ChatUI = ({
 
       <div className="inner-container">
         <video ref={userVideo} autoPlay />
+        <video ref={partnerVideo} autoPlay />
         {callAccepted && <video ref={partnerVideo} autoPlay />}
         {messages?.messages?.map(({ message, user: { id } = {} }, index) => (
           <div
