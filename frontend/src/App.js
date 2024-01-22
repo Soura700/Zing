@@ -92,8 +92,8 @@ import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import { Leftbar2 } from "./components/messaging/Leftbar2";
 import { Group } from "./components/Group/Group";
-import  Video  from "./components/Video/Video.jsx";
-import Personalization from "./pages/Personalization/YourComponent.jsx"
+import Video from "./components/Video/Video.jsx";
+import Personalization from "./pages/Personalization/YourComponent.jsx";
 
 // import Posts from "../src/components/Posts/Posts"
 
@@ -113,10 +113,8 @@ import { AuthProvider } from "./Contexts/authContext";
 import Posts from "./components/Posts/Posts.jsx";
 import { ToastContainer } from "react-toastify";
 import CreateStory from "./components/Stories/CreateStory.jsx";
-import {Let} from "./components/messaging/Let.jsx"
-
-
-
+import { Let } from "./components/messaging/Let.jsx";
+import VideoCall from "./pages/VideoCall/VideoCall.jsx";
 
 function App() {
   const Layout = function () {
@@ -132,7 +130,7 @@ function App() {
 
     return (
       <div>
-        <ToastContainer/>
+        <ToastContainer />
         <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
           <LeftBar isVisible={toggle} />
@@ -165,46 +163,45 @@ function App() {
           element: <Profile />,
         },
         {
-          path:"/posts",
-          element:<Posts/>
-        }
+          path: "/posts",
+          element: <Posts />,
+        },
       ],
     },
-
 
     {
       path: "/login",
       element: <SignInSignUpForm />,
     },
 
-
-
     {
-      path:"/profile_setting/:userId",
-      element:<Personalization/>
+      path: "/profile_setting/:userId",
+      element: <Personalization />,
     },
-
 
     {
       path: "/message",
       element: <Let />,
     },
 
-
     {
       path: "/groupmessage",
       element: <Group />,
     },
 
- {
-        path: "/create_story",
-        element:<CreateStory/>,
-      },
     {
-      path:"/call",
-      element:<Video/>
-        }
+      path: "/create_story",
+      element: <CreateStory />,
+    },
+    {
+      path: "/call",
+      element: <Video />,
+    },
 
+    {
+      path: "/videoCall",
+      element: <VideoCall />,
+    },
   ]);
 
   return (

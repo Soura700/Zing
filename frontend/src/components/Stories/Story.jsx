@@ -10,6 +10,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import CloseIcon from "@mui/icons-material/Close";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
+import axios from "axios";
 
 const Story = () => {
   const navigate = useNavigate();
@@ -19,15 +20,17 @@ const Story = () => {
   const [selectedStory, setSelectedStory] = useState(null);
   const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
   const [showComments, setShowComments] = useState(null);
+  const [friendDetail, setFriendDetail] = useState([]);
 
   //   Soura added (20/1/2024)
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); //Setting the loading
-  const [friendRequests, setFriendRequests] = useState([]); //Sets the friends requets spreading with the old requests with the new requests in realtime
+  const [friend, setFriend] = useState({ friends: [] });
   const [senderName, setSenderName] = useState(null); //Setting the current / logged user name in the state
   const [username, setUsername] = useState(null); //Setting the current / logged user name in the state
   const [userPhoto, setUserPhoto] = useState(null); //Setting the userprofile image from the database
+  const [friendStories, setFriendStories] = useState([]);
   const parsedID = parseInt(id);
 
   useEffect(() => {
@@ -82,41 +85,94 @@ const Story = () => {
       }
     };
 
-    const fetchFriendRequests = async () => {
+    // async function fetchUserFriends() {
+    //   console.log("Entered in the function");
+    //   try {
+    //     const friendsRes = await axios.get(
+    //       "http://localhost:5000/api/friend_request/getFriends/" + parsedID
+    //     );
+    //     const friends = friendsRes.data;
+    //     setFriend(friends);
+    //     // Fetch details for each friend
+    //     const friendDetails = await Promise.all(
+    //       friends.friends.map(async (friend) => {
+    //         const friendRes = await axios.post(
+    //           "http://localhost:5000/api/auth/" + friend.friendId
+    //         );
+    //         return friendRes.data;
+    //       })
+    //     );
+
+    //     setFriendDetail(friendDetails);
+    //   } catch (error) {
+    //     console.error("Error fetching friends data:", error);
+    //   }
+    // }
+
+    async function fetchUserFriends() {
+      console.log("Entered in the function");
       try {
-        console.log(parsedID);
-        const res = await fetch(
-          "http://localhost:5000/api/friend_request/get_friend_requests",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: parsedID,
-            }),
-          }
+        const friendsRes = await axios.get(
+          "http://localhost:5000/api/friend_request/getFriends/" + parsedID
         );
-        const data = await res.json();
-        setFriendRequests(data);
+        const friends = friendsRes.data;
+        setFriend(friends);
+
+        // Fetch details and stories for each friend
+        const friendDetailsAndStories = await Promise.all(
+          friends.friends.map(async (friend) => {
+            // Fetch friend details
+            const friendDetailsRes = await axios.post(
+              "http://localhost:5000/api/auth/" + friend.friendId
+            );
+            const friendDetails = friendDetailsRes.data;
+
+            console.log("Friend Id");
+            console.log(friend.friendId);
+            // Fetch stories for the friend
+            const storiesRes = await axios.get(
+              "http://localhost:5000/api/stories/getStories/" + friend.friendId
+            );
+            const stories = storiesRes.data;
+
+            return { friendDetails, stories };
+          })
+        );
+
+        // Filter out entries with empty friend stories arrays
+        const filteredFriendDetailsAndStories = friendDetailsAndStories.filter(
+          (item) => item.stories.length > 0
+        );
+
+        // Separate friend details and stories into separate state variables
+        const friendDetails = filteredFriendDetailsAndStories.map(
+          (item) => item.friendDetails
+        );
+        const friendStories = filteredFriendDetailsAndStories.map(
+          (item) => item.stories
+        );
+
+        setFriendDetail(friendDetails);
+        setFriendStories(friendStories); // Assume you have a state variable for friend stories
       } catch (error) {
-        console.error("Error fetching friend requests:", error);
+        console.error("Error fetching friends data:", error);
       }
-    };
+    }
 
     if (id && parsedID) {
-      Promise.all([
-        fetchData(),
-        fetchSenderName(),
-        fetchFriendRequests(),
-      ])
+      Promise.all([fetchData(), fetchSenderName(), fetchUserFriends()])
         .then(() => setIsLoading(false))
         .catch((error) => console.error("Error during data fetching:", error));
     }
   }, [id, parsedID, checkAuthentication]);
 
-  console.log("parsedID")
-  console.log(senderName + parsedID)
+  console.log("parsedID");
+  console.log(senderName + parsedID);
+  console.log("Friends");
+  console.log(friend);
+  console.log(friendDetail);
+  console.log("Friends Stories");
+  console.log(friendStories);
 
   useEffect(() => {
     const newSocket = io("http://localhost:5500");
@@ -134,6 +190,8 @@ const Story = () => {
       .then((data) => setStories(data))
       .catch((error) => console.error("Error fetching stories:", error));
   }, []);
+
+  useEffect(() => {});
 
   const showFullStory = (story) => {
     setShowStory(!showStory);
@@ -166,17 +224,15 @@ const Story = () => {
     setShowComments(false);
   };
 
-
-
-//   Added By Soura
-    const handleMessageButtonClick = () => {
-        alert("Called");
-      alert(parsedID);
-      alert(username);
-      navigate("/create_story", {
-        state: { userId: parsedID, userName: senderName, clicked: true },
-      });
-    };
+  //   Added By Soura
+  const handleMessageButtonClick = () => {
+    alert("Called");
+    alert(parsedID);
+    alert(username);
+    navigate("/create_story", {
+      state: { userId: parsedID, userName: senderName, clicked: true },
+    });
+  };
 
   return (
     <div className={styles.stories}>
@@ -208,11 +264,11 @@ const Story = () => {
                         url: selectedStory.mediaUrl,
                         duration: 5000,
                       },
-                      {
-                        type: "image",
-                        url: selectedStory.mediaUrl,
-                        duration: 5000,
-                      },
+                      // {
+                      //   type: "image",
+                      //   url: selectedStory.mediaUrl,
+                      //   duration: 5000,
+                      // },
                     ]}
                   />
                   <KeyboardArrowRightIcon
@@ -275,20 +331,32 @@ const Story = () => {
         {/* <button onClick={() => navigate("/create_story")}>+</button> */}
         <button onClick={handleMessageButtonClick}>+</button>
       </div>
-      {stories.map((story, index) => (
-        <div
-          className={styles.story}
-          key={story._id}
-          onClick={() => showFullStory(story)}
-        >
-          <img
-            src={story.mediaUrl}
-            alt={story.name}
-            onClick={() => showFullStory(story)}
-          />
-          <span>{story.name}</span>
-        </div>
-      ))}
+      {friendStories.map(
+        (story, index) => (
+          console.log("stories"),
+          console.log(story),
+          console.log(story[0].mediaUrl),
+          (
+            <div
+              className={styles.story}
+              key={story._id}
+              onClick={() => showFullStory(story)}
+            >
+              <img
+                // src={story.mediaUrl}
+                src={
+                  story[0]?.mediaUrl
+                    ? `http://localhost:5000/${story[0].mediaUrl}`
+                    : ""
+                }
+                alt={story.name}
+                onClick={() => showFullStory(story)}
+              />
+              <span>{story.name}</span>
+            </div>
+          )
+        )
+      )}
     </div>
   );
 };
