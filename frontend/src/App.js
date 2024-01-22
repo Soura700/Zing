@@ -114,7 +114,8 @@ import Posts from "./components/Posts/Posts.jsx";
 import { ToastContainer } from "react-toastify";
 import CreateStory from "./components/Stories/CreateStory.jsx";
 import { Let } from "./components/messaging/Let.jsx";
-import { VideoCall } from "@mui/icons-material";
+
+import VideoCall from "./pages/VideoCall/VideoCall.jsx"
 
 function App() {
   const Layout = function () {
@@ -197,6 +198,13 @@ function App() {
       path: "/call",
       element: <Video />,
     },
+
+
+    {
+      path: "/videoCall",
+      element: <VideoCall />,
+    },
+
   ]);
 
   return (

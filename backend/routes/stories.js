@@ -48,6 +48,17 @@ router.get('/allStories', async (req, res) => {
   }
 });
 
+router.get("/getStories/:userId", async(req,res)=>{
+  const {userId} = req.params;
+  try{
+    const stories = await Story.find({userId})
+
+    res.status(200).json(stories);
+  }catch(error){
+    res.status(500).json(error)
+  }
+})
+
 // Create a new story with photo or video
 router.post('/create_story', upload.single('mediaFile'), async (req, res) => {
   const expiryTime = new Date();
