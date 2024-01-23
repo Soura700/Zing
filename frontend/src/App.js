@@ -201,7 +201,7 @@ function App() {
 
 
     {
-      path: "/videoCall",
+      path: "/videocall",
       element: <VideoCall />,
     },
 

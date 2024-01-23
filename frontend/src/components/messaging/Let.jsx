@@ -17,6 +17,7 @@ import CallUI from "../../components/CallUi/CallUi";
 import ringtone from "../../assets/Chaleya.mp3";
 import IncomingCallUi from "../IncomingCallUi/IncomingCallUi";
 import ChatUI from "../Chat-main/ChatUi";
+import ChatUI2 from "../Chat-main/Chat-Ui2";
 
 export const Let= () => {
   const location = useLocation();
@@ -698,7 +699,7 @@ export const Let= () => {
         </div>
         {/* main chat section */}
         {activeConversation ? (
-          <ChatUI
+          <ChatUI2
             showSidebarMenu={() => setShowMenu(!showMenu)}
             handleToggle={handleToggle}
             toggle={toggle}
