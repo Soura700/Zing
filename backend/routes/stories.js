@@ -51,9 +51,9 @@ router.get('/allStories', async (req, res) => {
 router.get("/getStories/:userId", async(req,res)=>{
   const {userId} = req.params;
   try{
-    const stories = await Story.find({userId})
-
-    res.status(200).json(stories);
+    const stories = await Story.find({userId});
+    const storiesCount = await Story.find({userId}).count();
+    res.status(200).json({ stories,storiesCount });
   }catch(error){
     res.status(500).json(error)
   }

@@ -32,6 +32,9 @@ const Story = () => {
   const [userPhoto, setUserPhoto] = useState(null); //Setting the userprofile image from the database
   const [friendStories, setFriendStories] = useState([]);
   const parsedID = parseInt(id);
+  const [selectedFriendStories, setSelectedFriendStories] = useState([]);
+  const [selectedFriendStoryImage,setSelectedFriendStoryImage] = useState(null);
+  const [ownStories,ownSetStories] = useState([])
 
   useEffect(() => {
     const newSocket = io("http://localhost:5500");
@@ -52,6 +55,9 @@ const Story = () => {
             "Content-Type": "application/json",
           },
         });
+        const response = await axios.get(`http://localhost:5000/api/stories/getStories/${parsedID}`);
+        const stories = response.data.stories;
+        ownSetStories(stories);
         const userDetails = await userRes.json();
         setUsername(userDetails[0].username);
         setUserPhoto(userDetails[0].profileImg);
@@ -59,7 +65,6 @@ const Story = () => {
         console.error("Error fetching user data:", error);
       }
     };
-
     const fetchSenderName = async () => {
       try {
         await checkAuthentication();
@@ -73,7 +78,6 @@ const Story = () => {
           }
         );
         const userDetails = await userRes.json();
-
         if (userDetails && userDetails.length > 0 && userDetails[0]) {
           setSenderName(userDetails[0].username);
           setUserPhoto(userDetails[0].profileImg);
@@ -85,32 +89,7 @@ const Story = () => {
       }
     };
 
-    // async function fetchUserFriends() {
-    //   console.log("Entered in the function");
-    //   try {
-    //     const friendsRes = await axios.get(
-    //       "http://localhost:5000/api/friend_request/getFriends/" + parsedID
-    //     );
-    //     const friends = friendsRes.data;
-    //     setFriend(friends);
-    //     // Fetch details for each friend
-    //     const friendDetails = await Promise.all(
-    //       friends.friends.map(async (friend) => {
-    //         const friendRes = await axios.post(
-    //           "http://localhost:5000/api/auth/" + friend.friendId
-    //         );
-    //         return friendRes.data;
-    //       })
-    //     );
-
-    //     setFriendDetail(friendDetails);
-    //   } catch (error) {
-    //     console.error("Error fetching friends data:", error);
-    //   }
-    // }
-
     async function fetchUserFriends() {
-      console.log("Entered in the function");
       try {
         const friendsRes = await axios.get(
           "http://localhost:5000/api/friend_request/getFriends/" + parsedID
@@ -126,24 +105,18 @@ const Story = () => {
               "http://localhost:5000/api/auth/" + friend.friendId
             );
             const friendDetails = friendDetailsRes.data;
-
-            console.log("Friend Id");
-            console.log(friend.friendId);
             // Fetch stories for the friend
             const storiesRes = await axios.get(
               "http://localhost:5000/api/stories/getStories/" + friend.friendId
             );
             const stories = storiesRes.data;
-
-            return { friendDetails, stories };
+            return { friendDetails, stories: stories.stories };
           })
         );
-
         // Filter out entries with empty friend stories arrays
         const filteredFriendDetailsAndStories = friendDetailsAndStories.filter(
           (item) => item.stories.length > 0
         );
-
         // Separate friend details and stories into separate state variables
         const friendDetails = filteredFriendDetailsAndStories.map(
           (item) => item.friendDetails
@@ -151,7 +124,6 @@ const Story = () => {
         const friendStories = filteredFriendDetailsAndStories.map(
           (item) => item.stories
         );
-
         setFriendDetail(friendDetails);
         setFriendStories(friendStories); // Assume you have a state variable for friend stories
       } catch (error) {
@@ -166,13 +138,6 @@ const Story = () => {
     }
   }, [id, parsedID, checkAuthentication]);
 
-  console.log("parsedID");
-  console.log(senderName + parsedID);
-  console.log("Friends");
-  console.log(friend);
-  console.log(friendDetail);
-  console.log("Friends Stories");
-  console.log(friendStories);
 
   useEffect(() => {
     const newSocket = io("http://localhost:5500");
@@ -183,35 +148,55 @@ const Story = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Fetch data from http://localhost:5000/api/stories/allStories
-    fetch("http://localhost:5000/api/stories/allStories")
-      .then((response) => response.json())
-      .then((data) => setStories(data))
-      .catch((error) => console.error("Error fetching stories:", error));
-  }, []);
 
-  useEffect(() => {});
 
-  const showFullStory = (story) => {
+  const showFullStory = async (userId) => {
     setShowStory(!showStory);
-    setSelectedStory(story);
-    setSelectedStoryIndex(stories.indexOf(story));
+    try {
+      // Fetch stories for the specified user
+      const response = await axios.get(
+        `http://localhost:5000/api/stories/getStories/${userId}`
+      );
+      const userStories = response.data.stories;
+      const user = await axios.post(
+        `http://localhost:5000/api/auth/${userId}`
+      );
+      const userDeatil = user.data;
+      console.log("User Details");
+      console.log(userDeatil[0].profileImg);
+      setSelectedFriendStoryImage(userDeatil[0].profileImg)
+      if (userStories.length > 0) {
+        // Assuming the first story is selected; you may need to adjust this logic
+        const firstStory = userStories[0];
+        setSelectedStory(firstStory);
+        setSelectedFriendStories(userStories);
+      } else {
+        // Handle the case when there are no stories
+        setSelectedStory(null);
+        setSelectedFriendStories([]);
+      }
+    } catch (error) {
+      console.error("Error fetching user stories:", error);
+      setSelectedStory(null);
+      setSelectedFriendStories([]);
+    }
   };
 
   const navigateToNextStory = (e) => {
     e.stopPropagation();
-    const nextIndex = (selectedStoryIndex + 1) % stories.length;
+    const nextIndex = (selectedStoryIndex + 1) % selectedFriendStories.length;
     setSelectedStoryIndex(nextIndex);
-    setSelectedStory(stories[nextIndex]);
+    setSelectedStory(selectedFriendStories[nextIndex]);
   };
 
   const navigateToPreviousStory = (e) => {
     e.stopPropagation();
     const previousIndex =
-      selectedStoryIndex === 0 ? stories.length - 1 : selectedStoryIndex - 1;
+      selectedStoryIndex === 0
+        ? selectedFriendStories.length - 1
+        : selectedStoryIndex - 1;
     setSelectedStoryIndex(previousIndex);
-    setSelectedStory(stories[previousIndex]);
+    setSelectedStory(selectedFriendStories[previousIndex]);
   };
 
   const openComments = (e) => {
@@ -226,9 +211,6 @@ const Story = () => {
 
   //   Added By Soura
   const handleMessageButtonClick = () => {
-    alert("Called");
-    alert(parsedID);
-    alert(username);
     navigate("/create_story", {
       state: { userId: parsedID, userName: senderName, clicked: true },
     });
@@ -242,7 +224,7 @@ const Story = () => {
             {selectedStory && (
               <>
                 <div className={styles.userNameStory}>
-                  <img src="" alt="" />
+                  <img src={`http://localhost:5000/${selectedFriendStoryImage}`} alt="" />
                   <div className={styles.userHeading}>
                     <h1>{selectedStory.name}</h1>
                     <p>10 minutes ago</p>
@@ -253,23 +235,17 @@ const Story = () => {
                     className={styles.userStoryContentLeftOpt}
                     onClick={(e) => navigateToPreviousStory(e)}
                   />
+
                   <Stories
                     key={selectedStory.id}
                     width="427px"
                     height="540px"
                     background="transparent"
-                    stories={[
-                      {
-                        type: "image",
-                        url: selectedStory.mediaUrl,
-                        duration: 5000,
-                      },
-                      // {
-                      //   type: "image",
-                      //   url: selectedStory.mediaUrl,
-                      //   duration: 5000,
-                      // },
-                    ]}
+                    stories={selectedFriendStories.map((story) => ({
+                      type: "image",
+                      url: `http://localhost:5000/${story.mediaUrl}`,
+                      duration: 5000,
+                    }))}
                   />
                   <KeyboardArrowRightIcon
                     className={styles.userStoryContentRightOpt}
@@ -312,19 +288,41 @@ const Story = () => {
         ) : (
           <div className={styles.closeFullStory}></div>
         )}
-        <img src="" alt="" />
-
+        <div
+          className={styles.storyImg}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.target.tagName !== "IMG" && showFullStory(null);
+          }}
+        >
+          <img
+            src="https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+            alt=""
+            className={styles.storyImgClass}
+            // onClick={() => navigate("/create_story")}
+            onClick={handleMessageButtonClick}
+          />
+        </div>
         <span>Soura Bose</span>
         {/* <button onClick={() => navigate("/create_story")}>+</button> */}
         <button onClick={handleMessageButtonClick}>+</button>
       </div>
-      {stories.map((story) => (
+      {friendStories.map((story, index) => (
         <div
           className={styles.story}
-          key={story.id}
-          onClick={() => showFullStory(story)}
+          key={story._id}
+          onClick={() => showFullStory(story[index].userId)}
         >
-          <img src={story.img} alt={story.name} />
+          <img
+            // src={story.mediaUrl}
+            src={
+              story[0]?.mediaUrl
+                ? `http://localhost:5000/${story[index].mediaUrl}`
+                : ""
+            }
+            alt={story.name}
+            // onClick={() => showFullStory(story[index].userId)}
+          />
           <span>{story.name}</span>
         </div>
       ))}

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-import Peer from "simple-peer";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import VideocamIcon from "@mui/icons-material/Videocam";
@@ -11,7 +10,9 @@ import MicNoneIcon from "@mui/icons-material/MicNone";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import "./chatui.css";
 
-const ChatUI = ({
+import { useNavigate } from "react-router-dom";
+
+const ChatUI2 = ({
   showSidebarMenu,
   handleToggle,
   toggle,
@@ -26,14 +27,9 @@ const ChatUI = ({
   showMessageBox,
 }) => {
   const [socket, setSocket] = useState(/* Your socket instance */);
-  const [peer, setPeer] = useState(null);
-  const [callerSignal, setCallerSignal] = useState();
-  const [callAccepted, setCallAccepted] = useState(false);
-  const [mediaStream, setMediaStream] = useState(null);
   const [incomingCall, setIncomingCall] = useState(false);
-  const [callerStream, setCallerStream] = useState(null);
-  const userVideo = useRef();
-  const partnerVideo = useRef();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const newSocket = io("http://localhost:5500");
@@ -53,120 +49,28 @@ const ChatUI = ({
   useEffect(() => {
     if (socket) {
       // Listen for incoming calls
-      socket.on("incomingCall", (data) => {
+      socket.on("incomingCallAlert", (data) => {
+        console.log("Hellloooooooooooooooooooo" + data);
         setIncomingCall(true);
-        setCallerSignal(data.signal);
       });
     }
   }, [socket]);
 
-  const callUser = (id) => {
-
-    const newPeer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream: mediaStream,
+  const handleMessageButtonClick = () => {
+    socket.emit("initiateCall", {
+      receiverId: messages.receiver.receiverId,
+      callerId: parsedId,
     });
-
-    newPeer.on("signal", (data) => {
-      // Send call signal to the other user
-      socket.emit("callUser", {
-        userToCall: id,
-        signalData: data,
-        from: parsedId,
-      });
+    navigate("/videocall", {
+      state: { userId: messages.receiver.receiverId, clicked: true },
     });
-
-    newPeer.on("stream", (stream) => {
-      // Display caller's video
-      partnerVideo.current.srcObject = stream;
-      setCallerStream(stream);
-    });
-
-    socket.on("callAccepted", (data) => {
-      // Set the signal from the callee
-      setCallAccepted(true);
-      newPeer.signal(data.signal);
-    });
-
-    setPeer(newPeer);
   };
-
-  const answerCall = () => {
-    alert("Called");
-    const newPeer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: mediaStream,
-    });
-
-    newPeer.on("signal", (data) => {
-      // Send answer signal to the caller
-      console.log("Data");
-      console.log(data);
-      socket.emit("answerCall", { signal: data, to: parsedId });
-    });
-
-
-      // Ensure that partnerVideo.current is defined before setting srcObject
-  if (partnerVideo.current) {
-    newPeer.on("stream", (stream) => {
-      // Display receiver's's video
-      partnerVideo.current.srcObject = stream;
-    });
-  } else {
-    console.error("partnerVideo.current is undefined or null");
-  }
-
-  if (userVideo.current) {
-    userVideo.current.srcObject = callerStream;
-  } else {
-    console.error("userVideo.current is undefined or null");
-  }
-
-
-    newPeer.signal(callerSignal);
-
-    setPeer(newPeer);
-  };
-
-  console.log(partnerVideo);
-
-  const handleCallButtonClick = () => {
-    // Call logic here
-    const friendId = messages.receiver.receiverId;
-    if (!peer) {
-      callUser(friendId);
-    }
-  };
-
-
 
   const handleAcceptButtonClick = () => {
-    // Answer the incoming call
-    answerCall(callerStream);
-    setIncomingCall(false);
+    navigate("/videocall", {
+      state: { userId: messages.receiver.receiverId, clicked: true },
+    });
   };
-
-  useEffect(() => {
-    // Fetch and set media stream here
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        setMediaStream(stream);
-        userVideo.current.srcObject = stream;
-      })
-      .catch((error) => console.error("Error accessing media devices:", error));
-
-    return () => {
-      if (peer) {
-        peer.destroy();
-        setPeer(null);
-      }
-    };
-  }, [peer]);
-
-
 
   return (
     <div className="main-chat-section">
@@ -192,10 +96,13 @@ const ChatUI = ({
           </div>
         </div>
         <div className="right-part">
+          {/* <Link to={`/videocall/${messages.receiver.receiverId}`}> */}
           <CallRoundedIcon
+            onClick={handleMessageButtonClick}
             className="right-part-icon"
-            onClick={handleCallButtonClick}
           />
+          {/* </Link> */}
+
           <VideocamIcon className="right-part-icon" />
           <MoreVertIcon className="right-part-icon" onClick={handleToggle} />
           {toggle ? (
@@ -209,9 +116,6 @@ const ChatUI = ({
       </div>
 
       <div className="inner-container">
-        <video ref={userVideo} autoPlay />
-        <video ref={partnerVideo} autoPlay/>
-        {callAccepted && <video ref={partnerVideo} autoPlay />}
         {messages?.messages?.map(({ message, user: { id } = {} }, index) => (
           <div
             key={index}
@@ -249,18 +153,18 @@ const ChatUI = ({
           </label>
           <LocationOnIcon className="chat-btn" />
           <MicNoneIcon className="chat-btn" />
-          {incomingCall &&
-            (alert("Button"),
-            (<button onClick={handleAcceptButtonClick}>Accept</button>))}
         </div>
         <div className="submit-btn-class">
           <button onClick={() => sendMessage()}>
             <TelegramIcon className="submit-btn" />
           </button>
+          {incomingCall && (
+            <button onClick={handleAcceptButtonClick}>Accept</button>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default ChatUI;
+export default ChatUI2;
