@@ -221,7 +221,7 @@ export const Let= () => {
               ...conversation,
               user: {
                 ...conversation.user,
-                profileImg: userDetails[0].profileImg,
+                profileImg: userDetails[0]?.profileImg,
               },
             };
           })

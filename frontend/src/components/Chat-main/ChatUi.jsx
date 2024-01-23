@@ -61,6 +61,7 @@ const ChatUI = ({
   }, [socket]);
 
   const callUser = (id) => {
+
     const newPeer = new Peer({
       initiator: true,
       trickle: false,
@@ -105,23 +106,27 @@ const ChatUI = ({
       console.log(data);
       socket.emit("answerCall", { signal: data, to: parsedId });
     });
-    // Ensure that partnerVideo.current is defined before setting srcObject
-    if (partnerVideo.current) {
-      newPeer.on("stream", (stream) => {
-        // Display receiver's's video
-        partnerVideo.current.srcObject = stream;
-      });
-    } else {
-      console.error("partnerVideo.current is undefined or null");
-    }
 
-    if (userVideo.current) {
-      userVideo.current.srcObject = callerStream;
-    } else {
-      console.error("userVideo.current is undefined or null");
-    }
+
+      // Ensure that partnerVideo.current is defined before setting srcObject
+  if (partnerVideo.current) {
+    newPeer.on("stream", (stream) => {
+      // Display receiver's's video
+      partnerVideo.current.srcObject = stream;
+    });
+  } else {
+    console.error("partnerVideo.current is undefined or null");
+  }
+
+  if (userVideo.current) {
+    userVideo.current.srcObject = callerStream;
+  } else {
+    console.error("userVideo.current is undefined or null");
+  }
+
 
     newPeer.signal(callerSignal);
+
     setPeer(newPeer);
   };
 
@@ -134,6 +139,8 @@ const ChatUI = ({
       callUser(friendId);
     }
   };
+
+
 
   const handleAcceptButtonClick = () => {
     // Answer the incoming call
@@ -158,6 +165,8 @@ const ChatUI = ({
       }
     };
   }, [peer]);
+
+
 
   return (
     <div className="main-chat-section">
@@ -201,7 +210,7 @@ const ChatUI = ({
 
       <div className="inner-container">
         <video ref={userVideo} autoPlay />
-        <video ref={partnerVideo} autoPlay />
+        <video ref={partnerVideo} autoPlay/>
         {callAccepted && <video ref={partnerVideo} autoPlay />}
         {messages?.messages?.map(({ message, user: { id } = {} }, index) => (
           <div
