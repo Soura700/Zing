@@ -8,6 +8,8 @@ import CallEndIcon from "@mui/icons-material/CallEnd";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import AddIcCallIcon from '@mui/icons-material/AddIcCall';
+import PhoneForwardedIcon from '@mui/icons-material/PhoneForwarded';
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
@@ -28,7 +30,6 @@ const VideoCall = () => {
 
   const location = useLocation();
   var { userId, userName, clicked } = location.state || {};
-
 
   useEffect(() => {
     const newSocket = io("http://localhost:5500");
@@ -183,46 +184,58 @@ const VideoCall = () => {
             <div className="camera-video">
               <div className="cam">
                 <div className="cam1">
-                  <img className="image1" src={img1} alt="" />
+                  {/* <img className="image1" src={img1} alt="" /> */}
                   <div className="name-overlay">
-                    <video ref={userVideo} autoPlay />
+                    <video ref={userVideo} autoPlay className="callerVid" />
+                    {/* caller's video screen */}
                   </div>
                   <div className="name-overlay1">
                     {" "}
-                    <VolumeOffIcon />
+                    {/* <VolumeOffIcon /> */}
                   </div>
                 </div>
-                <div className="cam1">
-                  <img className="image1" src={img1} alt="" />
-                  <div className="name-overlay">
-                    <video ref={partnerVideo} autoPlay />
+                <div className="rec-cam1">
+                  {/* <img className="image1" src={img1} alt="" /> */}
+                  <div className="rec-name-overlay2 ">
+                    <video
+                      ref={partnerVideo}
+                      autoPlay
+                      className="receiverVid2"
+                    />
                   </div>
-                  <div className="name-overlay1">
+                  <div className="rec-name-overlay1">
                     {" "}
-                    <VolumeOffIcon />
+                    {/* <VolumeOffIcon /> */}
                   </div>
                 </div>
               </div>
               <div className="cam">
-                <div className="cam1">
-                  <img className="image1" src={img1} alt="" />
-                  <div className="name-overlay">
+                <div className="rec-cam1">
+                  {/* <img className="image1" src={img1} alt="" /> */}
+                  <div className="rec-name-overlay">
                     {" "}
-                    {callAccepted && <video ref={partnerVideo} autoPlay />}
+                    {callAccepted && (
+                      <video
+                        ref={partnerVideo}
+                        autoPlay
+                        className="receiverVid"
+                      />
+                    )}
+                    {/* receiver's video screen */}
                   </div>
-                  <div className="name-overlay1">
+                  <div className="rec-name-overlay1">
                     {" "}
-                    <VolumeOffIcon />
+                    {/* <VolumeOffIcon /> */}
                   </div>
                 </div>
-                <div className="cam1">
+                {/* <div className="cam1">
                   <img className="image1" src={img1} alt="" />
                   <div className="name-overlay">Camera 4</div>
                   <div className="name-overlay1">
                     {" "}
                     <VolumeOffIcon />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="video-control">
@@ -265,10 +278,10 @@ const VideoCall = () => {
                       onClick={toggleEndCallIcon}
                     />
                   )}
-                  <button onClick={handleCallButtonClick}>Start</button>
+                  <button onClick={handleCallButtonClick} className="startCallBtn">Start <AddIcCallIcon /></button>
                 </div>
                 {incomingCall && (
-                  <button onClick={handleAcceptButtonClick}>Accept</button>
+                  <button onClick={handleAcceptButtonClick} className="acceptCallBtn">Accept <PhoneForwardedIcon /></button>
                 )}
               </div>
             </div>
