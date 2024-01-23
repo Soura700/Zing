@@ -161,7 +161,11 @@
     box-shadow: 2px 2px 5px #a479fa;
     cursor: pointer;
 }
-
+link h1:hover {
+    outline: none;
+    text-decoration: none;
+    color: aqua;
+}
 .item5 {
     border: none;
     border-radius: 12px;
@@ -187,7 +191,10 @@
     font-size: 18px;
     color: white;
 }
-
+.item5 .header h1:hover {
+    outline: none;
+    text-decoration: none;
+}
 .item5 .logo {
     margin: 11px 8px;
     color: white;
