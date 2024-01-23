@@ -63,11 +63,12 @@
 .video-control {
     width: 98%;
     height: 80px;
-    background-color: #333344;
+    background-color: rgb(51, 51, 68);
     margin-bottom: 10px;
     margin-left: 10px;
     border-radius: 30px;
     padding: 20px;
+    box-shadow: 0px 0px 8px 5px rgb(28, 28, 37);
 }
 
 .icons,
@@ -76,6 +77,7 @@
     align-items: center;
     justify-content: center;
     width: fit-content;
+    
 }
 
 .icons {
@@ -91,6 +93,7 @@
     padding: var(--padding-3xs);
     cursor: pointer;
 }
+
 .mic .videocontrolicons {
     border-radius: 50px;
     background-color: #4e4d5f;
@@ -99,32 +102,80 @@
     color: #ffffff;
     width: 50px;
     height: 50px;
+
 }
+
 .videocontrolicons.active {
     background: rgb(227, 71, 71);
-  }
-  .end-call .callEndIcon.active {
-    background-color: #d63b3b; 
-  }
-  .end-call .callEndIcon {
+}
+
+.end-call .callEndIcon.active {
+    background-color: #d63b3b;
+}
+
+.end-call .callEndIcon {
     border-radius: 50px;
     width: 60px;
     height: 50px;
     font-size: 45px;
     padding: 5px;
     background-color: #d63b3b;
-  }
+}
+
 .end-call {
     display: flex;
     align-items: center;
-    justify-content: center;
+    border: 0px solid red;
+    padding: 2px;
+    gap: 20px;
+    justify-content: space-between;
     border-radius: 50px;
     cursor: pointer;
 }
+
+.end-call .startCallBtn {
+    height: 50px;
+    width: 90px;
+    padding: 5px;
+    border: 0px;
+    border-radius: 50px;
+    background: #454564;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.acceptCallBtn {
+    height: 50px;
+    width: 100px;
+    padding: 5px;
+    border: 0px;
+    border-radius: 50px;
+    background: #454564;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.acceptCallBtn:hover {
+    background: #454564;
+}
+
+button {
+    margin: 0;
+}
+
 .end-call.videocontrolicons {
     font-size: 35px;
     color: #ffffff;
 }
+
 .left-button {
 
     display: flex;
@@ -134,13 +185,13 @@
 
 }
 
-.iconlogo {
+/* .iconlogo {
     margin-top: 20px;
-}
+} */
 
-.iconlybulkhome {
+/* .iconlybulkhome {
     margin-top: 30px;
-}
+} */
 
 .iconlyboldlogout {
     margin-top: 60px;
@@ -213,21 +264,70 @@
     margin: 10px;
     justify-content: center;
 }
+
 .cam1 img {
     object-fit: cover;
     border-radius: 20px;
 }
+
 .name-overlay {
-    position: absolute;
-    top: 10px;
-    left: 70px;
     color: #fff;
     border-radius: 30px;
     background-color: rgba(0, 0, 0, 0.5);
-
-    padding: 5px;
+    height: 80vh;
     font-size: 14px;
 }
+
+.name-overlay .callerVid {
+    border: 3px solid #454564;
+    border-radius: 30px;
+    width: 80vw;
+    height: 80vh;
+    /* box-shadow: 0px 0px 34px 4px rgba(0, 0, 0, 0.47);
+    -webkit-box-shadow: 0px 0px 34px 4px rgba(0, 0, 0, 0.47);
+    -moz-box-shadow: 0px 0px 34px 4px rgba(0, 0, 0, 0.47); */
+}
+
+.rec-cam1 {
+    display: flex;
+    width: 100%;
+    position: relative;
+    margin: 10px;
+    justify-content: center;
+}
+
+.rec-name-overlay {
+    color: #fff;
+    position: absolute;
+    right: 50px;
+    bottom: 10px;
+    border-radius: 30px;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    height: 30vh;
+    font-size: 14px;
+}
+
+.rec-name-overlay1 {
+    position: absolute;
+    top: 65px;
+    right: 70px;
+    height: fit-content;
+    width: fit-content;
+    color: #fff;
+    border-radius: 30px;
+    background-color: rgba(0, 0, 0, 0.334);
+    cursor: pointer;
+    padding: 3px 5px;
+    font-size: 14px;
+}
+
+.rec-name-overlay .receiverVid {
+    border: 0px solid rgb(0, 183, 255);
+    width: 30vw;
+    height: 30vh;
+
+}
+
 .name-overlay1 {
     position: absolute;
     top: 10px;
@@ -241,6 +341,34 @@
     padding: 3px 5px;
     font-size: 14px;
 }
+
+.rec-name-overlay2 {
+    color: #fff;
+    position: relative;
+    right: 50px;
+    top: 50px;
+    bottom: 10px;
+    border-radius: 30px;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    height: 30vh;
+    font-size: 14px;
+}
+
+.rec-name-overlay2 .receiverVid2 {
+    border: 0px solid rgb(3, 255, 62);
+    position: absolute;
+    right: 3px;
+    top: 290px;
+    width: 30vw;
+    height: 30vh;
+}
+
+.hidden {
+    visibility: visible;
+}
+
+/* start and access btn styles */
+
 .image1 {
     width: 80%;
 
@@ -443,8 +571,8 @@
         gap: 5px;
 
     }
-    .icons
-    .mic {
+
+    .icons .mic {
         height: 10px;
         width: 30px;
 
@@ -585,10 +713,126 @@
         max-height: 100%;
         /* Prevent scrolling on the body and main container */
     }
+    
+    .name-overlay {
+        color: #fff;
+        border-radius: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        height: 80vh;
+        font-size: 14px;
+        margin-right: 20px;
+    }
+    .name-overlay .callerVid {
+        border: 3px solid #454564;
+        border-radius: 10px;
+        width: 95vw;
+        height: 80vh;
+        margin: 0;
+    }
+    .video-control {
+        width: 67vh;
+        margin-right: 6px;
+    }
+    .mic .videocontrolicons {
+        border-radius: 50px;
+        background-color: #4e4d5f;
+        font-size: 45px;
+        padding: 5px;
+        color: #ffffff;
+        width: 42px;
+        height: 42px;
+    
+    }
+    .end-call {
+        display: flex;
+        align-items: center;
+        border: 0px solid red;
+        padding: 2px;
+        gap: 20px;
+        justify-content: space-between;
+        border-radius: 50px;
+        cursor: pointer;
+    }
+    .end-call .callEndIcon {
+        border-radius: 50px;
+        width: 42px;
+        height: 42px;
+        font-size: 45px;
+        padding: 5px;
+        background-color: #d63b3b;
+    }
+    .end-call .startCallBtn {
+        height: 42px;
+        width: 78px;
+        padding: 5px;
+        border: 0px;
+        border-radius: 50px;
+        background: #454564;
+        cursor: pointer;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 10px;
+    }
+    
+    .acceptCallBtn {
+        height: 42px;
+        width: 78px;
+        padding: 5px;
+        border: 0px;
+        border-radius: 50px;
+        background: #454564;
+        cursor: pointer;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 10px;
+    }
+    .icons {
+        gap: 25px;
 
+    }
+    .rec-name-overlay1 {
+        position: absolute;
+        top: 65px;
+        right: 70px;
+        height: fit-content;
+        width: fit-content;
+        color: #fff;
+        border-radius: 30px;
+        background-color: rgba(0, 0, 0, 0.334);
+        cursor: pointer;
+        padding: 3px 5px;
+        font-size: 14px;
+        visibility: hidden;
+    }
+    
+    .rec-name-overlay .receiverVid {
+        border: 0px solid rgb(0, 183, 255);
+        position: absolute;
+        right: -136px;
+        top: 82px;
+        width: 30vw;
+        height: 30vh;
+    
+    }
+    
+    .rec-name-overlay2 .receiverVid2 {
+        border: 0px solid rgb(3, 255, 62);
+        position: absolute;
+        right: -96px;
+        top: 282px;
+        width: 30vw;
+        height: 30vh;
+    }
+    
     .left-part {
         width: 45vh;
         height: 60vh;
+        margin: 0;
+        padding: 0;
     }
 
     .right-part {
@@ -655,13 +899,10 @@
 
     }
 
-    .video-control {
-        width: 37vh;
-
-    }
+    
 
     .icons {
-        gap: 5px;
+        gap: 25px;
 
     }
 

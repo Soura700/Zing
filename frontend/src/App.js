@@ -92,9 +92,9 @@ import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import { Leftbar2 } from "./components/messaging/Leftbar2";
 import { Group } from "./components/Group/Group";
-import Video from "./components/Video/Video.jsx";
-import Personalization from "./pages/Personalization/YourComponent.jsx";
-
+import  Video  from "./components/Video/Video.jsx";
+import Personalization from "./pages/Personalization/YourComponent.jsx"
+import Saved from "./pages/Saved/Saved.jsx";
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -164,9 +164,9 @@ function App() {
           element: <Profile />,
         },
         {
-          path: "/posts",
-          element: <Posts />,
-        },
+          path:"/posts",
+          element:<Posts/>
+        }
       ],
     },
 

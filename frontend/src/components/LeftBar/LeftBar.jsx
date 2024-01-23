@@ -11,9 +11,10 @@ import MessageIcon from "@mui/icons-material/Message";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import styles from "./leftBar.module.css"
+import styles from "./leftBar.module.css";
+import { Link } from "react-router-dom";
 
-export const LeftBar = ( {isVisible}) => {
+export const LeftBar = ({ isVisible }) => {
   return (
     <>
       {/* <div className={styles.leftBar}> */}
@@ -22,7 +23,7 @@ export const LeftBar = ( {isVisible}) => {
           <div className={styles.item}>
             {/* here item means each options (ex: friends, groups ,marketplace etc) */}
             <div className={styles.logo}>
-              <PeopleAltIcon fontSize="small"/>
+              <PeopleAltIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Friends</h1>
@@ -31,7 +32,7 @@ export const LeftBar = ( {isVisible}) => {
 
           <div className={styles.item2}>
             <div className={styles.logo}>
-              <MessageIcon fontSize="small"/>
+              <MessageIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Messages</h1>
@@ -40,7 +41,7 @@ export const LeftBar = ( {isVisible}) => {
 
           <div className={styles.item3}>
             <div className={styles.logo}>
-              <TrendingUpIcon fontSize="small"/>
+              <TrendingUpIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Trending</h1>
@@ -48,24 +49,24 @@ export const LeftBar = ( {isVisible}) => {
           </div>
           <div className={styles.item4}>
             <div className={styles.logo}>
-              <EventNoteIcon fontSize="small"/>
+              <EventNoteIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Events</h1>
             </div>
           </div>
-          <div className={styles.item5}>
+          <Link to="/saved" className={styles.item5}>
             <div className={styles.logo}>
-              <BookmarkIcon fontSize="small"/>
+              <BookmarkIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Saved</h1>
             </div>
-          </div>
-          
+          </Link>
+
           <div className={styles.item6}>
             <div className={styles.logo}>
-              <SettingsIcon fontSize="small"/>
+              <SettingsIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Settings</h1>
@@ -74,7 +75,7 @@ export const LeftBar = ( {isVisible}) => {
 
           <div className={styles.item7}>
             <div className={styles.logo}>
-              <HelpOutlineIcon fontSize="small"/>
+              <HelpOutlineIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Help</h1>

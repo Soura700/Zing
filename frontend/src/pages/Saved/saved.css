@@ -1,0 +1,12 @@
+.savedPageContainer {
+    padding: 10px;
+    border: 1px solid rgb(219, 219, 219);
+    border-radius: 12px;
+    margin: 20px;
+}
+
+h1 {
+    color: rgb(60, 60, 60);
+    font-size: 30px;
+    font-weight: 400;
+}
