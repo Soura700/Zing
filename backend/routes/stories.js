@@ -1,29 +1,3 @@
-// // create stories
-// const Stories = require('../models/Stories');
-// const mongoose = require('mongoose');
-// const { request } = require('./auth');
-// var router = require('express').Router();
-
-// router.post("/create_stories", async (req,res) => {
-//     const userId = req.body.userId;
-    
-//     try{
-//         const newStories = new Stories({
-//             userId : req.body.userId,
-//             userName : req.body.userName,
-//         })
-//         const stories = await newStories.save()
-//         res.status(200).json(stories);
-//     }
-
-//     catch(error){
-//         console.log(error);
-//         res.status(500).json(error);
-//     }
-// })
-// module.exports = router;
-
-
 
 const express = require('express');
 const router = express.Router();
@@ -55,7 +29,7 @@ cron.schedule('0 0 * * *', async () => {
 
     // Remove expired stories from the database
     for (const story of expiredStories) {
-      await Story.findByIdAndRemove(story._id);
+      await Story.findByIdAndRemove(story.id);
     }
 
     console.log('Expired stories deleted successfully.');
@@ -65,7 +39,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // Get all stories
-router.get('/', async (req, res) => {
+router.get('/allStories', async (req, res) => {
   try {
     const stories = await Story.find();
     res.json(stories);
@@ -73,6 +47,17 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+router.get("/getStories/:userId", async(req,res)=>{
+  const {userId} = req.params;
+  try{
+    const stories = await Story.find({userId})
+
+    res.status(200).json(stories);
+  }catch(error){
+    res.status(500).json(error)
+  }
+})
 
 // Create a new story with photo or video
 router.post('/create_story', upload.single('mediaFile'), async (req, res) => {
