@@ -283,6 +283,15 @@ io.on("connection", (socket) => {
       // Handle the case when the target socket is not valid
     }
   });
+
+  socket.on("initiateCall", (data) => {
+    console.log("Calledddddddddddddddddddddddddddddddd");
+    const receiverSocket = data.receiverId;
+    if (receiverSocket) {
+      // Notify the receiver about the incoming call
+      io.emit("incomingCallAlert", { callerId: data.callerId });
+    }
+  });
 });
 
 
