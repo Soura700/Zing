@@ -17,18 +17,19 @@ import LockIcon from "@mui/icons-material/Lock";
 import BlockIcon from "@mui/icons-material/Block";
 import ReportIcon from "@mui/icons-material/Report";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import GroupsIcon from '@mui/icons-material/Groups';
+import GroupsIcon from "@mui/icons-material/Groups";
 import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./group.css";
 
 export const Group = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [toggle, setToggle] = useState(false);
-
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -61,14 +62,25 @@ export const Group = () => {
   const searchUserSuggestions = async (searchValue) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/conversation/get/conversation/` + searchValue
+        `http://localhost:5000/api/conversation/get/conversation/` +
+          searchValue,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: parsedId,
+          }),
+        }
       );
       // console
       if (res.ok) {
         const data = await res.json();
-        // console.log(data)
         // Update the state with the fetched user name suggestions
-        setSearchResult(data); // Assuming `setSearchResult` is a state updater function
+        setSearchResult(data);
+      } else if (res.status === 404) {
+        toast.error("No conversations found");
       } else {
         console.error("Failed to fetch user name suggestions");
       }
@@ -77,11 +89,13 @@ export const Group = () => {
     }
   };
 
-  // console.log(searchResult);
+  console.log("Search Resukt.........");
+  console.log(searchResult);
 
   const handleSearchIconClick = () => {
     // Call the searchUserSuggestions function with the current searchValue
     searchUserSuggestions(searchValue);
+    setSearchValue("");
   };
 
   const parsedId = parseInt(id);
@@ -142,8 +156,6 @@ export const Group = () => {
 
     setSelectedUserNames(updatedUserNames);
   };
-
-  console.log(groupMessages);
 
   //
   useEffect(() => {
@@ -236,6 +248,22 @@ export const Group = () => {
       console.log(response);
       setGroupChat(response.groupName);
 
+
+      const createConversation = await fetch("http://localhost:5000/api/conversation/create/group/conversation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          groupName: response.groupName,
+          admin: response.groupAdmin, // Set the logged-in user as the admin
+          memberIds: memberIds, // Add members including the logged-in user
+        }),
+      });
+
+      const conversationResponse = await createConversation.json();
+
       if (res.status === 200) {
         // Clear any selected users and group name input
         setSelectedUsers([]);
@@ -256,12 +284,12 @@ export const Group = () => {
 
   useEffect(() => {
     const fetchGroups = async () => {
-      const res = await fetch("http://localhost:5000/api/group/all_groups");
+      const res = await fetch("http://localhost:5000/api/group/groups/" + parsedId);
       const data = await res.json();
       setGroups(data);
     };
     fetchGroups();
-  }, []);
+  }, [parsedId]);
 
   // Render loading indicator if still loading authentication data
   if (isLoading) {
@@ -282,36 +310,32 @@ export const Group = () => {
     }
   };
 
-  const addUserToGroup = (userToAdd) => {
-    // alert("called");
-    // Check if the user is already added
-    const isUserAlreadyAdded = selectedUsers.some(
-      (user) => user.id === userToAdd.id
+
+  const addUserToGroup = (user) => {
+    setSearchResult([]);
+    // Add the user to the selectedUsers state
+    const isUserAlreadySelected = selectedUsers.some(
+      (selectedUsers) => selectedUsers.userId === user.userId
     );
-
-    if (!isUserAlreadyAdded) {
-      // Add the user to the selectedUsers array
-      setSelectedUsers([...selectedUsers, userToAdd]);
-
-      // Add the user's name to the selectedUserNames array
-      setSelectedUserNames([...selectedUserNames, userToAdd.username]);
+    if (!isUserAlreadySelected) {
+      setSelectedUsers([...selectedUsers, user]);
+      // Add the username to the selectedUserNames state
+      setSelectedUserNames([...selectedUserNames, user.username]);
     }
   };
 
+
   const handleGroupClick = async (groupId) => {
+    alert("Hello");
     socket.emit(groupId, parsedId);
-
     socket.emit("join chat", groupId);
-
     try {
       // Make an API request to fetch group messages based on groupId
       const res = await fetch(
         `http://localhost:5000/api/groupmessage/get_group_messages/${groupId}`
       );
-
       if (res.ok) {
         const data = await res.json();
-
         console.log("Data");
         console.log(data);
 
@@ -363,7 +387,6 @@ export const Group = () => {
         reader.readAsDataURL(file);
       }
     }
-    // console.log(e);
   }
 
   console.log(Image);
@@ -380,6 +403,9 @@ export const Group = () => {
       groupMessages.length > 0 &&
       groupMessages[messageIndex].conversationId
     ) {
+
+      alert("Entered");
+
       const conversationId = groupMessages[messageIndex].conversationId;
       const groupId = groupMessages[messageIndex].groupId;
 
@@ -493,6 +519,7 @@ export const Group = () => {
                       // }
 
                       onClick={() => {
+                        alert("Hello");
                         handleGroupClick(group._id);
                         setGroupName(group.groupName);
                       }}
@@ -578,6 +605,9 @@ export const Group = () => {
 
       {/* main chat section */}
 
+
+
+
       <div className="main-chat-section">
         {/* {groupMessages?.message?.length > 0 ? ( */}
         {groupMessages.length > 0 ? (
@@ -657,35 +687,8 @@ export const Group = () => {
                 </div>
               </div>
               <div className="inner-container">
-                {/* {groupMessages?.message.map(({ message, user: { id } = {} }, index) => { */}
-                {/* {groupMessages.map(({ message, user: { id } = {} }, index) => {
-                  console.log(groupMessages);
-                  if (id === parsedId) {
-
-                    if(message.startsWith("data:image/")){
-                      return (
-                        <div className="senders-photo">
-                          <img src={message} alt="" />
-                      </div>
-                      )
-                    }
-                    
-                    return (
-                      <div className="outgoing-msg" key={index}>
-                        {message}
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div className="incoming-msg" key={index}>
-                        {message}
-                      </div>
-                    );
-                  }
-                })} */}
                 {groupMessages.map(({ message, user: { id } = {} }, index) => {
                   console.log(groupMessages);
-
                   // Check if the message starts with "data:image/"
                   if (message.startsWith("data:image/")) {
                     // If it's an image, render it as an img element
@@ -713,35 +716,8 @@ export const Group = () => {
                     );
                   }
                 })}
-
-                {/* {groupMessages && groupMessages.length > 0 ? (
-                  groupMessages.map(({ message, user: { id } = {} }, index) => {
-                    console.log(groupMessages);
-                    if (id === parsedId) {
-                      return (
-                        <div className="outgoing-msg" key={index}>
-                          {message}
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div className="incoming-msg" key={index}>
-                          {message}
-                        </div>
-                      );
-                    }
-                  })
-                ) : (
-                  <div
-                    className="no-conversations"
-                    style={{ textAlign: "center", marginTop: "10px" }}
-                  >
-                    No Messages to show. Click on the conversation to see the
-                    messages
-                  </div>
-                )} */}
                 {/* // Inside your component's render function */}
-                <div className="senders-photo">
+                {/* <div className="senders-photo">
                   {Image && Image.startsWith("data:image/") ? (
                     <img src={Image} alt="" />
                   ) : null}
@@ -750,7 +726,7 @@ export const Group = () => {
                   {Image && Image.startsWith("data:image/") ? (
                     <img src={Image} alt="" />
                   ) : null}
-                </div>
+                </div> */}
               </div>
 
               <div className="chat-bottom">
@@ -887,24 +863,7 @@ export const Group = () => {
             </div>
 
             <div className="user-list">
-              {/* <div className="userListContainer">
-                <div className="userLists">
-                  <p>Messi</p>
-                  <div className="userListIconContainer">
-                    <DoneIcon className="userListIconTick"/>
-                    <CloseIcon className="userListIconCross"/>
-                  </div>
-                </div>
-              </div> */}
-
               {searchResult.map((user) => (
-                // <div
-                //   key={user.id}
-                //   className="user-item"
-                //   onClick={handleGroup(user)}
-                // >
-                //   <label htmlFor={`user-${user.id}`}>{user.username}</label>
-                // </div>
                 <div className="userListContainer">
                   <div className="userLists" key={user.id}>
                     <p>{user.username}</p>
@@ -913,7 +872,7 @@ export const Group = () => {
                         className="userListIconTick"
                         onClick={() => addUserToGroup(user)}
                       />
-                      <CloseIcon className="userListIconCross" />
+                      <CloseIcon className="userListIconCross" onClick={""} />
                     </div>
                   </div>
                 </div>
@@ -931,6 +890,7 @@ export const Group = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };
