@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./YourComponent.css"; // Import your CSS file
+import "./YourComponent.css"; 
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
