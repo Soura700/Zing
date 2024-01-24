@@ -22,6 +22,7 @@ const interests_route = require("./routes/interest");
 const unread_message_route = require("./routes/unreadmessages");
 const fof = require("./routes/suggestion");
 const path = require("path");
+const bodyParser = require("body-parser");
 
 // const io = require("socket.io")(5500,{
 //   cors:{
@@ -31,6 +32,7 @@ const path = require("path");
 
 // Use the cookie-parser middleware
 app.use(cookieParser());
+// app.use(bodyParser.json({limit:'50mb'}));
 
 app.use(
   cors({
@@ -91,7 +93,6 @@ let users = [];
 const activeGroups = [];
 
 io.on("connection", (socket) => {
-  console.log("User Connected", socket.id);
 
   // 13/9/2023
   socket.emit("me", socket.id);
@@ -134,13 +135,21 @@ io.on("connection", (socket) => {
     console.log("User Joined Room" + room);
   });
 
-  socket.on(
-    "sendGroupMessage",
-    ({ senderId, message, conversationId, group_id }) => {
-      console.log(group_id + message + conversationId + senderId);
-      io.emit("groupMessage", { senderId, message });
-    }
-  );
+  // socket.on(
+  //   "sendGroupMessage",
+  //   ({ senderId, message, conversationId, group_id }) => {
+  //     console.log(group_id + message + conversationId + senderId);
+  //     io.emit("groupMessage", { senderId, message });
+  //   }
+  // );
+
+  socket.on("sendGroupMessage", ({ senderId, message, conversationId, group_id }) => {
+    console.log(group_id + message + conversationId + senderId);
+  
+    // Use socket.broadcast.to to send the message to all clients in the group except the sender
+    socket.broadcast.to(group_id).emit("groupMessage", { senderId, message });
+  });
+  
 
   // // 27/09/2023
 

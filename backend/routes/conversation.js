@@ -146,8 +146,10 @@ router.post("/get", async (req, res) => {
   // })
 
 
-  router.get("/get/conversation/:username", async (req, res) => {
+  router.post("/get/conversation/:username", async (req, res) => {
+  
     const username = req.params.username;
+    const searcherId = req.body.userId;
   
     try {
       connection.query('SELECT id from users where username = ? ', [username], async (err, result) => {
@@ -160,9 +162,18 @@ router.post("/get", async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
           }
   
-          const conversations = await Conversations.find({ members: result[0].id });
+          const conversations = await Conversations.find({
+            members:{
+              $all:[result[0].id,searcherId],
+            }
+          });
+
+          // const conversations = await Conversations.find({ members: result[0].id });
+
+          console.log(conversations.length);
+          console.log("Conversationssssssssssss");
   
-          if (conversations) {
+          if (conversations.length != 0) {
             // Construct an array with the desired format
             const responseArray = conversations.map(conversation => ({
               userId: result[0].id,
@@ -170,8 +181,9 @@ router.post("/get", async (req, res) => {
               // Adjust this to match your conversation schema
               // Add other properties from the conversation as needed
             }));
-  
             return res.status(200).json(responseArray);
+          }else{
+            return res.status(404).json({ error: 'Conversation not found' });
           }
         }
       });
@@ -198,7 +210,9 @@ router.post("/get", async (req, res) => {
 router.post("/create/group/conversation", async (req, res) => {
   try {
     const { memberIds } = req.body;
+    const { groupName } = req.body;
     const newConversation = new GroupConversation({
+      groupName:groupName,
       members: memberIds,
     });
     const conversation = await newConversation.save();
@@ -209,6 +223,5 @@ router.post("/create/group/conversation", async (req, res) => {
   }
 });
 
-  
 
 module.exports = router;
