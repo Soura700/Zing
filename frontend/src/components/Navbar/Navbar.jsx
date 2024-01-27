@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import BedtimeRoundedIcon from '@mui/icons-material/BedtimeRounded';
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
 import { useState } from "react";
@@ -251,7 +251,7 @@ const Navbar = ({ toggleMenu, user }) => {
   const openNotifPanel = async () => {
 
     if(message.length === 0){
-      toast("No messages to show!!!!");
+      toast("No messages to show!");
       return;
     }
 
@@ -379,9 +379,9 @@ const Navbar = ({ toggleMenu, user }) => {
           <span className={styles.title}>SocialMedia</span>
         </Link>
 
-        <HomeOutlinedIcon className={styles.icon} />
-        <DarkModeOutlinedIcon className={styles.icon} />
-        <GridViewOutlinedIcon className={styles.icon} />
+        {/* <HomeOutlinedIcon className={styles.icon} /> */}
+        
+        {/* <GridViewOutlinedIcon className={styles.icon} /> */}
 
         <div className={styles.search}>
           <SearchOutlinedIcon className={styles.icon} onClick={handleToggle} />
@@ -401,7 +401,7 @@ const Navbar = ({ toggleMenu, user }) => {
         </div>
 
         {/* Sidebar Meeu */}
-
+        
         <MenuRoundedIcon className={styles.menuIcon} onClick={toggleMenu} />
 
         {/* <MenuRoundedIcon className='menuIcon'  /> */}
@@ -410,10 +410,13 @@ const Navbar = ({ toggleMenu, user }) => {
       </div>
 
       <div className={styles.right_navbar}>
-        {/* <PersonOutlinedIcon onClick={handleIconClick} /> */}
-        {/* PersonOutlinedIcon with unread notification count badge */}
+        {/* <PersonRoundedIcon onClick={handleIconClick} /> */}
+        {/* PersonRoundedIcon with unread notification count badge */}
+        <div className={styles.userOptPart}>
+        <BedtimeRoundedIcon className={styles.icon} />
         <div className={styles.profileIconContainer}>
-          <PersonOutlinedIcon
+          
+          <PersonRoundedIcon
             onClick={handleIconClick}
             className={styles.friendsBadgeIcon}
           />
@@ -475,12 +478,12 @@ const Navbar = ({ toggleMenu, user }) => {
             </ul>
           </div>
         )}
-        <EmailOutlinedIcon
+        <EmailRoundedIcon
           className={styles.messagesBadgeIcon}
           onClick={openNotifPanel}
         />
         <div className={styles.messagesBadge}>{unreadMessageCount}</div>
-        <NotificationsOutlinedIcon
+        <NotificationsRoundedIcon
           onClick={openNotifPanel}
           className={styles.notifBadgeIcon}
         />
@@ -526,6 +529,9 @@ const Navbar = ({ toggleMenu, user }) => {
           <div className={styles.closedNotifPanel}></div>
         )}
         <div className={styles.notifBadge}>{unreadNotificationCount}</div>
+        </div>
+
+
         <div className={styles.user}>
           <a
             style={{ textDecoration: "none" }}
@@ -537,6 +543,7 @@ const Navbar = ({ toggleMenu, user }) => {
             <span>{username}</span>
           </a>
         </div>
+
       </div>
       {/* <ToastContainer/> */}
     </div>

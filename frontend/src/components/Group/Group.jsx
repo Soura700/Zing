@@ -52,12 +52,18 @@ export const Group = () => {
 
   //25 Sep 2023 code
   const [Image, setImage] = useState("");
-
+  const [showImg, setShowImg] = useState(false);
   // Function to toggle the Create Group modal
   const toggleCreateGroupModal = () => {
     setShowCreateGroupModal(!showCreateGroupModal);
   };
-
+  const showFullImg = () => {
+    setShowImg(!showImg);
+  };
+  const closeImg = () => {
+    // Set showImg to false to hide the image
+    setShowImg(false);
+  };
   // Add this function to your React component
   const searchUserSuggestions = async (searchValue) => {
     try {
@@ -248,19 +254,21 @@ export const Group = () => {
       console.log(response);
       setGroupChat(response.groupName);
 
+      const createConversation = await fetch(
+        "http://localhost:5000/api/conversation/create/group/conversation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-      const createConversation = await fetch("http://localhost:5000/api/conversation/create/group/conversation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          groupName: response.groupName,
-          admin: response.groupAdmin, // Set the logged-in user as the admin
-          memberIds: memberIds, // Add members including the logged-in user
-        }),
-      });
+          body: JSON.stringify({
+            groupName: response.groupName,
+            admin: response.groupAdmin, // Set the logged-in user as the admin
+            memberIds: memberIds, // Add members including the logged-in user
+          }),
+        }
+      );
 
       const conversationResponse = await createConversation.json();
 
@@ -284,7 +292,9 @@ export const Group = () => {
 
   useEffect(() => {
     const fetchGroups = async () => {
-      const res = await fetch("http://localhost:5000/api/group/groups/" + parsedId);
+      const res = await fetch(
+        "http://localhost:5000/api/group/groups/" + parsedId
+      );
       const data = await res.json();
       setGroups(data);
     };
@@ -310,7 +320,6 @@ export const Group = () => {
     }
   };
 
-
   const addUserToGroup = (user) => {
     setSearchResult([]);
     // Add the user to the selectedUsers state
@@ -323,7 +332,6 @@ export const Group = () => {
       setSelectedUserNames([...selectedUserNames, user.username]);
     }
   };
-
 
   const handleGroupClick = async (groupId) => {
     alert("Hello");
@@ -403,7 +411,6 @@ export const Group = () => {
       groupMessages.length > 0 &&
       groupMessages[messageIndex].conversationId
     ) {
-
       alert("Entered");
 
       const conversationId = groupMessages[messageIndex].conversationId;
@@ -572,31 +579,33 @@ export const Group = () => {
 
             <span>All Conversations</span>
 
-            <div className="mid-text4">
-              <div className="left4">
-                <img src={image} alt=""></img>
-                <div className="left-info">
-                  <h2>John Doe</h2>
-                  <p className="activity">whats up</p>
+            <div className="AllUserChat">
+              <div className="mid-text4">
+                <div className="left4">
+                  <img src={image} alt=""></img>
+                  <div className="left-info">
+                    <h2>John Doe</h2>
+                    <p className="activity">whats up</p>
+                  </div>
+                </div>
+                <div className="right4">
+                  <p>9:26 PM</p>
+                  <circle>11</circle>
                 </div>
               </div>
-              <div className="right4">
-                <p>9:26 PM</p>
-                <circle>11</circle>
-              </div>
-            </div>
 
-            <div className="mid-text5">
-              <div className="left5">
-                <img src={image} alt=""></img>
-                <div className="left-info">
-                  <h2>John Doe</h2>
-                  <p className="activity">typing...</p>
+              <div className="mid-text5">
+                <div className="left5">
+                  <img src={image} alt=""></img>
+                  <div className="left-info">
+                    <h2>John Doe</h2>
+                    <p className="activity">typing...</p>
+                  </div>
                 </div>
-              </div>
-              <div className="right5">
-                <p>9:26 PM</p>
-                <circle>1</circle>
+                <div className="right5">
+                  <p>9:26 PM</p>
+                  <circle>1</circle>
+                </div>
               </div>
             </div>
           </div>
@@ -604,9 +613,6 @@ export const Group = () => {
       </div>
 
       {/* main chat section */}
-
-
-
 
       <div className="main-chat-section">
         {/* {groupMessages?.message?.length > 0 ? ( */}
@@ -622,6 +628,7 @@ export const Group = () => {
                   <div className="user-info">
                     <div className="left-info">
                       <h1>{groupName}</h1>
+                      <p className="otherMembers">You and 2 Others</p>
                       {/* Add the user names of the group  */}
                     </div>
                   </div>
@@ -699,7 +706,20 @@ export const Group = () => {
                         }
                         key={index}
                       >
-                        <img src={message} alt="Sent Image" />
+                        <img
+                          src={message}
+                          alt="Sent Image"
+                          className="incomingMsgImg"
+                          onClick={showFullImg}
+                        />
+                        {showImg ? (
+                          <div className="chatImgShow">
+                            <img src={message} alt="Sent Image" />
+                              <CloseIcon className="closeIcon" onClick={closeImg}/>
+                          </div>
+                        ) : (
+                          <div className="chatImgClose"></div>
+                        )}
                       </div>
                     );
                   } else {
@@ -808,9 +828,8 @@ export const Group = () => {
                 onChange={(e) => setGroupValue(e.target.value)}
               />
             </div>
-
+            <h3>Add members</h3>
             <div className="add-members">
-              <h3>Add members</h3>
               <input
                 type="text"
                 name="search-bar"
@@ -818,19 +837,19 @@ export const Group = () => {
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search"
               />
-              {/* <div className="search-btn">
+              <div className="search-btn">
                 <SearchIcon
                   className="search-icon"
                   onClick={handleSearchIconClick}
                 />
-              </div> */}
+              </div>
             </div>
-            <div className="search-btn">
+            {/* <div className="search-btn">
               <SearchIcon
                 className="search-icon"
                 onClick={handleSearchIconClick}
               />
-            </div>
+            </div> */}
 
             {/* <div className="membersLabel">
               <div className="addMembersLabel">
@@ -845,10 +864,12 @@ export const Group = () => {
                   {/* Display the selected user names here */}
                   {selectedUserNames.map((name, index) => (
                     <>
-                      <p key={index}>{name}</p>
+                      <p key={index} className="membersLabelName">
+                        {name}
+                      </p>
                       <CloseIcon
                         fontSize="10px"
-                        className="membersLabel"
+                        className="membersLabelCloseIcon"
                         onClick={() => handleDelete(name)}
                       />
                     </>

@@ -22,6 +22,7 @@
     "simple-peer": "^9.11.1",
     "socket.io-client": "^4.7.2",
     "stories-react": "^1.1.2",
+    "typeface-quicksand": "^1.1.13",
     "web-vitals": "^2.1.4",
     "zego-express-engine-webrtc": "^2.5.0"
   },

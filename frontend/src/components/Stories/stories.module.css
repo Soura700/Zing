@@ -16,10 +16,11 @@
 
  .story {
    flex: 1;
-   border-radius: 10px;
+   border-radius: 20px;
    overflow: hidden;
    cursor: pointer;
-   min-width: 120px;
+   width: 150px;
+   /* min-width: 50px; */
  }
 
  /* .story .showFullStory {
@@ -241,7 +242,7 @@
 
      .story {
        flex: none;
-       width: 20px;
+       width: 120px;
        height: 160px;
        /* border-radius: 50%; */
      }
@@ -500,7 +501,7 @@
 
    .story {
      flex: none;
-     width: 20px;
+     width: 120px;
      height: 160px;
      /* border-radius: 50%; */
    }

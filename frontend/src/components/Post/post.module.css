@@ -1,12 +1,13 @@
 @import "../../style.css";
 
 .post {
-  -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+  /* -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
   -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-  box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-  border-radius: 20px;
+  box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38); */
+  border-radius:30px;
   /* background-color: themed("bg"); */
   background: rgb(255, 255, 255);
+  border: 1px solid rgb(226, 226, 226);
   color: themed("textColor");
   /* background: red; */
   margin-left: 20px;
@@ -37,7 +38,7 @@
 }
 .post .content .gallery img {
   height: fit-content;
-  width: 300px;
+  width: 500px;
   object-fit: cover;
   cursor: pointer;
   border-radius: 5px;
@@ -48,23 +49,49 @@
   align-items: center;
   justify-content: center;
 }
+.post .content .gallery .showFullImgContainer {
+  border: 0px solid red;
+  padding: 5px;
+  position: absolute;
+  border-radius: 12px;
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  background-color: rgba(17, 25, 40, 0.21);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
 
+    z-index: 998;
+    box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
+  height: 647px;
+  width: 1100px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.post .content .gallery .showFullImgContainer h2{
+  font-weight: 100;
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: rgb(83, 83, 83);
+}
 .post .content .gallery .showFullImg{
   border: 0px solid red;
-  position: absolute;
+  /* position: absolute; */
   background: rgb(255, 255, 255);
   border-radius: 12px;
-  height: fit-content;
-  width: auto;
-  padding: 5px;
-  top: 0px;
+  height: 470px;
+  width: 680px;
+  padding: 0px;
+  top: -128px;
+  z-index: 999;
   left: 50px;
-  box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
+  
 }
 .post .content .gallery .showFullImg img {
   position: relative;
-  height: 80%;
-  width: 80%;
+  height: 100%;
+  width: 100%;
 }
 .post .content .gallery .showFullImg button {
   position: absolute;
@@ -74,11 +101,13 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  border: 1px solid rgb(197, 197, 197);
+  background: transparent;
+  color: rgb(87, 87, 87);
+  border: 0px solid rgb(197, 197, 197);
   padding: 4px;
 }
 .post .content .gallery .showFullImg button:hover {
-  background: rgb(233, 232, 232);
+  background: transparent;
 }
 .post .content .gallery .showFullImg .prevImgBtn {
   left: 5px;
@@ -87,7 +116,7 @@
   right: 5px;
 }
 .post .content .gallery .showFullImg .closeImgBtn {
-  top: -10px;
+  top: 5px;
   right: 5px;
   border: 0px;
 }
