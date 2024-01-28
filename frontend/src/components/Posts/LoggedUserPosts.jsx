@@ -107,7 +107,8 @@ const LoggedUserPosts = ( {userId} ) => {
 
   // Setting the socket
   useEffect(() => {
-    const newSocket = io('http://localhost:5500');
+    // const newSocket = io('http://localhost:5500');
+    const newSocket = io('http://localhost:8000');
     setSocket(newSocket);
 
     return () => {

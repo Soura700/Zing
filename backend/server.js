@@ -1,6 +1,8 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const app = express();
+const server = require("http").Server(app);
+const { v4: uuidv4 } = require("uuid");
+const dotenv = require("dotenv");
 const cors = require("cors");
 var connection = require("./connection");
 var registerAuth = require("./routes/auth");
@@ -14,7 +16,6 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const friendRequestRoute = require("./routes/friend");
 const friend_Request_Route = require("./routes/friend2");
-const io = require("./socket");
 const suggestion = require("./routes/suggestion");
 // const suggestion2 = require("./routes/suggestion2");
 const personalization = require("./routes/personalization");
@@ -23,16 +24,35 @@ const unread_message_route = require("./routes/unreadmessages");
 const fof = require("./routes/suggestion");
 const path = require("path");
 const bodyParser = require("body-parser");
+// const io = require("./socket");
+app.set("view engine", "ejs");
 
-// const io = require("socket.io")(5500,{
-//   cors:{
-//     origin:'http://localhost:3000'
-//   }
-// });
 
-// Use the cookie-parser middleware
+const io = require("socket.io")(server, {
+  cors: {
+    origin: '*'
+  }
+}).listen(5500);
+
+
+const { ExpressPeerServer } = require("peer");
+const opinions = {
+  debug: true,
+}
+
+app.use("/peerjs", ExpressPeerServer(server, opinions));
+app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+  res.redirect(`/${uuidv4()}`);
+});
+
+app.get("/:room", (req, res) => {
+  res.render("room", { roomId: req.params.room });
+});
+
 app.use(cookieParser());
-// app.use(bodyParser.json({limit:'50mb'}));
+app.use(bodyParser.json({ limit: "50mb" }));
 
 app.use(
   cors({
@@ -42,7 +62,8 @@ app.use(
   })
 );
 
-//Step 1:
+
+
 dotenv.config();
 // Step 2:
 app.use(express.json());
@@ -89,11 +110,11 @@ mongoose
   await driver.close();
 })();
 
+
 let users = [];
 const activeGroups = [];
 
 io.on("connection", (socket) => {
-
   // 13/9/2023
   socket.emit("me", socket.id);
   // 13/9/2023
@@ -135,124 +156,18 @@ io.on("connection", (socket) => {
     console.log("User Joined Room" + room);
   });
 
-  // socket.on(
-  //   "sendGroupMessage",
-  //   ({ senderId, message, conversationId, group_id }) => {
-  //     console.log(group_id + message + conversationId + senderId);
-  //     io.emit("groupMessage", { senderId, message });
-  //   }
-  // );
-
-  socket.on("sendGroupMessage", ({ senderId, message, conversationId, group_id }) => {
-    console.log(group_id + message + conversationId + senderId);
-  
-    // Use socket.broadcast.to to send the message to all clients in the group except the sender
-    socket.broadcast.to(group_id).emit("groupMessage", { senderId, message });
-  });
-  
-
-  // // 27/09/2023
-
-  // socket.on('callUser', ({ signalData, callerId }) => {
-  //   // Emit this event to the specific user (callerId) or broadcast it to all users
-  //   // You can emit this event to the caller and provide the signal data for the call
-  //   // Example:
-  //   io.to(callerId).emit('incomingCall', { signalData });
-  // })
-
-  // socket.on('callUser', ({ receiverId }) => {
-  //   // Find the receiver's socket by ID
-  //   // const receiverSocket = /* Logic to find the receiver's socket by ID */;
-
-  //   console.log(receiverId);
-
-  //   const receiverSocket = users.find(user => user.userId === receiverId);
-
-  //   if (receiverSocket) {
-  //     // Emit an "incomingCall" event to the receiver's socket
-  //     io.emit('incomingCall', { callerId: socket.id });
-  //   }
-  //   else {
-  //     // Handle the case where the receiver with the specified ID is not found
-  //     console.log(`Receiver with ID ${receiverId} not found.`);
-  //     // You can emit an error event or take appropriate action here
-  //   }
-
-  // });
-
-  // socket.on('callUser', ({ receiverId, isVideoCall }) => {
-  //   const receiverSocketId = connectedUsers[receiverId];
-  //   if (receiverSocketId) {
-  //     io.to(receiverSocketId).emit('incomingCall', {
-  //       callerId: socket.id,
-  //       isVideoCall,
-  //     });
-  //   }
-  // });
-
-  // Event to handle sending the offer signal
-  socket.on("sendOfferSignal", ({ signalData, receiverId, isVideoCall }) => {
-    const receiverSocketId = connectedUsers[receiverId];
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("receiveOfferSignal", {
-        signalData,
-        callerId: socket.id,
-        isVideoCall,
-      });
+  socket.on(
+    "sendGroupMessage",
+    ({ senderId, message, conversationId, group_id }) => {
+      console.log(group_id + message + conversationId + senderId);
+      io.emit("groupMessage", { senderId, message });
     }
-  });
-
-  // Event to handle sending the answer signal
-  socket.on("sendAnswerSignal", ({ signalData, callerId }) => {
-    io.to(callerId).emit("receiveAnswerSignal", {
-      signalData,
-      receiverId: socket.id,
-    });
-  });
-
-  socket.on("offer", (data) => {
-    socket.to(data.target).emit("offer", data);
-  });
-
-  socket.on("answer", (data) => {
-    socket.to(data.target).emit("answer", data);
-  });
-
-  socket.on("ice-candidate", (data) => {
-    socket.to(data.target).emit("ice-candidate", data.candidate);
-  });
-
+  );
   socket.on("disconnect", () => {
     users = users.filter((user) => user.socketId !== socket.id);
     io.emit("getUser", users);
   }); // Disconnecting the user
 });
-
-// io.on("connection", (socket) => {
-//   console.log("User connected:", socket.id);
-
-//   socket.on("disconnect", () => {
-//     console.log("User disconnected:", socket.id);
-//   });
-
-//   socket.on("callUser", (data) => {
-//     console.log("Called User")
-//     // io.to(data.userToCall).emit("incomingCall", {
-//     //   signal: data.signalData,
-//     //   from: data.from,
-//     // });
-//     console.log(data);
-//     io.emit("incomingCall", {
-//       to:data.userToCall,
-//       signal: data.signalData,
-//       from: data.from,
-//     });
-//   });
-
-//   socket.on("answerCall", (data) => {
-//     io.to(data.to).emit("callAccepted", data.signal);
-//   });
-// });
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
@@ -282,7 +197,6 @@ io.on("connection", (socket) => {
     // const targetSocket = io.sockets.sockets.get(data.to);
     const targetSocket = data.to;
 
-
     if (targetSocket) {
       io.emit("callAccepted", {
         signal: data.signal, // Wrap the signal in an object
@@ -303,7 +217,41 @@ io.on("connection", (socket) => {
   });
 });
 
+io.on("connection", (socket) => {
 
+
+  socket.on("join-room", (roomId, userId, userName) => {
+    socket.join(roomId);
+    setTimeout(()=>{
+      console.log("Rooom ID")
+      console.log(roomId);
+      // socket.emit(getRoom)
+      socket.to(roomId).emit("user-connected", userId);
+    }, 1000)
+    socket.on("message", (message) => {
+      io.to(roomId).emit("createMessage", message, userName);
+    });
+  });
+
+
+  // socket.on("initiateGroupCall", (data) => {
+  //   console.log("Calledddddddddddddddddddddddddddddddd");
+  //   const receiverSocket = data.receiverId;
+  //   if (receiverSocket) {
+  //     // Notify the receiver about the incoming call
+  //     io.to(data.groupId).emit("incomingGroupCallAlert", { callerId: data.callerId });
+  //   }
+  // });
+
+  socket.on("initiateGroupCall", ({ groupId, callerId }) => {
+    console.log("Called The initiate group call");
+    console.log(groupId);
+    console.log(callerId);
+    // Broadcast the call initiation message to all participants in the room
+    io.to(groupId).emit("incomingGroupCallAlert", { callerId });
+  });
+
+});
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -328,4 +276,11 @@ app.use("/api/get", unread_message_route);
 console.log("hello");
 
 //step 5:
-app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
+// app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
+
+server.listen(process.env.PORT || 5000);
+
+
+module.exports ={
+  io:io
+};

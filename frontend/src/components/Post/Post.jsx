@@ -93,7 +93,7 @@ const Post = ({ post, userId }) => {
   }, [id, parsedID, checkAuthentication]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5500");
+    const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
 
     return () => {
@@ -103,7 +103,7 @@ const Post = ({ post, userId }) => {
 
   // This is for the like system (for updating the socket)
   useEffect(() => {
-    const socket = io("http://localhost:5500"); // Update the URL to match your server
+    const socket = io("http://localhost:8000"); // Update the URL to match your server
 
     // Listen for 'updateLikes' event
     socket.on("updateLikes", ({ postId, updatedLikes }) => {
