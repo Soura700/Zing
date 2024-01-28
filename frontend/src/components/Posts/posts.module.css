@@ -21,13 +21,6 @@ background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(244,238,255,1) 
 
 @media (max-width: 440px) {
   .posts {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background: #f4edff;
-    margin: 0;
-    border-radius: 20px 20px 0px 0px;
-    padding-bottom: 20px;
-    padding-top: 20px;
-  }
+    margin-top: 28px;
+  }  
 }

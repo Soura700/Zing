@@ -20,6 +20,8 @@
    overflow: hidden;
    cursor: pointer;
    width: 150px;
+   border: 0px solid red;
+   max-width: 210px;
    /* min-width: 50px; */
  }
 
@@ -496,7 +498,7 @@
      justify-content: space-between;
      position: relative;
      /* border: 1px solid red; */
-     margin-bottom: 50px;
+     margin-bottom: 18px;
    }
 
    .story {

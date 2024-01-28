@@ -183,6 +183,7 @@
   gap: 10px;
   cursor: pointer;
   font-size: 14px;
+  color: rgb(129, 101, 162);
 }
 
 .user .icon {
@@ -269,13 +270,13 @@
 @media (max-width: 427px) {
 
   .post {
-    -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    /* -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
-    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38); */
     border-radius: 20px;
     /* background-color: themed("bg"); */
-    background: rgb(255, 255, 255);
-    color: themed("textColor");
+    /* background: rgb(255, 255, 255);
+    color: themed("textColor"); */
     /* background: red; */
     /* width: 500px; */
     margin-left: 10px;
@@ -327,6 +328,13 @@
     border-radius: 50%;
     border: 1px solid rgb(197, 197, 197);
     padding: 4px;
+  }
+  .info>.item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 12px;
   }
   }  
 

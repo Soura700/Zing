@@ -270,15 +270,15 @@ const Post = ({ post, userId }) => {
             onClick={() => setCommentOpen(!commentOpen)}
           >
             <TextsmsOutlinedIcon />
-            12 Comments
+            {/* 12 Comments */}
           </div>
           <div className={styles.item}>
             <BookmarkBorderIcon />
-            Save
+            {/* Save */}
           </div>
           <div className={styles.item}>
             <ShareOutlinedIcon />
-            Share
+            {/* Share */}
           </div>
         </div>
         {/* {commentOpen && <Comments />} */}

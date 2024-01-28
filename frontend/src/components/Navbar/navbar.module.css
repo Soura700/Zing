@@ -15,7 +15,11 @@
   z-index: 999;
 
 }
-
+.title {
+  font-weight: bold;
+  font-size: 20px;
+  color: #000000;
+}
 .left_navbar {
   display: flex;
   align-items: center;
@@ -551,7 +555,7 @@ if upto 7 adds a vertical scrollbar */
     top: 0;
     background-color: rgb(255, 255, 255);
     z-index: 999;
-    width: 107vw; /*perfect for laptop (1024px) anurag C 27/1/24*/
+    width: 111vw; /*perfect for laptop (1024px) anurag C 27/1/24*/
   }
 }
 
@@ -584,6 +588,6 @@ if upto 7 adds a vertical scrollbar */
     top: 0;
     background-color: rgb(255, 255, 255);
     z-index: 999;
-    width: 110vw; /*perfect for laptop (1024px) anurag C 27/1/24*/
+    width: 141vw; /*perfect for laptop (1024px) anurag C 27/1/24*/
   }
 }  
