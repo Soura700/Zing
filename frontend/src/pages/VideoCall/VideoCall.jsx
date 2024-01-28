@@ -1,7 +1,6 @@
 import React from "react";
 import "./videocall.css";
 
-import img1 from "../../videoAssets/mask-group@2x.png";
 import MicIcon from "@mui/icons-material/Mic";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import CallEndIcon from "@mui/icons-material/CallEnd";

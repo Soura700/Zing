@@ -12,8 +12,9 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.5.0",
+    "browser-image-compression": "^2.0.2",
     "cors": "^2.8.5",
-    "peerjs": "^1.5.1",
+    "peerjs": "^1.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.2",
@@ -22,8 +23,7 @@
     "simple-peer": "^9.11.1",
     "socket.io-client": "^4.7.2",
     "stories-react": "^1.1.2",
-    "web-vitals": "^2.1.4",
-    "zego-express-engine-webrtc": "^2.5.0"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
