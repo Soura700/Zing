@@ -26,6 +26,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./group.css";
+import { useNavigate } from "react-router-dom";
 
 export const Group = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
@@ -48,10 +49,34 @@ export const Group = () => {
   const [groupChat, setGroupChat] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupName, setGroupName] = useState("");
+  const [groupId, setGroupId] = useState(null);
   var msg = "";
-
   //25 Sep 2023 code
   const [Image, setImage] = useState("");
+  const [incomingCall, setIncomingCall] = useState(null);
+  const [url, setUrl] = useState(null);
+
+  const navigate = useNavigate();
+
+  // New Soura Bose
+
+  const [inCall, setInCall] = useState(false);
+
+  useEffect(() => {
+    if (socket) {
+      // Listen for incoming calls
+      socket.on("incomingGroupCallAlert", (data) => {
+        console.log("Hellloooooooooooooooooooo" + data);
+        console.log(data);
+        setIncomingCall(true);
+      });
+      // socket.on("room-joined", (data) => {
+      //   console.log("Hellloooooooooooooooooooo" + data);
+      //   console.log(data);
+      //   setIncomingCall(true);
+      // });
+    }
+  }, [socket]);
 
   // Function to toggle the Create Group modal
   const toggleCreateGroupModal = () => {
@@ -88,9 +113,6 @@ export const Group = () => {
       console.error("Error fetching user name suggestions:", error);
     }
   };
-
-  console.log("Search Resukt.........");
-  console.log(searchResult);
 
   const handleSearchIconClick = () => {
     // Call the searchUserSuggestions function with the current searchValue
@@ -142,12 +164,6 @@ export const Group = () => {
   }, [isLoggedIn]);
 
   const handleDelete = (userToRemove) => {
-    console.log(userToRemove);
-
-    // const updatedUserNames = selectedUserNames.filter(
-    //   (user)=>user !== userToRemove
-    // )
-
     const updatedUserNames = selectedUserNames.filter(
       (user) => user !== userToRemove
     );
@@ -248,19 +264,21 @@ export const Group = () => {
       console.log(response);
       setGroupChat(response.groupName);
 
+      const createConversation = await fetch(
+        "http://localhost:5000/api/conversation/create/group/conversation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-      const createConversation = await fetch("http://localhost:5000/api/conversation/create/group/conversation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          groupName: response.groupName,
-          admin: response.groupAdmin, // Set the logged-in user as the admin
-          memberIds: memberIds, // Add members including the logged-in user
-        }),
-      });
+          body: JSON.stringify({
+            groupName: response.groupName,
+            admin: response.groupAdmin, // Set the logged-in user as the admin
+            memberIds: memberIds, // Add members including the logged-in user
+          }),
+        }
+      );
 
       const conversationResponse = await createConversation.json();
 
@@ -284,7 +302,9 @@ export const Group = () => {
 
   useEffect(() => {
     const fetchGroups = async () => {
-      const res = await fetch("http://localhost:5000/api/group/groups/" + parsedId);
+      const res = await fetch(
+        "http://localhost:5000/api/group/groups/" + parsedId
+      );
       const data = await res.json();
       setGroups(data);
     };
@@ -310,7 +330,6 @@ export const Group = () => {
     }
   };
 
-
   const addUserToGroup = (user) => {
     setSearchResult([]);
     // Add the user to the selectedUsers state
@@ -323,7 +342,6 @@ export const Group = () => {
       setSelectedUserNames([...selectedUserNames, user.username]);
     }
   };
-
 
   const handleGroupClick = async (groupId) => {
     alert("Hello");
@@ -364,27 +382,38 @@ export const Group = () => {
   function chooseImage() {
     document.getElementById("imageInput").click();
   }
-  function SendImage(e) {
+  async function SendImage(e) {
     var inputElement = document.getElementById("imageInput");
     var file = inputElement.files[0];
     console.log("yep");
 
     if (!file.type.match("image.*")) {
-      alert("Please select  image only");
+      alert("Please select an image only");
     } else {
-      var reader = new FileReader();
+      try {
+        const options = {
+          maxSizeMB: 0.1, // Set the desired maximum size of the compressed image in megabytes
+          maxWidthOrHeight: 800, // Set the maximum width or height of the compressed image
+          useWebWorker: true, // Use Web Workers for faster compression (if available)
+        };
+        //
+        // const compressedFile = await imageCompression(file, options);
+        const reader = new FileReader();
 
-      reader.addEventListener(
-        "load",
-        function () {
-          // alert(reader.result);
-          setImage(reader.result);
-        },
-        false
-      );
+        reader.addEventListener(
+          "load",
+          function () {
+            // alert(reader.result);
+            setImage(reader.result);
+          },
+          false
+        );
 
-      if (file) {
-        reader.readAsDataURL(file);
+        // if (compressedFile) {
+        //   reader.readAsDataURL(compressedFile);
+        // }
+      } catch (error) {
+        console.error("Error compressing image:", error);
       }
     }
   }
@@ -396,14 +425,13 @@ export const Group = () => {
     alert("hi");
     setGroupMessages((prev) => [
       ...prev,
-      { message: message, user: { id: parsedId } }, // Ensure each message has a user field
+      { message: Image, user: { id: parsedId } }, // Ensure each message has a user field
     ]);
 
     if (
       groupMessages.length > 0 &&
       groupMessages[messageIndex].conversationId
     ) {
-
       alert("Entered");
 
       const conversationId = groupMessages[messageIndex].conversationId;
@@ -411,7 +439,7 @@ export const Group = () => {
 
       socket?.emit("sendGroupMessage", {
         senderId: parsedId,
-        message: message,
+        message: Image,
         conversationId: conversationId,
         group_id: groupId,
       });
@@ -445,13 +473,39 @@ export const Group = () => {
     }
   }
 
-  function loadChatImg() {
-    var msg = "";
-    if (Image.indexOf("base64") !== -1) {
-      msg = `<img src='${Image}' alt="" />`;
-      return msg;
-    }
-  }
+  const handleMessageClick = () => {
+
+    socket.emit("initiateGroupCall", {
+      groupId: groupId,
+      callerId: parsedId,
+    });
+
+    const url = `http://localhost:5000/${groupId}`;
+    window.location.href = url;
+    // setUrl(url);
+    // socket.on("room-joined", (roomId)=>{
+    //   setUrl(roomId)
+    //   console.log(roomId);
+    //   alert(roomId);
+    // });
+    // socket.emit("initiateGroupCall", {
+    //   groupId: groupId,
+    //   callerId: parsedId,
+    //   link:window.location.href
+    // });
+  };
+
+  // After redirection, capture the URL and store it in state
+  // This code can be placed wherever you handle state management in your application
+  // const handleRedirect = () => {
+  //   const redirectedUrl = window.location.href;
+  //   setUrl({ redirectedUrl });
+  // };
+
+  const handleAcceptButtonClick = () => {
+     const url = `http://localhost:5000/${groupId}`;
+     window.location.href =  url;
+  };
 
   // Render the rest of your component based on the authentication status
   return (
@@ -521,6 +575,7 @@ export const Group = () => {
                       onClick={() => {
                         alert("Hello");
                         handleGroupClick(group._id);
+                        setGroupId(group._id);
                         setGroupName(group.groupName);
                       }}
                     >
@@ -555,20 +610,6 @@ export const Group = () => {
                 }
               })
             }
-
-            {/* <div className="mid-text3">
-              <div className="left3">
-                <img src={image} alt=""></img>
-                <div className="left-info">
-                  <h2>John Doe</h2>
-                  <p className="activity">whats up</p>
-                </div>
-              </div>
-              <div className="right3">
-                <p>9:26 PM</p>
-                <circle>2</circle>
-              </div>
-            </div> */}
 
             <span>All Conversations</span>
 
@@ -605,9 +646,6 @@ export const Group = () => {
 
       {/* main chat section */}
 
-
-
-
       <div className="main-chat-section">
         {/* {groupMessages?.message?.length > 0 ? ( */}
         {groupMessages.length > 0 ? (
@@ -627,7 +665,18 @@ export const Group = () => {
                   </div>
                 </div>
                 <div className="right-part">
-                  <CallRoundedIcon className="right-part-icon" />
+                  {/* {inCall ? (
+                    <GroupVideoCall groupId={groupId} />
+                  ) : (
+                    <CallRoundedIcon
+                      className="right-part-icon"
+                      onClick={handleMessageClick}
+                    />
+                  )} */}
+                  <CallRoundedIcon
+                    className="right-part-icon"
+                    onClick={handleMessageClick}
+                  />
                   <VideocamIcon className="right-part-icon" />
                   <MoreVertIcon
                     className="right-part-icon"
@@ -716,7 +765,6 @@ export const Group = () => {
                     );
                   }
                 })}
-                {/* // Inside your component's render function */}
                 {/* <div className="senders-photo">
                   {Image && Image.startsWith("data:image/") ? (
                     <img src={Image} alt="" />
@@ -776,6 +824,9 @@ export const Group = () => {
                     </button>
                   )}
                 </div>
+                {incomingCall && (
+                  <button onClick={handleAcceptButtonClick}>Accept</button>
+                )}
               </div>
             </>
           ))

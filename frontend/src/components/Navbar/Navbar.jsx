@@ -147,7 +147,8 @@ const Navbar = ({ toggleMenu, user }) => {
   }, [id, parsedID, checkAuthentication]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5500");
+    // const newSocket = io("http://localhost:5500");
+    const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
 
     return () => {
