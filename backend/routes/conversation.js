@@ -211,11 +211,25 @@ router.post("/create/group/conversation", async (req, res) => {
   try {
     const { memberIds } = req.body;
     const { groupName } = req.body;
+    const { group_id } = req.body;
     const newConversation = new GroupConversation({
       groupName:groupName,
+      group_id:group_id,
       members: memberIds,
     });
     const conversation = await newConversation.save();
+    res.status(200).json(conversation);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+router.post("/get_group_id/conversation", async (req, res) => {
+  try {
+    const { group_id } = req.body;
+    const conversation = await GroupConversation.findOne({group_id:group_id});
+    console.log(conversation._id)
     res.status(200).json(conversation);
   } catch (error) {
     console.log(error);

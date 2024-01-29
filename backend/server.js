@@ -159,10 +159,15 @@ io.on("connection", (socket) => {
   socket.on(
     "sendGroupMessage",
     ({ senderId, message, conversationId, group_id }) => {
-      console.log(group_id + message + conversationId + senderId);
-      io.emit("groupMessage", { senderId, message });
+      // console.log(group_id + message + conversationId + senderId);
+      socket.broadcast.to(group_id).emit("groupMessage", { senderId, message });
     }
   );
+
+  socket.on("onlineUsers" , (users)=>{
+    io.emit("showOnlinUsers",users);
+  })
+
   socket.on("disconnect", () => {
     users = users.filter((user) => user.socketId !== socket.id);
     io.emit("getUser", users);
@@ -232,17 +237,6 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
   });
-
-
-  // socket.on("initiateGroupCall", (data) => {
-  //   console.log("Calledddddddddddddddddddddddddddddddd");
-  //   const receiverSocket = data.receiverId;
-  //   if (receiverSocket) {
-  //     // Notify the receiver about the incoming call
-  //     io.to(data.groupId).emit("incomingGroupCallAlert", { callerId: data.callerId });
-  //   }
-  // });
-
   socket.on("initiateGroupCall", ({ groupId, callerId }) => {
     console.log("Called The initiate group call");
     console.log(groupId);
@@ -279,8 +273,6 @@ console.log("hello");
 // app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
 
 server.listen(process.env.PORT || 5000);
-
-
 module.exports ={
   io:io
 };
