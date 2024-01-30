@@ -5,6 +5,8 @@ var router = express();
 const bcrypt = require("bcrypt");
 const connection = require("../connection");
 const session = require("express-session");
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 const { check, validationResult } = require("express-validator");
 
