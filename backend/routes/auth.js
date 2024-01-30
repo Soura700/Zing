@@ -5,6 +5,8 @@ var router = express();
 const bcrypt = require("bcrypt");
 const connection = require("../connection");
 const session = require("express-session");
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 const { check, validationResult } = require("express-validator");
 
@@ -309,9 +311,141 @@ router.get("/search-suggestions", (req, res) => {
   });
 });
 
+
+//30/01/2024 (biggo)
+
+//forgot password
+router.post("/password/forgotpassword", async (req, res) => {
+  try {
+    const { email } = req.body;
+    connection.query(
+      "SELECT * FROM users WHERE email = ?",
+      [email], // Add a comma here to separate the query string from the parameter array
+      (error, results) => {
+        if (error) {
+          return res.status(500).json(error);
+        } else {
+          if (!results[0].email) {
+            return res.status(409).json('User is not registered');
+          } else {
+            const secret = process.env.SECRET_KEY + results[0].user_password;
+            const payload = {
+              email: results[0].email,
+              id: results[0].id,
+            };
+            const token = jwt.sign(payload, secret, { expiresIn: '10m' });
+            const link = `http://localhost:3000/resetpassword/${results[0].id}/${token}`;
+            let transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: 'sourabose66@gmail.com',
+                pass: 'weelmmnyhsodglmw',
+              },
+            });
+
+            let message = {
+              from: 'sourabose66@gmail.com',
+              to: results[0].email,
+              subject: 'Password Reset',
+              text: link,
+            };
+            transporter.sendMail(message, (error, info) => {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log('Email sent: ' + info.response);
+              }
+            });
+            console.log(link);
+            res.send('Password link has been sent...');
+          }
+        }
+      }
+    );
+
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
+//reset password
+router.get('/resetpassword/:id/:token', async (req, res) => {
+  const { id, token } = req.params;
+  connection.query(
+    "SELECT * FROM users WHERE id = ?",
+    [id], // Add a comma here to separate the query string from the parameter array
+    (error, results) => {
+      if (error) {
+        return res.status(500).json(error);
+      } else {
+        if (!results[0].id) {
+          return res.status(409).json('User is not registered');
+        } else {
+          try{
+            const secret = process.env.SECRET_KEY + user.password;
+            const payload = jwt.verify(token, secret);
+            res.redirect("/resetpassword/:id/:token");
+          }catch(error){
+            res.status(500).json(error);
+
+          }
+        }
+      }
+    }
+  )
+});
+
+//update password
+router.post("/resetpassword/:id/:token", async (req, res, next) => {
+  const { id, token } = req.params;
+  console.log(id);
+  console.log(req.body.user_password);
+
+  // Fetch the user from the database based on id
+  connection.query('SELECT * FROM users WHERE id = ?', id, async (error, results, fields) => {
+    if (error) {
+      console.error('Error fetching user from MySQL database: ', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    // Check if the user exists
+    if (results.length === 0) {
+      return res.json({ status: "User does not exist" });
+    }
+
+    const user = results[0];
+    console.log(user);
+    console.log(user.user_password);
+    const secret = process.env.SECRET_KEY + user.user_password;
+
+    try {
+      // Verify the token
+      const payload = jwt.verify(token, secret);
+
+      // Hash the new password
+      const salt = await bcrypt.genSalt(12);
+      const hashedPass = await bcrypt.hash(req.body.user_password, salt);
+
+      console.log("Hashed Password");
+      console.log(hashedPass);
+
+      // Update the user's password in the database
+      connection.query('UPDATE users SET user_password = ? WHERE id = ?', [hashedPass, id], (updateError, updateResults, updateFields) => {
+        if (updateError) {
+          console.error('Error updating password in MySQL database: ', updateError);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        res.json({ msg: "Password Updated" });
+      });
+    } catch (error) {
+      console.error('Error resetting password: ', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+
+
 module.exports = router;
 
-
-
-// Done By bibha
-module.exports = router;
