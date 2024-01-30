@@ -15,10 +15,11 @@
     display: none;
 }
 
-label {
+.create-story-container label {
     cursor: pointer;
     padding: 10px 15px;
-    background-color: #3498db;
+    border: 1px solid black;
+    /* background-color: #3498db; */
     color: #fff;
     border-radius: 5px;
 }

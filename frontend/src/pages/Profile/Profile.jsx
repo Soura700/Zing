@@ -190,7 +190,9 @@ const Profile = () => {
                   message
                 </Link>
               </button> */}
-              <SettingsIcon className={styles.settings} />
+              {/* <SettingsIcon className={styles.settings} /> */} 
+              
+              {/* commented out as of no use currently  */}
               {/* <div className={styles.settings}>
                 <SettingsIcon/>
               </div> */}

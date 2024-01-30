@@ -1,9 +1,12 @@
 /* YourComponent.css */
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,500&family=Open+Sans&family=Poppins:wght@300&family=Quicksand:wght@400;500;600&family=Roboto+Slab:wght@300;400;600&family=Ubuntu:wght@300;400;500&display=swap');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif; 
+    /* global font style */
 }
 
 /* body {

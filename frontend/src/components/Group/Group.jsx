@@ -62,12 +62,17 @@ export const Group = () => {
       });
     }
   }, [socket]);
-
   // Function to toggle the Create Group modal
   const toggleCreateGroupModal = () => {
     setShowCreateGroupModal(!showCreateGroupModal);
   };
-
+  const showFullImg = () => {
+    setShowImg(!showImg);
+  };
+  const closeImg = () => {
+    // Set showImg to false to hide the image
+    setShowImg(false);
+  };
   // Add this function to your React component
   const searchUserSuggestions = async (searchValue) => {
     try {
@@ -576,37 +581,50 @@ export const Group = () => {
               }
             })}
             <span>All Conversations</span>
+<<<<<<< HEAD
             <div className="mid-text4">
               <div className="left4">
                 <img src={image} alt=""></img>
                 <div className="left-info">
                   <h2>John Doe</h2>
                   <p className="activity">whats up</p>
-                </div>
-              </div>
-              <div className="right4">
-                <p>9:26 PM</p>
-                <circle>11</circle>
-              </div>
-            </div>
+=======
 
-            <div className="mid-text5">
-              <div className="left5">
-                <img src={image} alt=""></img>
-                <div className="left-info">
-                  <h2>John Doe</h2>
-                  <p className="activity">typing...</p>
+            <div className="AllUserChat">
+              <div className="mid-text4">
+                <div className="left4">
+                  <img src={image} alt=""></img>
+                  <div className="left-info">
+                    <h2>John Doe</h2>
+                    <p className="activity">whats up</p>
+                  </div>
+                </div>
+                <div className="right4">
+                  <p>9:26 PM</p>
+                  <circle>11</circle>
+>>>>>>> 1d24c968e92cdf8f189800855b5339c66c038787
                 </div>
               </div>
-              <div className="right5">
-                <p>9:26 PM</p>
-                <circle>1</circle>
+
+              <div className="mid-text5">
+                <div className="left5">
+                  <img src={image} alt=""></img>
+                  <div className="left-info">
+                    <h2>John Doe</h2>
+                    <p className="activity">typing...</p>
+                  </div>
+                </div>
+                <div className="right5">
+                  <p>9:26 PM</p>
+                  <circle>1</circle>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       {/* main chat section */}
+<<<<<<< HEAD
       {activeConversations ? (
         <div className="main-chat-section">
           <>
@@ -619,6 +637,26 @@ export const Group = () => {
                   <div className="left-info">
                     <h1>{groupName}</h1>
                     {/* Add the user names of the group  */}
+=======
+
+      <div className="main-chat-section">
+        {/* {groupMessages?.message?.length > 0 ? ( */}
+        {groupMessages.length > 0 ? (
+          (console.log(groupMessages),
+          (
+            <>
+              <div className="info">
+                <div className="left-part">
+                  <div className="user-pic">
+                    <img src={image} alt=""></img>
+                  </div>
+                  <div className="user-info">
+                    <div className="left-info">
+                      <h1>{groupName}</h1>
+                      <p className="otherMembers">You and 2 Others</p>
+                      {/* Add the user names of the group  */}
+                    </div>
+>>>>>>> 1d24c968e92cdf8f189800855b5339c66c038787
                   </div>
                 </div>
               </div>
@@ -687,10 +725,71 @@ export const Group = () => {
                         </div>
                       </div>
                     </div>
+<<<<<<< HEAD
                   </div>
                 ) : (
                   <div className="RightPopUpDefault"></div>
                 )}
+=======
+                  ) : (
+                    <div className="RightPopUpDefault"></div>
+                  )}
+                </div>
+              </div>
+              <div className="inner-container">
+                {groupMessages.map(({ message, user: { id } = {} }, index) => {
+                  console.log(groupMessages);
+                  // Check if the message starts with "data:image/"
+                  if (message.startsWith("data:image/")) {
+                    // If it's an image, render it as an img element
+                    return (
+                      <div
+                        className={
+                          id === parsedId ? "outgoing-msg" : "incoming-msg"
+                        }
+                        key={index}
+                      >
+                        <img
+                          src={message}
+                          alt="Sent Image"
+                          className="incomingMsgImg"
+                          onClick={showFullImg}
+                        />
+                        {showImg ? (
+                          <div className="chatImgShow">
+                            <img src={message} alt="Sent Image" />
+                              <CloseIcon className="closeIcon" onClick={closeImg}/>
+                          </div>
+                        ) : (
+                          <div className="chatImgClose"></div>
+                        )}
+                      </div>
+                    );
+                  } else {
+                    // If it's not an image, render it as a text message
+                    return (
+                      <div
+                        className={
+                          id === parsedId ? "outgoing-msg" : "incoming-msg"
+                        }
+                        key={index}
+                      >
+                        {message}
+                      </div>
+                    );
+                  }
+                })}
+                {/* <div className="senders-photo">
+                  {Image && Image.startsWith("data:image/") ? (
+                    <img src={Image} alt="" />
+                  ) : null}
+                </div>
+                <div className="recievers-photo">
+                  {Image && Image.startsWith("data:image/") ? (
+                    <img src={Image} alt="" />
+                  ) : null}
+                </div> */}
+>>>>>>> 1d24c968e92cdf8f189800855b5339c66c038787
               </div>
             </div>
             <div className="inner-container">
@@ -802,9 +901,8 @@ export const Group = () => {
                 onChange={(e) => setGroupValue(e.target.value)}
               />
             </div>
-
+            <h3>Add members</h3>
             <div className="add-members">
-              <h3>Add members</h3>
               <input
                 type="text"
                 name="search-bar"
@@ -812,23 +910,46 @@ export const Group = () => {
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search"
               />
+<<<<<<< HEAD
+=======
+              <div className="search-btn">
+                <SearchIcon
+                  className="search-icon"
+                  onClick={handleSearchIconClick}
+                />
+              </div>
+>>>>>>> 1d24c968e92cdf8f189800855b5339c66c038787
             </div>
-            <div className="search-btn">
+            {/* <div className="search-btn">
               <SearchIcon
                 className="search-icon"
                 onClick={handleSearchIconClick}
               />
+<<<<<<< HEAD
             </div>
+=======
+            </div> */}
+
+            {/* <div className="membersLabel">
+              <div className="addMembersLabel">
+                <p>Messi</p>
+                <CloseIcon fontSize="10px" className="membersLabel" />
+              </div>
+            </div> */}
+
+>>>>>>> 1d24c968e92cdf8f189800855b5339c66c038787
             <div className="membersLabel">
               {selectedUserNames.length > 0 ? (
                 <div className="addMembersLabel">
                   {/* Display the selected user names here */}
                   {selectedUserNames.map((name, index) => (
                     <>
-                      <p key={index}>{name}</p>
+                      <p key={index} className="membersLabelName">
+                        {name}
+                      </p>
                       <CloseIcon
                         fontSize="10px"
-                        className="membersLabel"
+                        className="membersLabelCloseIcon"
                         onClick={() => handleDelete(name)}
                       />
                     </>

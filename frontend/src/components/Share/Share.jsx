@@ -6,7 +6,7 @@ import {
   } from "@mui/icons-material";
   import React, { useContext } from "react";
   import "./share.css";
-
+  import SendIcon from '@mui/icons-material/Send';
   import { useAuth } from "../../Contexts/authContext";
 
 
@@ -195,7 +195,7 @@ import {
              <div className="shareIcon">
           {/* ... (Your existing JSX) */}
           <button className="shareButton" onClick={handlePost}>
-            Post
+            <SendIcon className="shareButtonIcon"/>
           </button>
         </div>
           </div>
@@ -211,12 +211,14 @@ import {
               <div className="shareOption">
                 <VideoCameraFront
                   className="shareIcon"
-                  style={{ color: "#bb0000f2" }}
+                  // style={{ color: "#bb0000f2" }}
                 />
                 <span className="shareOptionText">Live Video</span>
               </div>
               <label htmlFor="file" className="shareOption">
-                <PermMedia className="shareIcon" style={{ color: "#2e0196f1" }} />
+                <PermMedia className="shareIcon" 
+                // style={{ color: "#2e0196f1" }} 
+                />
                 <span className="shareOptionText">Media</span>
                 <input
                   type="file"
@@ -235,9 +237,9 @@ import {
               >
                 <EmojiEmotions
                   className="shareIcon"
-                  style={{ color: "#bfc600ec" }}
+                  // style={{ color: "#bfc600ec" }}
                 />
-                <span className="shareOptionText">Feelings/Activity</span>
+                <span className="shareOptionText">Activity</span>
               </div>
             </div>
           </div>

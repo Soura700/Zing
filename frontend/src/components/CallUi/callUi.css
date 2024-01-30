@@ -1,0 +1,48 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.call-ui {
+    background: red;
+}
+
+.CallContainer2 {
+    border: 1px solid rgb(208, 208, 208);
+    margin: 15px;
+    border-radius: 20px;
+}
+.CallContainer2 .caller-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+.CallContainer2 .caller-info span {
+    font-size: 25px;
+    font-weight: 200;
+    color: rgb(59, 59, 59);
+}
+.CallContainer3 {
+    border: 0px solid rgb(0, 208, 255);
+    width: 350px;
+}
+.CallContainer4 {
+    border: 0px solid rgb(24, 72, 83);
+    width: 300px;
+    height: 100px;
+}
+.box {
+    color: #4c3181;
+    font-size: 30px;
+    font-weight: 200;
+}
+.CallContainer4 button {
+    width: fit-content;
+    background: #8360c9;
+    color: white;
+    border-radius: 8px;
+    border: 0px;
+}
+.CallBtn1 {
+    width: fit-content;
+}

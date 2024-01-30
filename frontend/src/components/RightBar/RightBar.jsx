@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styles from "./rightbar.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../../Contexts/authContext";
+import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Link } from "react-router-dom";
 import { io } from "socket.io-client";
 
@@ -333,13 +335,13 @@ const RightBar = () => {
                     onClick={() => handleFollow(senderName, user[0].username)}
                     className={styles.btn1}
                   >
-                    Follow
+                    <DoneRoundedIcon className={styles.btn1Icon}/>
                   </button>
                   <button
                     onClick={() => handleDismiss(user[0].username, user[0].id)}
                     className={styles.btn2}
                   >
-                    Dismiss
+                    <CloseRoundedIcon className={styles.btn2Icon}/>
                   </button>
                 </div>
               </div>
