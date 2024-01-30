@@ -281,5 +281,37 @@ router.post("/:userId", (req, res) => {
   }
 });
 
+
+
+// Search suggestion API endpoint
+router.get("/search-suggestions", (req, res) => {
+  // Extract the search query from the request query parameters
+  const { query } = req.query;
+
+  // SQL query to fetch matching usernames from the database
+  const searchQuery = `
+    SELECT username FROM users
+    WHERE username LIKE CONCAT('%', ?, '%')
+    LIMIT 5;
+  `;
+
+  // Execute the SQL query
+  connection.query(searchQuery, [query], (error, results) => {
+    if (error) {
+      // Handle database error
+      console.error("Error executing SQL query:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      // Extract usernames from the query results
+      const usernames = results.map((result) => result.username);
+      res.status(200).json(usernames);
+    }
+  });
+});
+
+module.exports = router;
+
+
+
 // Done By bibha
 module.exports = router;

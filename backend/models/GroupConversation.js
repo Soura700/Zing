@@ -5,6 +5,10 @@ const GroupSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    group_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Group'
+    },
     members : {
         type : Array,
         required : true,

@@ -159,10 +159,15 @@ io.on("connection", (socket) => {
   socket.on(
     "sendGroupMessage",
     ({ senderId, message, conversationId, group_id }) => {
-      console.log(group_id + message + conversationId + senderId);
-      io.emit("groupMessage", { senderId, message });
+      socket.to(group_id).emit("groupMessage", { senderId, message });
     }
   );
+
+
+  socket.on("onlineUsers" , (users)=>{
+    io.emit("showOnlinUsers",users);
+  })
+
   socket.on("disconnect", () => {
     users = users.filter((user) => user.socketId !== socket.id);
     io.emit("getUser", users);
@@ -170,17 +175,13 @@ io.on("connection", (socket) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
 
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
+    // console.log("User disconnected:", socket.id);
   });
 
   socket.on("callUser", (data) => {
-    console.log("Calling User:", data.userToCall);
-    // const targetSocket = io.sockets.sockets.get(data.userToCall);
     const targetSocket = data.userToCall;
-
     if (targetSocket) {
       io.emit("incomingCall", {
         signal: data.signalData,
@@ -193,10 +194,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("answerCall", (data) => {
-    console.log("Answering Call to:", data.to);
-    // const targetSocket = io.sockets.sockets.get(data.to);
+    // console.log("Answering Call to:", data.to);
     const targetSocket = data.to;
-
     if (targetSocket) {
       io.emit("callAccepted", {
         signal: data.signal, // Wrap the signal in an object
@@ -208,7 +207,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("initiateCall", (data) => {
-    console.log("Calledddddddddddddddddddddddddddddddd");
     const receiverSocket = data.receiverId;
     if (receiverSocket) {
       // Notify the receiver about the incoming call
@@ -218,37 +216,19 @@ io.on("connection", (socket) => {
 });
 
 io.on("connection", (socket) => {
-
-
   socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
     setTimeout(()=>{
-      console.log("Rooom ID")
-      console.log(roomId);
-      // socket.emit(getRoom)
       socket.to(roomId).emit("user-connected", userId);
     }, 1000)
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
   });
-
-
-  // socket.on("initiateGroupCall", (data) => {
-  //   console.log("Calledddddddddddddddddddddddddddddddd");
-  //   const receiverSocket = data.receiverId;
-  //   if (receiverSocket) {
-  //     // Notify the receiver about the incoming call
-  //     io.to(data.groupId).emit("incomingGroupCallAlert", { callerId: data.callerId });
-  //   }
-  // });
-
   socket.on("initiateGroupCall", ({ groupId, callerId }) => {
-    console.log("Called The initiate group call");
-    console.log(groupId);
-    console.log(callerId);
     // Broadcast the call initiation message to all participants in the room
-    io.to(groupId).emit("incomingGroupCallAlert", { callerId });
+    // io.to(groupId).emit("incomingGroupCallAlert", { callerId });
+    socket.to(groupId).emit("incomingGroupCallAlert", { callerId });
   });
 
 });
@@ -279,8 +259,6 @@ console.log("hello");
 // app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
 
 server.listen(process.env.PORT || 5000);
-
-
 module.exports ={
   io:io
 };

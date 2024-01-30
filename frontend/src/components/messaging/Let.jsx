@@ -19,7 +19,7 @@ import IncomingCallUi from "../IncomingCallUi/IncomingCallUi";
 import ChatUI from "../Chat-main/ChatUi";
 import ChatUI2 from "../Chat-main/Chat-Ui2";
 
-export const Let= () => {
+export const Let = () => {
   const location = useLocation();
   var { userId, userName, clicked } = location.state || {};
   const parsedUserId = parseInt(userId);
@@ -41,6 +41,7 @@ export const Let= () => {
   const [showGroup, setShowGroup] = useState(false);
   const parsedId = parseInt(id);
   const [showMessageBox, setShowMessageBox] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   //this edited1
   const [showMenu, setShowMenu] = useState(false);
   const showSidebarMenu = () => {
@@ -49,7 +50,6 @@ export const Let= () => {
   const showAllGroups = () => {
     setShowGroup(!showGroup);
   };
-
 
   useEffect(() => {
     const socket = io("http://localhost:5500");
@@ -146,8 +146,6 @@ export const Let= () => {
 
   // ... (rest of your component code)
 
-
-
   const styles = {
     "*": {
       margin: 0,
@@ -172,6 +170,7 @@ export const Let= () => {
       socket.on("getUser", (activeUsers) => {
         console.log("Active Users", activeUsers);
         setActiveUsers(activeUsers);
+        socket.emit("onlineUsers", activeUsers);
       });
       socket.on("getMessage", (data) => {
         console.log(data);
@@ -182,11 +181,17 @@ export const Let= () => {
       });
     }
   }, [socket, parsedId, isLoggedIn]);
+
   const isUserOnline = (userId) => {
-    // return activeUsers.find((user)=>user.userId ===  userId );
     return activeUsers.some((user) => user.userId === userId);
   };
+
+  console.log(activeUsers);
+  // socket.emit("onlineUsers", activeUsers);
+
+  console.log("Online Users");
   console.log(isUserOnline());
+
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {

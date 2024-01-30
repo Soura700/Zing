@@ -1,28 +1,26 @@
-.posts{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background: #f4edff;
-    margin: 0;
-    border-radius: 20px 20px 0px 0px;
-    padding-bottom: 20px;
-    /* background: rgb(213, 213, 213);
-      background: linear-gradient(90deg, rgba(213, 213, 213, 1) 0%, rgba(230, 230, 230, 1) 35%, rgba(242, 242, 242, 1) 71%, rgba(255, 255, 255, 1) 100%); */
-      /* background: rgb(255, 255, 255);
-        background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgb(241, 241, 241) 42%, rgb(239, 239, 239), rgba(255, 255, 255, 1) 100%); */ 
-        /* background: rgb(255, 255, 255);
-          background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(228, 228, 228, 1) 42%, rgba(223, 223, 223, 1) 60%, rgba(255, 255, 255, 1) 100%); */
-  }
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #f4edff;
 
-  @media (max-width: 440px) {
-    .posts{
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      background: #f4edff;
-      margin: 0;
-      border-radius: 20px 20px 0px 0px;
-      padding-bottom: 20px;
-      padding-top: 20px;
-    }
-  }
+  /* background: linear-gradient(135deg, #f5eeff 25%, transparent 25%) -71px 0/ 142px 142px, linear-gradient(225deg, rgba(245,238,255,0.5) 25%, transparent 25%) -71px 0/ 142px 142px, linear-gradient(315deg, #f5eeff 25%, transparent 25%) 0 0/ 142px 142px, linear-gradient(45deg, rgba(245,238,255,0.5) 25%, #ffffff 25%) 0 0/ 142px 142px;
+  background-color: #ffffff; */
+  background: rgb(255,255,255);
+background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(244,238,255,1) 42%, rgba(232,220,255,1) 72%, rgba(227,213,255,1) 89%);
+  margin: 0;
+  border-radius: 0px 0px 0px 0px;
+  padding-bottom: 20px;
+  /* background: rgb(213, 213, 213);
+      background: linear-gradient(90deg, rgba(213, 213, 213, 1) 0%, rgba(230, 230, 230, 1) 35%, rgba(242, 242, 242, 1) 71%, rgba(255, 255, 255, 1) 100%); */
+  /* background: rgb(255, 255, 255);
+        background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgb(241, 241, 241) 42%, rgb(239, 239, 239), rgba(255, 255, 255, 1) 100%); */
+  /* background: rgb(255, 255, 255);
+          background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(228, 228, 228, 1) 42%, rgba(223, 223, 223, 1) 60%, rgba(255, 255, 255, 1) 100%); */
+}
+
+@media (max-width: 440px) {
+  .posts {
+    margin-top: 28px;
+  }  
+}
