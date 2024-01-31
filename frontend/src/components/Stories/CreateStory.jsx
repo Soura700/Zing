@@ -1,24 +1,22 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate from React Router Navigate
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../../Config";
+import { v4 } from "uuid";
+
 import "./CreateStory.css";
 
 const CreateStory = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // Initialize navigate from React Router Navigate
-
-  var { userId, userName, clicked } = location.state || {};
-
-  console.log(userId + userName);
-
-  const parsedId = parseInt(userId);
+  var { userId, userName } = location.state || {};
 
   const [formData, setFormData] = useState({
-    userId: userId || "", // Use the passed userId, if available
-    userName: userName || "", // Use the passed userName, if available
-    media: "", // 'photo' or 'video'
-    mediaFile: null,
+    userId: userId || "",
+    userName: userName || "",
+    media: "",
+    downloadURL: "",
   });
 
   const [imagePreview, setImagePreview] = useState(null);
@@ -31,12 +29,6 @@ const CreateStory = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      mediaFile: e.target.files[0],
-    });
-
-    // Preview the uploaded image
     const reader = new FileReader();
     reader.onload = () => {
       setImagePreview(reader.result);
@@ -47,33 +39,42 @@ const CreateStory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { userId, userName, media, mediaFile } = formData;
-
-    const storyData = new FormData();
-    storyData.append("userId", userId);
-    storyData.append("userName", userName);
-    storyData.append("media", media);
-    storyData.append("mediaFile", mediaFile);
+    const { userId, userName, media } = formData;
 
     try {
+      // Upload image to Firebase Storage
+      const imgRef = ref(storage, `files/${v4()}`);
+      await uploadBytes(imgRef, e.target.mediaFile.files[0]);
+
+      // Get the download URL
+      const downloadURL = await getDownloadURL(imgRef);
+
+      // Update formData with the downloadURL
+      setFormData({
+        ...formData,
+        downloadURL,
+      });
+
+      // Save user data to MongoDB (replace this with your actual MongoDB logic)
       const response = await fetch(
         "http://localhost:5000/api/stories/create_story",
         {
           method: "POST",
-          body: storyData,
-          // body: JSON.stringify({
-          //     storyData,
-          //     userId:parsedId,
-          //     userName: userName,
-          //   }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            userName,
+            media,
+            downloadURL, // Include downloadURL in the request
+          }),
         }
       );
 
       if (response.ok) {
         console.log("Story uploaded successfully");
-        // Redirect to the home page using navigate
         navigate("/");
-        // Reload the page
         window.location.reload();
       } else {
         console.error("Failed to upload story");
