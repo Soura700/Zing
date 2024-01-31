@@ -237,5 +237,72 @@ router.post("/get_group_id/conversation", async (req, res) => {
   }
 });
 
+// router.post("/block",async(req,res)=>{
+//   const {conversationId,userIdToBlock} = req.body;
+//   try{
+
+//   const conversation = await  Conversations.findById(conversationId);
+
+//   if(!conversation){
+//     return res.status(400).json({error:'Conversation Not Found'});
+//   }
+//   if(conversation.blockedUser.includes(userIdToBlock)){
+//     return res.status(400).json({error:'User Already Blocked'});
+//   }
+
+//   conversation.blockedUser.push(userIdToBlock);
+//   await conversation.save();
+
+//   return res.status(200).json({message:'User Blocked Successfully'});
+//   }catch(error){
+//     console.log("Error in blocking user : ", error);
+//     return res.status(500).json(error);
+//   }
+// })
+
+// API endpoint to block a user
+router.post('/block', async (req, res) => {
+  try {
+      // Extract data from request body
+      const { conversationId, userIdToBlock } = req.body;
+
+      // Find the conversation document by its ID
+      const conversation = await Conversations.findById(conversationId);
+
+      if (!conversation) {
+          return res.status(404).json({ error: 'Conversation not found' });
+      }
+
+      // Check if blockedUsers array exists in the conversation document
+      if (!conversation.blockedUser) {
+          conversation.blockedUser = []; // Initialize the blockedUsers array if it doesn't exist
+      }
+
+      // Check if the user is already blocked
+      let isUserBlocked = false;
+      for (const blockedUser of conversation.blockedUser) {
+          if (blockedUser === userIdToBlock) {
+              isUserBlocked = true;
+              break;
+          }
+      }
+
+      if (isUserBlocked) {
+          return res.status(400).json({ error: 'User already blocked' });
+      }
+
+      // Add the user to the blockedUsers array
+      conversation.blockedUser.push(userIdToBlock);
+
+      // Save the updated conversation document
+      await conversation.save();
+
+      return res.status(200).json({ message: 'User blocked successfully' });
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 module.exports = router;
