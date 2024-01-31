@@ -46,11 +46,29 @@ const Story = () => {
     };
   }, []);
 
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("new_story", (story) => {
+  //     const storyArray = [story];
+  //       setFriendStories((prevStories) => [...prevStories, storyArray]);
+  //     });
+  //   }
+  //   return () => {
+  //     if (socket) {
+  //       socket.off("new_story");
+  //     }
+  //   };
+  // }, [socket]);
+
   useEffect(() => {
     if (socket) {
       socket.on("new_story", (story) => {
-      const storyArray = [story];
-        setFriendStories((prevStories) => [...prevStories, storyArray]);
+        const storyArray = [story];
+        setFriendStories((prevStories) => {
+          const newStories = [...prevStories]; // Create a copy of the previous stories array
+          newStories.unshift(storyArray); // Add the new story array at the beginning
+          return newStories;
+        });
       });
     }
     return () => {
@@ -127,13 +145,6 @@ const Story = () => {
               "http://localhost:5000/api/stories/getStories/" + friend.friendId
             );
             const stories = storiesRes.data;
-
-            // if (socket) {
-            //   stories.forEach((story) => {
-            //     socket.emit("new_story", story);
-            //   });
-            // }
-
             return { friendDetails, stories: stories.stories };
           })
         );
@@ -161,7 +172,6 @@ const Story = () => {
         .catch((error) => console.error("Error during data fetching:", error));
     }
   }, [id, parsedID, checkAuthentication]);
-
 
   const uniqueImageUrls = new Set();
 
@@ -236,6 +246,23 @@ const Story = () => {
     });
   };
 
+  const getTimeDifferenceString = (timestamp) => {
+    const currentDate = new Date();
+    const timestampDate = new Date(timestamp);
+    const timeDifferenceMilliseconds = currentDate - timestampDate;
+    const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
+    const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
+    const timeDifferenceHours = Math.floor(timeDifferenceMinutes / 60);
+  
+    if (timeDifferenceSeconds < 60) {
+      return `${timeDifferenceSeconds} seconds ago`;
+    } else if (timeDifferenceMinutes < 60) {
+      return `${timeDifferenceMinutes} minutes ago`;
+    } else {
+      return `${timeDifferenceHours} hours ago`;
+    }
+  };
+
   return (
     <div className={styles.stories}>
       <div className={styles.story} onClick={() => showFullStory(null)}>
@@ -249,8 +276,9 @@ const Story = () => {
                     alt=""
                   />
                   <div className={styles.userHeading}>
-                    <h1>{selectedStory.name}</h1>
-                    <p>10 minutes ago</p>
+                    <h1>{selectedStory.userName}</h1>
+                    {/* <p>10 minutes ago</p> */}
+                    <p>{getTimeDifferenceString(selectedStory.createdAt)}</p>
                   </div>
                 </div>
                 <div className={styles.userStoryContent}>
