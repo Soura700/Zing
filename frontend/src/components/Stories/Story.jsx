@@ -39,13 +39,26 @@ const Story = () => {
   const [friendDetailIndex, setFriendDetailIndex] = useState(0);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5500");
+    const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
-
     return () => {
       newSocket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("new_story", (story) => {
+      const storyArray = [story];
+        setFriendStories((prevStories) => [...prevStories, storyArray]);
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off("new_story");
+      }
+    };
+  }, [socket]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -114,6 +127,13 @@ const Story = () => {
               "http://localhost:5000/api/stories/getStories/" + friend.friendId
             );
             const stories = storiesRes.data;
+
+            // if (socket) {
+            //   stories.forEach((story) => {
+            //     socket.emit("new_story", story);
+            //   });
+            // }
+
             return { friendDetails, stories: stories.stories };
           })
         );
@@ -142,46 +162,37 @@ const Story = () => {
     }
   }, [id, parsedID, checkAuthentication]);
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:5500");
-    setSocket(newSocket);
-
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
 
   const uniqueImageUrls = new Set();
 
- const showFullStory = async (userId, friendIndex = 0) => {
-   setShowStory(!showStory);
-   try {
-     // Fetch stories for the specified user
-     const response = await axios.get(
-       `http://localhost:5000/api/stories/getStories/${userId}`
-     );
-     const userStories = response.data.stories;
-     const user = await axios.post(`http://localhost:5000/api/auth/${userId}`);
-     const userDeatil = user.data;
-     console.log("User Details");
-     console.log(userDeatil[0].profileImg);
-     setSelectedFriendStoryImage(userDeatil[0].profileImg);
-     if (userStories.length > 0) {
-       setSelectedFriendStories(userStories);
-       setSelectedStoryIndex(0);
-       setSelectedStory(userStories[0]); // Set the selected story to the first story
-     } else {
-       setSelectedFriendStories([]);
-       setSelectedStory(null);
-     }
-     setFriendDetailIndex(friendIndex); // Set the initial friend detail index
-   } catch (error) {
-     console.error("Error fetching user stories:", error);
-     setSelectedFriendStories([]);
-     setSelectedStory(null);
-   }
- };
-
+  const showFullStory = async (userId, friendIndex = 0) => {
+    setShowStory(!showStory);
+    try {
+      // Fetch stories for the specified user
+      const response = await axios.get(
+        `http://localhost:5000/api/stories/getStories/${userId}`
+      );
+      const userStories = response.data.stories;
+      const user = await axios.post(`http://localhost:5000/api/auth/${userId}`);
+      const userDeatil = user.data;
+      console.log("User Details");
+      console.log(userDeatil[0].profileImg);
+      setSelectedFriendStoryImage(userDeatil[0].profileImg);
+      if (userStories.length > 0) {
+        setSelectedFriendStories(userStories);
+        setSelectedStoryIndex(0);
+        setSelectedStory(userStories[0]); // Set the selected story to the first story
+      } else {
+        setSelectedFriendStories([]);
+        setSelectedStory(null);
+      }
+      setFriendDetailIndex(friendIndex); // Set the initial friend detail index
+    } catch (error) {
+      console.error("Error fetching user stories:", error);
+      setSelectedFriendStories([]);
+      setSelectedStory(null);
+    }
+  };
 
   // Update the navigateToNextStory function to switch between user friends' stories
   const navigateToNextStory = (e) => {
