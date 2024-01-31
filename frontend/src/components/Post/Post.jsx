@@ -40,16 +40,10 @@ const Post = ({ post, userId }) => {
     : post.image && post.image !== "[]"
     ? JSON.parse(post.image)
     : [];
-
-  // console.log(images);
-
-  // Parse the JSON string into an array
-  // const images = JSON.parse(post.image);
-
-  // console.log(typeof images);
-
-  // const imageUrls = images.map((image) => `http://localhost:5000/uploads/${image}`);
   const liked = false;
+
+  console.log("Posts");
+  console.log(post);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,8 +56,6 @@ const Post = ({ post, userId }) => {
           },
         });
         const userDetails = await userRes.json();
-        // setUsername(userDetails[0].username);
-        // setUserPhoto(userDetails[0].profileImg);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -71,15 +63,10 @@ const Post = ({ post, userId }) => {
 
     const fetchFriendRequests = async () => {
       try {
-        console.log(parsedID);
         const res = await fetch(
           "http://localhost:5000/api/friend_request/getFriends/" + parsedID
         );
         const data = await res.json();
-        // console.log(data);
-        // console.log(typeof data);
-
-        // setFriendRequests(data);
       } catch (error) {
         console.error("Error fetching friend requests:", error);
       }
@@ -142,7 +129,6 @@ const Post = ({ post, userId }) => {
         // Handle error appropriately, e.g., show an error message to the user
       }
     } catch (error) {
-      console.log(error);
       console.error("Error updating likes:", error);
     }
   };
@@ -175,6 +161,27 @@ const Post = ({ post, userId }) => {
     }
   };
 
+  const getTimeDifferenceString = (timestamp) => {
+    const currentDate = new Date();
+    const timestampDate = new Date(timestamp);
+    const timeDifferenceMilliseconds = currentDate - timestampDate;
+    const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
+    const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
+    const timeDifferenceHours = Math.floor(timeDifferenceMinutes / 60);
+    const timeDifferenceDays = Math.floor(timeDifferenceHours / 24);
+
+  
+    if (timeDifferenceSeconds < 60) {
+      return `${timeDifferenceSeconds} seconds ago`;
+    } else if (timeDifferenceMinutes < 60) {
+      return `${timeDifferenceMinutes} minutes ago`;
+    }else if (timeDifferenceHours < 24) {
+      return `${timeDifferenceHours} hours ago`;
+    }else{
+      return `${timeDifferenceDays} days ago`;
+    }
+  };
+
   return (
     <div className={styles.post}>
       <div className={styles.container}>
@@ -188,7 +195,7 @@ const Post = ({ post, userId }) => {
               >
                 <span className={styles.name}>{post.name}</span>
               </Link>
-              <span className={styles.date}>1 min ago</span>
+              <span className={styles.date}>{getTimeDifferenceString(post.createdAt)}</span>
             </div>
           </div>
           {userId === post.userId && (
@@ -209,6 +216,7 @@ const Post = ({ post, userId }) => {
           )}
         </div>
         <div className={styles.content}>
+        <h3>{post.username}</h3>
           <p>{post.description}</p>
           {/* Render images */}
           {/* <div className={(images && images.length && images.length <= 2) ? styles.gridTwo : styles.gridMore}> */}
