@@ -175,8 +175,6 @@ const Story = () => {
       const userStories = response.data.stories;
       const user = await axios.post(`http://localhost:5000/api/auth/${userId}`);
       const userDeatil = user.data;
-      console.log("User Details");
-      console.log(userDeatil[0].profileImg);
       setSelectedFriendStoryImage(userDeatil[0].profileImg);
       if (userStories.length > 0) {
         setSelectedFriendStories(userStories);
