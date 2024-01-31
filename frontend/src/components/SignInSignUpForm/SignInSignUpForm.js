@@ -4,6 +4,7 @@ import img2 from "../../assets/img1svg.svg";
 import "./sign.css";
 import "./sign.css";
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import {  useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -199,6 +200,9 @@ const SignInSignUpForm = () => {
             </div>
 
             <input type="submit" value="Login" class="btn solid" />
+            <p>
+              <Link to='/forgotpassword'>Forgot Password?</Link>
+            </p>
             <p class="social-text">Or Sign in with social platforms</p>
             <div class="social-media">
               <a href="#" class="social-icon">

@@ -16,10 +16,13 @@
 
  .story {
    flex: 1;
-   border-radius: 10px;
+   border-radius: 20px;
    overflow: hidden;
    cursor: pointer;
-   min-width: 120px;
+   width: 150px;
+   border: 0px solid red;
+   max-width: 210px;
+   /* min-width: 50px; */
  }
 
  /* .story .showFullStory {
@@ -241,7 +244,7 @@
 
      .story {
        flex: none;
-       width: 20px;
+       width: 120px;
        height: 160px;
        /* border-radius: 50%; */
      }
@@ -495,12 +498,12 @@
      justify-content: space-between;
      position: relative;
      /* border: 1px solid red; */
-     margin-bottom: 50px;
+     margin-bottom: 18px;
    }
 
    .story {
      flex: none;
-     width: 20px;
+     width: 120px;
      height: 160px;
      /* border-radius: 50%; */
    }

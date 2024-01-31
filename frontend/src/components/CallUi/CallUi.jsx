@@ -1,4 +1,5 @@
 import React, { useState , useEffect } from "react";
+import "./callUi.css";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -208,18 +209,21 @@ const CallUI = ({ caller, onAccept, onReject, onEndCall, isCalling }) => {
   return (
     <div className="call-ui">
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          <div className="caller-info">
-            <Avatar alt={caller.name} src={caller.avatar} />
-            <span>{caller.name}</span>
-          </div>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {isCalling ? "Call in progress..." : "Incoming call..."}
+
+      <DialogContent className="CallContainer3">
+          <DialogContentText className="box">
+            {isCalling ? "Call in progress..." : "Incoming call"}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
+
+        <DialogTitle className="CallContainer2">
+          <div className="caller-info">
+            <Avatar alt={caller.name} src={caller.avatar} />
+            <span>{caller.name} John doe</span>
+          </div>
+        </DialogTitle>
+
+        <DialogActions className="CallContainer4">
           {isCalling ? (
             <>
               <Button
@@ -227,6 +231,7 @@ const CallUI = ({ caller, onAccept, onReject, onEndCall, isCalling }) => {
                 startIcon={<PhoneDisabledIcon />}
                 color="primary"
                 variant="outlined"
+                className="CallBtn1"
               >
                 End Call
               </Button>

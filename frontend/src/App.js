@@ -10,6 +10,8 @@ import LeftBar from "./components/LeftBar/LeftBar";
 import RightBar from "./components/RightBar/RightBar";
 import { useState } from "react";
 import SignInSignUpForm from "./components/SignInSignUpForm/SignInSignUpForm";
+import ForgotPasswordForm from "./components/SignInSignUpForm/ForgotPasswordForm.js";
+import ResetPasswordForm from "./components/SignInSignUpForm/ResetPasswordForm.js";
 import { AuthProvider } from "./Contexts/authContext";
 import Posts from "./components/Posts/Posts.jsx";
 import { ToastContainer } from "react-toastify";
@@ -83,7 +85,14 @@ function App() {
       path: "/login",
       element: <SignInSignUpForm />,
     },
-
+    {
+      path: "/forgotpassword",
+      element: <ForgotPasswordForm />,
+    },
+    {
+      path: "/resetpassword/:id/:token",
+      element: <ResetPasswordForm/>,
+    },
     {
       path: "/profile_setting/:userId",
       element: <Personalization />,
@@ -93,6 +102,10 @@ function App() {
       path: "/message",
       element: <Let />,
     },
+    // {
+    //   path: "/message",
+    //   element: <Leftbar2 />,
+    // },
 
     {
       path: "/groupmessage",

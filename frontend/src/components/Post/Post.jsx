@@ -5,9 +5,9 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { Link } from "react-router-dom";
 // import Comments from "../comments/Comments";
@@ -17,8 +17,6 @@ import { useAuth } from "../../Contexts/authContext";
 
 const Post = ({ post, userId }) => {
   console.log(post);
-
-  
 
   if (post.image) {
     console.log("Entered");
@@ -34,19 +32,16 @@ const Post = ({ post, userId }) => {
   const [toggle, setToggle] = useState(false);
   const parsedID = parseInt(id);
   const [showImg, setShowImg] = useState(false);
-  
 
   // const images = post.image === null ? JSON.parse(post.image) : [];
 
   const images = Array.isArray(post.image)
-  ? post.image
-  : post.image && post.image !== '[]'
-  ? JSON.parse(post.image)
-  : [];
+    ? post.image
+    : post.image && post.image !== "[]"
+    ? JSON.parse(post.image)
+    : [];
 
-  
   // console.log(images);
-
 
   // Parse the JSON string into an array
   // const images = JSON.parse(post.image);
@@ -160,26 +155,25 @@ const Post = ({ post, userId }) => {
   //   setShowImg(!showImg);
   // };
 
-    const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-  
-    const showPostImg = (index) => {
-      setSelectedImageIndex(index);
-    };
-  
-    const closeFullImg = () => {
-      setSelectedImageIndex(null);
-    };
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 
+  const showPostImg = (index) => {
+    setSelectedImageIndex(index);
+  };
 
-    const navigateImage = (direction) => {
-      if (selectedImageIndex !== null) {
-        const newIndex =
-          direction === 'next'
-            ? (selectedImageIndex + 1) % images.length
-            : (selectedImageIndex - 1 + images.length) % images.length;
-        setSelectedImageIndex(newIndex);
-      }
-    };
+  const closeFullImg = () => {
+    setSelectedImageIndex(null);
+  };
+
+  const navigateImage = (direction) => {
+    if (selectedImageIndex !== null) {
+      const newIndex =
+        direction === "next"
+          ? (selectedImageIndex + 1) % images.length
+          : (selectedImageIndex - 1 + images.length) % images.length;
+      setSelectedImageIndex(newIndex);
+    }
+  };
 
   return (
     <div className={styles.post}>
@@ -219,30 +213,48 @@ const Post = ({ post, userId }) => {
           {/* Render images */}
           {/* <div className={(images && images.length && images.length <= 2) ? styles.gridTwo : styles.gridMore}> */}
           <div className={styles.gallery}>
-      {images &&
-        images.map((image, index) => (
-          <div className={styles.imgContainer} key={index}>
-            <img
-              src={`http://localhost:5000/uploads/${image}`}
-              alt={`Image ${index}`}
-              onClick={() => showPostImg(index)}
-            />
-            {selectedImageIndex === index && (
-              <div className={styles.showFullImg}>
+            {images &&
+              images.map((image, index) => (
+                <div className={styles.imgContainer} key={index}>
                   <img
-              src={`http://localhost:5000/uploads/${image}`}
-              alt={`Image ${index}`}
-              onClick={() => showPostImg(index)}
-            />
-                {/* Add the full-size image or any other content here */}
-                <button onClick={() => navigateImage('prev')} className={styles.prevImgBtn}><KeyboardArrowLeftIcon/> </button>
-                <button onClick={() => navigateImage('next')} className={styles.nextImgBtn}><KeyboardArrowRightIcon /></button>
-                <button onClick={closeFullImg} className={styles.closeImgBtn}><CloseIcon /></button>
-              </div>
-            )}
+                    src={`http://localhost:5000/uploads/${image}`}
+                    alt={`Image ${index}`}
+                    onClick={() => showPostImg(index)}
+                  />
+                  {selectedImageIndex === index && (
+                    <div className={styles.showFullImgContainer}>
+                      <h2>Preview Post</h2>
+                      <div className={styles.showFullImg}>
+                      <img
+                        src={`http://localhost:5000/uploads/${image}`}
+                        alt={`Image ${index}`}
+                        onClick={() => showPostImg(index)}
+                      />
+                      {/* Add the full-size image or any other content here */}
+                      <button
+                        onClick={() => navigateImage("prev")}
+                        className={styles.prevImgBtn}
+                      >
+                        <KeyboardArrowLeftIcon />{" "}
+                      </button>
+                      <button
+                        onClick={() => navigateImage("next")}
+                        className={styles.nextImgBtn}
+                      >
+                        <KeyboardArrowRightIcon />
+                      </button>
+                      <button
+                        onClick={closeFullImg}
+                        className={styles.closeImgBtn}
+                      >
+                        <CloseIcon />
+                      </button>
+                    </div>
+                    </div>
+                  )}
+                </div>
+              ))}
           </div>
-        ))}
-    </div>
         </div>
         <div className={styles.info}>
           <div className={styles.item}>
@@ -258,15 +270,15 @@ const Post = ({ post, userId }) => {
             onClick={() => setCommentOpen(!commentOpen)}
           >
             <TextsmsOutlinedIcon />
-            12 Comments
+            {/* 12 Comments */}
           </div>
           <div className={styles.item}>
             <BookmarkBorderIcon />
-            Save
+            {/* Save */}
           </div>
           <div className={styles.item}>
             <ShareOutlinedIcon />
-            Share
+            {/* Share */}
           </div>
         </div>
         {/* {commentOpen && <Comments />} */}
