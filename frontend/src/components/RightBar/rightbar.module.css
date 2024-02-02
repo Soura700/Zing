@@ -764,14 +764,40 @@
 /* Soura (Date:7/8/2023) */
 /**/
 
-
 @media (max-width: 440px) {
-
-
-    .container {
+    /* original code */
+    .leftBar {
+        display: block;
+        position: absolute;
+        transition: top 1s ease-in-out;
+        /* top: 100px; */
+        background: red;
+        z-index: -999;
         display: none;
     }
 
 
+    .rightbar_show {
+        width: 50px;
+        position: absolute;
+        z-index: 999;
+        /* left: 0px; */
+        width: 115vw;
+        height: 65vh;
+        /* New */
+        margin-top: -60px;
+        /* transition: 0.35s ease-in; */
+        transform: translateY(15%);
+        background: white;
+        /* background: transparent; */
+        /* backdrop-filter: blur(10px) saturate(180%); */
+    }
 
+}
+
+
+@media (max-width: 440px) {
+    .container {
+        display: none;
+    }
 }

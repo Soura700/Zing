@@ -7,7 +7,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Link } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const RightBar = () => {
+const RightBar = ({isVisible}) => {
   const [toggle, setToggle] = useState(false);
   const [usersWithNames, setUsersWithNames] = useState([]);
   const [showMore, setShowMore] = useState(false);
@@ -311,7 +311,8 @@ const RightBar = () => {
   console.log(onlineFriends);
 
   return (
-    <div className={styles.container}>
+    // <div className={styles.container}>
+    <div className={isVisible ? `${styles.rightbar_show}` : styles.container}>
       <div className={styles.RightBar}>
         <div className={styles.item}>
           <h1 className={styles.header}>Suggestions For You</h1>
