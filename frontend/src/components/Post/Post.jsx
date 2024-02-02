@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../Contexts/authContext";
+import CommentSection from "../Comments/CommentSection";
 
 const Post = ({ post, userId }) => {
   console.log(post);
@@ -289,7 +290,7 @@ const Post = ({ post, userId }) => {
             {/* Share */}
           </div>
         </div>
-        {/* {commentOpen && <Comments />} */}
+        {commentOpen && <CommentSection />}
       </div>
     </div>
   );
