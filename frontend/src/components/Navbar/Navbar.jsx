@@ -17,6 +17,7 @@ import CircularProgress from "@mui/material/CircularProgress"; // Add this line
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTheme } from "../../Contexts/themeContext";
 
 const Navbar = ({ toggleMenu, user }) => {
   const [toggle, setToggle] = useState(false);
@@ -34,6 +35,9 @@ const Navbar = ({ toggleMenu, user }) => {
   const [deletedAcceptedRequests, setdeletedAcceptedRequests] = useState([]); //Sets the friends requets spreading with the old requests with the new requests in realtime
   const [unreadMessageCount, setunreadMessageCount] = useState(0); //It is for unreadnotification (use case : like facebook notification..)
   const [lastCheckedTimestamp, setLastCheckedTimestamp] = useState(null);
+
+  const { theme, toggleTheme } = useTheme();
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,6 +149,13 @@ const Navbar = ({ toggleMenu, user }) => {
         .catch((error) => console.error("Error during data fetching:", error));
     }
   }, [id, parsedID, checkAuthentication]);
+
+  const handleToggleTheme = () => {
+    alert("Called");
+    // Call the toggleTheme function provided by the context
+    toggleTheme();
+  };
+
 
   useEffect(() => {
     // const newSocket = io("http://localhost:5500");
@@ -374,7 +385,8 @@ const Navbar = ({ toggleMenu, user }) => {
   }
 
   return (
-    <div className={styles.navbar}>
+    // <div className={ `${styles.navbar} ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`} >
+    <div className={`${styles.navbar} ${theme === 'dark' ? 'theme-dark' : 'theme-light'}`} style={{ background: theme === 'dark' ? '#222' : 'white' }}>
       <div className={styles.left_navbar}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <span className={styles.title}>SocialMedia</span>
@@ -414,7 +426,7 @@ const Navbar = ({ toggleMenu, user }) => {
         {/* <PersonRoundedIcon onClick={handleIconClick} /> */}
         {/* PersonRoundedIcon with unread notification count badge */}
         <div className={styles.userOptPart}>
-        <BedtimeRoundedIcon className={styles.icon} />
+        <BedtimeRoundedIcon className={styles.icon} onClick={handleToggleTheme}/>
         <div className={styles.profileIconContainer}>
           
           <PersonRoundedIcon
