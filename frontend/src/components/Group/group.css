@@ -9,136 +9,87 @@
     display: flex;
     flex-direction: row;
     padding: 10px;
-    height: 100vh;
+    height: 98vh;
     margin: 0;
 }
-
+.grpOuterDiv {
+    background: #211e2a;
+    height: 100vh;
+}
 /* left-options bar styles */
 
-.left-opt-menu {
-    border: 0px solid rgb(186, 186, 186);
-    box-shadow: 0px 0px 5px 3px #e8e8e8;
+.grp-left-opt-menu {
+    border: 0px solid rgb(250, 250, 250);
     border-radius: 12px;
     margin: 0px 5px;
     display: flex;
-    height: 95vh;
     flex-direction: column;
+    height: 97vh;
+    margin-right: 41px;
 }
-
-.left-opt-menu .profile-img img {
+.grp-left-opt-menu .profile-img img {
     height: 50px;
     width: 50px;
     border-radius: 50px;
 }
-.left-opt-menu .profile-img img:hover {
+
+.grp-left-opt-menu .item1 {
+    font-size: 30px;
+    margin-top: 20px;
+    border: 0px solid red;
+    height: 40px;
+    border-radius: 50px;
+    padding: 10px;
     cursor: pointer;
 }
-.left-opt-menu .item1 {
-    font-size: large;
-    margin-top: 20px;
-    border: 0px solid red;
-    height: 40px;
-    border-radius: 50px;
-    padding: 10px;
-    transition-duration: 0.5s;
-    animation: ease-in-out;
-}
-.left-opt-menu .icon1 {
+.grp-left-opt-menu .icon1 {
     margin-top: 5px;
-    color: #865cda;
+    color: #706194;
 }
-.left-opt-menu .item1:hover {
-    font-size: large;
-    margin-top: 20px;
-    padding-left: 13px;
-    transform: scale(1.2);
-    color: #865cda;
-    background: #d8c6ff;
-}
-.left-opt-menu .icon1:hover {
-    margin-top: 5px;
-    color: #865cda;
-}
-.left-opt-menu .item1 {
+
+.grp-left-opt-menu .item1 {
     padding-left: 10px;
 }
-.left-opt-menu .item2 {
+.grp-left-opt-menu .item2 {
     font-size: large;
     margin-top: 20px;
     border: 0px solid red;
     height: 40px;
     border-radius: 50px;
     padding: 10px;
-    transition-duration: 0.5s;
-    animation: ease-in-out;
+    cursor: pointer;
 }
-.left-opt-menu .icon2 {
+.grp-left-opt-menu .icon2 {
     margin-top: 5px;
-    color: #865cda;
+    color: #706194;
 }
-.left-opt-menu .item2:hover {
-    font-size: large;
-    margin-top: 20px;
-    padding-left: 12px;
-    /* transform: scale(1.2); */
-    color: #865cda;
-    background: #d8c6ff;
-}
-.left-opt-menu .icon2:hover {
-    margin-top: 5px;
-    color: #865cda;
-}
-.left-opt-menu .item3 {
+
+.grp-left-opt-menu .item3 {
     font-size: large;
     margin-top: 20px;
     height: 40px;
     border-radius: 50px;
     padding: 10px;
-    transition-duration: 0.5s;
-    animation: ease-in-out;
     margin-bottom: 25px;
+    cursor: pointer;
 }
-.left-opt-menu .icon3 {
+.grp-left-opt-menu .icon3 {
     margin-top: 5px;
-    color: #865cda;
+    color: #706194;
 }
-.left-opt-menu .item3:hover {
-    font-size: large;
-    margin-top: 20px;
-    padding-left: 12px;
-    transform: scale(1.2);
-    color: #865cda;
-    background: #d8c6ff;
-}
-.left-opt-menu .icon3:hover {
-    margin-top: 5px;
-    color: #865cda;
-}
-.left-opt-menu .item4 {
+
+.grp-left-opt-menu .item4 {
     font-size: large;
     margin-top: 20px;
     border: 0px solid red;
     height: 40px;
     border-radius: 50px;
     padding: 10px;
-    transition-duration: 0.5s;
-    animation: ease-in-out;
+    cursor: pointer;
 }
-.left-opt-menu .icon4 {
+.grp-left-opt-menu .icon4 {
     margin-top: 5px;
-    color: #865cda;
-}
-.left-opt-menu .item4:hover {
-    font-size: large;
-    margin-top: 20px;
-    padding-left: 12px;
-    transform: scale(1.2);
-    color: #865cda;
-    background: #d8c6ff;
-}
-.left-opt-menu .icon4:hover {
-    margin-top: 5px;
-    color: #865cda;
+    color: #706194;
 }
 
 
@@ -149,10 +100,9 @@
     border: 0px solid red;
     border-radius: 12px;
     height: 95vh;
-    margin-left: 20px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     padding: 10px;
-    box-shadow: 0px 0px 5px 3px #e8e8e8;
+    /* box-shadow: 0px 0px 5px 3px #e8e8e8; */
 }
 
 .top-part {
@@ -185,32 +135,33 @@
 
 .top-search-bar input[type=text]{
     width: 260px;
-    height: 35px;
+    height: 45px;
     padding: 0px 15px;
     margin: 0px 10px;
-    border-radius: 10px;
-    background: #eee7ff;
-    border: 0px solid  rgb(165, 165, 165);
+    border-radius: 20px;
+    border: 1px solid  #483e5c;
 }
 .top-search-bar input[type=text]:focus{
     outline: none;
-    border: 2px solid #b996fe;
-    color: #5a33a7;
+    border: 2px solid #665688;
 }
 ::placeholder {
     padding: 20px;
+    color: rgb(190, 190, 190);
 }
 .top-search-bar .search-btn {
     border: 0px solid red;
     border-radius: 50px;
-    height: 30px;
-    width: 30px;
-    background: #e3d5ff;
+    height: 40px;
+    width: 45px;
+    background: #312843b7;
 }
 .top-search-bar .search-icon {
-    color: #5624ba;
-    margin: 4px;
+    color: #64587b;
+    margin-left: 10px;
+    margin-top: 10px;
     font-size: 22px;
+    cursor: pointer;
 }
 span {
     color: rgb(179, 179, 179);
@@ -220,20 +171,20 @@ span {
 }
 .CreateGrpIcon {
     border: none;
-    background: #7745da;
+    
+    border: 1px solid #534b66;
     color: white;
-    border-radius: 8px;
-    height: 30px;
-    width: 150px;
-    margin-left: 70px;
-    margin-top: 10px;
+    border-radius: 20px;
+    height: 50px;
+    width: 300px;
+    margin-left: 5px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    background: transparent;
 }
 .CreateGrpIcon:hover {
     cursor: pointer;
-    background: #723ae1;
-    border: none;
-    box-shadow: 0px 0px 9px #ae89ff;
-    color: white;
+    background: #534b66;
 }
 .mid-text {
     display: flex;
@@ -263,8 +214,8 @@ span {
 .left .left-info h2 {
     font-size: 18px;
     font-weight: 700;
-    color: #515151;
-}
+    color: #e1e1e1;
+}   
 .left .left-info p {
     font-size: 15px;
     color: #848484;
@@ -511,15 +462,18 @@ span {
 /* main chat section styles */
 
 .main-chat-section {
-    border-radius: 12px;
-    box-shadow: 0px 0px 5px 3px #e8e8e8;
+    border-radius: 30px;
+    border: 0px solid #6b598cb7;
+    /* box-shadow: 0px 0px 5px 3px #e8e8e8; */
+    background: #1b1720;
     width: 100%;
-    height: 95vh;
+    height: 100%;
     margin-left: 20px;
     display: flex;
     flex-direction: column;
-    position: relative;
     padding: 20px;
+    margin-left: 70px;
+    border-radius: 30px;
 }
 .info {
     height: 4rem;
@@ -548,7 +502,7 @@ span {
     font-size: 25px;
 }
 .info .left-part .user-info p {
-    color: rgb(27, 184, 27);
+    color: rgb(152, 96, 237);
 }
 
 .left-part .user-info .left-info .otherMembers{
@@ -575,14 +529,15 @@ span {
 }
 .info .right-part .RightPopUpShow .PopUpBox {
     height: fit-content;
-    width: 30%;
-    top: 1%;
+    width: 40%;
+    padding: 10px;
+    top: 50px;
     display: flex;
     flex-direction: column;
-    border: 2px solid rgb(201, 201, 201);
-    box-shadow: 2px 2px 12px 3px rgb(186, 186, 186);
+    border: 1px solid #38333d;
     border-radius: 16px;
-    background: white;
+    background: #1b1720;
+    border-radius: 30px;
     padding: 10px;
     position: absolute;
     right: 10%;
@@ -596,9 +551,10 @@ span {
 }
 .info .right-part .RightPopUpShow .PopUpBox .top h1 {
     font-size: 25px;
+    color: white;
 }
 .info .right-part .RightPopUpShow .PopUpBox .top p {
-    color: rgb(42, 191, 42);
+    color: rgb(161, 97, 244);
     font-size: 15px;
 }
 .info .right-part .RightPopUpShow .PopUpBox img {
@@ -607,145 +563,20 @@ span {
     margin-top: 20px;
     width: 100px;
 }
-.info .right-part .RightPopUpShow .PopUpBox .mid1 {
-    border: 0px solid red;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;  
-    align-items: center;
-    gap: 20px;
-    margin: 10px;
-    margin-bottom: 9px;
-}
 .info .right-part .RightPopUpShow .PopUpBox .mid1 .mid1-icon {
-    border: 0px solid blue;
-    background: #e3d6ff;
-    color: #5825c0;
+    color: #8b66b0;
     border-radius: 50%;
     padding: 10px;
-    font-size: 40px;
+    font-size: 30px;
+    height: 50px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .mid1 .mid1-icon:hover {
-    border: 0px solid blue;
-    background: #6026de;
-    color: #e6daff;
+    background: #38333d;
     border-radius: 50%;
     padding: 10px;
-    font-size: 40px;
-    cursor: pointer;
+    font-size: 30px;
 }
 
-
-.info .right-part .RightPopUpShow .PopUpBox .mid2 {
-    border: 1px solid rgb(206, 206, 206);
-    border-radius: 16px;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 5px;
-}
-.info .right-part .RightPopUpShow .PopUpBox .mid2:hover {
-    border: 1px solid #d7c4ff;
-    background: #ebe1ff;
-    border-radius: 16px;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 5px;
-    cursor: pointer;
-}
-.info .right-part .RightPopUpShow .PopUpBox  .userOpt {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-.info .right-part .RightPopUpShow .PopUpBox  .userOpt svg {
-    font-size: 20px;
-}
-
-.info .right-part .RightPopUpShow .PopUpBox  .userOpt h2 {
-    font-size: 15px;
-    margin-top: 5px;
-    margin-left: 10px;
-}
-.info .right-part .RightPopUpShow .PopUpBox .mid3 {
-    border: 1px solid rgb(206, 206, 206);
-    border-radius: 16px;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 5px;
-}
-.info .right-part .RightPopUpShow .PopUpBox .mid3:hover {
-    border: 1px solid #d7c4ff;
-    background: #ebe1ff;
-    border-radius: 16px;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 5px;
-    cursor: pointer;
-}
-.info .right-part .RightPopUpShow .PopUpBox .mid4 {
-    border: 1px solid rgb(206, 206, 206);
-    border-radius: 16px;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 5px;
-}
-.info .right-part .RightPopUpShow .PopUpBox .mid4:hover {
-    border: 1px solid #d7c4ff;
-    background: #ebe1ff;
-    border-radius: 16px;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 5px;
-    cursor: pointer;
-}
-.info .right-part .RightPopUpShow .PopUpBox .mid5 {
-    border: 1px solid rgb(206, 206, 206);
-    border-radius: 16px;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 5px;
-}
-.info .right-part .RightPopUpShow .PopUpBox .mid5:hover {
-    border: 1px solid #d7c4ff;
-    background: #ebe1ff;
-    border-radius: 16px;
-    padding: 5px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 5px;
-    cursor: pointer;
-}
 .info .right-part .RightPopUpShow .PopUpBox .bottom {
     border: 0px solid red;
     display: flex;
@@ -754,13 +585,13 @@ span {
     align-items: center;
     gap: 50px;
     margin: 0px 10px;
-    margin-top: 5px;
+    margin-top: 20px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt1 {
-    border: 0px solid red;
-    background: rgb(255, 199, 199);
-    color: rgb(186, 0, 0);
-    border-radius: 12px;
+    border: 1px solid #3a3343;
+    background: transparent;
+    color: #cccccc;
+    border-radius: 20px;
     width: fit-content;
     display: flex;
     flex-direction: row;
@@ -775,10 +606,10 @@ span {
     margin-top: 3px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt1:hover {
-    border: 0px solid red;
-    background: rgb(255, 49, 49);
-    color: rgb(255, 255, 255);
-    border-radius: 16px;
+    border: 1px solid #3a3343;
+    background: transparent;
+    color: #cccccc;
+    border-radius: 20px;
     display: flex;
     flex-direction: row;
     padding: 5px 8px;
@@ -786,10 +617,10 @@ span {
 }
 
 .info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt2{
-    border: 0px solid red;
-    background: rgb(255, 199, 199);
-    color: rgb(186, 0, 0);
-    border-radius: 12px;
+    border: 1px solid #3a3343;
+    background: transparent;
+    color: #cccccd;
+    border-radius: 20px;
     width: fit-content;
     display: flex;
     flex-direction: row;
@@ -804,10 +635,10 @@ span {
     margin-top: 3px;
 }
 .info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt2:hover {
-    border: 0px solid red;
-    background: rgb(255, 49, 49);
-    color: rgb(255, 255, 255);
-    border-radius: 16px;
+    border: 1px solid #3a3343;
+    background: transparent;
+    color: #cccccc;
+    border-radius: 20px;
     display: flex;
     flex-direction: row;
     padding: 5px 8px;
@@ -822,13 +653,13 @@ span {
 .inner-container {
     margin-top: 0px;
     border: 0px solid red;
-    background: #f6f0ff;
+    background: #332e3cb7;
     border-radius: 12px;
     width: 100%;
     height: 90%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: scroll;
 }
+
 
 .inner-container::-webkit-scrollbar {
     width: 5px;
@@ -836,11 +667,11 @@ span {
   }
   
   .inner-container::-webkit-scrollbar-thumb {
-    background-color: #a479fa;
+    background-color: #534d61b7;
   }
   
   .inner-container::-webkit-scrollbar-track {
-    background-color: #ffffff;
+    background: #332e3cb7;
   }
   
 .chat-bottom {
@@ -856,19 +687,18 @@ span {
     align-items: center;
 }
 .chat-bottom .chat-input input[type=text] {
-    border: 0px solid blue;
+    border: 0px solid rgb(213, 213, 213);
     font-size: 20px;
-    border-radius: 12px;
-    background :#eadbff;
-    color: #402577;
-    height: 40px;
-    width: 50rem;
-    max-width: 100%;
+    border-radius: 20px;
+    background :#3e354e;
+    color: #fcfcfc;
+    height: 45px;
+    width: 54vw;
 }
 .chat-bottom .chat-input input[type=text]:focus{
     outline: none;
-    border: 3px solid #8966cf;
-    color: #402577;
+    border: 2px solid #5c5171;
+    color: #ffffff;
 }
 .chat-bottom .chat-options {
     display: flex;
@@ -886,7 +716,8 @@ span {
 .chat-bottom .chat-btn {
     font-size: 30px;
     margin: 0px 10px;
-    color: #451e93;
+    color: #605674;
+    cursor: pointer;
 }
 .chat-bottom .submit-btn-class {
     padding: 0;
@@ -897,13 +728,15 @@ span {
     padding: 5px;
     margin: 0px;
     border: 0px solid #652ed3;
-    background: #dccbff;
-    border-radius: 12px;
+    background: #6e6188;
+    border-radius: 50px;
     width: fit-content;
+    padding: 2px 3px;
+    margin-left: 10px;
 }
 .chat-bottom .submit-btn {
     font-size: 40px;
-    color: #4b229e;
+    color: #190f2b;
 }
 
 .inner-container{
@@ -916,14 +749,14 @@ span {
     justify-content: center;
     text-align: left;
     font-size: small;
-    font-family: sans-serif;
     margin-bottom: 10px;
     padding: 10px;
     height: auto;
     width: fit-content;
     max-width: 40%;
-    background: white;
-    border-radius: 0px 10px 10px 10px;
+    background: rgb(193, 180, 206);
+    border-radius: 5px 15px 15px 15px;
+    font-weight: 500;
 }
 .incomingMsgImg {
     cursor: pointer;
@@ -964,24 +797,25 @@ span {
     justify-content: center;
     text-align: left;
     font-size: small;
-    font-family: sans-serif;
     margin-bottom: 10px;
     margin-left: auto;
     padding: 10px;
     height: auto;
     width: fit-content;
     max-width: 40%;
-    background: rgb(233, 210, 255);
-    border-radius: 10px 0px 10px 10px;
+    background: rgb(86, 74, 100);
+    border-radius: 15px 5px 15px 15px;
+    font-weight: 500;
+    color: white;
 }
 
 
 /* group chat popup modal styles */
 .create-group-modal{
-    border: 0px solid rgb(142, 142, 142);
-    border-radius: 12px;
-    box-shadow: 5px 5px 12px rgb(147, 147, 147);
-    background: white;
+    border: 1px solid rgb(65, 52, 78);
+    border-radius: 30px;
+    /* box-shadow: 5px 5px 12px rgb(147, 147, 147); */
+    background: rgb(38, 30, 47);
     position: absolute;
     margin-left: 40%;
     margin-top: 10%;
@@ -990,9 +824,10 @@ span {
 }
 .modal-content {
     border: 0px;
+    background: rgb(38, 30, 47);
 }
 .modal-content h2 {
-    color: #5624ba;
+    color: #ffffff;
     font-weight: 500;
 }
 .modal-content h3 {
@@ -1004,40 +839,54 @@ span {
     margin-left: 5px;
 }
 .modal-content .grp-name input {
-    border: 1px solid #c7b0f6;
-    height: 35px;
+    border: 1px solid rgb(78, 64, 93);
+    height: 45px;
     /* width: 96%; */
-    border-radius: 8px;
+    border-radius: 20px;
     padding: 5px;
-    padding-left: 10px;
+    padding-left: 30px;
+    color: white;
 }
 .modal-content .grp-name input:focus {
-    outline: none;
-    border: 2px solid #5825c0;
 }
 /* add members input style */
 .modal-content .add-members {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
 }
-.modal-content .add-members input {
-    border: 1px solid #c7b0f6;
-    height: 35px;
-    width: 90%;
-    border-radius: 8px;
+.modal-content .add-members-input {
+    display: flex;
+}
+.modal-content .add-members-input input {
+    border: 1px solid rgb(78, 64, 93);
+    height: 45px;
+    /* width: 96%; */
+    border-radius: 20px;
+    padding: 5px;
     padding-left: 10px;
+    padding-left: 30px;
+    color: white;
 }
 .modal-content .add-members input:focus {
-    outline: none;
-    border: 2px solid #5825c0;
 }
-.modal-content .add-members .search-icon {
-    border: 1px solid #5825c0;
-    color: #451e93;
-    width: 33px;
+.modal-content .add-members-input .search-btn {
+    border: 0px solid red;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content .search-btn .search-icon {
+    border: 0px solid #d3d3d3;
+    color: #ffffff;
     padding: 5px;
+    margin: 0px 5px;
     border-radius: 25px;
     height: 100%;
+    font-size: 40px;
+    cursor: pointer;
 }
 .membersLabel {
     display: flex;
@@ -1066,14 +915,15 @@ span {
     padding: 4px 10px;
     margin-top: 5px;
     gap: 13px;
-    background: #ffffff;
-    color: #402577;
+    background: rgb(43, 32, 54);
+    color: #ffffff;
     margin-right: 8px;
     border: 1px solid rgb(216, 216, 216);
     border-radius: 20px;
 }
 .addMembersLabel p{
     font-size: 15px;
+    margin: 0;
 }
 .addMembersLabel:hover {
     background: #6c3acf;
@@ -1091,22 +941,19 @@ span {
 .userListContainer {
     display: flex;
     flex-direction: column;
-    border: 0px solid #754acd;
-    box-shadow: 2px 2px 5px #949494;
+    border: 1px solid #594a79;
     padding: 8px;
-    background: #ffffff;
-    color: #402577;
-    border-radius: 12px;
+    color: #fefdff;
+    border-radius: 20px;
     margin-bottom: 10px;
     height: fit-content;
 }
 .userListContainer:hover {
     cursor: pointer;
-    border: 0px solid #754acd;
-    box-shadow: 2px 2px 5px #949494;
+    border: 1px solid #594a79;
+    color: #fefdff;
     padding: 8px;
-    background: #f0e9ff;
-    color: #402577;
+    color: #ffffff;
 
 }
 .userLists {
@@ -1118,8 +965,8 @@ span {
 }
 .userLists  .userListIconTick{
     border: 0px solid red;
-    background: rgb(186, 255, 186);
-    color: rgb(42, 129, 42);
+    background: #32234e;
+    color: #6a3cc0;
     padding: 2px;
     height: 25px;
     width: 25px;
@@ -1129,14 +976,13 @@ span {
 }
 .userLists  .userListIconTick:hover {
     cursor: pointer;
-    background: rgb(35, 142, 35);
-    color: rgb(255, 255, 255);
+
 }
 
 .userLists  .userListIconCross {
     border: 0px solid red;
-    background: rgb(255, 164, 164);
-    color: rgb(175, 45, 45);
+    background: #32234e;
+    color: rgb(226, 103, 103);
     padding: 2px;
     height: 25px;
     width: 25px;
@@ -1146,20 +992,20 @@ span {
 }
 .userLists  .userListIconCross:hover {
     cursor: pointer;
-    background: rgb(255, 53, 53);
-    color: rgb(255, 255, 255);
+
 }
  .createGrpChatBtn {
     border: none;
-    box-shadow: 2px 2px 5px #949494;
-    border-radius: 8px;
-    background: #4b229e;
+    /* box-shadow: 2px 2px 5px #949494; */
+    border: 1px solid rgb(80, 68, 94);;
+    border-radius: 30px;
+    background: rgb(38, 30, 47);
     font-size: 18px;
     color: white;
     padding: 5px;
     height: 35px;
-    width: 95px;
-    margin-left: 83%;
+    width: 135px;
+    margin-left: 73%;
     margin-top: 40px;
 }
 .createGrpChatBtn:hover {
@@ -1167,8 +1013,115 @@ span {
     background: #4b229e;
 }
 
+@media (max-width: 1200px) {
+
+    .grp-left-opt-menu {
+        border: 0px solid rgb(250, 250, 250);
+        border-radius: 12px;
+        margin: 0px 5px;
+        display: flex;
+        flex-direction: column;
+        height: 97vh;
+        margin-right: 2px;
+    }
+    .container .left-menu {
+        border: 0px solid red;
+        border-radius: 12px;
+        height: 95vh;
+        /* margin-bottom: 20px; */
+        padding: 10px;
+        /* box-shadow: 0px 0px 5px 3px #e8e8e8; */
+    }
+    .CreateGrpIcon {
+        border: none;
+        
+        border: 1px solid #534b66;
+        color: white;
+        border-radius: 20px;
+        height: 50px;
+        width: 288px;
+        margin-left: 5px;
+        margin-top: 40px;
+        margin-bottom: 10px;
+        background: transparent;
+    }
+} 
+@media (min-width: 920px) and (max-width: 1025px) {    
+    .grp-left-opt-menu {
+        border: 0px solid rgb(250, 250, 250);
+        border-radius: 12px;
+        margin: 0px 5px;
+        display: flex;
+        flex-direction: column;
+        height: 97vh;
+        margin-right: -24px;
+    }
+    .container .left-menu {
+        border: 0px solid red;
+        border-radius: 12px;
+        height: 95vh;
+        /* margin-bottom: 20px; */
+        padding: 10px;
+        /* box-shadow: 0px 0px 5px 3px #e8e8e8; */
+    }
+    .CreateGrpIcon {
+        border: none;
+        
+        border: 1px solid #534b66;
+        color: white;
+        border-radius: 20px;
+        height: 50px;
+        width: 226px;
+        margin-left: 24px;
+        margin-top: 40px;
+        margin-bottom: 10px;
+        background: transparent;
+    }
+    .grpOuterDiv {
+        background: #211e2a;
+        height: 106vh;
+        width: 106vw;
+    }
+}    
+@media (max-width: 769px) {
+    .grp-left-opt-menu {
+        border: 0px solid rgb(250, 250, 250);
+        border-radius: 12px;
+        margin: 0px 5px;
+        display: flex;
+        flex-direction: column;
+        height: 97vh;
+        margin-right: -24px;
+    }
+    .container .left-menu {
+        border: 0px solid red;
+        border-radius: 12px;
+        height: 95vh;
+        /* margin-bottom: 20px; */
+        padding: 10px;
+        /* box-shadow: 0px 0px 5px 3px #e8e8e8; */
+    }
+    .CreateGrpIcon {
+        border: none;
+        
+        border: 1px solid #534b66;
+        color: white;
+        border-radius: 20px;
+        height: 50px;
+        width: 226px;
+        margin-left: 24px;
+        margin-top: 40px;
+        margin-bottom: 10px;
+        background: transparent;
+    }
+    .grpOuterDiv {
+        background: #211e2a;
+        height: 121vh;
+        width: 121vw;
+    }
+}    
 @media (max-width: 427px) {
-    .container {
+    /* .container {
         display: flex;
         flex-direction: column;
         padding: 10px;
@@ -1263,7 +1216,6 @@ span {
 }
 .main-chat-section {
     border-radius: 12px;
-    box-shadow: 0px 0px 5px 3px #e8e8e8;
     width: 100%;
     height: 95vh;
     margin-left: 0px;
@@ -1289,12 +1241,12 @@ span {
 .container .left-menu {
 
     /* position: absolute; */
-    z-index: 999;
+    /* z-index: 999;
 }
 .main-chat-section {
 
     position: relative;
     z-index: 1;
-}
+} */
 
 }    

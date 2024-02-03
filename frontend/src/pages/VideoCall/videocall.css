@@ -499,15 +499,15 @@ button {
         /* Prevent scrolling on the body and main container */
     }
 
-    .left-part {
+    /* .left-part {
         width: 45vh;
         height: 60vh;
-    }
+    } */
 
-    .right-part {
+    /* .right-part {
         height: 84vh;
         padding: 15px;
-    }
+    } */
 
     .left-button {
         width: 50px;
@@ -534,159 +534,7 @@ button {
         height: 70vh;
         /* Adjust height to accommodate header and video controls */
     }
-
-    .header {
-        height: 40px;
-        padding: 5px;
-        width: 75%;
-    }
-
-    .preparing {
-        font-size: 15px;
-    }
-
-    .time {
-        height: 30px;
-        width: 100px;
-        font-size: 15px;
-    }
-
-    .leave {
-        height: 15px;
-        font-size: 10px;
-    }
-
-    .camera-video {
-        height: 78vh;
-        width: 40vh;
-
-    }
-
-    .video-control {
-        width: 40vh;
-
-    }
-
-    .icons {
-        gap: 5px;
-
-    }
-
-    .icons .mic {
-        height: 10px;
-        width: 30px;
-
-    }
-
-    .videocontrolicons {
-        height: 20px;
-        font-size: 25px;
-    }
-
-    .switch {
-
-
-
-        width: 170px;
-        height: 30px;
-
-
-        font-size: 14px;
-
-    }
-
-    .messages {
-
-        width: 80px;
-        height: 20px;
-        text-align: center;
-    }
-
-    .person1-chat,
-    .person2-chat {
-        display: flex;
-        margin-top: 20px;
-
-    }
-
-    .person2-img {
-        width: 35px;
-        height: 35px;
-        margin-left: 10px;
-    }
-
-    .person1-img {
-        width: 35px;
-        height: 35px;
-        margin-right: 10px;
-
-    }
-
-    .person1-text {
-        border-radius: var(--br-xs) var(--br-xs) var(--br-xs) 0;
-        background-color: var(--color-darkslateblue-200);
-        width: 200px;
-        height: 150px;
-
-
-
-    }
-
-    .text {
-        text-align: left;
-        font-size: 17px;
-        margin: 5px;
-    }
-
-
-
-    .iconlyboldpaper {
-
-        width: 25px;
-        height: 25px;
-
-    }
-
-    .upload {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 7px;
-
-    }
-
-
-    .frame-item {
-
-        width: 25px;
-        height: 25px;
-    }
-
-    .emoji-icon {
-        width: 28px;
-        height: 28px;
-    }
-
-    .chattop {
-        margin-top: 20px;
-        width: 150px;
-        gap: 10px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        margin-left: 5px;
-    }
-
-
-    .iconlyboldsend {
-
-
-        width: 20px;
-        height: 20px;
-    }
-
+   
 
 
     .chatbox1 {
@@ -827,18 +675,7 @@ button {
         width: 30vw;
         height: 30vh;
     }
-    
-    .left-part {
-        width: 45vh;
-        height: 60vh;
-        margin: 0;
-        padding: 0;
-    }
-
-    .right-part {
-        height: 84vh;
-        padding: 15px;
-    }
+   
 
     .left-button {
         width: 50px;
@@ -1042,37 +879,3 @@ button {
 
 }
 
-:root {
-    /* fonts */
-    --font-inter: Inter;
-
-    /* font sizes */
-    --font-size-base: 16px;
-    --font-size-sm: 14px;
-
-    /* Colors */
-    --color-darkslateblue-100: #393760;
-    --color-darkslateblue-200: #2e2c54;
-    --color-mediumpurple: #8871e6;
-    --color-white: #fff;
-    --color-lightsteelblue: #b9b9d1;
-    --color-slategray: #4d4b70;
-    --color-red: rgba(255, 0, 0, 0.5);
-
-    /* Gaps */
-    --gap-5xs: 8px;
-    --gap-7xs: 6px;
-
-    /* Paddings */
-    --padding-base: 16px;
-    --padding-5xs: 8px;
-    --padding-sm: 14px;
-    --padding-7xs: 6px;
-    --padding-3xs: 10px;
-
-    /* Border radiuses */
-    --br-xs: 12px;
-    --br-7xs: 6px;
-    --br-11xs: 2px;
-    --br-5xs: 8px;
-}

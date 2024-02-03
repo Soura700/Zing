@@ -101,6 +101,7 @@ input {
   top: 12px;
   left: 10px;
   font-size: 10px;
+  cursor: pointer;
 }
 
 .right_navbar .messagesBadgeIcon {
@@ -119,6 +120,7 @@ input {
   top: 12px;
   left: 108px;
   font-size: 10px;
+  cursor: pointer;
 }
 
 .right_navbar .notifBadgeIcon {
@@ -137,6 +139,7 @@ input {
   top: 12px;
   right: 65px;
   font-size: 10px;
+  cursor: pointer;
 }
 
 .user {
@@ -189,6 +192,9 @@ if upto 7 adds a vertical scrollbar */
   z-index: 1;
   overflow-x: hidden;
   overflow-y: auto;
+  border: 1px solid rgb(215, 215, 215);
+  border-radius: 30px;
+  box-shadow: 0 2px 5px rgba(218, 218, 218, 0.7);
 }
 
 .popup_menu ul {
@@ -269,7 +275,12 @@ if upto 7 adds a vertical scrollbar */
 }
 
 /* notif panel styles */
-
+.notifPanel .notifPanelHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
 
 .notifcontainer .request {
   display: flex;
@@ -320,22 +331,26 @@ if upto 7 adds a vertical scrollbar */
 }
 
 .notifPanel {
-  border: 0px solid red;
-  border-radius: 12px;
+  border: 1px solid rgb(215, 215, 215);
+  border-radius: 30px;
   background: white;
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 40px;
+  top: 60px;
   right: 1rem;
   width: 25rem;
   height: 20rem;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 5, 5, 0.7);
+  padding: 15px;
+  max-height: 247px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 0 2px 5px rgba(218, 218, 218, 0.7);
 }
 
 .notifPanel h1 {
   font-size: 20px;
+  font-weight: 600;
   padding: 10px 5px;
 }
 
@@ -347,45 +362,55 @@ if upto 7 adds a vertical scrollbar */
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #A479FA #F2FDFF;
+  scrollbar-color: #5c536db7 #332e3cb7;
 }
 
 /* Chrome, Edge and Safari */
 *::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
+  height: 5px;
+  width: 3px;
 }
 
 *::-webkit-scrollbar-track {
   border-radius: 9px;
-  background-color: #F2FDFF;
+  background: #332e3cb7;
 }
 
 *::-webkit-scrollbar-track:hover {
-  background-color: #F2FCFF;
+  background: #332e3cb7;
 }
 
 *::-webkit-scrollbar-track:active {
-  background-color: #F2FCFF;
+  background: #332e3cb7;
 }
 
 *::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background-color: #A479FA;
+  border-radius: 9px;
+  background-color: #534d61b7;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #815FC5;
+  background-color: #534d61b7;
 }
 
 *::-webkit-scrollbar-thumb:active {
-  background-color: #815FC5;
+  background-color: #534d61b7;
 }
 
 
 /* scrollbar styles end */
 
 
+
+
+
+/* bottom navbar styles(only visible for mobile) */
+
+.bottomNavbar {
+  box-shadow: 2px 2px 10px rgba(229, 229, 229, 0.551);
+  display: none;
+  position: relative;
+}
 
 /* working fine upto 324px */
 @media (max-width: 440px) {
@@ -394,21 +419,48 @@ if upto 7 adds a vertical scrollbar */
     /* 113% working fine 24-aug-23  */
 
   }
-/* 
+  .bottomNavbar {
+    display: block;
+    width: 115%;
+    box-shadow: 2px 2px 12px rgba(212, 212, 212, 0.551);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 2px;
+    padding-top: 16px;
+  }
+  .bottomNavbar .bottomNavbarIcon {
+    color: #65558e;
+    font-size: 31px;
+  }
+  .navbar {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 5px;
+    height: 50px;
+    /* border-bottom: 1px solid lightgray; */
+    box-shadow: 0px 0px 0px rgba(229, 229, 229, 0.551);
+    position: sticky;
+    top: 0;
+    background-color: rgb(255, 255, 255);
+    z-index: 999;
+  
+  }
   .search .extended {
-    border: 2px solid #815FC5;
+    border: 2px solid #e6e6e6;
     border-radius: 50px;
     background: white;
-    width: 99vw;
+    width: 105vw;
     z-index: 1;
     height: 3rem;
-    top: 60px;
-    left: -340px;
+    top: 44px;
+    left: -120px;
     position: absolute;
-    box-shadow: 1px 1px 12px 1px black;
+    /* box-shadow: 1px 1px 12px 1px black; */
     padding-left: 2rem;
-    font-size: 1.5rem;
-  } */
+    font-size: 20px;
+  }
 
   .search .extended:active {
     border: 2px solid #815FC5;
@@ -444,23 +496,152 @@ if upto 7 adds a vertical scrollbar */
         display: none;
     } */
 
-  .right_navbar {
+  /* .right_navbar {
     display: none;
+  } */
+  input {
+    border: 0px;
+    outline: none;
+    width: 0px;
+    padding-left: 20px;
+    background-color: transparent;
   }
-
   .search {
     display: flex;
     align-items: center;
     position: relative;
     /* gap: 10px; */
     padding: 5px;
-    width: 290px;
+    width: 43px;
     margin-left: 10px;
   }
-
+  .search .icon {
+    margin-left: 4px;
+    color: rgb(113, 113, 113);
+  }
+  
   .menuIcon {
-    visibility: visible;
+    visibility: visible; 
+    /* was visible earlier */
     margin: 0;
+  }
+
+  .right_navbar {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+  
+  .right_navbar .userOptPart {
+    border: 1px solid rgb(226, 226, 226);
+    padding: 0px 7px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-around;
+    gap: 14px;
+    align-items: center;
+    margin-right: 10px;
+  }
+  
+  .right_navbar .icon {
+    color: #9a97a4;
+    margin-bottom: 2px;
+    font-size: 22px;
+    cursor: pointer;
+  }
+  
+  .right_navbar .friendsBadgeIcon {
+    position: relative;
+    color: #9a97a4;
+    margin-top: 5px;
+    font-size: 27px;
+    cursor: pointer;
+  }
+  
+  .right_navbar .friendsBadge {
+    color: rgb(255, 255, 255);
+    background: red;
+    padding: 2px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    font-size: 10px;
+    cursor: pointer;
+  }
+  
+  .right_navbar .messagesBadgeIcon {
+    position: relative;
+    color: #9a97a4;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  
+  .right_navbar .messagesBadge {
+    color: rgb(255, 255, 255);
+    background: #8c77b5;
+    padding: 2px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 6px;
+    left: 97px;
+    font-size: 10px;
+    cursor: pointer;
+  }
+  
+  .right_navbar .notifBadgeIcon {
+    position: relative;
+    color: #9a97a4;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  
+  .right_navbar .notifBadge {
+    color: rgb(255, 255, 255);
+    background: #8c77b5;
+    padding: 2px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: 6px;
+    right: 56px;
+    font-size: 10px;
+    cursor: pointer;
+  }
+  
+  .user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: 10px;
+    }
+  
+    span {
+      color: #4e4e4e;
+      font-size: 0px;
+      margin-bottom: 5px;
+    }
+  }
+  
+  .user a {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .navbarRightbar {
+    position: absolute;
+    visibility: visible;
+    background: #eeeeee;
+    border: 1px solid red;
+    z-index: 99999;
   }
 }
 
@@ -470,7 +651,7 @@ if upto 7 adds a vertical scrollbar */
 
 
 
-@media (max-width: 427px) {}
+/* @media (max-width: 427px) {} */
 
 
 /* Tablet */

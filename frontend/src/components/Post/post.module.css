@@ -63,11 +63,16 @@
     z-index: 998;
     box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
   height: 647px;
-  width: 1100px;
+  width: 1000px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   text-align: left;
+  left: -82px;
+  top: -140px;
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  background-color: rgba(123, 123, 123, 0.226);
 }
 .post .content .gallery .showFullImgContainer h2{
   font-weight: 100;
@@ -86,12 +91,17 @@
   top: -128px;
   z-index: 999;
   left: 50px;
-  
+  background: transparent;
 }
 .post .content .gallery .showFullImg img {
   position: relative;
   height: 100%;
   width: 100%;
+
+  max-width: 100%;
+    max-height: 100%;
+    width: auto; /* Ensure that the width adjusts proportionally */
+    height: auto;
 }
 .post .content .gallery .showFullImg button {
   position: absolute;
@@ -102,23 +112,27 @@
   align-items: center;
   border-radius: 50%;
   background: transparent;
-  color: rgb(87, 87, 87);
+  color: rgb(249, 249, 249);
   border: 0px solid rgb(197, 197, 197);
   padding: 4px;
 }
-.post .content .gallery .showFullImg button:hover {
-  background: transparent;
-}
+
 .post .content .gallery .showFullImg .prevImgBtn {
   left: 5px;
+  color: rgb(255, 255, 255);
+  background: rgba(0, 0, 0, 0.526);
 }
 .post .content .gallery .showFullImg .nextImgBtn {
   right: 5px;
+  color: rgb(255, 255, 255);
+  background: rgba(0, 0, 0, 0.526);
 }
 .post .content .gallery .showFullImg .closeImgBtn {
   top: 5px;
   right: 5px;
   border: 0px;
+  color: rgb(255, 255, 255);
+  background: rgba(0, 0, 0, 0.526);
 }
 .user {
   display: flex;
@@ -265,8 +279,74 @@
 
 /* 1170px
   1026px */
+@media (max-width: 1025px) {
+  .post .content .gallery .showFullImgContainer {
+    border: 0px solid red;
+    padding: 5px;
+    position: absolute;
+    border-radius: 12px;
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    background-color: rgba(17, 25, 40, 0.21);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+  
+      z-index: 998;
+      box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
+    height: 684px;
+    width: 787px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  .post .content .gallery .showFullImgContainer h2{
+    font-weight: 100;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: rgb(83, 83, 83);
+  }
+  .post .content .gallery .showFullImg{
+    border: 0px solid red;
+    /* position: absolute; */
+    background: rgb(255, 255, 255);
+    border-radius: 12px;
+    height: 647px;
+    width: 787px;
+    padding: 0px;
+    top: -128px;
+    z-index: 999;
+    left: 50px;
+    background: transparent;
+  }
+  .post .content .gallery .showFullImg img {
+    position: relative;
+    height: 100%;
+    width: 100%;
 
-
+    max-width: 100%;
+    max-height: 100%;
+    width: auto; /* Ensure that the width adjusts proportionally */
+    height: auto;
+  }
+  .post .content .gallery .showFullImg .prevImgBtn {
+    left: 5px;
+    color: rgb(255, 255, 255);
+    background: rgba(0, 0, 0, 0.526);
+  }
+  .post .content .gallery .showFullImg .nextImgBtn {
+    right: 5px;
+    color: rgb(255, 255, 255);
+    background: rgba(0, 0, 0, 0.526);
+  }
+  .post .content .gallery .showFullImg .closeImgBtn {
+    top: 5px;
+    right: 5px;
+    border: 0px;
+    color: rgb(255, 255, 255);
+    background: rgba(0, 0, 0, 0.526);
+  }
+}
 @media (max-width: 427px) {
 
   .post {
@@ -284,6 +364,31 @@
     margin-top: 0px;
 
   }
+  .post .content .gallery .showFullImgContainer {
+    border: 0px solid red;
+    padding: 5px;
+    /* position: absolute; */
+    border-radius: 12px;
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    background-color: rgba(255, 255, 255, 0.886);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+  
+      z-index: 998;
+      box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
+    height: 560px;
+    width: 460px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    left: -36px;
+
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    background-color: rgba(123, 123, 123, 0.226);
+  }
   .post .content .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
@@ -295,28 +400,44 @@
   }
   .post .content .gallery img {
     height: fit-content;
-    width: 205px;
-    object-fit: cover;
+    width: 406px;
     cursor: pointer;
     border-radius: 5px;
   }
   .post .content .gallery .showFullImg{
     border: 0px solid red;
-    position: absolute;
+    /* position: absolute; */
     background: rgb(255, 255, 255);
     border-radius: 12px;
-    height: fit-content;
-    width: auto;
-    padding: 5px;
-    top: 0px;
-    left: -39px;
-    right: -39px;
-    box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
+    height: 270px;
+    width: 100%;
+    padding: 0px;
+    top: -128px;
+    z-index: 999;
+    left: 50px; 
+    height: 560px;
+    width: 460px;
+    border-radius: 12px;
+    background: transparent;
+    border-radius: 12px;
+    /* border: 1px solid rgba(255, 255, 255, 0.125); */
+  }
+  .post .content .gallery .showFullImgContainer h2{
+    font-weight: 100;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: rgb(45, 45, 45);
+    margin-top: 10px;
   }
   .post .content .gallery .showFullImg img {
     position: relative;
-    height: 100%;
-    width: 100%;
+    /* max-height: 575px;
+    width: 486px; */
+
+    max-width: 100%;
+    max-height: 100%;
+    width: auto; /* Ensure that the width adjusts proportionally */
+    height: auto;
   }
   .post .content .gallery .showFullImg button {
     position: absolute;
@@ -328,6 +449,21 @@
     border-radius: 50%;
     border: 1px solid rgb(197, 197, 197);
     padding: 4px;
+  }
+  .post .content .gallery .showFullImg .prevImgBtn {
+    left: 5px;
+    color: rgb(255, 255, 255);
+  }
+  .post .content .gallery .showFullImg .nextImgBtn {
+    right: 5px;
+    color: rgb(255, 255, 255);
+  }
+  .post .content .gallery .showFullImg .closeImgBtn {
+    top: 5px;
+    right: 5px;
+    border: 0px;
+    color: rgb(255, 255, 255);
+    background: rgba(0, 0, 0, 0.526);
   }
   .info>.item {
     display: flex;
