@@ -7,7 +7,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Link } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const RightBar = () => {
+const RightBar = ({isVisible}) => {
   const [toggle, setToggle] = useState(false);
   const [usersWithNames, setUsersWithNames] = useState([]);
   const [showMore, setShowMore] = useState(false);
@@ -16,7 +16,10 @@ const RightBar = () => {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [socket, setSocket] = useState(null); //For setting the socket connection
+  const [socket2, setSocket2] = useState(null); //For setting the socket connection
   const [recentActivities, setRecentActivities] = useState([]);
+  const [onlineFriends, setOnlineFriends] = useState([]);
+  const [friends, setFriends] = useState([]);
   const parsedId = parseInt(id);
 
   useEffect(() => {
@@ -33,18 +36,13 @@ const RightBar = () => {
           }
         );
         const userDetails = await userRes.json();
-
-        console.log("User Id");
-        console.log(userDetails[0].id);
         setUserId(userDetails[0].id);
-
         // Check if userDetails is defined and not empty
         if (userDetails && userDetails.length > 0 && userDetails[0]) {
           setSenderName(userDetails[0].username);
         } else {
           console.error("Invalid or empty user details:", userDetails);
         }
-
         // Fetch other data
         const filteredUserRes = await fetch(
           "http://localhost:5000/api/api/filteredSuggestions/" + parsedId
@@ -77,17 +75,72 @@ const RightBar = () => {
       }
     };
 
+    const fetchFriendRequests = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/friend_request/getFriends/" + parsedId
+        );
+        const data = await res.json();
+        // console.log(data);
+        // console.log(typeof data);
+
+        setFriends(data);
+      } catch (error) {
+        console.error("Error fetching friend requests:", error);
+      }
+    };
     fetchData();
+    fetchFriendRequests();
   }, [id, checkAuthentication, parsedId]);
+
+  console.log("Hello Friends");
+  console.log(friends);
 
   useEffect(() => {
     const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
-
+    const newSocket2 = io("http://localhost:5500");
+    setSocket2(newSocket2);
     return () => {
       newSocket.disconnect();
     };
   }, []);
+
+  console.log("Friends");
+  console.log(typeof friends.friends);
+  console.log(friends.friends);
+
+  useEffect(() => {
+    if (socket2) {
+      socket2.on("showOnlinUsers", (users) => {
+        console.log(users);
+        const filteredUsers = users.filter((user) => user.userId !== parsedId);
+        console.log("Filtered");
+        console.log(filteredUsers);
+        if (friends && friends.friends) {
+          const friendsArray = Object.values(friends.friends);
+
+          const filteredFriends = friendsArray.filter((friend) =>
+            filteredUsers.some((user) => user.userId === friend.friendId)
+          );
+
+          console.log("Bro");
+          console.log(filteredFriends);
+
+          const friendNames = filteredFriends.map(
+            (friend) => friend.friendUsername
+          );
+
+          console.log(friendNames);
+          setOnlineFriends(friendNames);
+
+          // Proceed with using 'filteredFriends'
+        } else {
+          console.error("Friends object is undefined or not an object.");
+        }
+      });
+    }
+  }, [socket2, parsedId, friends]);
 
   useEffect(() => {
     if (socket) {
@@ -106,7 +159,6 @@ const RightBar = () => {
           // Handle other friend request actions if needed
         }
       });
-
       // lIKE SOCKET EVENT.....
       socket.on("like", async ({ postId, userid, likeUser }) => {
         if (userid === parsedId) {
@@ -139,7 +191,6 @@ const RightBar = () => {
         }
       });
 
-
       // Dislike socket event
       socket.on("dislike", async ({ postId, userid, dislikeUser }) => {
         if (userid === parsedId) {
@@ -157,8 +208,7 @@ const RightBar = () => {
 
             const userData = await userRes.json();
             console.log("Userdata");
-            console.log(userData)
-
+            console.log(userData);
 
             // Add the dislike activity with user details to the recent activities state
             setRecentActivities((prevActivities) => [
@@ -258,8 +308,11 @@ const RightBar = () => {
   console.log("Recent Activity");
   console.log(recentActivities);
 
+  console.log(onlineFriends);
+
   return (
-    <div className={styles.container}>
+    // <div className={styles.container}>
+    <div className={isVisible ? `${styles.rightbar_show}` : styles.container}>
       <div className={styles.RightBar}>
         <div className={styles.item}>
           <h1 className={styles.header}>Suggestions For You</h1>
@@ -394,34 +447,17 @@ const RightBar = () => {
         {/* box3 content starts here */}
         <div className={styles.item3}>
           <h1 className={styles.header}>Online Friends</h1>
-          <div className={styles.user6}>
-            <div className={styles.userInfo}>
-              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-              <h3>John Doe</h3>
-              <circle></circle>
+          {onlineFriends.map((onlinefriends,index) => {
+            return(
+            <div className={styles.user6}>
+              <div className={styles.userInfo}>
+                {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                <h3>{onlinefriends}</h3>
+                <circle></circle>
+              </div>
             </div>
-          </div>
-          <div className={styles.user7}>
-            <div className={styles.userInfo}>
-              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-              <h3>John Doe</h3>
-              <circle></circle>
-            </div>
-          </div>
-          <div className={styles.user8}>
-            <div className={styles.userInfo}>
-              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-              <h3>John Doe</h3>
-              <circle></circle>
-            </div>
-          </div>
-          <div className={styles.user9}>
-            <div className={styles.userInfo}>
-              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-              <h3>John Doe</h3>
-              <circle></circle>
-            </div>
-          </div>
+            )
+          })}
         </div>
         {/* box3 content ends here */}
       </div>

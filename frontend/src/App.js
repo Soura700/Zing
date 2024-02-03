@@ -10,6 +10,8 @@ import LeftBar from "./components/LeftBar/LeftBar";
 import RightBar from "./components/RightBar/RightBar";
 import { useState } from "react";
 import SignInSignUpForm from "./components/SignInSignUpForm/SignInSignUpForm";
+import ForgotPasswordForm from "./components/SignInSignUpForm/ForgotPasswordForm.js";
+import ResetPasswordForm from "./components/SignInSignUpForm/ResetPasswordForm.js";
 import { AuthProvider } from "./Contexts/authContext";
 import Posts from "./components/Posts/Posts.jsx";
 import { ToastContainer } from "react-toastify";
@@ -39,14 +41,14 @@ function App() {
         <ToastContainer />
         <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
-          {/* <LeftBar isVisible={toggle} /> */}
+          {/* <RightBar isVisible={toggle}/> */}
           <LeftBar/>
           <div style={{ flex: 6 }}>
             <React.StrictMode>
               <Outlet />
             </React.StrictMode>
           </div>
-          <RightBar isVisible={toggle} />
+          <RightBar />
         </div>
       </div>
     );
@@ -84,7 +86,14 @@ function App() {
       path: "/login",
       element: <SignInSignUpForm />,
     },
-
+    {
+      path: "/forgotpassword",
+      element: <ForgotPasswordForm />,
+    },
+    {
+      path: "/resetpassword/:id/:token",
+      element: <ResetPasswordForm/>,
+    },
     {
       path: "/profile_setting/:userId",
       element: <Personalization />,

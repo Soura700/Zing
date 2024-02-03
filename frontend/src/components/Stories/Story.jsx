@@ -33,17 +33,50 @@ const Story = () => {
   const [friendStories, setFriendStories] = useState([]);
   const parsedID = parseInt(id);
   const [selectedFriendStories, setSelectedFriendStories] = useState([]);
-  const [selectedFriendStoryImage,setSelectedFriendStoryImage] = useState(null);
-  const [ownStories,ownSetStories] = useState([])
+  const [selectedFriendStoryImage, setSelectedFriendStoryImage] =
+    useState(null);
+  const [ownStories, ownSetStories] = useState([]);
+  const [friendDetailIndex, setFriendDetailIndex] = useState(0);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5500");
+    const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
-
     return () => {
       newSocket.disconnect();
     };
   }, []);
+
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("new_story", (story) => {
+  //     const storyArray = [story];
+  //       setFriendStories((prevStories) => [...prevStories, storyArray]);
+  //     });
+  //   }
+  //   return () => {
+  //     if (socket) {
+  //       socket.off("new_story");
+  //     }
+  //   };
+  // }, [socket]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("new_story", (story) => {
+        const storyArray = [story];
+        setFriendStories((prevStories) => {
+          const newStories = [...prevStories]; // Create a copy of the previous stories array
+          newStories.unshift(storyArray); // Add the new story array at the beginning
+          return newStories;
+        });
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off("new_story");
+      }
+    };
+  }, [socket]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +88,9 @@ const Story = () => {
             "Content-Type": "application/json",
           },
         });
-        const response = await axios.get(`http://localhost:5000/api/stories/getStories/${parsedID}`);
+        const response = await axios.get(
+          `http://localhost:5000/api/stories/getStories/${parsedID}`
+        );
         const stories = response.data.stories;
         ownSetStories(stories);
         const userDetails = await userRes.json();
@@ -138,19 +173,9 @@ const Story = () => {
     }
   }, [id, parsedID, checkAuthentication]);
 
+  const uniqueImageUrls = new Set();
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:5500");
-    setSocket(newSocket);
-
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
-
-
-
-  const showFullStory = async (userId) => {
+  const showFullStory = async (userId, friendIndex = 0) => {
     setShowStory(!showStory);
     try {
       // Fetch stories for the specified user
@@ -158,35 +183,40 @@ const Story = () => {
         `http://localhost:5000/api/stories/getStories/${userId}`
       );
       const userStories = response.data.stories;
-      const user = await axios.post(
-        `http://localhost:5000/api/auth/${userId}`
-      );
+      const user = await axios.post(`http://localhost:5000/api/auth/${userId}`);
       const userDeatil = user.data;
-      console.log("User Details");
-      console.log(userDeatil[0].profileImg);
-      setSelectedFriendStoryImage(userDeatil[0].profileImg)
+      setSelectedFriendStoryImage(userDeatil[0].profileImg);
       if (userStories.length > 0) {
-        // Assuming the first story is selected; you may need to adjust this logic
-        const firstStory = userStories[0];
-        setSelectedStory(firstStory);
         setSelectedFriendStories(userStories);
+        setSelectedStoryIndex(0);
+        setSelectedStory(userStories[0]); // Set the selected story to the first story
       } else {
-        // Handle the case when there are no stories
-        setSelectedStory(null);
         setSelectedFriendStories([]);
+        setSelectedStory(null);
       }
+      setFriendDetailIndex(friendIndex); // Set the initial friend detail index
     } catch (error) {
       console.error("Error fetching user stories:", error);
-      setSelectedStory(null);
       setSelectedFriendStories([]);
+      setSelectedStory(null);
     }
   };
 
+  // Update the navigateToNextStory function to switch between user friends' stories
   const navigateToNextStory = (e) => {
     e.stopPropagation();
-    const nextIndex = (selectedStoryIndex + 1) % selectedFriendStories.length;
-    setSelectedStoryIndex(nextIndex);
-    setSelectedStory(selectedFriendStories[nextIndex]);
+    const nextFriendIndex = (selectedStoryIndex + 1) % friendStories.length;
+    setSelectedStoryIndex(0); // Reset the story index to the first story of the next friend
+    setFriendDetailIndex(nextFriendIndex); // Add this line to set the friend detail index
+
+    const nextFriendStories = friendStories[nextFriendIndex];
+    if (nextFriendStories && nextFriendStories.length > 0) {
+      setSelectedFriendStories(nextFriendStories);
+      setSelectedStory(nextFriendStories[0]); // Set the selected story to the first story of the next friend
+    } else {
+      setSelectedFriendStories([]);
+      setSelectedStory(null);
+    }
   };
 
   const navigateToPreviousStory = (e) => {
@@ -216,6 +246,23 @@ const Story = () => {
     });
   };
 
+  const getTimeDifferenceString = (timestamp) => {
+    const currentDate = new Date();
+    const timestampDate = new Date(timestamp);
+    const timeDifferenceMilliseconds = currentDate - timestampDate;
+    const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
+    const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
+    const timeDifferenceHours = Math.floor(timeDifferenceMinutes / 60);
+  
+    if (timeDifferenceSeconds < 60) {
+      return `${timeDifferenceSeconds} seconds ago`;
+    } else if (timeDifferenceMinutes < 60) {
+      return `${timeDifferenceMinutes} minutes ago`;
+    } else {
+      return `${timeDifferenceHours} hours ago`;
+    }
+  };
+
   return (
     <div className={styles.stories}>
       <div className={styles.story} onClick={() => showFullStory(null)}>
@@ -224,10 +271,14 @@ const Story = () => {
             {selectedStory && (
               <>
                 <div className={styles.userNameStory}>
-                  <img src={`http://localhost:5000/${selectedFriendStoryImage}`} alt="" />
+                  <img
+                    src={`http://localhost:5000/${selectedFriendStoryImage}`}
+                    alt=""
+                  />
                   <div className={styles.userHeading}>
-                    <h1>{selectedStory.name}</h1>
-                    <p>10 minutes ago</p>
+                    <h1>{selectedStory.userName}</h1>
+                    {/* <p>10 minutes ago</p> */}
+                    <p>{getTimeDifferenceString(selectedStory.createdAt)}</p>
                   </div>
                 </div>
                 <div className={styles.userStoryContent}>
@@ -243,7 +294,7 @@ const Story = () => {
                     background="transparent"
                     stories={selectedFriendStories.map((story) => ({
                       type: "image",
-                      url: `http://localhost:5000/${story.mediaUrl}`,
+                      url: story.downloadURL,
                       duration: 5000,
                     }))}
                   />
@@ -307,25 +358,24 @@ const Story = () => {
         {/* <button onClick={() => navigate("/create_story")}>+</button> */}
         <button onClick={handleMessageButtonClick}>+</button>
       </div>
-      {friendStories.map((story, index) => (
-        <div
-          className={styles.story}
-          key={story._id}
-          onClick={() => showFullStory(story[index].userId)}
-        >
-          <img
-            // src={story.mediaUrl}
-            src={
-              story[0]?.mediaUrl
-                ? `http://localhost:5000/${story[index].mediaUrl}`
-                : ""
-            }
-            alt={story.name}
-            // onClick={() => showFullStory(story[index].userId)}
-          />
-          <span>{story.name}</span>
-        </div>
-      ))}
+      {friendStories.map((friendStory, index) =>
+        friendStory.slice(0, 1).map((story) => {
+          if (!uniqueImageUrls.has(story.downloadURL)) {
+            uniqueImageUrls.add(story.downloadURL);
+            return (
+              <div
+                className={styles.story}
+                key={story._id}
+                onClick={() => showFullStory(story.userId)}
+              >
+                <img src={story.downloadURL} alt={story.name} />
+                <span>{story.name}</span>
+              </div>
+            );
+          }
+          return null;
+        })
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 var router = express();
 const bcrypt = require("bcrypt");
 const connection = require("../connection");
+const io = require("../socket");
 const Group = require("../models/GroupChat")
 
 
@@ -16,6 +17,10 @@ router.post("/create", async (req, res) => {
         groupAdmin:admin
       });
       const group = await newGroup.save();
+      members.forEach(member => {
+        io.to(member).emit('showCreatedGroup',group);
+      });
+      io.emit('showCreatedGroup',)
       res.status(200).json(group);
     } catch (error) {
       console.log(error);

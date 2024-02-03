@@ -1021,7 +1021,8 @@ export const Group = () => {
   const [groups, setGroups] = useState([]);
   const [groupName, setGroupName] = useState("");
   const [groupId, setGroupId] = useState(null);
-  const [conversationId, setConversationId] = useState(null);
+  const [conversationId , setConversationId] = useState(null);
+
 
   var msg = "";
   //25 Sep 2023 code
@@ -1211,7 +1212,7 @@ export const Group = () => {
             }),
           }
         );
-        if (res.status === 200) {
+       if (res.status === 200) {
           // Clear the input field after sending
           setMessage("");
         } else {
@@ -1223,6 +1224,8 @@ export const Group = () => {
       }
     }
   };
+
+
 
   const createGroup = async () => {
     try {
@@ -1294,6 +1297,20 @@ export const Group = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const handleGroup = (userToAdd) => {
+    const isUserAlreadyAdded = selectedUsers.some(
+      (user) => user.id === userToAdd.id
+    );
+
+    if (isUserAlreadyAdded) {
+      // User is already added, show an alert or handle it as needed
+      alert("User is already added to the group.");
+    } else {
+      // User is not in the selectedUsers array, add them
+      setSelectedUsers([...selectedUsers, userToAdd]);
+    }
+  };
 
   const addUserToGroup = (user) => {
     setSearchResult([]);
@@ -1420,19 +1437,19 @@ export const Group = () => {
     }
   }
 
-  const getConversationId = async (group_id) => {
+  const getConversationId = async ( group_id ) =>{
     try {
       // Make an API request to fetch group messages based on groupId
       const res = await fetch(
         `http://localhost:5000/api/conversation/get_group_id/conversation`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            group_id: group_id,
-          }),
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              group_id: group_id,
+            }),
         }
       );
       if (res.ok) {
@@ -1445,7 +1462,7 @@ export const Group = () => {
     } catch (error) {
       console.error("Error fetching conversation for the group:", error);
     }
-  };
+  }
 
   const handleMessageClick = () => {
     socket.emit("initiateGroupCall", {
@@ -1464,10 +1481,11 @@ export const Group = () => {
 
   // Render the rest of your component based on the authentication status
   return (
-    <div className="grpOuterDiv">
-      <div style={styles} className="container">
-        {/* left-options bar */}
-        <div className="grp-left-opt-menu">
+    <div style={styles} className="container">
+      {/* left-options bar */}
+
+      <div className="left-opt-menu">
+        <div className="container">
           <div className="items">
             <div className="profile-img">
               <img src={image} alt="" />
@@ -1478,31 +1496,40 @@ export const Group = () => {
             <div className="item2">
               <PeopleRoundedIcon fontSize="medium" className="icon2" />
             </div>
+            <div className="item3">
+              {/* <CallRoundedIcon fontSize="medium" className="icon3" /> */}
+              <CallRoundedIcon fontSize="medium" className="icon3" />
+            </div>
+            <hr></hr>
             <div className="item4">
               <SettingsRoundedIcon fontSize="medium" className="icon4" />
             </div>
           </div>
         </div>
-        {/* left - activity bar */}
-        <div className="left-menu">
-          <div className="top-part">
-            <div className="top-part-opt">
-              <h1>Messages</h1>
-              <GroupsIcon />
+      </div>
+
+      {/* left - activity bar */}
+      <div className="left-menu">
+        <div className="top-part">
+          <div className="top-part-opt">
+            <h1>Messages</h1>
+            <GroupsIcon />
+          </div>
+          <div className="top-search-bar">
+            <input type="text" name="search-bar" placeholder="Search" />
+            <div className="search-btn">
+              <SearchIcon className="search-icon" />
             </div>
-            <div className="top-search-bar">
-              <input type="text" name="search-bar" placeholder="Search" />
-              <div className="search-btn">
-                <SearchIcon className="search-icon" />
-              </div>
-            </div>
+          </div>
+          <div className="mid-part">
+            <span>Pinned Messages</span>
+            {/* <button onClick={toggleCreateGroupModal}>Create Group</button> */}
             <button className="CreateGrpIcon" onClick={toggleCreateGroupModal}>
               Create Group
             </button>
-            <div className="mid-part">
-              <span>All Chats</span>
-
-              {groups.map((group, user, index) => {
+            {
+              // conversations.length>0?
+              groups.map((group, user, index) => {
                 if (groups.length > 0) {
                   console.log(group._id);
                   console.log(group.groupName);
@@ -1510,16 +1537,31 @@ export const Group = () => {
                     <div
                       className="mid-text"
                       key={index}
+                      // onClick={() =>
+                      //   fetchMessages(
+                      //     conversation.conversationId,
+                      //     conversation.user
+                      //   )
+                      // }
+
                       onClick={() => {
-                        setActiveConversations(true);
+                        alert("Hello");
+                        handleGroupClick(group._id);
                         setGroupId(group._id);
                         setGroupName(group.groupName);
-                        getConversationId(group._id);
-                        handleGroupClick(group._id);
                       }}
                     >
                       <div className="left">
-                        <img src={image} alt="" />
+                        <img
+                          src={image}
+                          alt=""
+                          // onClick={() =>
+                          //   fetchMessages(
+                          //     group.conversationId,
+                          //     conversation.user
+                          //   )
+                          // }
+                        />
                         <div className="left-info">
                           <h2 onClick={() => console.log("Hello")}>
                             {/* {conversation.conversationUserData[0].username} */}
@@ -1538,8 +1580,12 @@ export const Group = () => {
                     No conversations to show.
                   </div>;
                 }
-              })}
-              {/* <span>All Conversations</span>
+              })
+            }
+
+            <span>All Conversations</span>
+
+            <div className="AllUserChat">
               <div className="mid-text4">
                 <div className="left4">
                   <img src={image} alt=""></img>
@@ -1566,7 +1612,7 @@ export const Group = () => {
                   <p>9:26 PM</p>
                   <circle>1</circle>
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
@@ -1610,32 +1656,37 @@ export const Group = () => {
                       <div className="PopUpBox">
                         <div className="top">
                           <img src={image} alt=""></img>
-                          <h1>{groupName}</h1>
+                          <h1>John Doe</h1>
+                          <p>Online</p>
                         </div>
-                        {/* <div className="mid2">
+                        <div className="mid1">
+                          <CallRoundedIcon className="mid1-icon" />
+                          <VideocamIcon className="mid1-icon" />
+                        </div>
+                        <div className="mid2">
                           <div className="userOpt">
                             <CollectionsIcon className="right-part-icon" />
                             <h2>Media</h2>
                           </div>
-                        </div> */}
-                        {/* <div className="mid3">
+                        </div>
+                        <div className="mid3">
                           <div className="userOpt">
                             <VolumeOffIcon className="right-part-icon" />
                             <h2>Mute Chat</h2>
                           </div>
-                        </div> */}
-                        {/* <div className="mid4">
+                        </div>
+                        <div className="mid4">
                           <div className="userOpt">
                             <ArrowBackIosIcon className="right-part-icon" />
                             <h2>Close Chat</h2>
                           </div>
-                        </div> */}
-                        {/* <div className="mid5">
+                        </div>
+                        <div className="mid5">
                           <div className="userOpt">
                             <LockIcon className="right-part-icon" />
                             <h2>Chat Lock</h2>
                           </div>
-                        </div> */}
+                        </div>
                         <div className="bottom">
                           <div className="userOpt1">
                             <BlockIcon className="bottom-icon" />
@@ -1643,7 +1694,7 @@ export const Group = () => {
                           </div>
                           <div className="userOpt2">
                             <ReportIcon className="bottom-icon" />
-                            <h2>Leave</h2>
+                            <h2>Report</h2>
                           </div>
                         </div>
                       </div>
@@ -1655,6 +1706,7 @@ export const Group = () => {
               </div>
               <div className="inner-container">
                 {groupMessages.map(({ message, user: { id } = {} }, index) => {
+                  console.log(groupMessages);
                   // Check if the message starts with "data:image/"
                   if (message.startsWith("data:image/")) {
                     // If it's an image, render it as an img element
@@ -1665,7 +1717,20 @@ export const Group = () => {
                         }
                         key={index}
                       >
-                        <img src={message} alt="Sent Image" />
+                        {/* <img
+                          src={message}
+                          alt="Sent Image"
+                          className="incomingMsgImg"
+                          onClick={showFullImg}
+                        /> */}
+                        {/* {showImg ? (
+                          <div className="chatImgShow">
+                            <img src={message} alt="Sent Image" />
+                              <CloseIcon className="closeIcon" onClick={closeImg}/>
+                          </div>
+                        ) : (
+                          <div className="chatImgClose"></div>
+                        )} */}
                       </div>
                     );
                   } else {
@@ -1682,6 +1747,16 @@ export const Group = () => {
                     );
                   }
                 })}
+                {/* <div className="senders-photo">
+                  {Image && Image.startsWith("data:image/") ? (
+                    <img src={Image} alt="" />
+                  ) : null}
+                </div>
+                <div className="recievers-photo">
+                  {Image && Image.startsWith("data:image/") ? (
+                    <img src={Image} alt="" />
+                  ) : null}
+                </div> */}
               </div>
 
               <div className="chat-bottom">
@@ -1706,8 +1781,8 @@ export const Group = () => {
                   <label htmlFor="imageInput" onClick={chooseImage}>
                     <PhotoSizeSelectActualIcon className="chat-btn" />
                   </label>
-                  {/* <LocationOnIcon className="chat-btn" />
-                  <MicNoneIcon className="chat-btn" /> */}
+                  <LocationOnIcon className="chat-btn" />
+                  <MicNoneIcon className="chat-btn" />
                 </div>
                 <div className="submit-btn-class">
                   {/* <button onClick={() => sendMessage()}>
@@ -1717,7 +1792,7 @@ export const Group = () => {
                     <div className="addMembersLabel">
                       {/* Display the selected user names here */}
                       <button onClick={() => uploadImage()}>
-                        <ArrowUpwardRoundedIcon className="submit-btn" />
+                        <TelegramIcon className="submit-btn" />
                       </button>
                       {/* <CloseIcon
                     fontSize="10px"
@@ -1727,7 +1802,7 @@ export const Group = () => {
                     </div>
                   ) : (
                     <button onClick={() => sendMessage()}>
-                      <ArrowUpwardRoundedIcon className="submit-btn" />
+                      <TelegramIcon className="submit-btn" />
                     </button>
                   )}
                 </div>
@@ -1736,67 +1811,84 @@ export const Group = () => {
                 )}
               </div>
             </>
-            {/* )} */}
           </div>
+          // ))
         ) : (
           <div
             className="no-conversations"
             style={{ textAlign: "center", marginTop: "10px" }}
           >
-            No Messages to show. Click on the conversation to see the messages
+            No Messages to show.Click on the conversation to see the messages
           </div>
         )}
+      </div>
 
-        {showCreateGroupModal && (
-          // console.log(searchResult),
-          <div className="create-group-modal">
-            <div className="modal-content">
-              <h2>Create Group</h2>
-              {/* New */}
-              <div className="grp-name">
-                <h3>Enter group name</h3>
-                <input
-                  type="text"
-                  placeholder="Enter Group Name"
-                  value={groupValue}
-                  onChange={(e) => setGroupValue(e.target.value)}
+      {showCreateGroupModal && (
+        // console.log(searchResult),
+        <div className="create-group-modal">
+          <div className="modal-content">
+            <h2>Create Group</h2>
+
+            {/* New */}
+
+            <div className="grp-name">
+              <h3>Enter group name</h3>
+              <input
+                type="text"
+                placeholder="Enter Group Name"
+                // value={searchValue}
+                // onChange={handleSearchInputChange}
+                value={groupValue}
+                onChange={(e) => setGroupValue(e.target.value)}
+              />
+            </div>
+            <h3>Add members</h3>
+            <div className="add-members">
+              <input
+                type="text"
+                name="search-bar"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search"
+              />
+              <div className="search-btn">
+                <SearchIcon
+                  className="search-icon"
+                  onClick={handleSearchIconClick}
                 />
               </div>
+            </div>
+            {/* <div className="search-btn">
+              <SearchIcon
+                className="search-icon"
+                onClick={handleSearchIconClick}
+              />
+            </div> */}
 
-              <div className="add-members">
-                <h3>Add members</h3>
-                <div className="add-members-input">
-                  <input
-                    type="text"
-                    name="search-bar"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    placeholder="Search"
-                  />
-                  <div className="search-btn">
-                    <SearchIcon
-                      className="search-icon"
-                      onClick={handleSearchIconClick}
-                    />
-                  </div>
-                </div>
+            {/* <div className="membersLabel">
+              <div className="addMembersLabel">
+                <p>Messi</p>
+                <CloseIcon fontSize="10px" className="membersLabel" />
               </div>
+            </div> */}
 
-              <div className="membersLabel">
-                {selectedUserNames.length > 0 ? (
-                  <div className="addMembersLabel">
-                    {/* Display the selected user names here */}
-                    {selectedUserNames.map((name, index) => (
-                      <>
-                        <p key={index}>{name}</p>
-                        <CloseIcon
-                          fontSize="10px"
-                          className="membersLabel"
-                          onClick={() => handleDelete(name)}
-                        />
-                      </>
-                    ))}
-                    {/* <CloseIcon
+            <div className="membersLabel">
+              {selectedUserNames.length > 0 ? (
+                <div className="addMembersLabel">
+                  {/* Display the selected user names here */}
+                  {selectedUserNames.map((name, index) => (
+                    <>
+                      <p key={index} className="membersLabelName">
+                        {name}
+                      </p>
+                      <CloseIcon
+                        fontSize="10px"
+                        className="membersLabelCloseIcon"
+                        onClick={() => handleDelete(name)}
+                      />
+                    </>
+                  ))}
+                  {/* <CloseIcon
                     fontSize="10px"
                     className="membersLabel"
                     onClick={ () =>handleDelete(id)}
@@ -1835,6 +1927,6 @@ export const Group = () => {
         )}
         <ToastContainer />
       </div>
-    </div>
+    // </div>
   );
 };

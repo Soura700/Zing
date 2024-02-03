@@ -73,15 +73,15 @@ router.delete("/delete_post/:userId/:postId", (req, res) => {
 // });
 
 router.post("/create", upload.array("images", 5), (req, res) => {
-  const { userId, description } = req.body;
+  const { userId, description , username } = req.body;
 
   const images = req.files.map((file) => file.filename);
 
   const checkUserQuery = "SELECT id FROM users WHERE id = ?";
   const insertPostQuery =
-    "INSERT INTO posts (userId, description , image) VALUES (?, ? , ?)";
+    "INSERT INTO posts (userId, username, description , image) VALUES (?, ? , ? , ?)";
 
-  const values = [userId, description, JSON.stringify(images)];
+  const values = [userId, username, description, JSON.stringify(images)];
 
   // Check if the user exists
   connection.query(checkUserQuery, [userId], (err, results) => {
@@ -344,7 +344,7 @@ router.get("/:userId", (req, res) => {
   const userId = req.params.userId;
   try {
     connection.query(
-      "SELECT * FROM posts WHERE userId = ?",
+      "SELECT * FROM posts WHERE userId = ? ORDER BY createdAt DESC",
       [userId], // Add a comma here to separate the query string from the parameter array
       (error, results) => {
         if (error) {

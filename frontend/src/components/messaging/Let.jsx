@@ -19,7 +19,7 @@ import IncomingCallUi from "../IncomingCallUi/IncomingCallUi";
 import ChatUI from "../Chat-main/ChatUi";
 import ChatUI2 from "../Chat-main/Chat-Ui2";
 
-export const Let = ({clickToggle}) => {
+export const Let = () => {
   const location = useLocation();
   var { userId, userName, clicked } = location.state || {};
   const parsedUserId = parseInt(userId);
@@ -41,6 +41,7 @@ export const Let = ({clickToggle}) => {
   const [showGroup, setShowGroup] = useState(false);
   const parsedId = parseInt(id);
   const [showMessageBox, setShowMessageBox] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   //this edited1
   const [showMenu, setShowMenu] = useState(true);
   const [zIndex, setZIndex] = useState(999);
@@ -201,6 +202,7 @@ export const Let = ({clickToggle}) => {
       socket.on("getUser", (activeUsers) => {
         console.log("Active Users", activeUsers);
         setActiveUsers(activeUsers);
+        socket.emit("onlineUsers", activeUsers);
       });
       socket.on("getMessage", (data) => {
         console.log(data);
@@ -211,11 +213,17 @@ export const Let = ({clickToggle}) => {
       });
     }
   }, [socket, parsedId, isLoggedIn]);
+
   const isUserOnline = (userId) => {
-    // return activeUsers.find((user)=>user.userId ===  userId );
     return activeUsers.some((user) => user.userId === userId);
   };
+
+  console.log(activeUsers);
+  // socket.emit("onlineUsers", activeUsers);
+
+  console.log("Online Users");
   console.log(isUserOnline());
+
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {
@@ -738,7 +746,7 @@ export const Let = ({clickToggle}) => {
             profileImg={messages.receiver?.profileImg}
             showMessageBox={true}
             mobileZindex={zIndex}
-            clickToggle={clickToggle}
+            // clickToggle={clickToggle}
           />
         ) : (
           <div

@@ -23,7 +23,7 @@ export const LeftBar = ({ isVisible }) => {
           <div className={styles.item}>
             {/* here item means each options (ex: friends, groups ,marketplace etc) */}
             <div className={styles.logo}>
-              <PeopleAltIcon />
+              <PeopleAltIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Friends</h1>
