@@ -150,8 +150,9 @@
     border: 0px solid rgb(220, 220, 220);
     height: fit-content;
     width: 5rem;
-    background: #2a223d;
-    color: rgb(184, 184, 184);
+    padding: 2px 0px;
+    background: rgb(240, 240, 240);
+    color: rgb(68, 68, 68);
     border-radius: 12px;
     text-align: center;
     margin: auto;
@@ -378,8 +379,7 @@
     color: rgb(255, 255, 255);
     text-align: left;
     margin: 10px 15px;
-    font-size: 25px;
-    font-weight: 500;
+    font-size: 20px;
     background: rgb(255, 255, 255);
     background: #332a49;
 }
@@ -788,59 +788,15 @@
         margin-top: -60px;
         /* transition: 0.35s ease-in; */
         transform: translateY(15%);
-        background: white;
+        
+        background: transparent;
         /* background: transparent; */
         /* backdrop-filter: blur(10px) saturate(180%); */
-    }
-
-}
-
-
-@media (max-width: 440px) {
-    .container {
-        border: none;
-        background: rgb(255, 255, 255);
-        width: 105vw;
-        box-shadow: 10px 0px 9px 1px rgba(137, 137, 137, 0.285);
-
-
-    }
-
-    .item {
-        border: none;
-        border-radius: 8px;
-        background: rgb(25, 151, 255);
-        display: flex;
-        height: 45px;
-        flex-direction: row;
-        padding-left: 10px;
-        margin-top: 2px;
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-
-    .leftbar_show {
         
-        position: absolute;
-        border-radius: 12px;
-        background: rgb(255, 255, 255);
-        z-index: 1;
-       
-    } */
-
-
-
-    /* original code */
-    .leftBar {
-        display: block;
-        position: absolute;
-        transition: top 1s ease-in-out;
-        /* top: 100px; */
-        background: red;
-        z-index: -999;
-        display: none;
     }
-
-
-
+    .container {
+        display: none;
+        
+    }
 }
+

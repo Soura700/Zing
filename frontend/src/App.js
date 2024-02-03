@@ -48,7 +48,7 @@ function App() {
               <Outlet />
             </React.StrictMode>
           </div>
-          <RightBar />
+          <RightBar isVisible={toggle}/>
         </div>
       </div>
     );
@@ -78,7 +78,7 @@ function App() {
         {
           path:"/saved",
           element:<Saved/>
-        },
+        }
       ],
     },
 

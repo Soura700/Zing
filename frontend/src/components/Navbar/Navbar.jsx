@@ -7,11 +7,11 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import EmailRoundedIcon from "@mui/icons-material/EmailRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import CloseIcon from "@mui/icons-material/Close";
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
-import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
+import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
 import { useState } from "react";
@@ -43,6 +43,31 @@ const Navbar = ({ toggleMenu, user }) => {
   const [unreadMessageCount, setunreadMessageCount] = useState(0); //It is for unreadnotification (use case : like facebook notification..)
   const [lastCheckedTimestamp, setLastCheckedTimestamp] = useState(null);
   const [showRightBar, setShowRightBar] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const searchRef = useRef(null);
+  //popup for search modal
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setPopupVisible(false);
+      }
+    };
+
+    if (popupVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [popupVisible]);
+
+  const handleSearchClick = () => {
+    setPopupVisible(true);
+  };
+
   useEffect(() => {
     // Event listener to close notifPanel when clicked outside of it
     const handleClickOutside = (event) => {
@@ -407,189 +432,249 @@ const Navbar = ({ toggleMenu, user }) => {
     setShowRightBar(!showRightBar);
   };
   return (
-   <div className={styles.navbarContainer}>
-     <div className={styles.navbar}>
-      <div className={styles.left_navbar}>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span className={styles.title}>SocialMedia</span>
-        </Link>
+    <div className={styles.navbarContainer}>
+      <div className={styles.navbar}>
+        <div className={styles.left_navbar}>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <span className={styles.title}>SocialMedia</span>
+          </Link>
 
-        {/* <HomeOutlinedIcon className={styles.icon} /> */}
+          {/* <HomeOutlinedIcon className={styles.icon} /> */}
 
-        {/* <GridViewOutlinedIcon className={styles.icon} /> */}
+          {/* <GridViewOutlinedIcon className={styles.icon} /> */}
 
-        <div className={styles.search}>
-          <SearchOutlinedIcon className={styles.icon} onClick={handleToggle} />
-          {toggle ? (
-            <input
-              type="text"
-              placeholder="Search..."
-              className={styles.extended}
+          <div className={styles.search} ref={searchRef}>
+            <SearchOutlinedIcon
+              className={styles.icon}
+              onClick={handleToggle}
             />
-          ) : (
-            <input
-              type="text"
-              placeholder="Search..."
-              className={styles.default}
-            />
-          )}
-        </div>
+            {toggle ? (
+              <input
+                type="text"
+                placeholder="Search..."
+                className={styles.extended}
+                onClick={handleSearchClick}
+              />
+            ) : (
+              <input
+                type="text"
+                placeholder="Search..."
+                className={styles.default}
+                onClick={handleSearchClick}
+              />
+            )}
+            {popupVisible && (
+              <div className={styles.searchPopUpModal}>
+                <h4>Search Results</h4>
+                <div className={styles.searchPopUpUserContainer}>
 
-        {/* Sidebar Menu */}
+                  <div className={styles.searchUser}>
+                    <img
+                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                      alt=""
+                    />
+                    <p>John Doe</p>
+                  </div>
 
-        <MenuRoundedIcon className={styles.menuIcon} onClick={toggleMenu} />
+                  <div className={styles.searchUser}>
+                    <img
+                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                      alt=""
+                    />
+                    <p>John Doe</p>
+                  </div>
 
-        {/* <MenuRoundedIcon className='menuIcon'  /> */}
+                  <div className={styles.searchUser}>
+                    <img
+                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                      alt=""
+                    />
+                    <p>John Doe</p>
+                  </div>
 
-        {/* <LeftBar isVisible={toggle} /> */}
-      </div>
+                  <div className={styles.searchUser}>
+                    <img
+                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                      alt=""
+                    />
+                    <p>John Doe</p>
+                  </div>
 
-      <div className={styles.right_navbar}>
-        {/* <PersonRoundedIcon onClick={handleIconClick} /> */}
-        {/* PersonRoundedIcon with unread notification count badge */}
-        <div className={styles.userOptPart}>
-          <BedtimeRoundedIcon className={styles.icon} />
-          {/* dark mode button */}
-          <div className={styles.profileIconContainer}>
-            <PersonRoundedIcon
-              onClick={handleIconClick}
-              className={styles.friendsBadgeIcon}
-            />
-            {unreadNotificationCount > 0 && (
-              <div className={styles.friendsBadge}>
-                {unreadNotificationCount}
+                  <div className={styles.searchUser}>
+                    <img
+                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                      alt=""
+                    />
+                    <p>John Doe</p>
+                  </div>
+
+                </div>
               </div>
             )}
           </div>
-          {isMenuVisible && (
-            <div className={styles.popup_menu}>
-              <ul className={styles.requests}>
-                {friendRequests.map((user, index) => {
-                  console.log(user);
-                  const username =
-                    user.userDetails && user.userDetails.length > 0
-                      ? user.userDetails[0].username
-                      : "";
-                  return (
-                    <li className={styles.request} key={index}>
-                      <div className={styles.left}>
-                        {/* <img
+
+          {/* Sidebar Menu */}
+
+          <MenuRoundedIcon className={styles.menuIcon} onClick={toggleMenu} />
+
+          {/* <MenuRoundedIcon className='menuIcon'  /> */}
+
+          {/* <LeftBar isVisible={toggle} /> */}
+        </div>
+
+        <div className={styles.right_navbar}>
+          {/* <PersonRoundedIcon onClick={handleIconClick} /> */}
+          {/* PersonRoundedIcon with unread notification count badge */}
+          <div className={styles.userOptPart}>
+            <BedtimeRoundedIcon className={styles.icon} />
+            {/* dark mode button */}
+            <div className={styles.profileIconContainer}>
+              <PersonRoundedIcon
+                onClick={handleIconClick}
+                className={styles.friendsBadgeIcon}
+              />
+              {unreadNotificationCount > 0 && (
+                <div className={styles.friendsBadge}>
+                  {unreadNotificationCount}
+                </div>
+              )}
+            </div>
+            {isMenuVisible && (
+              <div className={styles.popup_menu}>
+                <ul className={styles.requests}>
+                  {friendRequests.map((user, index) => {
+                    console.log(user);
+                    const username =
+                      user.userDetails && user.userDetails.length > 0
+                        ? user.userDetails[0].username
+                        : "";
+                    return (
+                      <li className={styles.request} key={index}>
+                        <div className={styles.left}>
+                          {/* <img
                         className={styles.ig}
                         src="https://images.pexels.com/photos/19555765/pexels-photo-19555765/free-photo-of-portrait-of-egret-bird.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
                         alt="john doe"
                       /> */}
-                        <img src={userPhoto} />
-                      </div>
-                      <p className={styles.middle}>
-                        <a
-                          style={{ textDecoration: "none" }}
-                          href={`/profile/${user.senderUserId}`}
-                          className={styles.userNameLink}
-                        >
-                          <span>{user.senderUsername}</span>
-                        </a>
-                        requested to follow you
-                      </p>
+                          <img src={userPhoto} />
+                        </div>
+                        <p className={styles.middle}>
+                          <a
+                            style={{ textDecoration: "none" }}
+                            href={`/profile/${user.senderUserId}`}
+                            className={styles.userNameLink}
+                          >
+                            <span>{user.senderUsername}</span>
+                          </a>
+                          requested to follow you
+                        </p>
 
-                      <div className={styles.right}>
-                        <button
-                          onClick={() =>
-                            handleConfirm(user.senderUsername, senderName)
-                          }
-                          className={styles.acceptBtn}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleDelete(user.senderUsername, senderName)
-                          }
-                          className={styles.declineBtn}
-                        >
-                          Decline
-                        </button>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
-          <EmailRoundedIcon
-            className={styles.messagesBadgeIcon}
-            onClick={openNotifPanel}
-          />
-          <div className={styles.messagesBadge}>{unreadMessageCount}</div>
-          <NotificationsRoundedIcon
-            onClick={openNotifPanel}
-            className={styles.notifBadgeIcon}
-          />
-          <div className={styles.messagesBadge}>{unreadMessageCount}</div>
-          {notifMenu ? (
-          <div ref={notifPanelRef} className={styles.notifPanel}>
-            <div className={styles.notifPanelHeader}>
-              <h1>Notification Panel</h1>
-              <CloseIcon onClick={() => setNotifMenu(false)} />
-            </div>
-            <div className={styles.notifcontainer}>
-            <ul className={styles.requests}>
-                {message.map((user, index) => {
-                  console.log("Message User");
-                  console.log(user);
-                  const username =
-                    user.userDetails && user.userDetails.length > 0
-                      ? user.userDetails[0].username
-                      : "";
-                  return (
-                    <li className={styles.request} key={index}>
-                      <div className={styles.left}>
-                        <img src={userPhoto} />
-                      </div>
-                      <p className={styles.middle}>
-                        <a
-                          style={{ textDecoration: "none" }}
-                          href={`/profile/${user.senderUserId}`}
-                          className={styles.userNameLink}
-                        >
-                          <span>{user.receiverUserName}</span>
-                        </a>
-                        {/* {} */}
-                        {/* {user.status === "Declined" ? "declined your request" : "accepted your request"} */}
-                        {user.message}
-                      </p>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+                        <div className={styles.right}>
+                          <button
+                            onClick={() =>
+                              handleConfirm(user.senderUsername, senderName)
+                            }
+                            className={styles.acceptBtn}
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleDelete(user.senderUsername, senderName)
+                            }
+                            className={styles.declineBtn}
+                          >
+                            Decline
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+            <EmailRoundedIcon
+              className={styles.messagesBadgeIcon}
+              onClick={openNotifPanel}
+            />
+            <div className={styles.messagesBadge}>{unreadMessageCount}</div>
+            <NotificationsRoundedIcon
+              onClick={openNotifPanel}
+              className={styles.notifBadgeIcon}
+            />
+            <div className={styles.messagesBadge}>{unreadMessageCount}</div>
+            {notifMenu ? (
+              <div ref={notifPanelRef} className={styles.notifPanel}>
+                <div className={styles.notifPanelHeader}>
+                  <h1>Notification Panel</h1>
+                  <CloseIcon onClick={() => setNotifMenu(false)} />
+                </div>
+                <div className={styles.notifcontainer}>
+                  <ul className={styles.requests}>
+                    {message.map((user, index) => {
+                      console.log("Message User");
+                      console.log(user);
+                      const username =
+                        user.userDetails && user.userDetails.length > 0
+                          ? user.userDetails[0].username
+                          : "";
+                      return (
+                        <li className={styles.request} key={index}>
+                          <div className={styles.left}>
+                            <img src={userPhoto} />
+                          </div>
+                          <p className={styles.middle}>
+                            <a
+                              style={{ textDecoration: "none" }}
+                              href={`/profile/${user.senderUserId}`}
+                              className={styles.userNameLink}
+                            >
+                              <span>{user.receiverUserName}</span>
+                            </a>
+                            {/* {} */}
+                            {/* {user.status === "Declined" ? "declined your request" : "accepted your request"} */}
+                            {user.message}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            ) : null}
+            <div className={styles.notifBadge}>{unreadNotificationCount}</div>
           </div>
-        ) : null}
-          <div className={styles.notifBadge}>{unreadNotificationCount}</div>
-        </div>
 
-        <div className={styles.user}>
-          <a
-            style={{ textDecoration: "none" }}
-            href={`/profile/${parsedID}`}
-            className={styles.userNameLink}
-          >
-            <img src={userPhoto} />
+          <div className={styles.user}>
+            <a
+              style={{ textDecoration: "none" }}
+              href={`/profile/${parsedID}`}
+              className={styles.userNameLink}
+            >
+              <img src={userPhoto} />
 
-            <span>{username}</span>
-          </a>
+              <span>{username}</span>
+            </a>
+          </div>
         </div>
+        {/* <ToastContainer/> */}
       </div>
-      {/* <ToastContainer/> */}
+      <div className={styles.bottomNavbar}>
+        <HomeRoundedIcon className={styles.bottomNavbarIcon} />
+        <GroupRoundedIcon
+          className={styles.bottomNavbarIcon}
+          onClick={toggleRightBar}
+        />
+        {showRightBar && <RightBar className={styles.bottomNavbarIcon} />}
+        <MessageRoundedIcon className={styles.bottomNavbarIcon} />
+        <BookmarkRoundedIcon className={styles.bottomNavbarIcon} />
+        <SettingsRoundedIcon className={styles.bottomNavbarIcon} />
+        <MenuRoundedIcon
+          className={styles.bottomNavbarIcon}
+          onClick={toggleMenu}
+        />
+      </div>
     </div>
-    <div className={styles.bottomNavbar}>
-      <HomeRoundedIcon className={styles.bottomNavbarIcon}/>
-      <GroupRoundedIcon className={styles.bottomNavbarIcon} onClick={toggleRightBar}/>
-      {showRightBar && <RightBar className={styles.bottomNavbarIcon}/>}
-      <MessageRoundedIcon className={styles.bottomNavbarIcon}/>
-      <BookmarkRoundedIcon className={styles.bottomNavbarIcon}/>
-      <SettingsRoundedIcon className={styles.bottomNavbarIcon}/>
-    </div>
-   </div>
   );
 };
 

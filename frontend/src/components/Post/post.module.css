@@ -165,11 +165,18 @@
 
 .details>.name {
   font-weight: 500;
+  font-size: 25px;
 }
-
+.details .name {
+  color: rgb(59, 39, 79);
+  font-weight: 500;
+  font-size: 23px;
+}
 
 .details>.date {
   font-size: 12px;
+  margin-left: 5px;
+  color: rgb(103, 103, 103);
 }
 
 .content {

@@ -149,10 +149,22 @@ const ChatUI2 = ({
   //   setClicked(true); // Set clicked to false to show the main-chat-section
   // };
 
-  const handleArrowButtonClick = () => {
-  setClicked((clicked) => {
-    alert("Previous clicked state:" + clicked);
-    return !clicked; // Toggle the previous state
+//   const handleArrowButtonClick = () => {
+//   setClicked((clicked) => {
+//     alert("Previous clicked state:" + clicked);
+//     return !clicked; 
+//   });
+// };
+
+const handleArrowButtonClick = () => {
+  setClicked((prevClicked) => {
+    // Toggle the previous state
+    if (prevClicked) {
+      // If the user is going back to the /message page, trigger a reload
+      navigate("/message");
+      window.location.reload();
+    }
+    return !prevClicked;
   });
 };
   // const customStyle = {   zIndex: mobileZindex , visibility: clicked ? "hidden" : "visible" }
