@@ -48,7 +48,7 @@
 
 .btn {
   margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   align-items: center;
   height: fit-content;
 }
@@ -59,38 +59,39 @@
 
 .btn .btn1 {
   border: none;
-  background-color: #a479fa;
+  background-color: #4d3f68;
   color: white;
-  width: fit-content;
   font-size: 20px;
-  margin-top: 10px;
+  width: fit-content;
+  margin-top: 0px;
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 70px;
   cursor: pointer;
 }
 
+
 .btn .btn1:hover {
-  box-shadow: 2px 2px 12px #a479fa;
-  background-color: #8363c2;
+  box-shadow: 2px 2px 12px #c6c6c6;
+  background-color: #4d3f68;
   outline: none;
 }
 .btn .btn1:active {
   border: 0px;
   outline: none;
 }
+
 .btn .btn2 {
   border: none;
   background-color: rgb(255, 255, 255);
-  border: 1px solid #a7a7a7;
+  border: 1px solid #bcbcbc;
   color: rgb(104, 104, 104);
-  width: fit-content;
   font-size: 20px;
+  width: fit-content;
   /* margin-top: 10px; */
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 10px 10px;
+  border-radius: 70px;
   cursor: pointer;
 }
-
 .btn .settings {
   margin-left: 30px;
   color: rgb(163, 163, 163);
@@ -142,7 +143,35 @@
   -moz-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62); */
   /* box-shadow: 0px 0px 20px 5px rgb(146, 146, 146); */
 }
-
+.changeProfilePic {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  border: 0px solid black;
+  padding: 5px;
+  height: 40px;
+  width: 40px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.362);
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+.changeCoverPic {
+  position: absolute;
+  left: 56%;
+  bottom: -43px;
+  border: 0px solid rgb(123, 123, 123);
+  padding: 3px;
+  height: 45px;
+  width: 55px;
+  font-size: 25px; 
+  border-radius: 50%;
+  background: #ffffffe3;
+  color: #4d3f68e3;
+  cursor: pointer;
+  box-shadow: 0px 0px 5px 1px rgb(188, 188, 188); 
+}
 .images {
   width: 100%;
   height: 200px;
@@ -151,11 +180,14 @@
   align-content: center;
   justify-content: center;
 }
-
+.images input {
+  display: none;
+}
 .cover {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  position: relative;
 }
 
 .info {
@@ -258,16 +290,16 @@ a {
 
 /* Hide the default scrollbar for WebKit browsers */
 .profileFriends::-webkit-scrollbar {
-  width: 1rem;
+  width: 5px;
   height: 3px;
 }
 
 .profileFriends::-webkit-scrollbar-thumb {
-  background-color: #a479fa;
+  background-color: #534d61b7;
 }
 
 .profileFriends::-webkit-scrollbar-track {
-  background-color: #ffffff;
+  background: #332e3cb7;
 }
 
 /* ... rest of your styles ... */
@@ -365,11 +397,11 @@ a {
   height: 0px;
 }
 .suggestedUsers::-webkit-scrollbar-thumb {
-  background-color: #a479fa;
+  background-color: #534d61b7;
 }
 
 .suggestedUsers::-webkit-scrollbar-track {
-  background-color: #ffffff;
+  background: #332e3cb7;
 }
 
 /* ... rest of your styles ... */
@@ -435,24 +467,24 @@ a {
 
   .btn .btn1 {
     border: none;
-    background-color: #a479fa;
+    background-color: #4d3f68;
     color: white;
     font-size: 15px;
     margin-top: 0px;
     padding: 10px 20px;
-    border-radius: 10px;
+    border-radius: 70px;
     cursor: pointer;
   }
 
   .btn .btn2 {
     border: none;
     background-color: rgb(255, 255, 255);
-    border: 1px solid #a479fa;
+    border: 1px solid #bcbcbc;
     color: rgb(104, 104, 104);
     font-size: 15px;
     /* margin-top: 10px; */
     padding: 10px 10px;
-    border-radius: 10px;
+    border-radius: 70px;
     cursor: pointer;
   }
 
@@ -488,7 +520,35 @@ a {
     -webkit-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62);
     -moz-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62); */
   }
-
+  .changeProfilePic {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    border: 0px solid black;
+    padding: 5px;
+    height: 40px;
+    width: 40px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.362);
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+  }
+  .changeCoverPic {
+    position: absolute;
+    left: 56%;
+    bottom: -43px;
+    border: 0px solid rgb(123, 123, 123);
+    padding: 3px;
+    height: 45px;
+    width: 55px;
+    font-size: 25px; 
+    border-radius: 50%;
+    background: #ffffffe3;
+    color: #4d3f68e3;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px 1px rgb(188, 188, 188); 
+  }
 }
 
 @media (max-width: 768px) {
@@ -511,7 +571,7 @@ a {
     /* box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62);
     -webkit-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62);
     -moz-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62); */
-    box-shadow: 0px 0px 20px 5px rgb(146, 146, 146);
+    /* box-shadow: 0px 0px 20px 5px rgb(146, 146, 146); */
   }
 
   .uInfo {
@@ -576,6 +636,35 @@ a {
     padding: 10px;
     /* box-shadow: 0px 0px 10px 1px rgb(170, 170, 170); */
     overflow-y: auto;
+  }
+  .changeProfilePic {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    border: 0px solid black;
+    padding: 5px;
+    height: 40px;
+    width: 40px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.362);
+    font-size: 50px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+  }
+  .changeCoverPic {
+    position: absolute;
+    left: 53%;
+    bottom: -25px;
+    border: 0px solid rgb(123, 123, 123);
+    padding: 3px;
+    height: 45px;
+    width: 55px;
+    font-size: 25px; 
+    border-radius: 50%;
+    background: #ffffffe3;
+    color: #4d3f68e3;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px 1px rgb(188, 188, 188); 
   }
 }
 
@@ -687,17 +776,17 @@ a {
   }
 
   /* Hide the default scrollbar for WebKit browsers */
-.suggestedUsers::-webkit-scrollbar {
-  width: 1rem;
-  height: 0px;
-}
-.suggestedUsers::-webkit-scrollbar-thumb {
-  background-color: #a479fa;
-}
-
-.suggestedUsers::-webkit-scrollbar-track {
-  background-color: #ffffff;
-}
+  .suggestedUsers .users::-webkit-scrollbar {
+    width: 1rem;
+    height: 0px;
+  }
+  .suggestedUsers::-webkit-scrollbar-thumb {
+    background-color: #534d61b7;
+  }
+  
+  .suggestedUsers::-webkit-scrollbar-track {
+    background: #332e3cb7;
+  }
 
 /* ... rest of your styles ... */
 

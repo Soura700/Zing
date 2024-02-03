@@ -8,7 +8,7 @@ import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import GroupsIcon from "@mui/icons-material/Groups";
 import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress from Material-UI
-import { useState } from "react";
+import { useState } from "react";                            
 import { io } from "socket.io-client";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../Contexts/authContext";
@@ -43,7 +43,39 @@ export const Let = () => {
   const [showMessageBox, setShowMessageBox] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
   //this edited1
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = useState(true);
+  const [zIndex, setZIndex] = useState(999);
+
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 472px)");
+    const showSidebarMenu = () => {
+      setShowMenu(!showMenu);
+      setZIndex(99);
+    };
+    const handleMediaQueryChange = (mediaQuery) => {
+      // Update z-index based on media query result
+      setZIndex(mediaQuery.matches ? 9999 : 999);
+    };
+
+   
+
+    // Initial check for media query
+    handleMediaQueryChange(mediaQuery);
+
+    // Listen for changes in media query
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    // Clean up the event listener
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
+  }, []);
+
+
+
+
+
   const showSidebarMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -317,12 +349,12 @@ export const Let = () => {
   }
   // Render the rest of your component based on the authentication status
   return (
-    <div className="leftbar2">
+    <div className="leftbar2 outerDiv">
       <div style={styles} className="container">
         {/* left-options bar */}
 
         <div className="left-opt-menu">
-          <div className="container">
+          <div className="innerContainer">
             <div className="items">
               <div className="profile-img">
                 <img src={image} alt="" />
@@ -337,11 +369,6 @@ export const Let = () => {
                   <PeopleRoundedIcon fontSize="medium" className="icon2" />
                 </a>
               </div>
-              <div className="item3">
-                {/* <CallRoundedIcon fontSize="medium" className="icon3" /> */}
-                <CallRoundedIcon fontSize="medium" className="icon3" />
-              </div>
-              <hr></hr>
               <div className="item4">
                 <SettingsRoundedIcon fontSize="medium" className="icon4" />
               </div>
@@ -350,7 +377,9 @@ export const Let = () => {
         </div>
         {/* left - activity bar */}
         {showMenu ? (
-          <div className="showFullMenu">
+          <div className="showFullMenu" 
+          //style={{ zIndex: 9999 }}//
+          >
             <div className="top-part">
               <div className="top-part-opt">
                 <h1>Messages</h1>
@@ -362,61 +391,62 @@ export const Let = () => {
                 </div>
               </div>
               <div className="mid-part">
-                <span>Pinned Messages</span>
+                <span>All Chats</span>
 
-                {
-                  // conversations.length>0?
-                  conversations.map((conversation, user, index) => {
-                    console.log(user);
+                <div className="midChatBox">
+                  {
+                    // conversations.length>0?
+                    conversations.map((conversation, user, index) => {
+                      console.log(user);
 
-                    console.log("Helloooooooo Bro........");
-                    alert(conversation);
+                      console.log("Helloooooooo Bro........");
+                      
 
-                    if (conversations.length > 0) {
-                      return (
-                        <div
-                          className="mid-text"
-                          key={index}
-                          onClick={() =>
-                            fetchMessages(
-                              conversation.conversationId,
-                              conversation.user
-                            )
-                          }
-                        >
-                          <div className="left">
-                            <img
-                              src={image}
-                              alt=""
-                              onClick={() =>
-                                fetchMessages(
-                                  conversation.conversationId,
-                                  conversation.user
-                                )
-                              }
-                            />
-                            <div className="left-info">
-                              <h2 onClick={() => alert("Hello")}>
-                                {/* {conversation.conversationUserData[0].username} */}
-                                {conversation.user.username}
-                              </h2>
-                              <p className="activity">Lorem, ipsum dolor.</p>
+                      if (conversations.length > 0) {
+                        return (
+                          <div
+                            className="mid-text"
+                            key={index}
+                            onClick={() =>
+                              fetchMessages(
+                                conversation.conversationId,
+                                conversation.user
+                              )
+                            }
+                          >
+                            <div className="left">
+                              <img
+                                src={image}
+                                alt=""
+                                onClick={() =>
+                                  fetchMessages(
+                                    conversation.conversationId,
+                                    conversation.user
+                                  )
+                                }
+                              />
+                              <div className="left-info">
+                                <h2 onClick={() => alert("Hello")}>
+                                  {/* {conversation.conversationUserData[0].username} */}
+                                  {conversation.user.username}
+                                </h2>
+                                <p className="activity">Lorem, ipsum dolor.</p>
+                              </div>
+                            </div>
+                            <div className="right">
+                              <p>9:26 PM</p>
                             </div>
                           </div>
-                          <div className="right">
-                            <p>9:26 PM</p>
-                          </div>
-                        </div>
-                      );
-                    } else {
-                      <div className="no-conversations">
-                        No conversations to show.
-                      </div>;
-                    }
-                  })
-                }
-                <span>All Conversations</span>
-                <div className="mid-text4">
+                        );
+                      } else {
+                        <div className="no-conversations">
+                          No conversations to show.
+                        </div>;
+                      }
+                    })
+                  }
+                </div>
+                {/* <div className="mid-text4">
                   <div className="left4">
                     <img src={image} alt=""></img>
                     <div className="left-info">
@@ -442,7 +472,7 @@ export const Let = () => {
                     <p>9:26 PM</p>
                     <circle>1</circle>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -459,7 +489,7 @@ export const Let = () => {
                 </div>
               </div>
               <div className="mid-part">
-                <span>Pinned Messages</span>
+                <span>All Chats</span>
 
                 {
                   // conversations.length>0?
@@ -511,8 +541,7 @@ export const Let = () => {
                     }
                   })
                 }
-                <span>All Conversations</span>
-                <div className="mid-text4">
+                {/* <div className="mid-text4">
                   <div className="left4">
                     <img src={image} alt=""></img>
                     <div className="left-info">
@@ -538,7 +567,7 @@ export const Let = () => {
                     <p>9:26 PM</p>
                     <circle>1</circle>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -619,7 +648,7 @@ export const Let = () => {
               </div>
             </div>
             <div className="mid-part">
-              <span>Pinned Messages</span>
+              <span>All Chats</span>
               {
                 // conversations.length>0?
                 conversations.map((conversation, user, index) => {
@@ -672,8 +701,7 @@ export const Let = () => {
                   }
                 })
               }
-              <span>All Conversations</span>
-              <div className="mid-text4">
+              {/* <div className="mid-text4">
                 <div className="left4">
                   <img src={image} alt=""></img>
                   <div className="left-info">
@@ -698,7 +726,7 @@ export const Let = () => {
                   <p>9:26 PM</p>
                   <circle>1</circle>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -717,6 +745,8 @@ export const Let = () => {
             activeUsers={activeUsers}
             profileImg={messages.receiver?.profileImg}
             showMessageBox={true}
+            mobileZindex={zIndex}
+            // clickToggle={clickToggle}
           />
         ) : (
           <div
