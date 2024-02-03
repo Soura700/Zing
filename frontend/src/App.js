@@ -41,13 +41,14 @@ function App() {
         <ToastContainer />
         <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
-          <LeftBar isVisible={toggle} />
+          {/* <RightBar isVisible={toggle}/> */}
+          <LeftBar/>
           <div style={{ flex: 6 }}>
             <React.StrictMode>
               <Outlet />
             </React.StrictMode>
           </div>
-          <RightBar />
+          <RightBar isVisible={toggle}/>
         </div>
       </div>
     );

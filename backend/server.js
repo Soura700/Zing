@@ -22,6 +22,7 @@ const personalization = require("./routes/personalization");
 const interests_route = require("./routes/interest");
 const unread_message_route = require("./routes/unreadmessages");
 const fof = require("./routes/suggestion");
+const commentRoute = require("./routes/comment");
 const path = require("path");
 const bodyParser = require("body-parser");
 // const io = require("./socket");
@@ -253,6 +254,7 @@ app.use("/api/bio_profile_img", personalization);
 app.use("/api/get", unread_message_route);
 // console.log(suggestion2);
 // suggestion2;
+app.use("/api/comment",commentRoute); //  01/02/2024
 console.log("hello");
 
 //step 5:

@@ -4,8 +4,9 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import SettingsIcon from "@mui/icons-material/Settings";
-// import LoggedUserPosts from '../../components/Posts/LoggedUserPosts';
+import LoggedUserPosts from '../../components/Posts/LoggedUserPosts';
 import { useAuth } from "../../Contexts/authContext";
 import { Link, useParams , useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -168,6 +169,10 @@ const Profile = () => {
           src={`http://localhost:5000/${userPhoto}`}
           alt="Profile"
         />
+        <input type="file" id="changeProfilePicInput"/>
+        <label htmlFor="changeProfilePicInput"><AddAPhotoIcon className={styles.changeProfilePic}/></label>
+        <input type="file" id="changeCoverPicInput"/>
+        <label htmlFor="changeCoverPicInput"><AddAPhotoIcon className={styles.changeCoverPic}/></label>
       </div>
       <div className={styles.profileContainer}>
         <div className={styles.uInfo}>
@@ -294,8 +299,8 @@ const Profile = () => {
           </div>
         </div>
         {/* Post will be here */}
-        {/* <LoggedUserPosts userId={userId} /> */}
-        <Posts/>
+        <LoggedUserPosts userId={userId} />
+        {/* <Posts/> */}
       </div>
     </div>
   );

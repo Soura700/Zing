@@ -318,6 +318,8 @@ router.get("/search-suggestions", (req, res) => {
 router.post("/password/forgotpassword", async (req, res) => {
   try {
     const { email } = req.body;
+    console.log("Email");
+    console.log(email);
     connection.query(
       "SELECT * FROM users WHERE email = ?",
       [email], // Add a comma here to separate the query string from the parameter array

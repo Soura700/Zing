@@ -549,7 +549,7 @@ export const Leftbar2 = () => {
                   })
                 }
                 <span>All Conversations</span>
-                <div className="mid-text4">
+                {/* <div className="mid-text4">
                   <div className="left4">
                     <img src={image} alt=""></img>
                     <div className="left-info">
@@ -575,7 +575,7 @@ export const Leftbar2 = () => {
                     <p>9:26 PM</p>
                     <circle>1</circle>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -645,7 +645,7 @@ export const Leftbar2 = () => {
                   })
                 }
                 <span>All Conversations</span>
-                <div className="mid-text4">
+                {/* <div className="mid-text4">
                   <div className="left4">
                     <img src={image} alt=""></img>
                     <div className="left-info">
@@ -671,7 +671,7 @@ export const Leftbar2 = () => {
                     <p>9:26 PM</p>
                     <circle>1</circle>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -806,7 +806,7 @@ export const Leftbar2 = () => {
                 })
               }
               <span>All Conversations</span>
-              <div className="mid-text4">
+              {/* <div className="mid-text4">
                 <div className="left4">
                   <img src={image} alt=""></img>
                   <div className="left-info">
@@ -831,7 +831,7 @@ export const Leftbar2 = () => {
                   <p>9:26 PM</p>
                   <circle>1</circle>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

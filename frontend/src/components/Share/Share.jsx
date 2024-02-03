@@ -141,6 +141,7 @@ import {
         // Append text data
         formData.append("userId", id);
         formData.append("description", input);
+        formData.append("username",username); 
     
         // Append file data
         if (img) {

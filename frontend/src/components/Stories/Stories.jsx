@@ -1,5 +1,3 @@
-// stories.jsx
-
 import { useState, useEffect } from "react";
 import styles from "./stories.module.css";
 

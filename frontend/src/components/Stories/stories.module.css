@@ -495,12 +495,27 @@
      width: 28rem;
      margin-bottom: 0;
      gap: 12px;
-     justify-content: space-between;
+     /* justify-content: space-between; */
      position: relative;
      /* border: 1px solid red; */
      margin-bottom: 18px;
    }
-
+   .story>button {
+    position: absolute;
+    bottom: 28px;
+    left: 10px;
+    color: white;
+    background-color: #5271ff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
    .story {
      flex: none;
      width: 120px;
