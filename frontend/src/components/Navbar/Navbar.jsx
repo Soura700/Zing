@@ -443,16 +443,12 @@ const Navbar = ({ toggleMenu, user }) => {
     setShowRightBar(!showRightBar);
   };
   return (
+    <>
     <div className={styles.navbar}>
       <div className={styles.left_navbar}>
         <Link to="/" style={{ textDecoration: "none" }}>
           <span className={styles.title}>SocialMedia</span>
         </Link>
-
-          {/* <HomeOutlinedIcon className={styles.icon} /> */}
-
-          {/* <GridViewOutlinedIcon className={styles.icon} /> */}
-
           <div className={styles.search} ref={searchRef}>
             <SearchOutlinedIcon
               className={styles.icon}
@@ -682,7 +678,7 @@ const Navbar = ({ toggleMenu, user }) => {
           onClick={toggleMenu}
         />
       </div>
-    </div>
+    </>
   );
 };
 
