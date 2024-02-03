@@ -290,7 +290,7 @@ const Post = ({ post, userId }) => {
             {/* Share */}
           </div>
         </div>
-        {commentOpen && <CommentSection />}
+        {commentOpen && <CommentSection postId={post.id} userId={parsedID} userName={post.username}/>}
       </div>
     </div>
   );
