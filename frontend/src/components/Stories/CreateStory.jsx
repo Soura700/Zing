@@ -5,6 +5,8 @@ import { storage } from "../../Config";
 import { v4 } from "uuid";
 
 import "./CreateStory.css";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+
 
 const CreateStory = () => {
   const location = useLocation();
@@ -84,6 +86,15 @@ const CreateStory = () => {
     }
   };
 
+  const handleClosePreview = () => {
+    // Reset image preview
+    setImagePreview(null);
+    // Reset file input if it exists
+    const fileInput = document.getElementById("mediaFile");
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
   return (
     <div className="create-story-container">
       <h2>Create Story</h2>
@@ -99,24 +110,32 @@ const CreateStory = () => {
           />
         </label>
         <br />
-        <label>
-          Upload Media:
+        {/* <label> */}
+          
+          
+          <div className="mediaInputCreateStory">
+            <p>Upload Media:</p> 
           <input
             type="file"
             name="mediaFile"
             accept="image/*, video/*"
             onChange={handleFileChange}
             required
+            className="mediaInput"
           />
-        </label>
+          </div>
+        {/* </label> */}
         <br />
         {imagePreview && (
           <div className="image-preview-container">
+            <button className="close-btn" onClick={handleClosePreview}>
+              <CloseRoundedIcon className="close-icon"/>
+            </button>
             <img src={imagePreview} alt="Preview" />
           </div>
         )}
         <br />
-        <button type="submit">Upload Story</button>
+        <button type="submit" className="uplaodStory">Upload Story</button>
       </form>
     </div>
   );

@@ -247,8 +247,8 @@ const ChatUI = ({
           <label htmlFor="imageInput">
             <PhotoSizeSelectActualIcon className="chat-btn" />
           </label>
-          <LocationOnIcon className="chat-btn" />
-          <MicNoneIcon className="chat-btn" />
+          {/* <LocationOnIcon className="chat-btn" />
+          <MicNoneIcon className="chat-btn" /> */}
           {incomingCall &&
             (alert("Button"),
             (<button onClick={handleAcceptButtonClick}>Accept</button>))}
