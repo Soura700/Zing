@@ -3,7 +3,7 @@ import "./style.css";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import { Group } from "./components/Group/Group";
-import Personalization from "./pages/Personalization/YourComponent.jsx"
+import Personalization from "./pages/Personalization/YourComponent.jsx";
 import Saved from "./pages/Saved/Saved.jsx";
 import Profile from "./pages/Profile/Profile";
 import LeftBar from "./components/LeftBar/LeftBar";
@@ -17,7 +17,7 @@ import Posts from "./components/Posts/Posts.jsx";
 import { ToastContainer } from "react-toastify";
 import CreateStory from "./components/Stories/CreateStory.jsx";
 import { Let } from "./components/messaging/Let.jsx";
-import VideoCall from "./pages/VideoCall/VideoCall.jsx"
+import VideoCall from "./pages/VideoCall/VideoCall.jsx";
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -26,6 +26,7 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
+import { ThemeProvider } from "./Contexts/themeContext.js";
 
 function App() {
   const Layout = function () {
@@ -42,13 +43,13 @@ function App() {
         <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
           {/* <RightBar isVisible={toggle}/> */}
-          <LeftBar/>
+          <LeftBar />
           <div style={{ flex: 6 }}>
             <React.StrictMode>
               <Outlet />
             </React.StrictMode>
           </div>
-          <RightBar isVisible={toggle}/>
+          <RightBar isVisible={toggle} />
         </div>
       </div>
     );
@@ -72,13 +73,13 @@ function App() {
           element: <Profile />,
         },
         {
-          path:"/posts",
-          element:<Posts/>
+          path: "/posts",
+          element: <Posts />,
         },
         {
-          path:"/saved",
-          element:<Saved/>
-        }
+          path: "/saved",
+          element: <Saved />,
+        },
       ],
     },
 
@@ -92,7 +93,7 @@ function App() {
     },
     {
       path: "/resetpassword/:id/:token",
-      element: <ResetPasswordForm/>,
+      element: <ResetPasswordForm />,
     },
     {
       path: "/profile_setting/:userId",
@@ -124,11 +125,13 @@ function App() {
   ]);
 
   return (
-    <div>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </div>
+    <ThemeProvider>
+      <div>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </div>
+    </ThemeProvider>
   );
 }
 

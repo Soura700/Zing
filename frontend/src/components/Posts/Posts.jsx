@@ -7,7 +7,7 @@ import { useAuth } from "../../Contexts/authContext";
 
 
 
-const Posts = () => {
+const Posts = ({styles}) => {
 
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); // Add loading state
@@ -161,9 +161,9 @@ const Posts = () => {
 
 
   console.log(postofFriendsData)
-  return <div className={styles.posts}>
+  return <div className={styles.posts} style={styles}>
     {postofFriendsData.map(post=>(
-      <Post post={post} userId={parsedID} key={post.id}/>
+      <Post post={post} userId={parsedID} key={post.id} style={styles}/>
     ))}
         {/* {postData.map(post=>(
       <Post post={post} userId={parsedID} key={post.id}/>
