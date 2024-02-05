@@ -929,7 +929,6 @@ span {
         background: white;
         padding: 10px;
         width: 96vw;
- /* Initially set to be transparent */
 
 
     }
@@ -938,17 +937,4 @@ span {
        display: none;
     }
   
-    /* .main-chat-section {
-        border-radius: 12px;
-        width: 100%;
-        height: 90%;
-        z-index: 1;
-        margin-left: 0px;
-        display: flex;
-        flex-direction: column;
-        padding: 10px;
-        position: relative;
-        
-    } */
-    
 }

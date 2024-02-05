@@ -209,13 +209,12 @@ import {
           )}
           <div className="shareBottom">
             <div className="shareOptions">
-              <div className="shareOption">
+              {/* <div className="shareOption">
                 <VideoCameraFront
                   className="shareIcon"
-                  // style={{ color: "#bb0000f2" }}
                 />
                 <span className="shareOptionText">Live Video</span>
-              </div>
+              </div> */}
               <label htmlFor="file" className="shareOption">
                 <PermMedia className="shareIcon" 
                 // style={{ color: "#2e0196f1" }} 
@@ -240,7 +239,7 @@ import {
                   className="shareIcon"
                   // style={{ color: "#bfc600ec" }}
                 />
-                <span className="shareOptionText">Activity</span>
+                <span className="shareOptionText">Emoji</span>
               </div>
             </div>
           </div>
