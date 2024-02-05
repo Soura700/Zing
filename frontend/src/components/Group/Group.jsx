@@ -974,42 +974,41 @@ export const Group = () => {
                 {additionalDivOpen && (
                   <div ref={additionalDivRef} className="additional-div">
                     <h2>Group Members</h2>
-                      
-                      <div className="groupMembersDiv">
-                        <div className="groupMembers">
-                          <img src="" alt="" />
-                          <p>John Doe</p>
-                        </div>
-                        <div className="groupMembers">
-                          <img src="" alt="" />
-                          <p>John Doe</p>
-                        </div>
-                        <div className="groupMembers">
-                          <img src="" alt="" />
-                          <p>John Doe</p>
-                        </div>
-                        <div className="groupMembers">
-                          <img src="" alt="" />
-                          <p>John Doe</p>
-                        </div>
-                        <div className="groupMembers">
-                          <img src="" alt="" />
-                          <p>John Doe</p>
-                        </div>
-                        <div className="groupMembers">
-                          <img src="" alt="" />
-                          <p>John Doe</p>
-                        </div>
-                        <div className="groupMembers">
-                          <img src="" alt="" />
-                          <p>John Doe</p>
-                        </div>
-                        <div className="groupMembers">
-                          <img src="" alt="" />
-                          <p>John Doe</p>
-                        </div>
 
+                    <div className="groupMembersDiv">
+                      <div className="groupMembers">
+                        <img src="" alt="" />
+                        <p>John Doe</p>
                       </div>
+                      <div className="groupMembers">
+                        <img src="" alt="" />
+                        <p>John Doe</p>
+                      </div>
+                      <div className="groupMembers">
+                        <img src="" alt="" />
+                        <p>John Doe</p>
+                      </div>
+                      <div className="groupMembers">
+                        <img src="" alt="" />
+                        <p>John Doe</p>
+                      </div>
+                      <div className="groupMembers">
+                        <img src="" alt="" />
+                        <p>John Doe</p>
+                      </div>
+                      <div className="groupMembers">
+                        <img src="" alt="" />
+                        <p>John Doe</p>
+                      </div>
+                      <div className="groupMembers">
+                        <img src="" alt="" />
+                        <p>John Doe</p>
+                      </div>
+                      <div className="groupMembers">
+                        <img src="" alt="" />
+                        <p>John Doe</p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -1092,7 +1091,14 @@ export const Group = () => {
                   )}
                 </div>
                 {incomingCall && (
-                  <button onClick={handleAcceptButtonClick}>Accept</button>
+                  <div className="acceptButtonDiv">
+                    <h1>Incoming Call</h1>
+                    <div className="acceptButton">
+                      <button onClick={handleAcceptButtonClick}>
+                        <p>Accept</p>
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             </>
