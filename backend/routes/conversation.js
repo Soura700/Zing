@@ -362,4 +362,36 @@ router.post("/block", async (req, res) => {
   }
 });
 
+//leave group (03/02/2024)
+router.post("/leave/group/conversation", async (req, res) => {
+  try {
+    const { memberId, conversationId } = req.body;
+
+    // Find the group conversation by ID
+    const groupConversation = await GroupConversation.findById(conversationId);
+
+    // Check if the conversation exists
+    if (!groupConversation) {
+      return res.status(404).json({ message: "Group conversation not found" });
+    }
+
+    // Check if the member is part of the conversation
+    const memberIndex = groupConversation.members.indexOf(memberId);
+    if (memberIndex === -1) {
+      return res.status(400).json({ message: "Member is not part of the conversation" });
+    }
+
+    // Remove the member from the conversation
+    groupConversation.members.splice(memberIndex, 1);
+
+    // Save the updated conversation
+    const updatedConversation = await groupConversation.save();
+
+    res.status(200).json(updatedConversation);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;
