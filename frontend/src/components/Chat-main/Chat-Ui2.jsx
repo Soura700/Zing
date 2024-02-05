@@ -244,10 +244,10 @@ const handleArrowButtonClick = () => {
                     <BlockIcon className="bottom-icon" />
                     <h2>Block</h2>
                   </div>
-                  <div className="userOpt2">
+                  {/* <div className="userOpt2">
                     <ReportIcon className="bottom-icon" />
                     <h2>Leave</h2>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

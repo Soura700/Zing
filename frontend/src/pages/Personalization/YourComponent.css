@@ -21,11 +21,12 @@
     flex-direction: column;
     text-align: center;
     align-items: center;
+    padding: 0;
   }
 
 
 header {
-    margin: 5px 30px;
+    margin: 0px 30px;
     font-size: 25px;
     text-align: left;
 }
@@ -168,6 +169,190 @@ button.selected {
     color: white;
 }
 
+.whole{
+    padding: 0px;
+    
+}
+.personalizerScreen1 {
+    height: 130vh;
+    width: 99.3vw;
+    margin: 0px;
+    background-image: url("./pexels-merlin-lightpainting-10874566.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 50px;
+}
+.personalizerScreen1 .part1 {
+    display: flex;
+}
+.personalizerScreen1::before {
+    content: ""; /* Necessary for pseudo-elements */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 130%;
+    background-color: rgba(0, 0, 0, 0.374); /* Adjust opacity here */
+    z-index: 9;
+}
+
+/* .personalizerScreen1 header h1{
+    font-size: 70px;
+    color: white;
+    font-weight: 900;
+    text-shadow: 5px 2px 5px rgba(0,0,0,0.6);
+
+    position: relative;
+    z-index: 1;
+} */
+
+.personalizerScreen1 header{
+    margin-top: 100px;
+    text-align: left;
+
+}
+.personalizerScreen1 header h1{
+    font-size: 70px;
+    color: white;
+    font-weight: 400;
+    z-index: 99;
+    position: relative;
+    text-shadow: 5px 2px 5px rgba(0,0,0,0.6);
+}
+.personalizerScreen1 header h2{
+    font-size: 40px;
+    color: rgba(255, 255, 255, 0.785);
+    font-weight: 200;
+    z-index: 99;
+    position: relative;
+    text-shadow: 5px 2px 5px rgba(0,0,0,0.6);
+    margin-top: 50px;
+    margin-left: 90px;
+}
+#profile {
+    border: 1px solid red;
+    height: fit-content;
+    margin-top: 190px;
+    margin-left: 210px;
+    z-index: 99;
+    padding: 30px;
+
+    width: 450px;
+    
+
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.5);
+    border-radius: 30px;
+    border: 0px solid rgba(255, 255, 255, 0.125);
+    color: white;
+}
+.addBio {
+    font-size: 20px;
+}
+.auto-size-text-box {
+    width: auto;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ededed91;
+    text-align: center; 
+    line-height: auto;
+    justify-content: center;
+    margin-left: 25%;
+    margin-right: 25%;
+    border-radius: 10px;
+}
+.image-container img {
+    cursor: pointer;
+}
+
+
+.part2 {
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+.part2 h1 {
+    color: white;
+}
+.goDownIcon {
+        background: rgba(255, 255, 255, 0.79);
+        color: rgba(0, 0, 0, 0.926);
+        height: 40px;
+        width: 40px;
+        border-radius: 50px;
+        font-size: 20px;
+        padding-top: 8px;
+        
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.5);
+    color: rgba(255, 255, 255, 0.84);
+    cursor: pointer;
+}
+
+#interests {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: black;
+    padding: 150px 0px;
+}
+#interests h2 {
+    font-size: 50px;
+}
+#interests h4 {
+    font-size: 25px;
+}
+
+#interestsList {
+    margin-top: 50px;
+}
+#interestsList ul {
+    align-items: center;
+    justify-content: center;
+}
+#interestsList li {
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(225, 225, 225);
+    padding: 7px 35px;
+}
+#interestsList li:hover {
+    border: 1px solid rgb(115, 8, 221);
+    background: rgb(115, 8, 221);
+    color: white;
+}
+#ConfirmBtn {
+    width: fit-content;
+    padding: 10px 40px;
+    margin-top: 15px;
+    border-radius: 30px;
+    border: 1px solid rgb(62, 0, 123);
+    background: rgb(62, 0, 123);
+    color: white;
+    margin-bottom: 30px;
+}
+#ConfirmBtn:hover {
+    background: rgb(49, 4, 94);
+    cursor: pointer;
+}
+
+#interestsList li.selected {
+    border: 1px solid rgb(115, 8, 221);
+    background-color: rgb(115, 8, 221);
+    color: rgb(255, 255, 255);
+}
 
 @media only screen and (max-width: 600px) {
     header {
@@ -202,7 +387,8 @@ button.selected {
         width: 50%;
     }
     .whole{
-        padding: 10px;
+        padding: 0px;
+        
     }
     header h1 {
         margin-bottom: 10px;

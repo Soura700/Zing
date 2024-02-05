@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "./leftbar2.css";
 import image from "../../assets/jd-chow-gutlccGLXKI-unsplash.jpg";
 import SearchIcon from "@mui/icons-material/Search";
@@ -7,8 +7,9 @@ import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import GroupsIcon from "@mui/icons-material/Groups";
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress from Material-UI
-import { useState } from "react";                            
+import { useState } from "react";
 import { io } from "socket.io-client";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../Contexts/authContext";
@@ -45,7 +46,7 @@ export const Let = () => {
   //this edited1
   const [showMenu, setShowMenu] = useState(true);
   const [zIndex, setZIndex] = useState(999);
-
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 472px)");
@@ -57,8 +58,6 @@ export const Let = () => {
       // Update z-index based on media query result
       setZIndex(mediaQuery.matches ? 9999 : 999);
     };
-
-   
 
     // Initial check for media query
     handleMediaQueryChange(mediaQuery);
@@ -72,9 +71,34 @@ export const Let = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close the popup if clicked outside of it
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setShowPopup(false);
+      }
+    };
 
+    // Add event listener when component mounts
+    document.addEventListener("mousedown", handleClickOutside);
 
+    // Remove event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
+  const popupRef = useRef(null);
+
+  // const togglePopup = () => {
+  //   setShowPopup(!showPopup);
+  // };
+  const togglePopup = () => {
+    if (!showPopup) {
+      // If popup is not already open, open it
+      setShowPopup(true);
+    }
+  };
 
   const showSidebarMenu = () => {
     setShowMenu(!showMenu);
@@ -377,15 +401,62 @@ export const Let = () => {
         </div>
         {/* left - activity bar */}
         {showMenu ? (
-          <div className="showFullMenu" 
-          //style={{ zIndex: 9999 }}//
+          <div
+            className="showFullMenu"
+            //style={{ zIndex: 9999 }}//
           >
             <div className="top-part">
               <div className="top-part-opt">
                 <h1>Messages</h1>
               </div>
               <div className="top-search-bar">
-                <input type="text" name="search-bar" placeholder="Search" />
+                <input
+                  type="text"
+                  name="search-bar"
+                  placeholder="Search"
+                  onFocus={togglePopup}
+                />
+                {showPopup && (
+                  <div ref={popupRef}>
+                    {/* Popup content */}
+                    <div className="popup1">
+                      <h2>Search results</h2>
+                      <div className="popupResultsContainer">
+                        <div className="popupUser">
+                          <img
+                            src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                            alt=""
+                          />
+                          <p>John Doe</p>
+                        </div>
+
+                        <div className="popupUser">
+                          <img
+                            src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                            alt=""
+                          />
+                          <p>John Doe</p>
+                        </div>
+
+                        <div className="popupUser">
+                          <img
+                            src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                            alt=""
+                          />
+                          <p>John Doe</p>
+                        </div>
+
+                        <div className="popupUser">
+                          <img
+                            src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                            alt=""
+                          />
+                          <p>John Doe</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <div className="search-btn">
                   <SearchIcon className="search-icon" />
                 </div>
@@ -400,7 +471,6 @@ export const Let = () => {
                       console.log(user);
 
                       console.log("Helloooooooo Bro........");
-                      
 
                       if (conversations.length > 0) {
                         return (
@@ -483,7 +553,17 @@ export const Let = () => {
                 <h1>Messages</h1>
               </div>
               <div className="top-search-bar">
-                <input type="text" name="search-bar" placeholder="Search" />
+                <input
+                  type="text"
+                  name="search-bar"
+                  placeholder="Search"
+                  onFocus={togglePopup}
+                />
+                {showPopup && (
+                  <div ref={popupRef} className="popup">
+                    {/* Popup content */}
+                  </div>
+                )}
                 <div className="search-btn">
                   <SearchIcon className="search-icon" />
                 </div>
@@ -577,7 +657,9 @@ export const Let = () => {
           <div className="top-part">
             <div className="top-part-opt">
               <h1>Messages</h1>
-              <GroupsIcon className="group-icon" onClick={showAllGroups} />
+              {/* <GroupsIcon className="group-icon" onClick={showAllGroups} /> */}
+               <HomeRoundedIcon /> 
+
             </div>
             {showGroup ? (
               <div className="showAllGroups">
@@ -642,10 +724,53 @@ export const Let = () => {
               <div className="RightPopUpDefault"></div>
             )}
             <div className="top-search-bar">
-              <input type="text" name="search-bar" placeholder="Search" />
+              <input
+                type="text"
+                name="search-bar"
+                placeholder="Search"
+                onClick={togglePopup} // Attach onClick event handler to the input field
+              />
               <div className="search-btn">
                 <SearchIcon className="search-icon" />
               </div>
+              {showPopup && (
+                <div className="popup">
+                  <h2>Search results</h2>
+                  <div className="popupResultsContainer">
+                    <div className="popupUser">
+                      <img
+                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                        alt=""
+                      />
+                      <p>John Doe</p>
+                    </div>
+
+                    <div className="popupUser">
+                      <img
+                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                        alt=""
+                      />
+                      <p>John Doe</p>
+                    </div>
+
+                    <div className="popupUser">
+                      <img
+                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                        alt=""
+                      />
+                      <p>John Doe</p>
+                    </div>
+
+                    <div className="popupUser">
+                      <img
+                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                        alt=""
+                      />
+                      <p>John Doe</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="mid-part">
               <span>All Chats</span>

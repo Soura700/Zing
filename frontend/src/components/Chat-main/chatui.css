@@ -186,7 +186,7 @@
 }
 
 
-.top-search-bar {
+.top-search-bar { 
     margin-top: 20px;
     width: 300px;
     display: flex;
@@ -201,6 +201,7 @@
     margin: 0px 10px;
     border-radius: 20px;
     border: 1px solid  #483e5c;
+    position: relative;
 }
 .top-search-bar input[type=text]:focus{
     outline: none;
@@ -235,7 +236,7 @@
 .mid-part {
     margin: 20px 0px;
     border: 1px solid #312843df;
-    max-height: 524px;
+    max-height: 380px;
     width: 355px;
     padding: 10px;
     overflow-y: auto;
@@ -887,6 +888,7 @@
     border: 0px solid #652ed3;
     background: #6e6188;
     border-radius: 50px;
+    width: fit-content;
 }
 .chat-bottom .submit-btn {
     font-size: 40px;
@@ -969,7 +971,101 @@
     border: 1px solid blue;
     display: none;
 }
+/* mobile search popup styles */
+.popup {
+    border: 1px solid rgba(122, 122, 122, 0.386);
+    max-height: 286px;
+    width: 382px;
+    position: absolute;
+    background: #1e1827;
+    top: 148px;
+    border-radius: 30px;
+    padding: 10px;
+    z-index: 99;
+    color: white;
+    left: 120px;
+} 
+.popup h2 {
+    font-size: 24px;
+    margin-left: 16px;
+    margin-top: 10px;
+}
+.popupResultsContainer {
+    border: 0px solid blue;
+    padding: 5px;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .popupUser {
+    border: 1px solid rgba(133, 133, 133, 0.493);
+    display: flex;
+    padding: 5px 10px;
+    margin: 10px 5px;
+    border-radius: 18px;
+    padding-top: 14px;
+  }
+  .popupUser img {
+    border: 1px solid rgb(136, 136, 136);
+    height: 30px;
+    width: 30px;
+    border-radius: 50px;
+    margin-right: 10px;
+    box-shadow: none;
+    cursor: pointer;
+  }
+  .popupUser p {
+    cursor: pointer;
+  }
 
+
+
+
+  .popup1 {
+    border: 1px solid rgba(122, 122, 122, 0.386);
+    max-height: 303px;
+    width: 408px;
+    position: absolute;
+    background: #1e1827;
+    top: 125px;
+    border-radius: 30px;
+    padding: 10px;
+    z-index: 99;
+    color: white;
+    left: 0px;
+} 
+.popup1 h2 {
+    font-size: 24px;
+    margin-left: 16px;
+    margin-top: 10px;
+}
+.popup1 .popupResultsContainer {
+    border: 0px solid blue;
+    padding: 5px;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .popup1 .popupUser {
+    border: 1px solid rgba(133, 133, 133, 0.493);
+    display: flex;
+    padding: 5px 10px;
+    margin: 10px 5px;
+    border-radius: 18px;
+    padding-top: 14px;
+  }
+  .popup1 .popupUser img {
+    border: 1px solid rgb(136, 136, 136);
+    height: 30px;
+    width: 30px;
+    border-radius: 50px;
+    margin-right: 10px;
+    box-shadow: none;
+    cursor: pointer;
+  }
+  .popup1 .popupUser p {
+    cursor: pointer;
+  }
 
 @media (max-width: 1200px) {
 
@@ -1059,6 +1155,7 @@
         border-radius: 20px;
         border: 1px solid  #483e5c;
         margin-left: 22px;
+        position: relative;
     }
 }    
 @media (max-width: 769px) {
@@ -1124,9 +1221,18 @@
         margin-left: 20px;
         display: flex;
         flex-direction: column;
-        padding: 20px;
-        margin-left: 6px;
+        padding: 10px;
+        margin-left: 1px;
         border-radius: 10px;
+    }
+    .chat-bottom .chat-input input[type=text] {
+        border: 0px solid rgb(213, 213, 213);
+        font-size: 20px;
+        border-radius: 20px;
+        background :#3e354e;
+        color: #fcfcfc;
+        height: 45px;
+        width: 65vw;
     }
     .outerDiv .container {
         display: flex;
@@ -1140,6 +1246,18 @@
     .left-opt-menu {
        visibility: hidden;
        margin: -25px;
+    }
+    .info .left-part {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+    }
+    .info {
+
+        margin-bottom: -2px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
     .info .left-part .backIcon {
         display: block;
@@ -1155,24 +1273,24 @@
         display: none;
     }
     .info .left-part .user-info h1{
-        font-size: 23px;
+        font-size: 21px;
         font-weight: 500;
         color: rgb(255, 255, 255);
     }
     .info .left-part .user-info p {
         color: rgb(152, 96, 237);
-        font-size: 15px;
+        font-size: 13px;
     }
     .info .right-part {
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: start;
-       margin: 0px 20px;
-       padding-top: 5px;
-       margin-left: 20px;
-       margin-right: 0px;
-       gap: 10px;
+        margin: 0px 20px;
+        padding-top: 14px;
+        margin-left: 20px;
+        margin-right: 0px;
+        gap: 11px;
     }
     .info .right-part .right-part-icon {
         font-size: 27px;
@@ -1248,10 +1366,177 @@
     }
     .top-search-bar {
         margin-top: 20px;
-        width: 400px;
+        width: 378px;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
-    
+    .info .right-part .RightPopUpShow .PopUpBox {
+        height: fit-content;
+        width: 70%;
+        padding: 10px;
+        top: 50px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #38333d;
+        border-radius: 16px;
+        background: #1b1720;
+        border-radius: 30px;
+        padding: 10px;
+        position: absolute;
+        right: 10%;
+    }
 }
+
+
+@media (max-width: 376px) {
+    
+    .main-chat-section {
+        border-radius: 30px;
+        border: 0px solid #6b598cb7;
+        /* box-shadow: 0px 0px 5px 3px #e8e8e8; */
+        background: #1b1720;
+        width: 120vw;
+        height: 107vh;
+        margin-left: 20px;
+        display: flex;
+        flex-direction: column;
+        padding: 9px;
+        margin-left: 6px;
+        border-radius: 10px;
+    }
+    .outerDiv .container {
+        display: flex;
+        flex-direction: row;
+        border: 0px solid red;
+        padding: 10px;
+        width: 110vw;
+        height: 100vh;
+        /* overflow-y: hidden; */
+    }
+    .left-opt-menu {
+       visibility: hidden;
+       margin: -25px;
+    }
+    .info .left-part .backIcon {
+        display: block;
+        color: white;
+    }
+
+    .info .left-part .backIcon {
+        display: flex;
+        align-items: start;
+        margin-top: 13px;
+    }
+    .lft-menu {
+        display: none;
+    }
+    .info .left-part .user-info h1{
+        font-size: 23px;
+        font-weight: 500;
+        color: rgb(255, 255, 255);
+    }
+    .info .left-part .user-info p {
+        color: rgb(152, 96, 237);
+        font-size: 15px;
+    }
+    .info .right-part {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: start;
+       margin: 0px 20px;
+       padding-top: 5px;
+       margin-left: 20px;
+       margin-right: 0px;
+       gap: 10px;
+    }
+    .info .right-part .right-part-icon {
+        font-size: 27px;
+        color: #736993;
+    
+    }
+    .showFullMenu {
+        border: 0px solid blue;
+        display: block;
+        position: absolute;
+        z-index: 999;
+        left: 0px;
+        top: 0px; 
+        background: rgba(33, 30,42, 1);
+        padding: 10px;
+        width: 110vw;
+        height: 110vh;
+ /* Initially set to be transparent */
+
+
+    }
+    .mid-part {
+        margin: 20px 0px;
+        border: 1px solid #312843df;
+        max-height: 524px;
+        width: 391px;
+        padding: 10px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        margin-top: 50px;
+        border-radius: 35px;
+    }
+    .chat-bottom {
+        border: 0px solid red;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .top-search-bar input[type=text]{
+        width: 327px; 
+        height: 45px;
+        padding: 0px 15px;
+        margin: 0px 10px;
+        border-radius: 20px;
+        border: 1px solid  #483e5c;
+        font-size: 15px;
+    }
+    .top-search-bar .search-btn {
+        border: 0px solid red;
+        border-radius: 50px;
+        height: 40px;
+        width: 40px;
+        background: #312843b7;
+    }
+    .top-search-bar input[type=text]:focus{
+        outline: none;
+        border: 2px solid #665688;
+    }
+    ::placeholder {
+        padding-left: 10px;
+        font-size: 20px;
+        color: rgb(190, 190, 190);
+    }
+    .inner-container{
+        width: auto;
+        padding: 15px;
+    }
+    .top-part {
+        display: flex;
+        flex-direction: column;
+        width: 400px;
+        border: 0px solid red;
+    }
+    .top-search-bar {
+        margin-top: 20px;
+        width: 355px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .top-search-bar .search-icon {
+        color: #64587b;
+        margin-left: 9px;
+        margin-top: 10px;
+        font-size: 22px;
+        cursor: pointer;
+    }
+    
+}    

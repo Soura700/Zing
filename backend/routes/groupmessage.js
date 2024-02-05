@@ -52,16 +52,18 @@ const GroupConversations = require("../models/GroupConversation");
 
 router.post("/group/message_create", async (req, res) => {
   try {
-    const { conversationId, message, senderId, group_id } = req.body;
+    const { conversationId, message, senderId, group_id , groupName} = req.body;
     const { memberIds } = req.body;
 
     if (!senderId || !message || !group_id) {
       return res.status(400).json("Please Fill all required fields");
     }
 
-    if (!conversationId && receiverId) {
+    if (!conversationId) {
       const newConversation = new GroupConversations({
+        groupName:groupName,
         members: [memberIds],
+        group_id:group_id
       });
 
       const conversation = await newConversation.save();
