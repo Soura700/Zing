@@ -451,11 +451,11 @@ export const Leftbar2 = () => {
   // Render the rest of your component based on the authentication status
   return (
     <div className="leftbar2">
-      <div style={styles} className="container">
+      <div style={styles} className="container1">
         {/* left-options bar */}
 
         <div className="left-opt-menu">
-          <div className="container">
+          <div className="container1">
             <div className="items">
               <div className="profile-img">
                 <img src={image} alt="" />
