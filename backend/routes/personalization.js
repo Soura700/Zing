@@ -47,21 +47,22 @@ router.post('/upload', upload.single('profilePicture'), (req, res) => {
 
 router.put('/update-profile', upload.single('profilePicture'), (req, res) => {
   const { userId, bio } = req.body;
-  let profilePicturePath = '';
-
   // Check if a new profile picture was uploaded
-  if (req.file) {
-    profilePicturePath = req.file.path;
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+    // profilePicturePath = req.file.path;
   }
 
-  // Update the bio and/or profile image in the MySQL table
-  const updateQuery = 'UPDATE users SET bio = ?, profileImg = ? WHERE id = ?';
-  connection.query(updateQuery, [bio, profilePicturePath, userId], (err, result) => {
+  const profilePicturePath = req.file.path;
+  const updateQuery = 'UPDATE users SET profileImg = ? WHERE id = ?';
+  // const updateQuery = 'UPDATE `socialmedia`.`users` SET `profileImg` = ? WHERE id = ?';
+
+  connection.query(updateQuery, [ profilePicturePath, userId], (err, result) => {
     if (err) {
       console.error('Error updating profile in MySQL:', err);
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
-      io.emit('profileUpdated',{userId,bio,profilePicturePath});
+      // io.emit('profileUpdated',{userId,bio,profilePicturePath});
       res.json({ message: 'Profile updated successfully!' });
     }
   });

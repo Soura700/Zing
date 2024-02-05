@@ -4,11 +4,11 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import PinterestIcon from "@mui/icons-material/Pinterest";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import SettingsIcon from "@mui/icons-material/Settings";
-import LoggedUserPosts from '../../components/Posts/LoggedUserPosts';
+import LoggedUserPosts from "../../components/Posts/LoggedUserPosts";
 import { useAuth } from "../../Contexts/authContext";
-import { Link, useParams , useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Posts from "../../components/Posts/Posts";
@@ -16,7 +16,7 @@ import Posts from "../../components/Posts/Posts";
 const Profile = () => {
   const [user, setUser] = useState([]);
   // const [friend, setFriend] = useState([]);
-  const [friend, setFriend] = useState({friends:[]});
+  const [friend, setFriend] = useState({ friends: [] });
   const [username, setUsername] = useState([]);
   const [friendDetail, setFriendDetail] = useState([]);
   const [toggle, setToggle] = useState(false);
@@ -29,8 +29,9 @@ const Profile = () => {
   const navigate = useNavigate();
   // Condition to check if the current user is viewing their own profile
   const isOwnProfile = userId == loggedInUserId;
-  const profileHeaderText = isOwnProfile ? "Your Friends" : `${username}'s Friends`;
-
+  const profileHeaderText = isOwnProfile
+    ? "Your Friends"
+    : `${username}'s Friends`;
 
   // Fetching the userdetails
   useEffect(() => {
@@ -136,16 +137,42 @@ const Profile = () => {
     setToggle(!toggle);
   };
 
-    // Check if the logged-in user is friends with the user whose profile is being viewed
-    const isFriendWithCurrentUser = friend.friends.some(
-      (friend) => friend.friendId === loggedInUserId
-    );
+  // Check if the logged-in user is friends with the user whose profile is being viewed
+  const isFriendWithCurrentUser = friend.friends.some(
+    (friend) => friend.friendId === loggedInUserId
+  );
 
-    const handleMessageButtonClick = ()=>{
-      alert(userId);
-      alert(username);
-      navigate('/message',  { state: { userId: userId , userName : username , clicked:true }});
+  const handleMessageButtonClick = () => {
+    alert(userId);
+    alert(username);
+    navigate("/message", {
+      state: { userId: userId, userName: username, clicked: true },
+    });
+  };
+
+  const handleProfileImageUpdate = async (e) => {
+    const file = e.target.files[0]; // Get the selected file
+    const formData = new FormData(); // Create FormData object
+    formData.append("userId", loggedInUserId);
+    formData.append("profilePicture", file); // Append the file to FormData object
+
+    try {
+      fetch("http://localhost:5000/api/bio_profile_img/update-profile", {
+        method: "PUT",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          // Handle the response as needed
+        })
+        .catch((error) => {
+          console.error("Error uploading file:", error);
+        });
+    } catch (error) {
+      // console.error("Error updating profile image:", error);
     }
+  };
 
   return (
     <div className={styles.profile}>
@@ -155,7 +182,6 @@ const Profile = () => {
           alt=""
           className={styles.cover}
         />
-        {/* src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load" */}
         {userPhoto !== null && (
           <img
             className={styles.profilePic}
@@ -169,10 +195,22 @@ const Profile = () => {
           src={`http://localhost:5000/${userPhoto}`}
           alt="Profile"
         />
-        <input type="file" id="changeProfilePicInput"/>
-        <label htmlFor="changeProfilePicInput"><AddAPhotoIcon className={styles.changeProfilePic}/></label>
-        <input type="file" id="changeCoverPicInput"/>
-        <label htmlFor="changeCoverPicInput"><AddAPhotoIcon className={styles.changeCoverPic}/></label>
+        <input type="file" id="changeProfilePicInput" />
+        <label htmlFor="changeProfilePicInput">
+          <AddAPhotoIcon className={styles.changeProfilePic} />
+        </label>
+        {isOwnProfile && (
+          <>
+            <input
+              type="file"
+              id="changeCoverPicInput"
+              onChange={(e) => handleProfileImageUpdate(e)}
+            />
+            <label htmlFor="changeCoverPicInput">
+              <AddAPhotoIcon className={styles.changeCoverPic} />
+            </label>
+          </>
+        )}
       </div>
       <div className={styles.profileContainer}>
         <div className={styles.uInfo}>
@@ -181,12 +219,17 @@ const Profile = () => {
             <h1>{username}</h1>
             {/* // ))} */}
             <div className={styles.btn}>
-              {!isOwnProfile && !isFriendWithCurrentUser && <button className={styles.btn1}>Follow</button>}
+              {!isOwnProfile && !isFriendWithCurrentUser && (
+                <button className={styles.btn1}>Follow</button>
+              )}
               {/* <button className={styles.btn1}>follow</button> */}
               {!isOwnProfile && (
-                <button className={styles.btn2} onClick={handleMessageButtonClick}>
+                <button
+                  className={styles.btn2}
+                  onClick={handleMessageButtonClick}
+                >
                   {/* <Link to={`/message/${userId}`} style={{ textDecoration: "none" }}> */}
-                    message
+                  message
                   {/* </Link> */}
                 </button>
               )}
@@ -195,8 +238,8 @@ const Profile = () => {
                   message
                 </Link>
               </button> */}
-              {/* <SettingsIcon className={styles.settings} /> */} 
-              
+              {/* <SettingsIcon className={styles.settings} /> */}
+
               {/* commented out as of no use currently  */}
               {/* <div className={styles.settings}>
                 <SettingsIcon/>
@@ -270,29 +313,25 @@ const Profile = () => {
           <div className={styles.profileFriends}>
             {/* friendcard div means particular friend's profile card  */}
             {uniqueFriendDetails.length > 0 ? (
-              uniqueFriendDetails.map(
-                (friend, index) => (
-                  (
-                    <div key={index} className={styles.friendCard}>
-                      <div className={styles.cardImg}>
-                        <a
-                          style={{ textDecoration: "none" }}
-                          href={`/profile/${friend.id}`}
-                        >
-                          <img
-                            src={`http://localhost:5000/${friend.profileImg}`}
-                            alt={friend.username} // Use the actual property from the friend details
-                            className={styles.friendPic}
-                          />
-                        </a>
-                      </div>
-                      <div className={styles.cardName}>
-                        <h3>{friend.username}</h3>
-                      </div>
-                    </div>
-                  )
-                )
-              )
+              uniqueFriendDetails.map((friend, index) => (
+                <div key={index} className={styles.friendCard}>
+                  <div className={styles.cardImg}>
+                    <a
+                      style={{ textDecoration: "none" }}
+                      href={`/profile/${friend.id}`}
+                    >
+                      <img
+                        src={`http://localhost:5000/${friend.profileImg}`}
+                        alt={friend.username} // Use the actual property from the friend details
+                        className={styles.friendPic}
+                      />
+                    </a>
+                  </div>
+                  <div className={styles.cardName}>
+                    <h3>{friend.username}</h3>
+                  </div>
+                </div>
+              ))
             ) : (
               <p>No Friends to show</p>
             )}

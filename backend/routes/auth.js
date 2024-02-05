@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 
 const { check, validationResult } = require("express-validator");
+const { QueryStatistics } = require("neo4j-driver");
 
 router.use(
   session({
@@ -289,14 +290,12 @@ router.post("/:userId", (req, res) => {
 router.get("/search-suggestions", (req, res) => {
   // Extract the search query from the request query parameters
   const { query } = req.query;
-
   // SQL query to fetch matching usernames from the database
   const searchQuery = `
-    SELECT username FROM users
+    SELECT * FROM users
     WHERE username LIKE CONCAT('%', ?, '%')
     LIMIT 5;
   `;
-
   // Execute the SQL query
   connection.query(searchQuery, [query], (error, results) => {
     if (error) {
@@ -305,12 +304,12 @@ router.get("/search-suggestions", (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     } else {
       // Extract usernames from the query results
-      const usernames = results.map((result) => result.username);
-      res.status(200).json(usernames);
+      res.status(200).json(results);
+      // const usernames = results.map((result) => result.username);
+      // res.status(200).json(usernames);
     }
   });
 });
-
 
 //30/01/2024 (biggo)
 

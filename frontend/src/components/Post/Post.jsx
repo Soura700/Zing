@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../Contexts/authContext";
 import CommentSection from "../Comments/CommentSection";
 
-const Post = ({ post, userId }) => {
+const Post = ({ post, userId , style}) => {
   console.log(post);
 
   if (post.image) {
@@ -184,7 +184,7 @@ const Post = ({ post, userId }) => {
   };
 
   return (
-    <div className={styles.post}>
+    <div className={styles.post} style={style}>
       <div className={styles.container}>
         <div className={styles.user}>
           <div className={styles.userInfo}>

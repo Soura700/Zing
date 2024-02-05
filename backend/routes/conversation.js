@@ -254,7 +254,7 @@ router.post("/get_group_id/conversation", async (req, res) => {
     const conversation = await GroupConversation.findOne({
       group_id: group_id,
     });
-    console.log(conversation._id);
+    // console.log(conversation._id);
     res.status(200).json(conversation);
   } catch (error) {
     console.log(error);

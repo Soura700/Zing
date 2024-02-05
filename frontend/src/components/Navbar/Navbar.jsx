@@ -16,6 +16,8 @@ import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
 import { useState } from "react";
 import RightBar from "../RightBar/RightBar";
+import axios from "axios";
+import { useTheme } from "../../Contexts/themeContext";
 // Toggler
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { Link } from "react-router-dom";
@@ -24,9 +26,10 @@ import CircularProgress from "@mui/material/CircularProgress"; // Add this line
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useTheme } from "../../Contexts/themeContext";
 
 const Navbar = ({ toggleMenu, user }) => {
+  const { theme, toggleTheme } = useTheme();
+
   const [toggle, setToggle] = useState(false);
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const { isLoggedIn, id, checkAuthentication } = useAuth();
@@ -45,6 +48,8 @@ const Navbar = ({ toggleMenu, user }) => {
   const [lastCheckedTimestamp, setLastCheckedTimestamp] = useState(null);
   const [showRightBar, setShowRightBar] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [query, setQuery] = useState(""); // State to store the search query
+  const [suggestions, setSuggestions] = useState([]); // State to store search suggestions
   const searchRef = useRef(null);
   //popup for search modal
   useEffect(() => {
@@ -65,9 +70,9 @@ const Navbar = ({ toggleMenu, user }) => {
     };
   }, [popupVisible]);
 
-  const handleSearchClick = () => {
-    setPopupVisible(true);
-  };
+  // const handleSearchClick = () => {
+  //   setPopupVisible(true);
+  // };
 
   useEffect(() => {
     // Event listener to close notifPanel when clicked outside of it
@@ -92,9 +97,6 @@ const Navbar = ({ toggleMenu, user }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [notifMenu]);
-
-  const { theme, toggleTheme } = useTheme();
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -207,13 +209,6 @@ const Navbar = ({ toggleMenu, user }) => {
     }
   }, [id, parsedID, checkAuthentication]);
 
-  const handleToggleTheme = () => {
-    alert("Called");
-    // Call the toggleTheme function provided by the context
-    toggleTheme();
-  };
-
-
   useEffect(() => {
     // const newSocket = io("http://localhost:5500");
     const newSocket = io("http://localhost:8000");
@@ -312,6 +307,54 @@ const Navbar = ({ toggleMenu, user }) => {
     };
   }, [socket, senderName]);
 
+  const handleInputChange = async (event) => {
+    const inputValue = event.target.value;
+    setQuery(inputValue); // Update the query state as the user types
+
+    try {
+      // Make an AJAX request to fetch search suggestions from the backend
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/search-suggestions?query=",
+        {
+          params: { query: inputValue }, // Pass the search query as a parameter
+        }
+      );
+
+      // Update the suggestions state with the response data
+      setSuggestions(response.data);
+    } catch (error) {
+      console.error("Error fetching search suggestions:", error);
+    }
+  };
+
+  // //////////////////////////
+  const handleSearchClick = () => {
+    setPopupVisible(true); // Show the search popup when search icon is clicked
+  };
+
+  useEffect(() => {
+    // Event listener to close search popup when clicked outside of it
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setPopupVisible(false);
+      }
+    };
+
+    // Add event listener when search popup is open
+    if (popupVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    // Clean up event listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [popupVisible]);
+
+  // /////////////////////////////////////////////////////////
+
   const handleToggle = () => {
     setToggle(!toggle);
   };
@@ -345,6 +388,10 @@ const Navbar = ({ toggleMenu, user }) => {
 
     setNotifMenu(!notifMenu);
     setunreadMessageCount(0);
+  };
+
+  const handleThemeToggle = () => {
+    toggleTheme();
   };
 
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -442,17 +489,35 @@ const Navbar = ({ toggleMenu, user }) => {
   const toggleRightBar = () => {
     setShowRightBar(!showRightBar);
   };
+
+  console.log("Suggestions");
+  console.log(suggestions);
+
+  // const styles = {
+  //   backgroundColor: theme === "light" ? "#ffffff" : "#000000",
+  //   color: theme === "light" ? "#000000" : "#ffffff",
+  // };
+
   return (
-    <>
-    <div className={styles.navbar}>
-      <div className={styles.left_navbar}>
-        <Link to="/" style={{ textDecoration: "none" }}>
-          <span className={styles.title}>SocialMedia</span>
-        </Link>
+    <div className={styles.navbarContainer}>
+      <div className={styles.navbar}>
+        <div className={styles.left_navbar}>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <span className={styles.title}>SocialMedia</span>
+          </Link>
+
+          {/* <HomeOutlinedIcon className={styles.icon} /> */}
+
+          {/* <GridViewOutlinedIcon className={styles.icon} /> */}
+
           <div className={styles.search} ref={searchRef}>
             <SearchOutlinedIcon
               className={styles.icon}
-              onClick={handleToggle}
+              onClick={() => {
+                handleToggle();
+                handleSearchClick();
+              }}
+              //  onClick={handleSearchClick}
             />
             {toggle ? (
               <input
@@ -460,6 +525,7 @@ const Navbar = ({ toggleMenu, user }) => {
                 placeholder="Search..."
                 className={styles.extended}
                 onClick={handleSearchClick}
+                onChange={handleInputChange}
               />
             ) : (
               <input
@@ -467,53 +533,32 @@ const Navbar = ({ toggleMenu, user }) => {
                 placeholder="Search..."
                 className={styles.default}
                 onClick={handleSearchClick}
+                onChange={handleInputChange}
               />
             )}
             {popupVisible && (
               <div className={styles.searchPopUpModal}>
                 <h4>Search Results</h4>
                 <div className={styles.searchPopUpUserContainer}>
-
-                  <div className={styles.searchUser}>
-                    <img
-                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                      alt=""
-                    />
-                    <p>John Doe</p>
-                  </div>
-
-                  <div className={styles.searchUser}>
-                    <img
-                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                      alt=""
-                    />
-                    <p>John Doe</p>
-                  </div>
-
-                  <div className={styles.searchUser}>
-                    <img
-                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                      alt=""
-                    />
-                    <p>John Doe</p>
-                  </div>
-
-                  <div className={styles.searchUser}>
-                    <img
-                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                      alt=""
-                    />
-                    <p>John Doe</p>
-                  </div>
-
-                  <div className={styles.searchUser}>
-                    <img
-                      src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                      alt=""
-                    />
-                    <p>John Doe</p>
-                  </div>
-
+                  {suggestions.length === 0 ? (
+                    <p>No search results found</p>
+                  ) : (
+                    suggestions.map((user, index) => (
+                      <div className={styles.searchUser} key={index}>
+                        <a href={`http://localhost:3000/profile/${user.id}`}>
+                          <img
+                            src={`http://localhost:5000/${user.profileImg}`}
+                            alt={`user${index}`}
+                          />
+                        </a>
+                        <p>
+                          <a href={`http://localhost:3000/profile/${user.id}`}>
+                            {user.username}
+                          </a>
+                        </p>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -522,44 +567,38 @@ const Navbar = ({ toggleMenu, user }) => {
           {/* Sidebar Menu */}
 
           <MenuRoundedIcon className={styles.menuIcon} onClick={toggleMenu} />
-
-          {/* <MenuRoundedIcon className='menuIcon'  /> */}
-
-          {/* <LeftBar isVisible={toggle} /> */}
         </div>
 
-      <div className={styles.right_navbar}>
-        {/* <PersonRoundedIcon onClick={handleIconClick} /> */}
-        {/* PersonRoundedIcon with unread notification count badge */}
-        <div className={styles.userOptPart}>
-        <BedtimeRoundedIcon className={styles.icon} />
-        <div className={styles.profileIconContainer}>
-          
-          <PersonRoundedIcon
-            onClick={handleIconClick}
-            className={styles.friendsBadgeIcon}
-          />
-          {unreadNotificationCount > 0 && (
-            <div className={styles.friendsBadge}>{unreadNotificationCount}</div>
-          )}
-        </div>
-        {isMenuVisible && (
-          <div className={styles.popup_menu}>
-            <ul className={styles.requests}>
-              {friendRequests.map((user, index) => {
-                console.log(user);
-                const username =
-                  user.userDetails && user.userDetails.length > 0
-                    ? user.userDetails[0].username
-                    : "";
-                return (
-                  <li className={styles.request} key={index}>
-                    <div className={styles.left}>
-                      {/* <img
-                        className={styles.ig}
-                        src="https://images.pexels.com/photos/19555765/pexels-photo-19555765/free-photo-of-portrait-of-egret-bird.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-                        alt="john doe"
-                      /> */}
+        <div className={styles.right_navbar}>
+          <div className={styles.userOptPart}>
+            <BedtimeRoundedIcon
+              className={styles.icon}
+              onClick={handleThemeToggle}
+            />
+            {/* dark mode button */}
+            <div className={styles.profileIconContainer}>
+              <PersonRoundedIcon
+                onClick={handleIconClick}
+                className={styles.friendsBadgeIcon}
+              />
+              {unreadNotificationCount > 0 && (
+                <div className={styles.friendsBadge}>
+                  {unreadNotificationCount}
+                </div>
+              )}
+            </div>
+            {isMenuVisible && (
+              <div className={styles.popup_menu}>
+                <ul className={styles.requests}>
+                  {friendRequests.map((user, index) => {
+                    console.log(user);
+                    const username =
+                      user.userDetails && user.userDetails.length > 0
+                        ? user.userDetails[0].username
+                        : "";
+                    return (
+                      <li className={styles.request} key={index}>
+                        <div className={styles.left}>
                           <img src={userPhoto} />
                         </div>
                         <p className={styles.middle}>
@@ -656,7 +695,6 @@ const Navbar = ({ toggleMenu, user }) => {
               className={styles.userNameLink}
             >
               <img src={userPhoto} />
-
               <span>{username}</span>
             </a>
           </div>
@@ -678,7 +716,7 @@ const Navbar = ({ toggleMenu, user }) => {
           onClick={toggleMenu}
         />
       </div>
-    </>
+    </div>
   );
 };
 
