@@ -10,6 +10,8 @@ import LoggedUserPosts from "../../components/Posts/LoggedUserPosts";
 import { useAuth } from "../../Contexts/authContext";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Stories from "stories-react";
+import "stories-react/dist/index.css";
 import axios from "axios";
 import Posts from "../../components/Posts/Posts";
 
@@ -27,6 +29,9 @@ const Profile = () => {
   // Assuming loggedInUserId is the ID of the logged-in user
   const loggedInUserId = parseInt(id);
   const navigate = useNavigate();
+  const [selectedStory, setSelectedStory] = useState(null);
+  const [showStories, setShowStories] = useState(false);
+
   // Condition to check if the current user is viewing their own profile
   const isOwnProfile = userId == loggedInUserId;
   const profileHeaderText = isOwnProfile
@@ -118,9 +123,27 @@ const Profile = () => {
         throw error; // Propagate the error to the calling function if necessary
       }
     }
+
+    const fetchStory = async () => {
+      const storyUserId = parseInt(userId);
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/stories/getStories/${storyUserId}`
+        );
+        const stories = response.data.stories;
+        setSelectedStory(stories);
+        console.log(response.data);
+        console.log("Stories");
+        console.log(stories);
+      } catch (error) {
+        console.error("Error updating profile image:", error);
+      }
+    };
+
     fetchUser();
     fetchUserFriends();
     suggestionOfFriends();
+    fetchStory();
   }, [id, checkAuthentication]);
 
   //  friendDetails with each element having a friendId property ..So removing the duplicates
@@ -143,8 +166,6 @@ const Profile = () => {
   );
 
   const handleMessageButtonClick = () => {
-    alert(userId);
-    alert(username);
     navigate("/message", {
       state: { userId: userId, userName: username, clicked: true },
     });
@@ -174,6 +195,29 @@ const Profile = () => {
     }
   };
 
+  const handleUserPhotoClick = () => {
+    alert("Called");
+    // Toggle the state to show or hide the stories component
+    setShowStories(!showStories);
+  };
+
+  // useEffect(() => {
+  //   const fetchData = async () =>{
+  //     try {
+  //       const response = await axios.get(`http://localhost:5000/api/stories/getStories/${userId}`);
+  //       const stories = response.data.stories;
+  //       console.log("Stories");
+  //       console.log(stories);
+  //     } catch (error) {
+  //       console.error("Error updating profile image:", error);
+  //     }
+  //   }
+  //   fetchData();
+  // },[]);
+
+  console.log("Selected Story");
+  console.log(selectedStory);
+
   return (
     <div className={styles.profile}>
       <div className={styles.images}>
@@ -187,13 +231,42 @@ const Profile = () => {
             className={styles.profilePic}
             src={`http://localhost:5000/uploads/${userPhoto}`}
             alt="Profile"
+            onClick={handleUserPhotoClick}
           />
         )}
-        <img className={styles.profilePic} src={userPhoto} />
+
+        {showStories && (
+          <Stories
+            key={selectedStory.id}
+            width="427px"
+            height="540px"
+            background="transparent"
+            stories={selectedStory.map((story) => ({
+              type: "image",
+              url: story.downloadURL,
+              duration: 5000,
+            }))}
+          />
+        )}
+
+        {/* <Stories
+          key={selectedStory.id}
+          width="427px"
+          height="540px"
+          background="transparent"
+          stories={selectedStory.map((story) => ({
+            type: "image",
+            url: story.downloadURL,
+            duration: 5000,
+          }))}
+        /> */}
+
+        <img className={styles.profilePic} src={userPhoto}  />
         <img
           className={styles.profilePic}
           src={`http://localhost:5000/${userPhoto}`}
           alt="Profile"
+          onClick={handleUserPhotoClick}
         />
         <input type="file" id="changeProfilePicInput" />
         <label htmlFor="changeProfilePicInput">

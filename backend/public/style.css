@@ -1,11 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,500&family=Open+Sans&family=Poppins:wght@300&family=Quicksand:wght@400;500;600&family=Roboto+Slab:wght@300;400;600&family=Ubuntu:wght@300;400;500&display=swap');
 
 :root {
   --main-darklg: #1d2635;
   --main-dark: #161d29;
   --primary-color: #2f80ec;
   --main-light: #eeeeee;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Quicksand', sans-serif; 
 }
 
 * {
@@ -20,7 +20,8 @@
   height: 8vh;
   position: relative;
   width: 100%;
-  background-color: var(--main-darklg);
+  /* background-color: var(--main-darklg); */
+  background: #191521fa;
 }
 
 .logo > h3 {
@@ -45,24 +46,31 @@
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  background-color: var(--main-dark);
+  /* background-color: var(--main-dark); */
+  background: #1b1720;
+  max-height: 76vh;
+  border: 3px solid #1b1720;
 }
 
 video {
-  height: 300px;
+  height: 30%;
   border-radius: 1rem;
-  margin: 0.5rem;
-  width: 400px;
+  margin: 10px;
+  width: 38%;
   object-fit: cover;
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
+  
 }
 
 .options {
   padding: 1rem;
   display: flex;
-  background-color: var(--main-darklg);
+  /* background-color: var(--main-darklg); */
+  background: #1b1720;
+  position: sticky;
+  bottom: 0;
 }
 
 .options__left {
@@ -77,13 +85,14 @@ video {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--primary-color);
   height: 50px;
-  border-radius: 5px;
+  border-radius: 50px;
   color: var(--main-light);
   font-size: 1.2rem;
   width: 50px;
   margin: 0 0.5rem;
+  background: #37323fb0;
+  cursor: pointer;
 }
 
 .background__red {
@@ -94,12 +103,14 @@ video {
   display: flex;
   flex-direction: column;
   flex: 0.3;
-  background-color: #242f41;
+  background: #27222d;
+  width: 150px;
 }
 
 .main__chat_window {
   flex-grow: 1;
   overflow-y: scroll;
+
 }
 
 .main__chat_window::-webkit-scrollbar {
@@ -117,9 +128,13 @@ video {
   height: 50px;
   flex: 1;
   font-size: 1rem;
-  border-radius: 5px;
   padding-left: 20px;
   border: none;
+  border-radius: 20px;
+  font-weight: 500;
+  border: 1px solid #3b3541;;
+  background: #3f3a48;
+  color: white;
 }
 
 .messages {
@@ -146,16 +161,21 @@ video {
 }
 
 .message > span {
-  background-color: #eeeeee;
+  background-color: #191521fa;
+  color: white;
+  font-weight: 500;
   margin: 1rem 0;
   padding: 1rem;
-  border-radius: 5px;
+  border-radius: 20px;
 }
 
 #video-grid {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  border: 2px solid #1b1720;
+  padding: 20px;
+  margin: 30px;
 }
 
 #showChat {
@@ -170,7 +190,18 @@ video {
   left: 28px;
   color: #fff;
 }
-
+@media (max-width: 1230px) {
+  video {
+    height: 30%;
+    border-radius: 1rem;
+    margin: 0.5rem;
+    width: 42%;
+    object-fit: cover;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+  }
+}  
 @media (max-width: 700px) {
   .main__right {
     display: none;
@@ -181,11 +212,48 @@ video {
   }
 
   video {
-    height: auto;
-    width: 100%;
+    height: 40%;
+    border-radius: 1rem;
+    margin: 0.5rem;
+    width: 55%;
   }
 
   #showChat {
     display: flex;
   }
 }
+
+@media (max-width: 427px) {
+  video {
+    height: 130px;
+    border-radius: 1rem;
+    margin: 10px;
+    width: 176px;
+    object-fit: cover;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    
+  }
+  .videos__group {
+    flex-grow: 1;
+    display: flex;
+    /* justify-content: center;
+    align-items: center; */
+    padding: 10px;
+    /* background-color: var(--main-dark); */
+    background: #1b1720;
+    max-height: 76vh;
+    border: 3px solid #1b1720;
+  }
+  #video-grid {
+    display: flex;
+    flex-direction: row;
+    /* align-items: center;
+    justify-content: center; */
+    /* flex-wrap: wrap; */
+    border: 2px solid #1b1720;
+    padding: 0px;
+    margin: 0px;
+  }
+}  
