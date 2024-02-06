@@ -30,8 +30,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import imageCompression from "browser-image-compression";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./group.css";
+import axios from "axios";
 
 export const Group = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
@@ -62,6 +63,10 @@ export const Group = () => {
   const [showMenu, setShowMenu] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [additionalDivOpen, setAdditionalDivOpen] = useState(false);
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [groupMembersLenght, setGroupMembersLenght] = useState(null);
+  const [searchSuggestionResult, setSearchSuggestionResult] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   var msg = "";
   //25 Sep 2023 code
@@ -275,58 +280,6 @@ export const Group = () => {
       });
     }
   }, [socket, parsedId, isLoggedIn]);
-
-  // const sendMessage = async () => {
-  //   const messageIndex = 0;
-
-  //   setGroupMessages((prev) => [
-  //     ...prev,
-  //     { message: message, user: { id: parsedId } }, // Ensure each message has a user field
-  //   ]);
-
-  //   if (
-  //     groupMessages.length > 0 &&
-  //     groupMessages[messageIndex].conversationId
-  //   ) {
-  //     const conversationId = groupMessages[messageIndex].conversationId;
-  //     const groupId = groupMessages[messageIndex].groupId;
-
-  //     socket?.emit("sendGroupMessage", {
-  //       senderId: parsedId,
-  //       message: message,
-  //       conversationId: conversationId,
-  //       group_id: groupId,
-  //     });
-
-  //     try {
-  //       const res = await fetch(
-  //         "http://localhost:5000/api/groupmessage/group/message_create",
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({
-  //             conversationId: conversationId,
-  //             senderId: parsedId,
-  //             message: message,
-  //             group_id: groupId,
-  //           }),
-  //         }
-  //       );
-
-  //       if (res.status === 200) {
-  //         // Clear the input field after sending
-  //         setMessage("");
-  //       } else {
-  //         console.error("Failed to send message to the API");
-  //         // Handle error appropriately, e.g., show an error message to the user
-  //       }
-  //     } catch (error) {
-  //       console.error("Error sending message:", error);
-  //     }
-  //   }
-  // };
 
   const sendMessage = async () => {
     const messageIndex = 0;
@@ -694,6 +647,48 @@ export const Group = () => {
     window.location.href = url;
   };
 
+  const getGroupMembers = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/group/get_group_members?groupId=65bfaa29eeef4bcdeb846f91",
+        {
+          params: { query: groupId }, // Pass the search query as a parameter
+        }
+      );
+
+      if (res.status === 200) {
+        console.log(res.data.length);
+        // Clear the input field after sending
+        setGroupMembersLenght(res.data.length - 1);
+        setGroupMembers(res.data);
+      } else {
+        console.error("Failed to get group members to the API");
+        // Handle error appropriately, e.g., show an error message to the user
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleInputChange = async (event) => {
+    const inputValue = event.target.value;
+    setSearchQuery(inputValue); // Update the query state as the user types
+
+    try {
+      // Make an AJAX request to fetch search suggestions from the backend
+      const response = await axios.get(
+        "http://localhost:5000/api/group/search-suggestions",
+        {
+          params: { query: searchQuery }, // Pass the search query as a parameter
+        }
+      );
+      // Update the suggestions state with the response data
+      setSearchSuggestionResult(response.data);
+    } catch (error) {
+      console.error("Error fetching search suggestions:", error);
+    }
+  };
+
   // Render the rest of your component based on the authentication status
   return (
     <div style={styles} className="grpOuterDiv">
@@ -730,13 +725,16 @@ export const Group = () => {
             <div className="grp-top-part-opt">
               <h1>Groups</h1>
               {/* <GroupsIcon /> */}
-              <HomeRoundedIcon />
+              <Link to="/">
+                <HomeRoundedIcon />
+              </Link>
             </div>
             <div className="grp-top-search-bar">
               <input
                 type="text"
                 name="search-bar"
                 placeholder="Search"
+                onChange={handleInputChange}
                 onClick={togglePopup}
               />
               <div className="search-btn">
@@ -746,37 +744,32 @@ export const Group = () => {
                 <div className="grp-popup" ref={popupRef}>
                   <h2>Search results</h2>
                   <div className="popupResultsContainer">
-                    <div className="popupUser">
-                      <img
-                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                        alt=""
-                      />
-                      <p>John Doe</p>
-                    </div>
-
-                    <div className="popupUser">
-                      <img
-                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                        alt=""
-                      />
-                      <p>John Doe</p>
-                    </div>
-
-                    <div className="popupUser">
-                      <img
-                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                        alt=""
-                      />
-                      <p>John Doe</p>
-                    </div>
-
-                    <div className="popupUser">
-                      <img
-                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                        alt=""
-                      />
-                      <p>John Doe</p>
-                    </div>
+                    {searchSuggestionResult.length === 0 ? (
+                      <p>No search results found</p>
+                    ) : (
+                      searchSuggestionResult.map((suggestion, index) => (
+                        <div className="popupUser">
+                          <img
+                            src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                            alt=""
+                          />
+                          <p
+                            onClick={() => {
+                              alert("Hello");
+                              setActiveConversations(true);
+                              setGroupId(suggestion._id);
+                              setGroupName(suggestion.groupName);
+                              getGroupMembers();
+                              getConversationId(suggestion._id);
+                              handleGroupClick(suggestion._id);
+                              setShowPopup(false);
+                            }}
+                          >
+                            {suggestion.groupName}
+                          </p>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
@@ -789,97 +782,62 @@ export const Group = () => {
             </button>
             <div className="grp-mid-part">
               <span>All Groups</span>
-              {/* <span>Pinned Messages</span> */}
-              {/* <button onClick={toggleCreateGroupModal}>Create Group</button> */}
+              {groups.map((group, user, index) => {
+                if (groups.length > 0) {
+                  console.log(group._id);
+                  console.log(group.groupName);
+                  return (
+                    <div
+                      className="mid-text"
+                      key={index}
+                      // onClick={() =>
+                      //   fetchMessages(
+                      //     conversation.conversationId,
+                      //     conversation.user
+                      //   )
+                      // }
 
-              {
-                // conversations.length>0?
-                groups.map((group, user, index) => {
-                  if (groups.length > 0) {
-                    console.log(group._id);
-                    console.log(group.groupName);
-                    return (
-                      <div
-                        className="mid-text"
-                        key={index}
-                        // onClick={() =>
-                        //   fetchMessages(
-                        //     conversation.conversationId,
-                        //     conversation.user
-                        //   )
-                        // }
-
-                        onClick={() => {
-                          alert("Hello");
-                          setActiveConversations(true);
-                          setGroupId(group._id);
-                          // alert(group.groupName);
-                          setGroupName(group.groupName);
-                          getConversationId(group._id);
-                          handleGroupClick(group._id);
-                        }}
-                      >
-                        <div className="left">
-                          <img
-                            src={image}
-                            alt=""
-                            // onClick={() =>
-                            //   fetchMessages(
-                            //     group.conversationId,
-                            //     conversation.user
-                            //   )
-                            // }
-                          />
-                          <div className="left-info">
-                            <h2 onClick={() => console.log("Hello")}>
-                              {/* {conversation.conversationUserData[0].username} */}
-                              {group.groupName}
-                            </h2>
-                            <p className="activity">Lorem, ipsum dolor.</p>
-                          </div>
-                        </div>
-                        <div className="right">
-                          <p>9:26 PM</p>
+                      onClick={() => {
+                        alert("Hello");
+                        setActiveConversations(true);
+                        setGroupId(group._id);
+                        // alert(group.groupName);
+                        setGroupName(group.groupName);
+                        getGroupMembers();
+                        getConversationId(group._id);
+                        handleGroupClick(group._id);
+                      }}
+                    >
+                      <div className="left">
+                        <img
+                          src={image}
+                          alt=""
+                          // onClick={() =>
+                          //   fetchMessages(
+                          //     group.conversationId,
+                          //     conversation.user
+                          //   )
+                          // }
+                        />
+                        <div className="left-info">
+                          <h2 onClick={() => console.log("Hello")}>
+                            {/* {conversation.conversationUserData[0].username} */}
+                            {group.groupName}
+                          </h2>
+                          <p className="activity">Lorem, ipsum dolor.</p>
                         </div>
                       </div>
-                    );
-                  } else {
-                    <div className="no-conversations">
-                      No conversations to show.
-                    </div>;
-                  }
-                })
-              }
-
-              {/*dummy groups */}
-
-              {/* <div className="mid-text4">
-                <div className="left4">
-                  <img src={image} alt=""></img>
-                  <div className="left-info">
-                    <h2>John Doe</h2>
-                    <p className="activity">whats up</p>
-                  </div>
-                </div>
-                <div className="right4">
-                  <p>9:26 PM</p>
-                  <circle>11</circle>
-                </div>
-              </div>
-
-              <div className="mid-text5">
-                <div className="left5">
-                  <img src={image} alt=""></img>
-                  <div className="left-info">
-                    <h2>John Doe</h2>
-                    <p className="activity">typing...</p>
-                  </div>
-                </div>
-                <div className="right5">
-                  <p>9:26 PM</p>
-                  <circle>1</circle>
-                </div>
-              </div> */}
+                      <div className="right">
+                        <p>9:26 PM</p>
+                      </div>
+                    </div>
+                  );
+                } else {
+                  <div className="no-conversations">
+                    No conversations to show.
+                  </div>;
+                }
+              })}
             </div>
           </div>
         </div>
@@ -900,7 +858,14 @@ export const Group = () => {
                   <div className="user-info">
                     <div className="left-info">
                       <h1>{groupName}</h1>
-                      <p onClick={toggleAdditionalDiv}>You and 2 others</p>
+                      <p
+                        onClick={() => {
+                          toggleAdditionalDiv();
+                          getGroupMembers();
+                        }}
+                      >
+                        {`You and ${groupMembersLenght} others`}
+                      </p>
                       {/* Add the user names of the group  */}
                     </div>
                   </div>
@@ -930,30 +895,6 @@ export const Group = () => {
                           {/* <img src={`http://localhost:5000/${profileImg}`} alt=""></img>
                         <h1>{activeConversations.username}</h1> */}
                         </div>
-                        {/* <div className="mid2">
-                                <div className="userOpt">
-                                  <CollectionsIcon className="right-part-icon" />
-                                  <h2>Media</h2>
-                                </div>
-                              </div> */}
-                        {/* <div className="mid3">
-                                <div className="userOpt">
-                                  <VolumeOffIcon className="right-part-icon" />
-                                  <h2>Mute Chat</h2>
-                                </div>
-                              </div> */}
-                        {/* <div className="mid4">
-                                <div className="userOpt">
-                                  <ArrowBackIosIcon className="right-part-icon" />
-                                  <h2>Close Chat</h2>
-                                </div>
-                              </div> */}
-                        {/* <div className="mid5">
-                                <div className="userOpt">
-                                  <LockIcon className="right-part-icon" />
-                                  <h2>Chat Lock</h2>
-                                </div>
-                              </div> */}
                         <div className="bottom">
                           <div className="userOpt1">
                             <BlockIcon className="bottom-icon" />
@@ -972,10 +913,36 @@ export const Group = () => {
                 </div>
 
                 {additionalDivOpen && (
-                  <div ref={additionalDivRef} className="additional-div">
+                  <div
+                    ref={additionalDivRef}
+                    className="additional-div"
+                    style={{ zIndex: 999 }}
+                  >
                     <h2>Group Members</h2>
-                      
-                      <div className="groupMembersDiv">
+                    {groupMembers.map((groupMember, index) => {
+                      console.log("Group Member");
+                      console.log(groupMember);
+                      return (
+                        <div className="groupMembersDiv">
+                          <div className="groupMembers">
+                            <a
+                              href="/message"
+                              style={{ "text-decoration": " none" }}
+                            >
+                              <img
+                                src={`http://localhost:5000/${groupMember.user.profileImg}`}
+                                alt="User"
+                              />
+                            </a>
+                            <a href="/message">
+                              <p>{groupMember.user.username}</p>
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* <div className="groupMembersDiv">
                         <div className="groupMembers">
                           <img src="" alt="" />
                           <p>John Doe</p>
@@ -1009,7 +976,7 @@ export const Group = () => {
                           <p>John Doe</p>
                         </div>
 
-                      </div>
+                      </div> */}
                   </div>
                 )}
               </div>
@@ -1154,14 +1121,6 @@ export const Group = () => {
                   </div>
                 </div>
               </div>
-
-              {/* <div className="membersLabel">
-              <div className="addMembersLabel">
-                <p>Messi</p>
-                <CloseIcon fontSize="10px" className="membersLabel" />
-              </div>
-            </div> */}
-
               <div className="membersLabel">
                 {selectedUserNames.length > 0 ? (
                   <div className="addMembersLabel">

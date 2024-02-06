@@ -141,6 +141,7 @@
     padding: 0px 15px;
     margin: 0px 10px;
     border-radius: 20px;
+    color: #ffffff;
     border: 1px solid  #483e5c;
 }
 .top-search-bar input[type=text]:focus{

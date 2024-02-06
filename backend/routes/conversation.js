@@ -262,7 +262,6 @@ router.post("/get_group_id/conversation", async (req, res) => {
   }
 });
 
-
 //leave group (03/02/2024)
 router.post("/leave/group/conversation", async (req, res) => {
   try {
@@ -279,7 +278,9 @@ router.post("/leave/group/conversation", async (req, res) => {
     // Check if the member is part of the conversation
     const memberIndex = groupConversation.members.indexOf(memberId);
     if (memberIndex === -1) {
-      return res.status(400).json({ message: "Member is not part of the conversation" });
+      return res
+        .status(400)
+        .json({ message: "Member is not part of the conversation" });
     }
 
     // Remove the member from the conversation
@@ -294,7 +295,7 @@ router.post("/leave/group/conversation", async (req, res) => {
     res.status(500).json(error);
   }
 });
-    
+
 // router.post("/block",async(req,res)=>{
 //   const {conversationId,userIdToBlock} = req.body;
 //   try{
@@ -361,5 +362,120 @@ router.post("/block", async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// Search suggestion API endpoint
+// router.get("/search-suggestions", async (req, res) => {
+//   try {
+//     // Extract the search query from the request query parameters
+//     const { query } = req.query;
+//     const { index0 } = req.body;
+
+//     // Fetch user data from SQL
+//     const searchQuery = `
+//       SELECT * FROM users
+//       WHERE username LIKE CONCAT('%', ?, '%')
+//       LIMIT 5;
+//     `;
+
+//     connection.query(searchQuery, [query], async (error, sqlResults) => {
+//       if (error) {
+//         // Handle database error
+//         console.error("Error executing SQL query:", error);
+//         res.status(500).json({ error: "Internal Server Error" });
+//       } else {
+//         try {
+//           // Extract user IDs from the SQL results
+//           const userIds = sqlResults.map((result) => result.id);
+
+//           // Find conversations based on conditions in MongoDB
+//           const mongoConversations = await Conversations.find({
+//             "members.0": index0, // Filter by index 0
+//             "members.1": { $in: userIds } // Filter by index 1
+//           });
+
+//           // Filter SQL results that are present in MongoDB conversations
+//           const mergedResults = sqlResults.filter(sqlResult =>
+//             mongoConversations.some(conversation =>
+//               conversation.members.includes(sqlResult.id)
+//             )
+//           ).map(sqlResult => ({
+//             ...sqlResult,
+//             mongoData: mongoConversations.filter(conversation =>
+//               conversation.members.includes(sqlResult.id)
+//             )
+//           }));
+
+//           res.status(200).json(mergedResults);
+//         } catch (error) {
+//           console.error("Error fetching conversations:", error);
+//           res.status(500).json({ error: "Internal Server Error" });
+//         }
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return res.status(500).json({ msg: "Internal Server Error" });
+//   }
+// });
+
+
+router.post("/search-suggestions", async (req, res) => {
+  try {
+    // Extract the search query and index0 from the request query parameters
+    const { query } = req.query;
+    const {index0} = req.body;
+
+    // Fetch user data from SQL
+    const searchQuery = `
+      SELECT * FROM users
+      WHERE username LIKE CONCAT('%', ?, '%')
+      LIMIT 5;
+    `;
+
+    connection.query(searchQuery, [query], async (error, sqlResults) => {
+      if (error) {
+        // Handle database error
+        console.error("Error executing SQL query:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        try {
+          // Extract user IDs from the SQL results
+          const userIds = sqlResults.map((result) => result.id);
+
+          // Find conversations based on conditions in MongoDB
+          const mongoConversations = await Conversations.find({
+            "members.0": index0, // Filter by index 0
+            "members.1": { $in: userIds } // Filter by index 1
+          });
+
+          // Filter SQL results to include only those matching index0 and present in MongoDB conversations
+          const mergedResults = sqlResults.filter(sqlResult =>
+            sqlResult.id !== index0 &&
+            mongoConversations.some(conversation =>
+              conversation.members.includes(sqlResult.id)
+            )
+          ).map(sqlResult => ({
+            ...sqlResult,
+            mongoData: mongoConversations.filter(conversation =>
+              conversation.members.includes(sqlResult.id)
+            )
+          }));
+
+          res.status(200).json(mergedResults);
+        } catch (error) {
+          console.error("Error fetching conversations:", error);
+          res.status(500).json({ error: "Internal Server Error" });
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({ msg: "Internal Server Error" });
+  }
+});
+
+
+
+
 
 module.exports = router;

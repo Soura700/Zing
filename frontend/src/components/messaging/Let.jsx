@@ -7,7 +7,7 @@ import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import GroupsIcon from "@mui/icons-material/Groups";
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress from Material-UI
 import { useState } from "react";
 import { io } from "socket.io-client";
@@ -19,6 +19,7 @@ import ringtone from "../../assets/Chaleya.mp3";
 import IncomingCallUi from "../IncomingCallUi/IncomingCallUi";
 import ChatUI from "../Chat-main/ChatUi";
 import ChatUI2 from "../Chat-main/Chat-Ui2";
+import axios from "axios";
 
 export const Let = () => {
   const location = useLocation();
@@ -47,6 +48,8 @@ export const Let = () => {
   const [showMenu, setShowMenu] = useState(true);
   const [zIndex, setZIndex] = useState(999);
   const [showPopup, setShowPopup] = useState(false);
+  const [searchSuggestionResult, setSearchSuggestionResult] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 472px)");
@@ -74,7 +77,7 @@ export const Let = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Close the popup if clicked outside of it
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
+      if (popupRef.current && popupRef.current.contains(event.target)) {
         setShowPopup(false);
       }
     };
@@ -295,6 +298,9 @@ export const Let = () => {
     }
   }, [isLoggedIn]);
   const fetchMessages = async (id, user) => {
+    alert(id);
+    console.log("Helloo User");
+    console.log(user);
     if (isLoggedIn) {
       // Fetch user image along with other conversation details
       const userRes = await fetch(
@@ -318,6 +324,8 @@ export const Let = () => {
         conversationId: id,
       });
       // setConversationId(id);
+      console.log("User");
+      console.log(user)
       setActiveConversation(user);
     }
   };
@@ -371,6 +379,35 @@ export const Let = () => {
   if (isLoading || socket === null) {
     return <CircularProgress />; // Use CircularProgress for a loading spinner
   }
+
+
+
+  const handleInputChange = async (event) => {
+    const inputValue = event.target.value;
+    setSearchQuery(inputValue); // Update the query state as the user types
+
+    try {
+      // Make an AJAX request to fetch search suggestions from the backend
+      const response = await axios.post(
+        `http://localhost:5000/api/conversation/search-suggestions/?query=${searchQuery}`,
+        { index0: parsedId }, // Pass additional data in the request body
+        {
+          headers: {
+            "Content-Type": "application/json", // Specify the content type as JSON
+          },
+        }
+      );
+
+      console.log("Response");
+      console.log(response.data);
+
+      // Update the suggestions state with the response data
+      setSearchSuggestionResult(response.data);
+    } catch (error) {
+      console.error("Error fetching search suggestions:", error);
+    }
+  };
+
   // Render the rest of your component based on the authentication status
   return (
     <div className="leftbar2 outerDiv">
@@ -414,6 +451,7 @@ export const Let = () => {
                   type="text"
                   name="search-bar"
                   placeholder="Search"
+                  onChange={handleInputChange}
                   onFocus={togglePopup}
                 />
                 {showPopup && (
@@ -422,37 +460,33 @@ export const Let = () => {
                     <div className="popup1">
                       <h2>Search results</h2>
                       <div className="popupResultsContainer">
-                        <div className="popupUser">
+                        {searchSuggestionResult.length === 0 ? (
+                          <p>No Search Results</p>
+                        ) : (
+                          searchSuggestionResult.map(
+                            (suggestion, index) => (
+                              (
+                                <div className="popupUser">
+                                  <img
+                                    src={`http://localhost:5000/${suggestion.profileImg}`}
+                                    alt="User"
+                                  />
+                                  <p onClick={()=>{
+                                    alert("Called");
+                                    console.log("Clickeddddddddddddddddddddddddddddddd");
+                                  }}>{suggestion.username}</p>
+                                </div>
+                              )
+                            )
+                          )
+                        )}
+                        {/* <div className="popupUser">
                           <img
                             src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
                             alt=""
                           />
                           <p>John Doe</p>
-                        </div>
-
-                        <div className="popupUser">
-                          <img
-                            src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                            alt=""
-                          />
-                          <p>John Doe</p>
-                        </div>
-
-                        <div className="popupUser">
-                          <img
-                            src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                            alt=""
-                          />
-                          <p>John Doe</p>
-                        </div>
-
-                        <div className="popupUser">
-                          <img
-                            src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                            alt=""
-                          />
-                          <p>John Doe</p>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -468,7 +502,7 @@ export const Let = () => {
                   {
                     // conversations.length>0?
                     conversations.map((conversation, user, index) => {
-                      console.log(user);
+                      console.log(conversation.user);
 
                       console.log("Helloooooooo Bro........");
 
@@ -516,33 +550,6 @@ export const Let = () => {
                     })
                   }
                 </div>
-                {/* <div className="mid-text4">
-                  <div className="left4">
-                    <img src={image} alt=""></img>
-                    <div className="left-info">
-                      <h2>John Doe</h2>
-                      <p className="activity">whats up</p>
-                    </div>
-                  </div>
-                  <div className="right4">
-                    <p>9:26 PM</p>
-                    <circle>11</circle>
-                  </div>
-                </div>
-
-                <div className="mid-text5">
-                  <div className="left5">
-                    <img src={image} alt=""></img>
-                    <div className="left-info">
-                      <h2>John Doe</h2>
-                      <p className="activity">typing...</p>
-                    </div>
-                  </div>
-                  <div className="right5">
-                    <p>9:26 PM</p>
-                    <circle>1</circle>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
@@ -621,33 +628,6 @@ export const Let = () => {
                     }
                   })
                 }
-                {/* <div className="mid-text4">
-                  <div className="left4">
-                    <img src={image} alt=""></img>
-                    <div className="left-info">
-                      <h2>John Doe</h2>
-                      <p className="activity">whats up</p>
-                    </div>
-                  </div>
-                  <div className="right4">
-                    <p>9:26 PM</p>
-                    <circle>11</circle>
-                  </div>
-                </div>
-
-                <div className="mid-text5">
-                  <div className="left5">
-                    <img src={image} alt=""></img>
-                    <div className="left-info">
-                      <h2>John Doe</h2>
-                      <p className="activity">typing...</p>
-                    </div>
-                  </div>
-                  <div className="right5">
-                    <p>9:26 PM</p>
-                    <circle>1</circle>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
@@ -658,8 +638,7 @@ export const Let = () => {
             <div className="top-part-opt">
               <h1>Messages</h1>
               {/* <GroupsIcon className="group-icon" onClick={showAllGroups} /> */}
-               <HomeRoundedIcon /> 
-
+              <HomeRoundedIcon />
             </div>
             {showGroup ? (
               <div className="showAllGroups">
@@ -728,6 +707,7 @@ export const Let = () => {
                 type="text"
                 name="search-bar"
                 placeholder="Search"
+                onChange={handleInputChange}
                 onClick={togglePopup} // Attach onClick event handler to the input field
               />
               <div className="search-btn">
@@ -737,37 +717,32 @@ export const Let = () => {
                 <div className="popup">
                   <h2>Search results</h2>
                   <div className="popupResultsContainer">
-                    <div className="popupUser">
-                      <img
-                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                        alt=""
-                      />
-                      <p>John Doe</p>
-                    </div>
-
-                    <div className="popupUser">
-                      <img
-                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                        alt=""
-                      />
-                      <p>John Doe</p>
-                    </div>
-
-                    <div className="popupUser">
-                      <img
-                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                        alt=""
-                      />
-                      <p>John Doe</p>
-                    </div>
-
-                    <div className="popupUser">
-                      <img
-                        src="C:\Users\anura\OneDrive\Desktop\social media cloned\SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
-                        alt=""
-                      />
-                      <p>John Doe</p>
-                    </div>
+                    {searchSuggestionResult.length === 0 ? (
+                      <p>No Search Results</p>
+                    ) : (
+                      searchSuggestionResult.map(
+                        (suggestion, index) => (
+                          console.log("Suggestions"),
+                          // console.log(suggestion.mongoData[0]._id),
+                          (
+                            <div className="popupUser">
+                              <img
+                                src={`http://localhost:5000/${suggestion.profileImg}`}
+                                alt="User"
+                              />
+                              <p 
+                              onClick={()=>{
+                                alert("Calleddddd");
+                                fetchMessages(suggestion.mongoData[0]._id,conversations)
+                                }}
+                                >
+                                {suggestion.username}
+                              </p>
+                            </div>
+                          )
+                        )
+                      )
+                    )}
                   </div>
                 </div>
               )}
@@ -826,32 +801,6 @@ export const Let = () => {
                   }
                 })
               }
-              {/* <div className="mid-text4">
-                <div className="left4">
-                  <img src={image} alt=""></img>
-                  <div className="left-info">
-                    <h2>John Doe</h2>
-                    <p className="activity">whats up</p>
-                  </div>
-                </div>
-                <div className="right4">
-                  <p>9:26 PM</p>
-                  <circle>11</circle>
-                </div>
-              </div>
-              <div className="mid-text5">
-                <div className="left5">
-                  <img src={image} alt=""></img>
-                  <div className="left-info">
-                    <h2>John Doe</h2>
-                    <p className="activity">typing...</p>
-                  </div>
-                </div>
-                <div className="right5">
-                  <p>9:26 PM</p>
-                  <circle>1</circle>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
