@@ -7,6 +7,8 @@ const connection = require("../connection");
 const multer = require("multer");
 const io = require("../socket");
 const path = require("path");
+const ShareLinkSchema = require("../models/ShareLinkSchema");
+const { v4: uuidv4 } = require('uuid');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
