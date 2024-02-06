@@ -27,6 +27,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import { ThemeProvider } from "./Contexts/themeContext.js";
+import ViewSharePost from "./components/SharePostModal/ViewSharePost.jsx";
 
 function App() {
   const Layout = function () {
@@ -94,6 +95,10 @@ function App() {
     {
       path: "/resetpassword/:id/:token",
       element: <ResetPasswordForm />,
+    },
+    {
+      path: "/posts/:postid/:uuid",
+      element: <ViewSharePost />,
     },
     {
       path: "/profile_setting/:userId",
