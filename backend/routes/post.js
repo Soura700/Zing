@@ -359,6 +359,25 @@ router.get("/:userId", (req, res) => {
   }
 });
 
+router.get('/get_post_by_id/:postId', (req, res) => {
+  const postId = req.params.postId;
+  try {
+    connection.query(
+      'SELECT * FROM posts WHERE id = ?',
+      [postId], // Add a comma here to separate the query string from the parameter array
+      (error, results) => {
+        if (error) {
+          return res.status(500).json(error);
+        } else {
+          return res.status(200).json(results);
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 // Fetching the posts by the timestamp and the userId
 router.get("/posts_by_timestamp/:userId/:createdAt", async (req, res) => {
   const { userId, createdAt } = req.params;
@@ -382,6 +401,77 @@ router.get("/posts_by_timestamp/:userId/:createdAt", async (req, res) => {
   } catch (error) {
     console.error("Error fetching posts by timestamp:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//share post API (04/02/2024)
+router.post('/share_post/:postId', async (req, res) => {
+  const postId = req.params.postId;
+  console.log(postId);
+  const updateQuery = 'SELECT * FROM posts WHERE id = ?';
+
+  try {
+    connection.query(updateQuery, [postId], async (err, result) => {
+      if (err) {
+        console.error('Error updating profile in MySQL:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        console.log("Result");
+        console.log(result[0].id);
+        const post = await ShareLinkSchema.findOne({ postId: postId });
+       
+        if (!post) {
+          const link = `https://localhost:3000/posts/${result[0].id}/${uuidv4()}`;
+          console.log("Enteredddd");
+          const newPostLink = new ShareLinkSchema({
+            postId: result[0].id,
+            shareLink: link
+          });
+          const postLink = await newPostLink.save();
+          return res.status(200).json(link);
+        }
+        else {
+          console.log("Entered2")
+          const link2 = `https://localhost:3000/posts/${result[0].id}/${uuidv4()}`;
+          post.shareLink = link2;
+          await post.save();
+          return res.status(200).json(link2);
+        }
+      }
+    })
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+//get shared link from database by post ID (06/02/2024)
+router.get('/get_post/sharelink', async (req, res) => {
+  
+  // const {shareLink} = req.query;
+  const {shareLink} = req.params;
+
+  const splitLink = shareLink.split("/");
+  const postId = splitLink[4];
+  try {
+  
+    if (!postId) {
+      return res.status(404).json({ error: 'PostId not found' });
+    }
+    const getPostQuery = 'SELECT * FROM posts WHERE id = ?';
+
+    connection.query(getPostQuery, [postId], (err, result) => {
+      if (err) {
+        console.error('Error retrieving post from MySQL:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        const post = result[0];
+        // res.redirect("/posts/:id/:uuid");
+        return res.status(200).json(post);
+      }
+    });
+  } catch (error) {
+    console.error('Error retrieving post:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

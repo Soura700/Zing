@@ -1059,7 +1059,14 @@ export const Group = () => {
                   )}
                 </div>
                 {incomingCall && (
-                  <button onClick={handleAcceptButtonClick}>Accept</button>
+                  <div className="acceptButtonDiv">
+                    <h1>Incoming Call</h1>
+                    <div className="acceptButton">
+                      <button onClick={handleAcceptButtonClick}>
+                        <p>Accept</p>
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             </>

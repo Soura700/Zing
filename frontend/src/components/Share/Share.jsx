@@ -1,3 +1,5 @@
+/* my share.jsx code */
+
 import {
   Close,
   EmojiEmotions,
@@ -29,7 +31,6 @@ const Share = () => {
   const [imgUrls, setImgUrls] = useState([]);
 
   const [img, setImg] = useState(null);
-
 
   const parsedID = parseInt(id);
 
@@ -78,10 +79,11 @@ const Share = () => {
     setInput(input + emoji);
   };
 
-  const removeImage = () => {
-    setImg(null);
+  const removeImage = (index) => {
+    const updatedImages = [...img];
+    updatedImages.splice(index, 1);
+    setImg(updatedImages);
   };
-
 
   // const handleImageChange = (e) => {
   //   const selectedFiles = e.target.files;
@@ -105,7 +107,6 @@ const Share = () => {
     setImgUrls(urls);
     setImg(selectedFiles);
   };
-
 
   const handlePost = async () => {
     try {
@@ -145,8 +146,6 @@ const Share = () => {
       console.error("Error creating post:", error);
     }
   };
-
-
 
   return (
     <div className="share">
@@ -195,31 +194,33 @@ const Share = () => {
             ))}
           </div>
         )} */}
-
-        {img &&
-          Array.from(img).map((file, index) => (
-            <div className="shareImgContainer" key={index}>
-              <img
-                src={URL.createObjectURL(file)}
-                alt=""
-                className="shareImg"
-              />
-              <Close
-                className="shareCancelImg"
-                onClick={() => removeImage(index)}
-              />
-            </div>
-          ))}
+        {img && img.length > 0 && (
+          <div className="sharePicSection">
+            {Array.from(img).map((file, index) => (
+              <div className="shareImgContainer" key={index}>
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt=""
+                  className="shareImg"
+                />
+                <Close
+                  className="shareCancelImg"
+                  onClick={() => removeImage(index)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="shareBottom">
           <div className="shareOptions">
-            <div className="shareOption">
+            {/* <div className="shareOption">
               <VideoCameraFront
                 className="shareIcon"
                 // style={{ color: "#bb0000f2" }}
               />
               <span className="shareOptionText">Live Video</span>
-            </div>
+            </div> */}
             <label htmlFor="file" className="shareOption">
               <PermMedia
                 className="shareIcon"
