@@ -209,6 +209,8 @@ const Navbar = ({ toggleMenu, user }) => {
     }
   }, [id, parsedID, checkAuthentication]);
 
+
+
   useEffect(() => {
     // const newSocket = io("http://localhost:5500");
     const newSocket = io("http://localhost:8000");
@@ -251,13 +253,41 @@ const Navbar = ({ toggleMenu, user }) => {
       // Get Friend Request
       socket.on(
         "acceptFriendRequest",
-        ({ acceptFriendRequestData, from, to }) => {
+        ({ acceptFriendRequestData, from, to , fromUserId}) => {
           console.log("Accepted the friedn Request");
           console.log(acceptFriendRequestData);
 
-          if (from === parsedID) {
-            console.log("Received friend request from the sender");
-            console.log(acceptFriendRequestData);
+          if (fromUserId === parsedID && socket) {
+            alert("Enteredddddddddddddddddddddddd");
+            if (
+              !deletedAcceptedRequests.some(
+                (request) =>
+                  request.senderUserId === acceptFriendRequestData.senderUserId
+              )
+            ) {
+              alert("Hellooooo");
+              setMessage((prevRequests) => {
+                // Check again inside the callback to ensure no race conditions
+                if (
+                  !prevRequests.some(
+                    (request) =>
+                      request.senderUserId ===
+                      acceptFriendRequestData.senderUserId
+                  )
+                ) {
+                  // Modify the message to include the declined information
+                  const acceptedMessage = {
+                    ...acceptFriendRequestData,
+                    message: `${acceptFriendRequestData.receiverUsername} has accepted your friend request`,
+                  };
+
+                  // return [...prevRequests, deleteFriendRequestData];
+                  return [...prevRequests, acceptedMessage];
+                }
+                return prevRequests;
+              });
+              setunreadMessageCount((prevCount) => prevCount + 1);
+            }
           }
         }
       );
@@ -438,7 +468,45 @@ const Navbar = ({ toggleMenu, user }) => {
   };
 
   // Function to confirm the request
-  const handleConfirm = async (senderName, receiverName) => {};
+  const handleConfirm = async (senderName, receiverName) => {
+    alert("Called");
+
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/friend_request/acceptFriendRequest",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            senderUsername: senderName,
+            receiverUsername: receiverName,
+          }),
+        }
+      );
+      const data = await res.json();
+
+      if (res.ok) {
+        // Use a callback function to ensure proper updating of state
+        setFriendRequests((prevRequests) =>
+          prevRequests.filter(
+            (request) => request.senderUsername !== senderName
+          )
+        );
+        // Check if there are no more friend requests, then close the notification panel
+        if (friendRequests.length === 1) {
+          setMenuVisible(false);
+        }
+        // Close the friend request menu
+        setMenuVisible(false);
+      } else {
+        toast.error("Failed to accept friend request");
+      }
+    } catch (error) {
+      toast.error("An error occurred while accepting friend request");
+    }
+  };
 
   const handleDelete = async (senderName, receiverName) => {
     try {

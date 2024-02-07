@@ -7,8 +7,8 @@ import CallEndIcon from "@mui/icons-material/CallEnd";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
-import AddIcCallIcon from '@mui/icons-material/AddIcCall';
-import PhoneForwardedIcon from '@mui/icons-material/PhoneForwarded';
+import AddIcCallIcon from "@mui/icons-material/AddIcCall";
+import PhoneForwardedIcon from "@mui/icons-material/PhoneForwarded";
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
@@ -26,6 +26,9 @@ const VideoCall = () => {
   const [callerStream, setCallerStream] = useState(null);
   const userVideo = useRef();
   const partnerVideo = useRef();
+  const [isSoundMuted, setIsSoundMuted] = useState(false);
+  const [isVideo, setIsVideo] = useState(false);
+
 
   const location = useLocation();
   var { userId, userName, clicked } = location.state || {};
@@ -174,6 +177,25 @@ const VideoCall = () => {
   const toggleEndCallIcon = async () => {
     setEndCallIcon(!endCallIcon);
   };
+
+  const toggleSoundMute = () => {
+    setIsSoundMuted((prevState) => !prevState);
+    if (mediaStream) {
+      mediaStream.getAudioTracks().forEach(track => {
+        track.enabled = !isSoundMuted; 
+      });
+    } 
+  };
+
+  const toggleVideo = () => {
+    setIsVideo(prevState => !prevState);
+    if (mediaStream) {
+      mediaStream.getVideoTracks().forEach(track => {
+        track.enabled = !isVideo;
+      });
+    } 
+  };
+
   return (
     <div className="outer-rect videocall">
       <div className="left-inner-rect"></div>
@@ -185,7 +207,7 @@ const VideoCall = () => {
                 <div className="cam1">
                   {/* <img className="image1" src={img1} alt="" /> */}
                   <div className="name-overlay">
-                    <video ref={userVideo} autoPlay className="callerVid" />
+                    <video ref={userVideo} autoPlay className="callerVid" muted={isSoundMuted} />
                     {/* caller's video screen */}
                   </div>
                   <div className="name-overlay1">
@@ -218,6 +240,7 @@ const VideoCall = () => {
                         ref={partnerVideo}
                         autoPlay
                         className="receiverVid"
+                        muted={isSoundMuted}
                       />
                     )}
                     {/* receiver's video screen */}
@@ -241,27 +264,39 @@ const VideoCall = () => {
               <div className="icons">
                 <div className="mic">
                   {soundIcon ? (
-                    <MicOffIcon
-                      className="videocontrolicons active"
-                      onClick={toggleSoundIcon}
+                    <MicIcon
+                      className="videocontrolicons "
+                      onClick={() => {
+                        toggleSoundIcon();
+                        toggleSoundMute();
+                      }}
                     />
                   ) : (
-                    <MicIcon
-                      className="videocontrolicons"
-                      onClick={toggleSoundIcon}
+                    <MicOffIcon
+                      className="videocontrolicons active"
+                      onClick={() => {
+                        toggleSoundIcon();
+                        toggleSoundMute();
+                      }}
                     />
                   )}
                 </div>
                 <div className="mic">
                   {videoIcon ? (
-                    <VideocamOffIcon
-                      className="videocontrolicons active"
-                      onClick={toggleVideoIcon}
+                    <VideocamIcon
+                      className="videocontrolicons "
+                      onClick={() => {
+                        toggleVideoIcon();
+                        toggleVideo();
+                      }}
                     />
                   ) : (
-                    <VideocamIcon
-                      className="videocontrolicons"
-                      onClick={toggleVideoIcon}
+                    <VideocamOffIcon
+                      className="videocontrolicons active"
+                      onClick={() => {
+                        toggleVideoIcon();
+                        toggleVideo();
+                      }}
                     />
                   )}
                 </div>
@@ -277,10 +312,20 @@ const VideoCall = () => {
                       onClick={toggleEndCallIcon}
                     />
                   )}
-                  <button onClick={handleCallButtonClick} className="startCallBtn">Start <AddIcCallIcon /></button>
+                  <button
+                    onClick={handleCallButtonClick}
+                    className="startCallBtn"
+                  >
+                    Start <AddIcCallIcon />
+                  </button>
                 </div>
                 {incomingCall && (
-                  <button onClick={handleAcceptButtonClick} className="acceptCallBtn">Accept <PhoneForwardedIcon /></button>
+                  <button
+                    onClick={handleAcceptButtonClick}
+                    className="acceptCallBtn"
+                  >
+                    Accept <PhoneForwardedIcon />
+                  </button>
                 )}
               </div>
             </div>

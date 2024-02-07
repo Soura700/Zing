@@ -383,9 +383,9 @@ const RightBar = ({isVisible}) => {
                         }
                         className={styles.btn1}
                       >
-                        Follow
+                       <DoneRoundedIcon className={styles.btn1Icon}/>
                       </button>
-                      <button className={styles.btn2}>Dismiss</button>
+                      <button className={styles.btn2}><CloseRoundedIcon className={styles.btn2Icon}/></button>
                     </div>
                   </div>
                 ))}

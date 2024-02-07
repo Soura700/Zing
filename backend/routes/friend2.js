@@ -224,6 +224,17 @@ router.post('/acceptFriendRequest', async (req, res) => {
     // Create friend relationship in Neo4j with "Accepted" status
     await createFriendRelationship(senderUserId, receiverUserId, 'Accepted');
 
+    const newUnreadMessage = new UnreadMessages({
+      senderId:senderUserId,
+      receiverId:receiverUserId,
+      receiverName:receiverUsername,
+      senderName:senderUsername,
+      message:`${receiverUsername} has accepted your friend request`,
+      message_type:'Accepted'
+    });
+
+    await newUnreadMessage.save();
+
          // Emit friend request to Socket.IO clients
          const acceptFriendRequestData = {
           senderUserId,
@@ -233,7 +244,7 @@ router.post('/acceptFriendRequest', async (req, res) => {
           status: 'Accepted', // Or 'Pending', etc.
         };
 
-    io.emit("acceptFriendRequest" , {acceptFriendRequestData : acceptFriendRequestData , from:senderUsername , to : receiverUsername});
+    io.emit("acceptFriendRequest" , {acceptFriendRequestData : acceptFriendRequestData , from:senderUsername , to : receiverUsername , fromUserId: senderUserId});
 
     return res.status(200).json({ success: true });
   } catch (error) {
@@ -252,7 +263,7 @@ router.get("/getFriends/:userId", async (req, res) => {
 
     // Query Neo4j for friends
     const getFriendsQuery = `
-      MATCH (u:User {userId: toFloat($userId)})-[:FRIENDS_WITH]-(fof:User)
+      MATCH (u:User {userId: toFloat($userId)})-[:FRIENDS_WITH {status:'Accepted'}]-(fof:User)
       RETURN fof;
     `;
 

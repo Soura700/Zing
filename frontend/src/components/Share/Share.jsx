@@ -1,5 +1,3 @@
-/* my share.jsx code */
-
 import {
   Close,
   EmojiEmotions,
@@ -133,7 +131,7 @@ const Share = () => {
         console.log("Post created successfully:", result);
 
         // Emit a socket event to inform other clients about the new post
-        socket.emit("newPost", { newPost: result });
+        socket.emit("newPost", { newPost: result , userId:id });
 
         // Clear input and other state values if needed
         setInput("");

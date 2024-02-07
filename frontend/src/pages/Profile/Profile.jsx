@@ -14,6 +14,8 @@ import Stories from "stories-react";
 import "stories-react/dist/index.css";
 import axios from "axios";
 import Posts from "../../components/Posts/Posts";
+import { io } from "socket.io-client";
+
 
 const Profile = () => {
   const [user, setUser] = useState([]);
@@ -26,11 +28,14 @@ const Profile = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [userPhoto, setUserPhoto] = useState(null); //Setting the userprofile image from the database
   const { userId } = useParams();
+  const [senderName, setSenderName] = useState(null);
   // Assuming loggedInUserId is the ID of the logged-in user
   const loggedInUserId = parseInt(id);
   const navigate = useNavigate();
   const [selectedStory, setSelectedStory] = useState(null);
   const [showStories, setShowStories] = useState(false);
+  const [socket, setSocket] = useState(null); //For setting the socket connection
+  const [socket2, setSocket2] = useState(null); //For setting the socket connection
 
   // Condition to check if the current user is viewing their own profile
   const isOwnProfile = userId == loggedInUserId;
@@ -40,6 +45,27 @@ const Profile = () => {
 
   // Fetching the userdetails
   useEffect(() => {
+    async function fetchOwnData() {
+      try {
+        const userRes = await fetch(
+          "http://localhost:5000/api/auth/" + id,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const userResJson = await userRes.json();
+        // setUser(userResJson);
+        setSenderName(userResJson[0].username);
+        // setSenderName(userResJson[0].username);
+        // setUserPhoto(userResJson[0].profileImg);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
     // Fetching the user details
     async function fetchUser() {
       try {
@@ -55,6 +81,7 @@ const Profile = () => {
         const userResJson = await userRes.json();
         setUser(userResJson);
         setUsername(userResJson[0].username);
+        // setSenderName(userResJson[0].username);
         setUserPhoto(userResJson[0].profileImg);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -83,6 +110,7 @@ const Profile = () => {
         console.error("Error fetching friends data:", error);
       }
     }
+    alert(senderName);
 
     async function suggestionOfFriends() {
       try {
@@ -140,6 +168,7 @@ const Profile = () => {
       }
     };
 
+    fetchOwnData();
     fetchUser();
     fetchUserFriends();
     suggestionOfFriends();
@@ -215,6 +244,58 @@ const Profile = () => {
   //   fetchData();
   // },[]);
 
+
+
+  const follow = async (senderUsername,receiverUsername) => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/friend_request/sendFriendRequest",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ senderUsername, receiverUsername }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to send friend request");
+      }
+
+      // Emit Socket.IO event after successful friend request
+      socket.emit("friendRequest", {
+        action: "removeSuggestion",
+        senderUsername: senderUsername, // Make sure to get the sender's ID
+        receiverUsername: receiverUsername, // Make sure to get the receiver's ID
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      // Update state to remove the user suggestion
+      // setUsersWithNames((prevUsers) => {
+      //   return prevUsers.filter(
+      //     (user) => user[0].username !== receiverUsername
+      //   );
+      // });
+    } catch (error) {
+      console.error("Error sending friend request:", error);
+    }
+  };
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:8000");
+    setSocket(newSocket);
+    const newSocket2 = io("http://localhost:5500");
+    setSocket2(newSocket2);
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+
+
   console.log("Selected Story");
   console.log(selectedStory);
 
@@ -261,7 +342,7 @@ const Profile = () => {
           }))}
         /> */}
 
-        <img className={styles.profilePic} src={userPhoto}  />
+        <img className={styles.profilePic} src={userPhoto} />
         <img
           className={styles.profilePic}
           src={`http://localhost:5000/${userPhoto}`}
@@ -293,7 +374,12 @@ const Profile = () => {
             {/* // ))} */}
             <div className={styles.btn}>
               {!isOwnProfile && !isFriendWithCurrentUser && (
-                <button className={styles.btn1}>Follow</button>
+                <button
+                  className={styles.btn1}
+                  onClick={() => follow(senderName,username)}
+                >
+                  Follow
+                </button>
               )}
               {/* <button className={styles.btn1}>follow</button> */}
               {!isOwnProfile && (

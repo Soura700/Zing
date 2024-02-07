@@ -69,7 +69,9 @@
     background: rgba(0, 0, 0, 0.314);
 }
 img {
-    max-width: 100%;
+    /* max-width: 100%; */
+    /* min-width: 100%; */
+    width: fit-content;
     height: auto;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);

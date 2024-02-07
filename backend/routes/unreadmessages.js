@@ -24,7 +24,7 @@ router.get("/get_unread_read_message/:userId", async (req,res)=>{
 
   try {
     // Find unread_message  where the specified user is the recipient (to)
-    const unread_messages = await UnreadMessages.find({ senderId: userId, $or:[ {message_type: 'Declined'} , {message_type:'Accept'} ] })
+    const unread_messages = await UnreadMessages.find({ senderId: userId, $or:[ {message_type: 'Declined'} , {message_type:'Accepted'} ] })
 
     res.status(200).json(unread_messages);
   } catch (error) {
