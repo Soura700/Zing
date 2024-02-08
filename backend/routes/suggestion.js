@@ -293,7 +293,7 @@ function filterRankedSuggestionsDynamicThreshold(rankedSuggestions, targetUserId
 function calculateDynamicPercentageThreshold(numSuggestions) {
   // Adjust the threshold based on the number of suggestions
   if (numSuggestions <= 5) {
-    return 40; // High threshold if few suggestions
+    return 20; // High threshold if few suggestions
   } else {
     return 20; // Lower threshold if more suggestions
   }

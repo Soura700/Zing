@@ -72,6 +72,7 @@
         .shareImgContainer {
             padding: 0 20px 10px 20px;
             position: relative;
+            width: fit-content;
         }
             /* .shareImg {
                 width: 100%;
@@ -154,7 +155,7 @@
 }
 .sharePicSection {
     display: flex;
-    position: absolute;
+    /* position: absolute; */
     background: white;
 
 
@@ -173,6 +174,7 @@
     backdrop-filter: blur(12px) saturate(101%);
     -webkit-backdrop-filter: blur(12px) saturate(101%);
     background-color: rgba(17, 25, 40, 0.37);
+    z-index: 999;
 }
 .sharePicBottom {
     display: flex;

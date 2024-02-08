@@ -24,8 +24,7 @@
 
 .post .content p {
   color: rgb(52, 52, 52);
-  font-size: 20px;
-  margin: 0px;
+  font-size: 25px;
 }
 .post .content .gallery {
   display: grid;
@@ -38,7 +37,7 @@
 }
 .post .content .gallery img {
   height: fit-content;
-  width: 500px;
+  width: 300px;
   object-fit: cover;
   cursor: pointer;
   border-radius: 5px;
@@ -168,7 +167,7 @@
   font-size: 25px;
 }
 .details .name {
-  color: rgb(59, 39, 79);
+  color: rgb(102, 97, 105);
   font-weight: 500;
   font-size: 23px;
 }
@@ -176,13 +175,17 @@
 .details>.date {
   font-size: 12px;
   margin-left: 5px;
-  color: rgb(103, 103, 103);
+  font-weight: 500;
+  color: rgb(190, 190, 190);
 }
 
 .content {
   margin: 20px 0px;
 }
-
+.content p {
+  font-weight: 500;
+  margin-left: 20px;
+}
 .content>img {
   width: 100%;
   max-height: 500px;
@@ -470,7 +473,7 @@ input[type="file"] {
     /* width: 500px; */
     margin-left: 10px;
     margin-right: 10px;
-    margin-top: 0px;
+    margin-top: 20px;
 
   }
   .post .content .gallery .showFullImgContainer {
@@ -509,7 +512,7 @@ input[type="file"] {
   }
   .post .content .gallery img {
     height: fit-content;
-    width: 406px;
+    width: 200px;
     cursor: pointer;
     border-radius: 5px;
   }

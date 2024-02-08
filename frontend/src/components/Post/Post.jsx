@@ -521,7 +521,7 @@ const Post = ({ post, userId, style }) => {
                 to={`/profile/${post.userId}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <span className={styles.name}>{post.name}</span>
+                <span className={styles.name}>{post.username}</span>
               </Link>
               <span className={styles.date}>
                 {getTimeDifferenceString(post.createdAt)}
@@ -559,7 +559,7 @@ const Post = ({ post, userId, style }) => {
           )}
         </div>
         <div className={styles.content}>
-          <h3>{post.username}</h3>
+          {/* <h3>{post.username}</h3> */}
           <p>{post.description}</p>
           {/* Render images */}
           {/* <div className={(images && images.length && images.length <= 2) ? styles.gridTwo : styles.gridMore}> */}
