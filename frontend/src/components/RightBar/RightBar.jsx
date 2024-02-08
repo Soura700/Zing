@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import styles from "./rightbar.module.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../../Contexts/authContext";
-import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import DoneRoundedIcon from "@mui/icons-material/DoneRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Link } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const RightBar = ({isVisible}) => {
+const RightBar = ({ isVisible }) => {
   const [toggle, setToggle] = useState(false);
   const [usersWithNames, setUsersWithNames] = useState([]);
   const [showMore, setShowMore] = useState(false);
@@ -336,13 +336,13 @@ const RightBar = ({isVisible}) => {
                     onClick={() => handleFollow(senderName, user[0].username)}
                     className={styles.btn1}
                   >
-                    <DoneRoundedIcon className={styles.btn1Icon}/>
+                    <DoneRoundedIcon className={styles.btn1Icon} />
                   </button>
                   <button
                     onClick={() => handleDismiss(user[0].username, user[0].id)}
                     className={styles.btn2}
                   >
-                    <CloseRoundedIcon className={styles.btn2Icon}/>
+                    <CloseRoundedIcon className={styles.btn2Icon} />
                   </button>
                 </div>
               </div>
@@ -383,9 +383,11 @@ const RightBar = ({isVisible}) => {
                         }
                         className={styles.btn1}
                       >
-                       <DoneRoundedIcon className={styles.btn1Icon}/>
+                        <DoneRoundedIcon className={styles.btn1Icon} />
                       </button>
-                      <button className={styles.btn2}><CloseRoundedIcon className={styles.btn2Icon}/></button>
+                      <button className={styles.btn2}>
+                        <CloseRoundedIcon className={styles.btn2Icon} />
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -401,11 +403,11 @@ const RightBar = ({isVisible}) => {
         {/* box2 content starts here */}
 
         <div className={styles.item2}>
-          <h1 className={styles.header}>Latest Activities</h1>
+          {/* <h1 className={styles.header}>Latest Activities</h1>
           {recentActivities.map((activity, index) => (
             <div key={index} className={styles.user4}>
               <div className={styles.userInfo}>
-                {/* You can customize the display based on the activity type (like or dislike) */}
+              
                 <h3>{activity.userName}</h3>
               </div>
               <p>{activity.action === "like" ? "liked" : "disliked"} a post</p>
@@ -413,19 +415,22 @@ const RightBar = ({isVisible}) => {
           ))}
           {/* <div className={styles.user2}>
             <div className={styles.userInfo}>
+             
               <h3>John Doe</h3>
             </div>
             <p>changed their cover picture</p>
           </div>
           <div className={styles.user3}>
             <div className={styles.userInfo}>
+         
               <h3>John Doe</h3>
             </div>
             <p>liked a post</p>
           </div>
           <div className={styles.user4}>
             <div className={styles.userInfo}>
-              <h3>John Doe</h3>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              {/* <h3>John Doe</h3>
             </div>
             <p>commented on your post</p>
           </div>
@@ -434,28 +439,27 @@ const RightBar = ({isVisible}) => {
               <h3>John Doe</h3>
             </div>
             <p>shared a post</p>
-          </div> */}
-          <div className={styles.more}>More</div>
+          </div>
+          <div className={styles.more}>More</div>  */}
+
+
         </div>
 
-        {/* box2 content ends here */}
-
-        {/* box3 content starts here */}
         <div className={styles.item3}>
           <h1 className={styles.header}>Online Friends</h1>
-          {onlineFriends.map((onlinefriends,index) => {
-            return(
-            <div className={styles.user6}>
-              <div className={styles.userInfo}>
-                {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-                <h3>{onlinefriends}</h3>
-                <circle></circle>
+          {onlineFriends.map((onlinefriends, index) => {
+            return (
+              <div className={styles.user6}>
+                <div className={styles.userInfo}>
+               
+                  <h3>{onlinefriends}</h3>
+                  <circle></circle>
+                </div>
               </div>
-            </div>
-            )
+            );
           })}
         </div>
-        {/* box3 content ends here */}
+
       </div>
     </div>
   );
