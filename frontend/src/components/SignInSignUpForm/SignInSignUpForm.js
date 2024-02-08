@@ -1,4 +1,6 @@
 import axios from "axios";
+import img6 from "../../assets/img6.png";
+import img7 from "../../assets/img7.png";
 import img from "../../assets/img.svg";
 import img2 from "../../assets/img1svg.svg";
 import "./sign.css";
@@ -203,16 +205,18 @@ const SignInSignUpForm = () => {
             <p>
               <Link to='/forgotpassword'>Forgot Password?</Link>
             </p>
-            <p class="social-text">Or Sign in with social platforms</p>
+            <p class="social-text">Or 
+            </p>
             <div class="social-media">
-              <a href="#" class="social-icon">
+              {/* <a href="#" class="social-icon">
                 <i class="fa-brands fa-facebook"></i>
               </a>
               <a href="#" class="social-icon">
                 <i class="fab fa-twitter"></i>
-              </a>
+              </a> */}
               <a href="#" class="social-icon">
                 <i class="fab fa-google"></i>
+                Sign in with Google
               </a>
             </div>
           </form>
@@ -248,16 +252,17 @@ const SignInSignUpForm = () => {
             </div>
 
             <input type="submit" class="btn" value="Sign up" />
-            <p class="social-text">Or Sign up with social platforms</p>
+            <p class="social-text">Or</p>
             <div class="social-media">
-              <a href="#" class="social-icon">
+              {/* <a href="#" class="social-icon">
                 <i class="fab fa-facebook-f"></i>
               </a>
               <a href="#" class="social-icon">
                 <i class="fab fa-twitter"></i>
-              </a>
+              </a> */}
               <a href="#" class="social-icon">
                 <i class="fab fa-google"></i>
+                Sign up with Google
               </a>
             </div>
           </form>
@@ -269,25 +274,24 @@ const SignInSignUpForm = () => {
           <div class="content">
             <h3>New here ?</h3>
             <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-              ex ratione. Aliquid!
+            Join our vibrant community of adventurers, creators, and dreamers. Sign up now!
             </p>
             <button
               class="btn transparent"
               id="sign-up-btn"
               onClick={handleSignUpClick}
             >
-              Sign up
+               Sign up
             </button>
           </div>
-          <img src={img} class="image" alt="" />
+          {/* <img src={img} class="image" alt="" /> */}
+          <img src={img6} class="image" alt="" />
         </div>
         <div className="panel right-panel">
           <div class="content">
             <h3>One of us ?</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-              laboriosam ad deleniti.
+            Welcome back, explorer! Your next adventure awaits.
             </p>
             <button
               class="btn transparent"
@@ -297,7 +301,7 @@ const SignInSignUpForm = () => {
               Sign in
             </button>
           </div>
-          <img src={img2} class="image" alt="" />
+          <img src={img7} class="image" alt="" />
         </div>
       </div>
       <ToastContainer />

@@ -218,7 +218,7 @@ button.selected {
 
 }
 .personalizerScreen1 header h1{
-    font-size: 70px;
+    font-size: 4rem;
     color: white;
     font-weight: 400;
     z-index: 99;
@@ -226,7 +226,7 @@ button.selected {
     text-shadow: 5px 2px 5px rgba(0,0,0,0.6);
 }
 .personalizerScreen1 header h2{
-    font-size: 40px;
+    font-size: 2rem;
     color: rgba(255, 255, 255, 0.785);
     font-weight: 200;
     z-index: 99;
@@ -243,7 +243,7 @@ button.selected {
     z-index: 99;
     padding: 30px;
 
-    width: 450px;
+    width: 30%;
     
 
     backdrop-filter: blur(15px) saturate(180%);
@@ -354,86 +354,224 @@ button.selected {
     color: rgb(255, 255, 255);
 }
 
-@media only screen and (max-width: 600px) {
-    header {
-        font-size: 20px;
-    }
-
-    #profile h2,
-    #profilePic h2 {
-        font-size: 20px;
-    }
-
-    .image-container img {
-        height: 90px;
-        width: 90px;
-        margin: 10px;
-    }
-
-    #profileBio input {
-        width: 80%;
-    }
-
-    #interestsList ul {
-        width: 100%;
-    }
-
-    #interestsList li {
-        min-width: 60px;
-        padding: 8px;
-    }
-
-    button {
-        width: 50%;
-    }
-    .whole{
-        padding: 0px;
+@media (max-width: 1024px) {
+    #profile {
+        border: 1px solid red;
+        height: fit-content;
+        margin-top: 190px;
+        margin-left: -30px;
+        z-index: 99;
+        padding: 30px;
+    
+        width: 30%;
         
-    }
-    header h1 {
-        margin-bottom: 10px;
-        text-align: center;
-        font-size: 30px;
-    }
-    header h2{
-        text-align: center;
-        font-size: 21px;
-    }
-    #profilePic h2 {
-        font-size: 15px;
-        align-items:center ;
-    }
-    #profileBio input {
-        height: 30px;
-        width: 250px;
-        background: white;
-        border: 1px solid black;
-        border-radius: 12px;
-        padding: 10px;
-        font-size: 15px;
-        margin-bottom: 20px;
-    }
-    #interests h2{
-        font-size: 15px;
-    }
-    #interests h4{
-        font-size: 12px;
-    }
-    #interestsList li {
-        border: 1px solid rgb(163, 163, 163);
-        color: rgb(47, 47, 47);
-        padding: 5px;
+    
+        backdrop-filter: blur(15px) saturate(180%);
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+        background-color: rgba(17, 25, 40, 0.5);
         border-radius: 30px;
-        min-width: 40px;
-        cursor: pointer;
+        border: 0px solid rgba(255, 255, 255, 0.125);
+        color: white;
     }
-    #interestsList ul {
-        font-size: 13px;
+} 
+
+@media (max-width: 1024px) {
+    .personalizerScreen1 header{
+        margin-top: 100px;
+        text-align: left;
+    
     }
-    button{
-        width: 80px;
+    .personalizerScreen1 header h1{
+        font-size: 3rem;
+        color: white;
+        font-weight: 400;
+        z-index: 99;
+        position: relative;
+        text-shadow: 5px 2px 5px rgba(0,0,0,0.6);
     }
-    .auto-size-text-box{
-        font-size: 10px;
+    .personalizerScreen1 header h2{
+        font-size: 2rem;
+        color: rgba(255, 255, 255, 0.785);
+        font-weight: 200;
+        z-index: 99;
+        position: relative;
+        text-shadow: 5px 2px 5px rgba(0,0,0,0.6);
+        margin-top: 50px;
+        margin-left: 90px;
     }
+    #profile {
+        border: 1px solid red;
+        height: fit-content;
+        margin-top: 190px;
+        margin-left: -30px;
+        z-index: 99;
+        padding: 30px;
+    
+        width: 30%;
+        
+    
+        backdrop-filter: blur(15px) saturate(180%);
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+        background-color: rgba(17, 25, 40, 0.5);
+        border-radius: 30px;
+        border: 0px solid rgba(255, 255, 255, 0.125);
+        color: white;
+    }
+}    
+
+@media only screen and (max-width: 768px) {
+    .personalizerScreen1 header{
+        margin-top: 2px;
+        text-align: center;
+    
+    }
+    
+    #profile {
+        border: 1px solid red;
+        height: fit-content;
+        margin-top: 190px;
+        margin-left: -396px;
+        z-index: 99;
+        padding: 30px;
+    
+        width: 50%;
+        height: 393px;
+        backdrop-filter: blur(15px) saturate(180%);
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+        background-color: rgba(17, 25, 40, 0.5);
+        border-radius: 30px;
+        border: 0px solid rgba(255, 255, 255, 0.125);
+        color: white;
+    }
+    
 }
+
+
+@media (max-width: 440px) {
+    .personalizerScreen1 header{
+        margin-top: 2px;
+        text-align: center;
+    
+    }
+    .personalizerScreen1 header h1{
+        font-size: 3rem;
+        color: white;
+        font-weight: 400;
+        z-index: 99;
+        position: relative;
+        margin-left: 133px;
+        text-shadow: 5px 2px 5px rgba(0,0,0,0.6);
+    }
+    .personalizerScreen1 header h2{
+        font-size: 2rem;
+        color: rgba(255, 255, 255, 0.785);
+        font-weight: 200;
+        z-index: 99;
+        position: relative;
+        text-shadow: 5px 2px 5px rgba(0,0,0,0.6);
+        margin-top: 50px;
+        margin-left: 90px;
+    }
+    #profile {
+        border: 1px solid red;
+        height: fit-content;
+        margin-top: 188px;
+        margin-left: -472px;
+        z-index: 99;
+        padding: 30px;
+    
+        width: 70%;
+        height: 393px;
+        backdrop-filter: blur(15px) saturate(180%);
+        -webkit-backdrop-filter: blur(15px) saturate(180%);
+        background-color: rgba(17, 25, 40, 0.5);
+        border-radius: 30px;
+        border: 0px solid rgba(255, 255, 255, 0.125);
+        color: white;
+    }
+
+    .personalizerScreen1 {
+        height: 130vh;
+        width: 160.3vw;
+        margin: 0px;
+        background-image: url("./pexels-merlin-lightpainting-10874566.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        top: 0px;
+        left: 0px;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 50px;
+    }
+    .personalizerScreen1 .part1 {
+        display: flex;
+    }
+    .personalizerScreen1::before {
+        content: ""; /* Necessary for pseudo-elements */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 130%;
+        height: 130%;
+        background-color: rgba(0, 0, 0, 0.374); /* Adjust opacity here */
+        z-index: 9;
+    }
+    .part2 {
+        z-index: 99;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+        margin-left: 149px;
+    }
+    .part2 h1 {
+        color: white;
+    }
+    .goDownIcon {
+        background: rgba(255, 255, 255, 0.79);
+        color: rgba(0, 0, 0, 0.926);
+        height: 40px;
+        width: 40px;
+        border-radius: 50px;
+        font-size: 20px;
+        padding-top: 8px;
+        margin-top: 14px;
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.5);
+    color: rgba(255, 255, 255, 0.84);
+    cursor: pointer;
+    }
+    #interests {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-left: 128px;
+        background: black;
+        padding: 150px 0px;
+    }
+    #interests h2 {
+        font-size: 45px;
+    }
+    #interests h4 {
+        font-size: 25px;
+    }
+    #ConfirmBtn {
+        width: fit-content;
+        padding: 10px 40px;
+        margin-top: 15px;
+        border-radius: 30px;
+        border: 1px solid rgb(62, 0, 123);
+        background: rgb(62, 0, 123);
+        color: white;
+        height: 65px;
+        width: 252px;
+        margin-bottom: 30px;
+        font-size: 22px;
+    }
+}    

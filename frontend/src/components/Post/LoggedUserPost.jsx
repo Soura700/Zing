@@ -10,6 +10,9 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 // import Comments from "../comments/Comments";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import AddPhotoAlternateRoundedIcon from "@mui/icons-material/AddPhotoAlternateRounded";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../Contexts/authContext";
@@ -30,7 +33,35 @@ const LoggedUserPost = ({ post, userId }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
   const parsedID = parseInt(id);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleFileChange = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
+  const handleClosePreview = () => {
+    // Reset image preview
+    setImagePreview(null);
+    // Reset file input if it exists
+    const fileInput = document.getElementById("mediaFile");
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
 
   // Parse the JSON string into an array
   const images = JSON.parse(post.image);
@@ -262,13 +293,15 @@ const LoggedUserPost = ({ post, userId }) => {
             </div>
           </div>
           {userId === post.userId && (
-            <MoreHorizIcon className="icon" onClick={handleToggle} />
+            <MoreHorizIcon className= {styles.icon} onClick={handleToggle} />
           )}
           {/* <MoreHorizIcon className="icon" onClick={handleToggle}/> */}
           {toggle ? (
             <div className={styles.postOptShow}>
               <ul>
-                <li className={styles.opt1}>Update Post</li>
+                <li className={styles.opt1} onClick={openModal}>
+                  Update Post
+                </li>
                 <div className={styles.opt2}>
                   <li>Delete Post</li>
                 </div>
@@ -276,6 +309,47 @@ const LoggedUserPost = ({ post, userId }) => {
             </div>
           ) : (
             <div className={styles.postOpt}></div>
+          )}
+
+          {isModalOpen && (
+            <div className={styles.updatePostModal}>
+              <div className={styles.modalHeader}>
+                <h2>Update Post</h2>
+                <CloseIcon onClick={closeModal} />
+              </div>
+              <div className={styles.updatePostContent}>
+                <textarea name="addCaption" id="" cols="30" rows="5" placeholder="Update post caption"></textarea>
+                <label htmlFor="addMedia">
+                  <p>Add Media</p>
+                  <AddPhotoAlternateRoundedIcon
+                    className={styles.updatePostAddPic}
+                  />
+                </label>
+                <input
+                  type="file"
+                  name="mediaFile"
+                  accept="image/*, video/*"
+                  onChange={handleFileChange}
+                  required
+                  id="addMedia"
+                />
+              </div>
+              {imagePreview && (
+                <div className={styles.imagePreviewContainer}>
+                  <button className="close-btn" onClick={handleClosePreview}>
+                    <CloseRoundedIcon className="close-icon" />
+                  </button>
+                  <img src={imagePreview} alt="Preview" />
+                </div>
+              )}
+              <div className={styles.confirmUpdate}>
+                <button className={styles.confirmUpdatePostBtn}>
+                  <CheckCircleRoundedIcon
+                    className={styles.confirmUpdatePostBtnIcon}
+                  />
+                </button>
+              </div>
+            </div>
           )}
         </div>
         <div className={styles.content}>

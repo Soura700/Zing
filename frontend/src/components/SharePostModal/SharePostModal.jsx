@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import "./sharePostModal.css"
+import InsertLinkOutlinedIcon from '@mui/icons-material/InsertLinkOutlined';
 const SharePostModal = ({ link, onClose }) => {
     const [copied, setCopied] = useState(false);
 
@@ -12,19 +13,22 @@ const SharePostModal = ({ link, onClose }) => {
     const splitPostId = splitData[4];
     const splitUuid = splitData[5];
 
-    alert(splitPostId);
-    alert(splitUuid);
+    // alert(splitPostId);
+    // alert(splitUuid);
 
     return (
-        <div>
+        <div className='sharePostContainer'>
             <p>Share this post:</p>
             <input type="text" value={link} readOnly />
             <a href={`/posts/${splitPostId}/${splitUuid}`}>
                 {link}
             </a>
-            <button onClick={copyToClipboard}>Copy Link</button>
+            <InsertLinkOutlinedIcon onClick={copyToClipboard} className='copyclipboard'/>
             {copied && <p>Link copied to clipboard!</p>}
-            <button onClick={onClose}>Close</button>
+            <button onClick={(e) => 
+                {
+                onClose();    
+                e.stopPropagation(); }} className='copiedBtn'>Close</button>
         </div>
     );
 };
