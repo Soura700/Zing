@@ -301,6 +301,11 @@ router.post("/like", (req, res) => {
 });
 
 function updateLikeCount(postId, likeStatus, res, userLiked) {
+  console.log(postId);
+  console.log(likeStatus);
+  console.log(res);
+  console.log(userLiked);
+  
   const incrementValue = likeStatus ? 1 : -1;
 
   console.log(likeStatus);
