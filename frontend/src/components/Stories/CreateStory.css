@@ -68,9 +68,9 @@
 .close-btn:hover {
     background: rgba(0, 0, 0, 0.314);
 }
-img {
-    /* max-width: 100%; */
-    /* min-width: 100%; */
+.image-preview-container img {
+    max-width: 100%;
+    min-width: 100%;
     width: fit-content;
     height: auto;
     border-radius: 5px;

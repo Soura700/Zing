@@ -484,4 +484,31 @@ router.get('/get_post/sharelink', async (req, res) => {
   }
 });
 
+router.get("/check_like/:postId/:userId", (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.params.userId;
+
+  // Query to check if the user has liked the post
+  const checkLikeQuery =
+    "SELECT * FROM post_likes WHERE post_id = ? AND user_id = ?";
+
+  // Execute the query
+  connection.query(checkLikeQuery, [postId, userId], (error, results) => {
+    if (error) {
+      console.error("Error checking like:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      if (results.length > 0) {
+        // The user has liked the post
+        res.status(200).json({ liked: true });
+      } else {
+        // The user has not liked the post
+        res.status(200).json({ liked: false });
+      }
+    }
+  });
+});
+
+
+
 module.exports = router;

@@ -14,8 +14,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Posts from "../../components/Posts/Posts";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
-
 
 const Profile = () => {
   const [user, setUser] = useState([]);
@@ -47,15 +48,12 @@ const Profile = () => {
   useEffect(() => {
     async function fetchOwnData() {
       try {
-        const userRes = await fetch(
-          "http://localhost:5000/api/auth/" + id,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         const userResJson = await userRes.json();
         // setUser(userResJson);
         setSenderName(userResJson[0].username);
@@ -87,6 +85,7 @@ const Profile = () => {
         console.error("Error fetching data:", error);
       }
     }
+
     // Fetching the  friends of the user
     async function fetchUserFriends() {
       try {
@@ -110,7 +109,6 @@ const Profile = () => {
         console.error("Error fetching friends data:", error);
       }
     }
-    alert(senderName);
 
     async function suggestionOfFriends() {
       try {
@@ -225,9 +223,11 @@ const Profile = () => {
   };
 
   const handleUserPhotoClick = () => {
-    alert("Called");
-    // Toggle the state to show or hide the stories component
-    setShowStories(!showStories);
+    if (selectedStory && selectedStory.length > 0) {
+      setShowStories(!showStories);
+    } else {
+      toast("No stories available");
+    }
   };
 
   // useEffect(() => {
@@ -244,9 +244,24 @@ const Profile = () => {
   //   fetchData();
   // },[]);
 
+  const getTimeDifferenceString = (timestamp) => {
+    const currentDate = new Date();
+    const timestampDate = new Date(timestamp);
+    const timeDifferenceMilliseconds = currentDate - timestampDate;
+    const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
+    const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
+    const timeDifferenceHours = Math.floor(timeDifferenceMinutes / 60);
 
+    if (timeDifferenceSeconds < 60) {
+      return `${timeDifferenceSeconds} seconds ago`;
+    } else if (timeDifferenceMinutes < 60) {
+      return `${timeDifferenceMinutes} minutes ago`;
+    } else {
+      return `${timeDifferenceHours} hours ago`;
+    }
+  };
 
-  const follow = async (senderUsername,receiverUsername) => {
+  const follow = async (senderUsername, receiverUsername) => {
     try {
       const response = await fetch(
         "http://localhost:5000/api/friend_request/sendFriendRequest",
@@ -258,21 +273,17 @@ const Profile = () => {
           body: JSON.stringify({ senderUsername, receiverUsername }),
         }
       );
-
       if (!response.ok) {
         throw new Error("Failed to send friend request");
       }
-
       // Emit Socket.IO event after successful friend request
       socket.emit("friendRequest", {
         action: "removeSuggestion",
         senderUsername: senderUsername, // Make sure to get the sender's ID
         receiverUsername: receiverUsername, // Make sure to get the receiver's ID
       });
-
       const result = await response.json();
       console.log(result);
-
       // Update state to remove the user suggestion
       // setUsersWithNames((prevUsers) => {
       //   return prevUsers.filter(
@@ -293,8 +304,6 @@ const Profile = () => {
       newSocket.disconnect();
     };
   }, []);
-
-
 
   console.log("Selected Story");
   console.log(selectedStory);
@@ -327,10 +336,15 @@ const Profile = () => {
         {showStories && (
           <div className={styles.overlay} onClick={handleOverlayClick}>
             <div className={styles.storyInfo}>
-              <img src="" alt="" />
+              {/* <img src="" alt="" /> */}
+              <img
+                src={`http://localhost:5000/${userPhoto}`}
+                alt=""
+                className={styles.cover}
+              />
               <div className={styles.storyInfoHeader}>
-              <h1>{username}</h1>
-              <p>3 minutes ago</p>
+                <h1>{username}</h1>
+                <p>{getTimeDifferenceString(selectedStory[0].createdAt)}</p>
               </div>
             </div>
             <div className={styles.modal}>
@@ -343,7 +357,6 @@ const Profile = () => {
                 background="transparent"
                 position="absolute"
                 margin-top="0px"
-                
                 stories={selectedStory.map((story) => ({
                   type: "image",
                   url: story.downloadURL,
@@ -368,12 +381,23 @@ const Profile = () => {
         /> */}
 
         <img className={styles.profilePic} src={userPhoto} />
-        <img
+        {/* <img
           className={styles.profilePic}
           src={`http://localhost:5000/${userPhoto}`}
           alt="Profile"
           onClick={handleUserPhotoClick}
+        /> */}
+        <img
+          className={`${styles.profilePic} ${
+            selectedStory && selectedStory.length > 0
+              ? styles.withStoryBorder
+              : ""
+          }`}
+          src={`http://localhost:5000/${userPhoto}`}
+          alt="Profile"
+          onClick={handleUserPhotoClick}
         />
+
         <input type="file" id="changeProfilePicInput" />
         <label htmlFor="changeProfilePicInput">
           <AddAPhotoIcon className={styles.changeProfilePic} />
@@ -401,7 +425,7 @@ const Profile = () => {
               {!isOwnProfile && !isFriendWithCurrentUser && (
                 <button
                   className={styles.btn1}
-                  onClick={() => follow(senderName,username)}
+                  onClick={() => follow(senderName, username)}
                 >
                   Follow
                 </button>

@@ -163,19 +163,15 @@
 
 .suggestedUsers {
     height: 28rem;
-    width: 29rem;
-    border: 1px solid rgb(198, 198, 198);
-    border-radius: 30px;
-
+    width: 315px;
+    border: 1px solid #4d4958;
+    border-radius: 26px;
     position: absolute;
     background: #32284e;
-    top: 50%;
-    right:160%;
-    padding: 20px;
+    right: -4px;
+    top: 279px;
     max-height: 326px;
-    -webkit-box-shadow: 9px 7px 43px 4px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 9px 7px 43px 4px rgba(0, 0, 0, 0.75);
-    box-shadow: 9px 7px 43px 4px rgba(0, 0, 0, 0.75);
+    box-shadow: 9px 7px 43px 4px rgba(82, 82, 82, 0.416);
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 999;
@@ -185,6 +181,10 @@
 .suggestedUsers .heading {
     display: flex;
     justify-content: space-between;
+    position: sticky;
+    top: 30px;
+    margin: 8px;
+    background: #32284e;
 }
 
 .suggestedUsers .closeIcon {
@@ -643,7 +643,7 @@
         width: 190px;
         /* margin-top: 20px; */
     }
-    .user {
+    /* .user {
         margin: 20px;
         margin-left: 9px;
         margin-right: 0px;
@@ -660,7 +660,7 @@
         padding: 5px 7px;
         color: white;
         background: #3d3061;
-    }
+    } */
     
     .item .header {
         color: rgb(44, 44, 44);
@@ -803,6 +803,42 @@
     .container {
         display: none;
         
+    }
+    .user {
+        margin: 20px;
+        margin-left: 9px;
+        margin-right: 0px;
+        gap: 5px;
+        display: flex;
+        font-size: 20px;
+        width: fit-content;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        border: 0px solid blue;
+        border-radius: 20px;
+        background: rgb(255, 255, 255);
+        padding: 5px 7px;
+        color: white;
+        background: #3d3061;
+        width: 90%;
+        /* max-width: 50px; */
+    }
+    .suggestedUsers {
+        height: 28rem;
+        width: 212px;
+        border: 1px solid #4d4958;
+        border-radius: 26px;
+        position: absolute;
+        background: #32284e;
+        right: -18px;
+        top: 279px;
+        max-height: 326px;
+        box-shadow: 9px 7px 43px 4px rgba(82, 82, 82, 0.416);
+        overflow-x: hidden;
+        overflow-y: auto;
+        z-index: 999;
+        padding-bottom: 20px;
     }
 }
 
