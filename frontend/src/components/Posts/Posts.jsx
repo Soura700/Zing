@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import Post from "../Post/Post";
-import styles from "./posts.module.css"
+import styles from "./posts.module.css";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
 
-
-
-const Posts = ({styles}) => {
-
+const Posts = ({ styles }) => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const [createdAt, setCreatedAt] = useState(null);
   const [postData, setPostData] = useState([]);
-  const [postofFriendsData, setPostofFriendsData] = useState([]);  
-  const [ friends , setFriends ] = useState([]);
+  const [postofFriendsData, setPostofFriendsData] = useState([]);
+  const [friends, setFriends] = useState([]);
   const parsedID = parseInt(id);
 
   useEffect(() => {
-
     // Fetching the data of the users (logged in)...
 
     const fetchData = async () => {
@@ -40,14 +36,13 @@ const Posts = ({styles}) => {
       }
     };
 
-
-
-// Fetching the friends of the logged user...
+    // Fetching the friends of the logged user...
     const fetchFriendRequests = async () => {
       try {
         console.log(parsedID);
         const res = await fetch(
-          "http://localhost:5000/api/friend_request/getFriends/" + parsedID);
+          "http://localhost:5000/api/friend_request/getFriends/" + parsedID
+        );
         const data = await res.json();
         console.log("data");
         console.log(data);
@@ -58,9 +53,6 @@ const Posts = ({styles}) => {
       }
     };
 
-
-
-
     if (id && parsedID) {
       Promise.all([fetchData(), fetchFriendRequests()])
         .then(() => setIsLoading(false))
@@ -68,43 +60,43 @@ const Posts = ({styles}) => {
     }
   }, [id, parsedID, checkAuthentication]);
 
-
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const promises = friends.friends.map(async (friend) => {
           const id = friend.friendId;
-          const res1 = await fetch(`http://localhost:5000/api/posts/posts_by_timestamp/${id}/${encodeURIComponent(createdAt)}`);
+          const res1 = await fetch(
+            `http://localhost:5000/api/posts/posts_by_timestamp/${id}/${encodeURIComponent(
+              createdAt
+            )}`
+          );
           return res1.json();
         });
-  
+
         const postDataArray = await Promise.all(promises);
-  
+
         // Filter out the error objects from the array means the objects thta have error like no posts available with status code 401
         const validPosts = postDataArray
           .reduce((acc, data) => acc.concat(data), [])
           .filter((post) => !post.error);
 
-      // Sort the validPosts array based on the createdAt property in descending order
-      const sortedPosts = validPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-  
-      
+        // Sort the validPosts array based on the createdAt property in descending order
+        const sortedPosts = validPosts.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
 
         setPostofFriendsData(sortedPosts);
       } catch (err) {
         console.log(err);
       }
     };
-  
+
     fetchPosts();
   }, [createdAt, friends]);
 
-
   // Setting the socket
   useEffect(() => {
-    const newSocket = io('http://localhost:8000');
+    const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
 
     return () => {
@@ -112,26 +104,40 @@ const Posts = ({styles}) => {
     };
   }, []);
 
-
   // Getting the posts in the realtime for the socket
   useEffect(() => {
     // Listen for new posts
     if (socket) {
-      console.log('Entered');
-      socket.on('newPost', ({newPost}) => {
-        alert(newPost);
-        console.log("newPost");
-        console.log(newPost);
-        setPostofFriendsData((prevPosts)=>[newPost,...prevPosts]);
-      });      
+      console.log("Entered");
+      socket.on("newPost", ({ newPost, userId }) => {
+        if (userId != parsedID) {
+          alert(newPost);
+          console.log("newPost");
+          console.log(newPost);
+          setPostofFriendsData((prevPosts) => [newPost, ...prevPosts]);
+        }
+        // alert(newPost);
+        // console.log("newPost");
+        // console.log(newPost);
+        // setPostofFriendsData((prevPosts) => [newPost, ...prevPosts]);
+      });
+
+      socket.on("postDelete", ({ postId }) => {
+        console.log(`${postId} was deleted`);
+        let filteredPosts = postofFriendsData.filter(
+          (post) => post.id != postId
+        );
+        setPostofFriendsData(filteredPosts);
+      });
     }
     // Cleanup on unmount
     return () => {
       if (socket) {
-        socket.off('newPost');
+        socket.off("newPost");
+        socket.off("postDelete");
       }
     };
-  }, [socket]);
+  }, [socket, postofFriendsData]);
 
   console.log("Post Of Friends");
   console.log(postofFriendsData);
@@ -141,14 +147,13 @@ const Posts = ({styles}) => {
   useEffect(() => {
     async function fetchPosts() {
       try {
-
         const postsRes = await axios.get(
           "http://localhost:5000/api/posts/allPosts"
         );
 
-      //  console.log("Data" + postsRes.data)
+        //  console.log("Data" + postsRes.data)
 
-       var newData = postsRes.data
+        var newData = postsRes.data;
 
         setPostData(newData);
       } catch (error) {
@@ -159,16 +164,17 @@ const Posts = ({styles}) => {
     fetchPosts();
   }, []);
 
-
-  console.log(postofFriendsData)
-  return <div className={styles.posts} style={styles}>
-    {postofFriendsData.map(post=>(
-      <Post post={post} userId={parsedID} key={post.id} style={styles}/>
-    ))}
-        {/* {postData.map(post=>(
+  console.log(postofFriendsData);
+  return (
+    <div className={styles.posts} style={styles}>
+      {postofFriendsData.map((post) => (
+        <Post post={post} userId={parsedID} key={post.id} style={styles} />
+      ))}
+      {/* {postData.map(post=>(
       <Post post={post} userId={parsedID} key={post.id}/>
     ))} */}
-  </div>;
+    </div>
+  );
 };
 
 export default Posts;

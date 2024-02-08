@@ -166,8 +166,15 @@ export const Group = () => {
   useEffect(() => {
     if (socket) {
       // Listen for incoming calls
-      socket.on("incomingGroupCallAlert", (data) => {
+      socket.on("incomingGroupCallAlert", ({callerId , groupid}) => {
+        alert("groupid" + groupid);
+        alert("groupId" + groupId);
         setIncomingCall(true);
+        // if(groupid == groupId )
+        // {
+        //   alert("True");
+        //   setIncomingCall(true);
+        // }
       });
     }
   }, [socket]);
@@ -634,7 +641,7 @@ export const Group = () => {
 
   const handleMessageClick = () => {
     socket.emit("initiateGroupCall", {
-      groupId: groupId,
+      groupid: groupId,
       callerId: parsedId,
     });
 

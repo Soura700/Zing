@@ -72,6 +72,15 @@ const LoggedUserPost = ({ post, userId }) => {
   const liked = false;
 
   useEffect(() => {
+    const newSocket = io("http://localhost:8000");
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
@@ -112,14 +121,7 @@ const LoggedUserPost = ({ post, userId }) => {
     }
   }, [id, parsedID, checkAuthentication]);
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:8000");
-    setSocket(newSocket);
 
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
 
   // This is for the like system (for updating the socket)
   useEffect(() => {
@@ -210,6 +212,31 @@ const LoggedUserPost = ({ post, userId }) => {
     }
   };
 
+  async function updatePost() {
+    alert("Called Updated");
+  }
+
+  // async function deletePost(){
+  //   alert("Called Deleted");
+  // }
+
+  async function deletePost() {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/posts/delete_post/${parsedID}/${post.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete post");
+      }
+      const responseData = await response.json();
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  }
+
   return (
     <div className={styles.post}>
       <div className={styles.container}>
@@ -239,7 +266,7 @@ const LoggedUserPost = ({ post, userId }) => {
                   Update Post
                 </li>
                 <div className={styles.opt2}>
-                  <li>Delete Post</li>
+                  <li onClick={deletePost}>Delete Post</li>
                 </div>
               </ul>
             </div>

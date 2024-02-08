@@ -10,6 +10,7 @@ const path = require("path");
 const ShareLinkSchema = require("../models/ShareLinkSchema");
 const { v4: uuidv4 } = require('uuid');
 
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -33,6 +34,7 @@ router.delete("/delete_post/:userId/:postId", (req, res) => {
         if (error) {
           res.status(500).json(error);
         } else {
+          io.emit("postDelete",{postId});
           res.status(200).json("Post has been deleted successfuly");
         }
       }
@@ -105,7 +107,7 @@ router.post("/create", upload.array("images", 5), (req, res) => {
             description,
             image:images
           };
-          io.emit('newPost', { newPost: newPost }); // Emit new post to all connected clients
+          io.emit('newPost', { newPost: newPost , userId:userId }); // Emit new post to all connected clients
           res.status(201).json({ id: result.insertId, ...req.body , images:images });
         }
       });

@@ -57,7 +57,7 @@
     margin: 20px;
     margin-left: 9px;
     margin-right: 0px;
-    gap: 50px;
+    gap: 5px;
     display: flex;
     font-size: 20px;
     width: fit-content;
@@ -70,6 +70,8 @@
     padding: 5px 7px;
     color: white;
     background: #3d3061;
+    width: 90%;
+    /* max-width: 50px; */
 }
 
 .userInfo {
@@ -150,9 +152,8 @@
     border: 0px solid rgb(220, 220, 220);
     height: fit-content;
     width: 5rem;
-    padding: 2px 0px;
-    background: rgb(240, 240, 240);
-    color: rgb(68, 68, 68);
+    background: #2a223d;
+    color: rgb(184, 184, 184);
     border-radius: 12px;
     text-align: center;
     margin: auto;
@@ -162,19 +163,23 @@
 
 .suggestedUsers {
     height: 28rem;
-    width: 35rem;
-    border: 0px solid red;
-    border-radius: 8px;
+    width: 29rem;
+    border: 1px solid rgb(198, 198, 198);
+    border-radius: 30px;
+
     position: absolute;
-    background: white;
-    top: 30%;
-    right: 150%;
+    background: #32284e;
+    top: 50%;
+    right:160%;
     padding: 20px;
+    max-height: 326px;
     -webkit-box-shadow: 9px 7px 43px 4px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 9px 7px 43px 4px rgba(0, 0, 0, 0.75);
     box-shadow: 9px 7px 43px 4px rgba(0, 0, 0, 0.75);
     overflow-x: hidden;
     overflow-y: auto;
+    z-index: 999;
+    padding-bottom: 20px;
 }
 
 .suggestedUsers .heading {
@@ -184,6 +189,7 @@
 
 .suggestedUsers .closeIcon {
     cursor: pointer;
+    color: rgb(255, 255, 255);
 }
 
 .suggestedUsers h2 {

@@ -17,6 +17,7 @@ const cookieParser = require("cookie-parser");
 const friendRequestRoute = require("./routes/friend");
 const friend_Request_Route = require("./routes/friend2");
 const suggestion = require("./routes/suggestion");
+var googleregisterAuth = require("./routes/googleauth");
 // const suggestion2 = require("./routes/suggestion2");
 const personalization = require("./routes/personalization");
 const interests_route = require("./routes/interest");
@@ -225,11 +226,16 @@ io.on("connection", (socket) => {
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
+    socket.on("call-ended", () => {
+      // Broadcast "call-ended" event to all other users in the room
+      socket.broadcast.emit("call-ended" , userId);
+    });
   });
-  socket.on("initiateGroupCall", ({ groupId, callerId }) => {
+  socket.on("initiateGroupCall", ({ groupid, callerId }) => {
     // Broadcast the call initiation message to all participants in the room
     // io.to(groupId).emit("incomingGroupCallAlert", { callerId });
-    socket.to(groupId).emit("incomingGroupCallAlert", { callerId });
+    // socket.to(groupId).emit("incomingGroupCallAlert", { callerId });
+    socket.to(groupid).emit("incomingGroupCallAlert", { callerId  , groupid});
   });
 
 });
@@ -237,6 +243,7 @@ io.on("connection", (socket) => {
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 PORT = 5000;
+app.use("/", googleregisterAuth);
 app.use("/api/auth", registerAuth);
 app.use("/api/posts", postRoute);
 app.use("/api/stories", storiesRoute);

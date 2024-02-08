@@ -123,10 +123,18 @@ const LoggedUserPosts = ( {userId} ) => {
     if (socket) {
       console.log('Entered');
       socket.on('newPost', ({newPost}) => {
-        alert(newPost);
-        console.log(newPost);
         setPostofFriendsData((prevPosts)=>[newPost,...prevPosts]);
       });
+
+      socket.on("postDelete", ({ postId }) => {
+        alert("Entered Successfully");
+        console.log(postData);
+        let filteredPosts = postData.filter(
+          (post) => post.id != postId
+        );
+        setPostData(filteredPosts);
+      });
+
     }
     // Cleanup on unmount
     return () => {
@@ -134,9 +142,8 @@ const LoggedUserPosts = ( {userId} ) => {
         socket.off('newPost');
       }
     };
-  }, [socket]);
+  }, [socket,postData]);
 
-  // console.log(postData);
 
   useEffect(() => {
     async function fetchPosts() {
