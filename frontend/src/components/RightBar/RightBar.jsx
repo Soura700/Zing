@@ -405,7 +405,7 @@ const RightBar = ({ isVisible }) => {
         <div className={styles.item2}>
           {/* <h1 className={styles.header}>Latest Activities</h1>
           {recentActivities.map((activity, index) => (
-            <div key={index} className={styles.user2}>
+            <div key={index} className={styles.user4}>
               <div className={styles.userInfo}>
               
                 <h3>{activity.userName}</h3>
@@ -413,7 +413,7 @@ const RightBar = ({ isVisible }) => {
               <p>{activity.action === "like" ? "liked" : "disliked"} a post</p>
             </div>
           ))}
-          <div className={styles.user2}>
+          {/* <div className={styles.user2}>
             <div className={styles.userInfo}>
              
               <h3>John Doe</h3>
@@ -429,19 +429,20 @@ const RightBar = ({ isVisible }) => {
           </div>
           <div className={styles.user4}>
             <div className={styles.userInfo}>
-
-              <h3>John Doe</h3>
+              {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+              {/* <h3>John Doe</h3>
             </div>
             <p>commented on your post</p>
           </div>
           <div className={styles.user5}>
             <div className={styles.userInfo}>
-
               <h3>John Doe</h3>
             </div>
             <p>shared a post</p>
           </div>
-          <div className={styles.more}>More</div> */}
+          <div className={styles.more}>More</div>  */}
+
+
         </div>
 
         <div className={styles.item3}>

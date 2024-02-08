@@ -18,13 +18,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../Contexts/authContext";
 
 const LoggedUserPost = ({ post, userId }) => {
-  console.log(post);
-
-  if (post.image) {
-    console.log("Entered");
-    console.log(post.image);
-    console.log(typeof post.image);
-  }
 
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const { isLoggedIn, id, checkAuthentication } = useAuth();
@@ -36,6 +29,8 @@ const LoggedUserPost = ({ post, userId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const parsedID = parseInt(id);
+  const [isLiked, setIsLiked] = useState(false);
+
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -125,13 +120,11 @@ const LoggedUserPost = ({ post, userId }) => {
 
   // This is for the like system (for updating the socket)
   useEffect(() => {
-    const socket = io("http://localhost:5500"); // Update the URL to match your server
+    const socket = io("http://localhost:8000"); // Update the URL to match your server
 
     // Listen for 'updateLikes' event
     socket.on("updateLikes", ({ postId, updatedLikes }) => {
       if (postId === post.id) {
-        alert("Hello");
-        alert(updatedLikes);
         setLikes(updatedLikes);
       }
     });
@@ -159,6 +152,7 @@ const LoggedUserPost = ({ post, userId }) => {
       });
 
       if (res.status === 200) {
+        setIsLiked(!isLiked);
       } else {
         console.error("Failed to update likes");
         // Handle error appropriately, e.g., show an error message to the user
@@ -192,6 +186,22 @@ const LoggedUserPost = ({ post, userId }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchLikeStatus = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/posts/check_like/${post.id}/${userId}`
+        );
+        const data = await response.json();
+        setIsLiked(data.liked);
+      } catch (error) {
+        // console.error("Error fetching like status:", error);
+      }
+    };
+
+    fetchLikeStatus();
+  }, [post.id, userId]);
+
   const getTimeDifferenceString = (timestamp) => {
     const currentDate = new Date();
     const timestampDate = new Date(timestamp);
@@ -216,9 +226,6 @@ const LoggedUserPost = ({ post, userId }) => {
     alert("Called Updated");
   }
 
-  // async function deletePost(){
-  //   alert("Called Deleted");
-  // }
 
   async function deletePost() {
     try {
@@ -366,7 +373,7 @@ const LoggedUserPost = ({ post, userId }) => {
         </div>
         <div className={styles.info}>
           <div className={styles.item}>
-            {liked ? (
+            {isLiked ? (
               <FavoriteOutlinedIcon />
             ) : (
               <FavoriteBorderOutlinedIcon onClick={LikeHandler} />

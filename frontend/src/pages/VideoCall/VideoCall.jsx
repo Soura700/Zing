@@ -207,7 +207,7 @@ const VideoCall = () => {
                 <div className="cam1">
                   {/* <img className="image1" src={img1} alt="" /> */}
                   <div className="name-overlay">
-                    <video ref={userVideo} autoPlay className="callerVid" muted={isSoundMuted} />
+                    <video ref={userVideo} autoPlay className="callerVid" />
                     {/* caller's video screen */}
                   </div>
                   <div className="name-overlay1">
@@ -240,7 +240,6 @@ const VideoCall = () => {
                         ref={partnerVideo}
                         autoPlay
                         className="receiverVid"
-                        muted={isSoundMuted}
                       />
                     )}
                     {/* receiver's video screen */}

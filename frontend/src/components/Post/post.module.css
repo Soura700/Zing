@@ -14,6 +14,7 @@
   margin-right: 20px;
   margin-top: 20px;
   position: relative;
+  z-index: 0;
 }
 
 .container {

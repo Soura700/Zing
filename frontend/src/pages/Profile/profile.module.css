@@ -41,6 +41,14 @@
   height: fit-content;
 
 }
+
+.withStoryBorder {
+  border: 4px solid rgb(175, 95, 255);
+  border-radius: 50%; /* To make the border circular */
+}
+
+
+
 .name p {
   width: 300px; 
   text-align: center;
@@ -138,7 +146,7 @@
 .profilePic {
   width: 200px;
   height: 200px;
-  border: 4px solid rgb(175, 95, 255);
+   /* border: 4px solid rgb(175, 95, 255); */
   border-radius: 50%;
   object-fit: cover;
   position: absolute;
