@@ -223,6 +223,7 @@ const ViewSharePost = () => {
         <p>Loading...</p>
       ) : (
         post && (
+          
           <div className={styles.post}>
             <div className={styles.container}>
               <div className={styles.user}>

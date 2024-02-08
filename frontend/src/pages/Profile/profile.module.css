@@ -25,6 +25,8 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+  /* background: #1f1c23; */
+  /* background: rgb(25, 25, 36); */
 }
 
 
@@ -136,13 +138,14 @@
 .profilePic {
   width: 200px;
   height: 200px;
-  border: 6px solid #ffffff;
+  border: 4px solid rgb(175, 95, 255);
   border-radius: 50%;
   object-fit: cover;
   position: absolute;
   left: 0;
   right: 0;
   margin: auto;
+  cursor: pointer;
   top: 60px;
   /* box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62);
   -webkit-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.62);
@@ -414,7 +417,76 @@ a {
 
 
 
+.profileStories {
+  border: 1px solid red;
+  width: 50vw;
+  background: red;
+}
+.profileStory {
+  border: 1px solid blue;
+  background: blue;
+  margin-top: 10px;
+} 
 
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.918); /* Semi-transparent black background */
+  z-index: 9999; /* Ensure it appears on top of other content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: flex;flex-direction: column;
+  cursor: pointer;
+}
+.overlay .storyInfo {
+  display: flex;
+  flex-direction: row;
+  color: red;
+}
+.overlay .storyInfo h1 {
+  color: white;
+  margin-left: 10px;
+  font-size: 20px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+.overlay .storyInfo img {
+  height: 30px;
+  width: 30px;
+  border: 1px solid rgb(224, 224, 224);
+  border-radius: 50px;
+  margin-top: 3px;
+}
+.modal {
+  width: 100%; 
+  height: 95%; 
+  background-color: transparent; 
+  border-radius: 8px; 
+  overflow: hidden;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+.modal img {
+  margin-top: 10px;
+  border-radius: 12px;
+  object-fit: contain;
+  max-height: 95%;
+}
+.storyInfoHeader {
+  display: flex;
+  flex-direction: column;
+}
+.storyInfoHeader p{
+  color: rgb(190, 190, 190);
+  margin-bottom: 0;
+  font-size: 15px;
+}
 
 
 

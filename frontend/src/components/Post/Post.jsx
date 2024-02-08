@@ -171,7 +171,6 @@
 //     const timeDifferenceHours = Math.floor(timeDifferenceMinutes / 60);
 //     const timeDifferenceDays = Math.floor(timeDifferenceHours / 24);
 
-  
 //     if (timeDifferenceSeconds < 60) {
 //       return `${timeDifferenceSeconds} seconds ago`;
 //     } else if (timeDifferenceMinutes < 60) {
@@ -298,38 +297,30 @@
 
 // export default Post;
 
+import styles from "./post.module.css";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
+import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import CloseIcon from "@mui/icons-material/Close";
 
-
-
-
-
-
-
-import styles from './post.module.css';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
-import TextsmsOutlinedIcon from '@mui/icons-material/TextsmsOutlined';
-import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import CloseIcon from '@mui/icons-material/Close';
-
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 // import Comments from "../comments/Comments";
-import { io } from 'socket.io-client';
-import { useEffect, useState } from 'react';
-import { useAuth } from '../../Contexts/authContext';
-import CommentSection from '../Comments/CommentSection';
-import ShareModal from '../SharePostModal/SharePostModal';
-
+import { io } from "socket.io-client";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../Contexts/authContext";
+import CommentSection from "../Comments/CommentSection";
+import ShareModal from "../SharePostModal/SharePostModal";
 
 const Post = ({ post, userId, style }) => {
   console.log(post);
 
   if (post.image) {
-    console.log('Entered');
+    console.log("Entered");
     console.log(post.image);
     console.log(typeof post.image);
   }
@@ -343,58 +334,65 @@ const Post = ({ post, userId, style }) => {
   const parsedID = parseInt(id);
   const [showImg, setShowImg] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [link,setLink] = useState(null);
+  const [link, setLink] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   // const images = post.image === null ? JSON.parse(post.image) : [];
 
   const images = Array.isArray(post.image)
     ? post.image
-    : post.image && post.image !== '[]'
+    : post.image && post.image !== "[]"
     ? JSON.parse(post.image)
     : [];
   const liked = false;
 
-  console.log('Posts');
+  console.log("Posts");
   console.log(post);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
-        const userRes = await fetch('http://localhost:5000/api/auth/' + id, {
-          method: 'POST',
+        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
         const userDetails = await userRes.json();
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
 
     const fetchFriendRequests = async () => {
       try {
         const res = await fetch(
-          'http://localhost:5000/api/friend_request/getFriends/' + parsedID
+          "http://localhost:5000/api/friend_request/getFriends/" + parsedID
         );
         const data = await res.json();
       } catch (error) {
-        console.error('Error fetching friend requests:', error);
+        console.error("Error fetching friend requests:", error);
       }
     };
 
     if (id && parsedID) {
       Promise.all([fetchData(), fetchFriendRequests()])
         .then(() => setIsLoading(false))
-        .catch((error) => console.error('Error during data fetching:', error));
+        .catch((error) => console.error("Error during data fetching:", error));
     }
   }, [id, parsedID, checkAuthentication]);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:8000');
+    const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
 
     return () => {
@@ -404,12 +402,12 @@ const Post = ({ post, userId, style }) => {
 
   // This is for the like system (for updating the socket)
   useEffect(() => {
-    const socket = io('http://localhost:8000'); // Update the URL to match your server
+    const socket = io("http://localhost:8000"); // Update the URL to match your server
 
     // Listen for 'updateLikes' event
-    socket.on('updateLikes', ({ postId, updatedLikes }) => {
+    socket.on("updateLikes", ({ postId, updatedLikes }) => {
       if (postId === post.id) {
-        alert('Hello');
+        alert("Hello");
         alert(updatedLikes);
         setLikes(updatedLikes);
       }
@@ -426,10 +424,10 @@ const Post = ({ post, userId, style }) => {
     // Assuming you have a post ID
     const postId = post.id;
     try {
-      const res = await fetch('http://localhost:5000/api/posts/like', {
-        method: 'POST',
+      const res = await fetch("http://localhost:5000/api/posts/like", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           postId: postId,
@@ -439,11 +437,11 @@ const Post = ({ post, userId, style }) => {
 
       if (res.status === 200) {
       } else {
-        console.error('Failed to update likes');
+        console.error("Failed to update likes");
         // Handle error appropriately, e.g., show an error message to the user
       }
     } catch (error) {
-      console.error('Error updating likes:', error);
+      console.error("Error updating likes:", error);
     }
   };
 
@@ -468,7 +466,7 @@ const Post = ({ post, userId, style }) => {
   const navigateImage = (direction) => {
     if (selectedImageIndex !== null) {
       const newIndex =
-        direction === 'next'
+        direction === "next"
           ? (selectedImageIndex + 1) % images.length
           : (selectedImageIndex - 1 + images.length) % images.length;
       setSelectedImageIndex(newIndex);
@@ -501,9 +499,9 @@ const Post = ({ post, userId, style }) => {
       `http://localhost:5000/api/posts/share_post/${post.id}`,
       {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        method: 'POST',
+        method: "POST",
       }
     );
     const data = await response.json();
@@ -513,20 +511,16 @@ const Post = ({ post, userId, style }) => {
   };
 
   return (
-    <div
-      className={styles.post}
-      style={style}>
+    <div className={styles.post} style={style}>
       <div className={styles.container}>
         <div className={styles.user}>
           <div className={styles.userInfo}>
-            <img
-              src={post.profilePic}
-              alt=''
-            />
+            <img src={post.profilePic} alt="" />
             <div className={styles.details}>
               <Link
                 to={`/profile/${post.userId}`}
-                style={{ textDecoration: 'none', color: 'inherit' }}>
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
                 <span className={styles.name}>{post.name}</span>
               </Link>
               <span className={styles.date}>
@@ -535,23 +529,33 @@ const Post = ({ post, userId, style }) => {
             </div>
           </div>
           {userId === post.userId && (
-            <MoreHorizIcon
-              className='icon'
-              onClick={handleToggle}
-            />
+            <MoreHorizIcon className="icon" onClick={handleToggle} />
           )}
           {/* <MoreHorizIcon className="icon" onClick={handleToggle}/> */}
           {toggle ? (
             <div className={styles.postOptShow}>
               <ul>
-                <li className={styles.opt1}>Update Post</li>
+                <button className={styles.opt1} onClick={openModal}>
+                  Update Post
+                </button>
                 <div className={styles.opt2}>
-                  <li>Delete Post</li>
+                  <li>De Post</li>
                 </div>
               </ul>
             </div>
           ) : (
             <div className={styles.postOpt}></div>
+          )}
+
+          {isModalOpen && (
+            <div className={styles.modal}>
+              <div className={styles.modalContent}>
+                <h2>Update Post</h2>
+                <button onClick={closeModal}>
+                  <CloseIcon />
+                </button>
+              </div>
+            </div>
           )}
         </div>
         <div className={styles.content}>
@@ -562,9 +566,7 @@ const Post = ({ post, userId, style }) => {
           <div className={styles.gallery}>
             {images &&
               images.map((image, index) => (
-                <div
-                  className={styles.imgContainer}
-                  key={index}>
+                <div className={styles.imgContainer} key={index}>
                   <img
                     src={`http://localhost:5000/uploads/${image}`}
                     alt={`Image ${index}`}
@@ -581,18 +583,21 @@ const Post = ({ post, userId, style }) => {
                         />
                         {/* Add the full-size image or any other content here */}
                         <button
-                          onClick={() => navigateImage('prev')}
-                          className={styles.prevImgBtn}>
-                          <KeyboardArrowLeftIcon />{' '}
+                          onClick={() => navigateImage("prev")}
+                          className={styles.prevImgBtn}
+                        >
+                          <KeyboardArrowLeftIcon />{" "}
                         </button>
                         <button
-                          onClick={() => navigateImage('next')}
-                          className={styles.nextImgBtn}>
+                          onClick={() => navigateImage("next")}
+                          className={styles.nextImgBtn}
+                        >
                           <KeyboardArrowRightIcon />
                         </button>
                         <button
                           onClick={closeFullImg}
-                          className={styles.closeImgBtn}>
+                          className={styles.closeImgBtn}
+                        >
                           <CloseIcon />
                         </button>
                       </div>
@@ -613,7 +618,8 @@ const Post = ({ post, userId, style }) => {
           </div>
           <div
             className={styles.item}
-            onClick={() => setCommentOpen(!commentOpen)}>
+            onClick={() => setCommentOpen(!commentOpen)}
+          >
             <TextsmsOutlinedIcon />
             {/* 12 Comments */}
           </div>
@@ -621,16 +627,10 @@ const Post = ({ post, userId, style }) => {
             <BookmarkBorderIcon />
             {/* Save */}
           </div>
-          <div
-            className={styles.item}
-            onClick={handleShare}>
+          <div className={styles.item} onClick={handleShare}>
             <ShareOutlinedIcon />
-            Share
             {showModal && (
-              <ShareModal
-                link={link}
-                onClose={() => setShowModal(false)}
-              />
+              <ShareModal link={link} onClose={() => setShowModal(false)} />
             )}
           </div>
         </div>
@@ -647,16 +647,3 @@ const Post = ({ post, userId, style }) => {
 };
 
 export default Post;
-
-
-
-
-
-
-
-
-
-
-
-
-

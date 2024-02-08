@@ -1,3 +1,5 @@
+import Stories from "stories-react";
+import "stories-react/dist/index.css";
 import styles from "./profile.module.css";
 import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -10,8 +12,6 @@ import LoggedUserPosts from "../../components/Posts/LoggedUserPosts";
 import { useAuth } from "../../Contexts/authContext";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Stories from "stories-react";
-import "stories-react/dist/index.css";
 import axios from "axios";
 import Posts from "../../components/Posts/Posts";
 import { io } from "socket.io-client";
@@ -299,6 +299,14 @@ const Profile = () => {
   console.log("Selected Story");
   console.log(selectedStory);
 
+  const handleOverlayClick = (e) => {
+    // Check if the click event target is the overlay itself
+    if (e.target === e.currentTarget) {
+      // Toggle the state to hide the stories component
+      setShowStories(false);
+    }
+  };
+
   return (
     <div className={styles.profile}>
       <div className={styles.images}>
@@ -317,17 +325,34 @@ const Profile = () => {
         )}
 
         {showStories && (
-          <Stories
-            key={selectedStory.id}
-            width="427px"
-            height="540px"
-            background="transparent"
-            stories={selectedStory.map((story) => ({
-              type: "image",
-              url: story.downloadURL,
-              duration: 5000,
-            }))}
-          />
+          <div className={styles.overlay} onClick={handleOverlayClick}>
+            <div className={styles.storyInfo}>
+              <img src="" alt="" />
+              <div className={styles.storyInfoHeader}>
+              <h1>{username}</h1>
+              <p>3 minutes ago</p>
+              </div>
+            </div>
+            <div className={styles.modal}>
+              <Stories
+                key={selectedStory.id}
+                padding-top="10px"
+                width="70%"
+                height="97%"
+                margin="auto"
+                background="transparent"
+                position="absolute"
+                margin-top="0px"
+                
+                stories={selectedStory.map((story) => ({
+                  type: "image",
+                  url: story.downloadURL,
+                  duration: 5000,
+                }))}
+                className={styles.profileStory}
+              />
+            </div>
+          </div>
         )}
 
         {/* <Stories

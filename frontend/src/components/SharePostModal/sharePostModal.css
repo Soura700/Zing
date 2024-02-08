@@ -1,0 +1,72 @@
+.sharePostContainer {
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 20px;
+    position: absolute;
+    padding: 20px;
+    width: 641px;
+    height: 256px;
+    margin-left: -617px;
+    background: white;
+    z-index: 999;
+
+    box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
+}
+
+.sharePostContainer p {
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.copyclipboard {
+    margin-left: 20px;
+    background: rgba(237, 237, 237, 0.542);
+    border-radius: 20px;
+    width: 40px;
+    color: rgb(146, 70, 222);
+}
+
+.copiedBtn {
+    border: 0px solid rgb(214, 214, 214);
+    border-radius: 30px;
+    background: rgba(218, 218, 218, 0.367);
+    color: rgb(72, 33, 111);
+    font-weight: 500;
+    margin-top: 60px;
+    cursor: pointer;
+}
+.copiedBtn:hover {
+    border: 0px solid rgb(214, 214, 214);
+    border-radius: 30px;
+    background: rgba(195, 195, 195, 0.367);
+    color: rgb(72, 33, 111);
+    font-weight: 500;
+    margin-top: 60px;
+    cursor: pointer;
+}
+
+
+@media (max-width: 430px) {
+    .sharePostContainer {
+        border: 1px solid rgb(209, 209, 209);
+        border-radius: 20px;
+        position: absolute;
+        padding: 20px;
+        width: 449px;
+        height: 256px;
+        margin-left: -360px;
+        background: white;
+        z-index: 999;
+        box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
+    }
+    .copiedBtn {
+        border: 0px solid rgb(214, 214, 214);
+        border-radius: 30px;
+        background: rgba(218, 218, 218, 0.367);
+        color: rgb(72, 33, 111);
+        font-weight: 500;
+        margin-top: 60px;
+        cursor: pointer;
+        margin-left: 321px;
+    }
+
+}    
