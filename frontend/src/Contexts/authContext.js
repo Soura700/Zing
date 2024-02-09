@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
-// import { get } from '../../../backend/routes/registerAuth';
+
 
 const AuthContext = createContext();
 
