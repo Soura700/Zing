@@ -1,4 +1,4 @@
-.savedPageContainer {
+/* .savedPageContainer {
     padding: 10px;
     border: 1px solid rgb(219, 219, 219);
     border-radius: 12px;
@@ -9,4 +9,56 @@ h1 {
     color: rgb(60, 60, 60);
     font-size: 30px;
     font-weight: 400;
+} */
+
+
+.savedPageContainer {
+   padding: 10px;
+}
+
+.SavedPageheader h1 {
+    color: rgb(60, 60, 60);
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.savedPostsContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.savedPostContainer {
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border: 1px solid rgb(219, 219, 219);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.savedPostDetails {
+    font-size: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
+
+.savedPostImages {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.savedPostImages img {
+    width: calc(33.33% - 10px);
+    height: auto;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.savedPostDetails p {
+    margin: 5px 0;
 }
