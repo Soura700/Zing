@@ -157,7 +157,7 @@ const CommentSection = ({ postId, userId, userName }) => {
       <div className="AllComments">
         <h1>All Comments</h1>
       </div>
-      {comments.map((comment) => (
+      {/* {comments.map((comment) => (
         <div className="allCommentContainer">
           <div key={comment._id} className="comment">
             <div className="commentHeader">
@@ -188,9 +188,45 @@ const CommentSection = ({ postId, userId, userName }) => {
             <h2>{comment.text}</h2>
           </div>
         </div>
-      ))}
+      ))} */}
+
+      {comments.length > 0 ? (
+        comments.map((comment) => (
+          <div className="allCommentContainer" key={comment._id}>
+            <div className="comment">
+              <div className="commentHeader">
+                <div className="commentHeaderUserDiv">
+                  <div className="commentHeaderInfo">
+                    <img
+                      src="SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                      alt=""
+                    />
+                    <h1>{comment.userName}</h1>
+                  </div>
+                  <div className="commentHeaderTime">
+                    <p>{getTimeDifferenceString(comment.createdAt)}</p>
+                  </div>
+                </div>
+                <div className="commentDelete">
+                  {comment.userId === userId && (
+                    <DeleteRoundedIcon
+                      onClick={() => handleDeleteComment(comment._id)}
+                      className="delBtn"
+                    />
+                  )}
+                </div>
+              </div>
+              <h2>{comment.text}</h2>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p style={{"color":"rgb(179 177 184)" , "marginLeft":"15px" , "fontSize":"14px"}}>No Comments</p>
+      )}
     </div>
   );
 };
 
 export default CommentSection;
+
+ 

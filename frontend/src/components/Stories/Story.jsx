@@ -339,15 +339,16 @@ const Story = () => {
         ) : (
           <div className={styles.closeFullStory}></div>
         )}
-        <div
+        <div style={{"objectFit":"cover"}}
           className={styles.storyImg}
           onClick={(e) => {
             e.stopPropagation();
             e.target.tagName !== "IMG" && showFullStory(null);
           }}
         >
-          <img
-            src="https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+          <img style={{"objectFit":"cover"  , "width" : "100%"}}
+            // src="https://images.pexels.com/photos/13916254/pexels-photo-13916254.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+            src={`http://localhost:5000/${userPhoto}`}
             alt=""
             className={styles.storyImgClass}
             // onClick={() => navigate("/create_story")}

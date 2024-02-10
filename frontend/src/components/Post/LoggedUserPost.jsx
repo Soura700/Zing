@@ -8,17 +8,18 @@ import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-// import Comments from "../comments/Comments";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import AddPhotoAlternateRoundedIcon from "@mui/icons-material/AddPhotoAlternateRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { io } from "socket.io-client";
+import CommentSection from "../Comments/CommentSection";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../Contexts/authContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoggedUserPost = ({ post, userId }) => {
-
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); //Setting the loading
@@ -30,7 +31,15 @@ const LoggedUserPost = ({ post, userId }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const parsedID = parseInt(id);
   const [isLiked, setIsLiked] = useState(false);
+  const [userPhoto, setUserPhoto] = useState(null); //Setting the userprofile image from the database
+  const [input, setInput] = useState(""); // State variable to store the input value
+  const [updatedDescription, setUpdatedDescription] = useState(null);
+  // const [updatedImage,setUpdatedImage] = useState()
 
+
+  const images = JSON.parse(post.image);
+
+  const [postImages, setPostImages] = useState(images);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -41,11 +50,24 @@ const LoggedUserPost = ({ post, userId }) => {
   };
 
   const handleFileChange = (e) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImagePreview(reader.result);
-    };
-    reader.readAsDataURL(e.target.files[0]);
+    const selectedFiles = e.target.files;
+    if (selectedFiles.length > 4) {
+      toast.error("You can select up to four images.");
+      return;
+    }
+
+    // Create object URLs for the selected files
+    const urls = Array.from(selectedFiles).map((file) => {
+      return URL.createObjectURL(file);
+    });
+
+    // Set the object URLs and selected files in the state
+    setImagePreview(selectedFiles);
+    // const reader = new FileReader();
+    // reader.onload = () => {
+    //   setImagePreview(reader.result);
+    // };
+    // reader.readAsDataURL(e.target.files[0]);
   };
 
   const handleClosePreview = () => {
@@ -59,9 +81,6 @@ const LoggedUserPost = ({ post, userId }) => {
   };
 
   // Parse the JSON string into an array
-  const images = JSON.parse(post.image);
-
-  console.log(typeof images);
 
   // const imageUrls = images.map((image) => `http://localhost:5000/uploads/${image}`);
   const liked = false;
@@ -86,8 +105,7 @@ const LoggedUserPost = ({ post, userId }) => {
           },
         });
         const userDetails = await userRes.json();
-        // setUsername(userDetails[0].username);
-        // setUserPhoto(userDetails[0].profileImg);
+        setUserPhoto(userDetails[0].profileImg); //Setting the userprofile image from the database
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -95,15 +113,10 @@ const LoggedUserPost = ({ post, userId }) => {
 
     const fetchFriendRequests = async () => {
       try {
-        console.log(parsedID);
         const res = await fetch(
           "http://localhost:5000/api/friend_request/getFriends/" + parsedID
         );
         const data = await res.json();
-        // console.log(data);
-        // console.log(typeof data);
-
-        // setFriendRequests(data);
       } catch (error) {
         console.error("Error fetching friend requests:", error);
       }
@@ -116,19 +129,24 @@ const LoggedUserPost = ({ post, userId }) => {
     }
   }, [id, parsedID, checkAuthentication]);
 
-
-
   // This is for the like system (for updating the socket)
   useEffect(() => {
     const socket = io("http://localhost:8000"); // Update the URL to match your server
-
     // Listen for 'updateLikes' event
     socket.on("updateLikes", ({ postId, updatedLikes }) => {
       if (postId === post.id) {
         setLikes(updatedLikes);
       }
     });
-
+    socket.on("postUpdated", ({ postId, description, image }) => {
+      if (postId == post.id) {
+        setUpdatedDescription(description);
+        if (image) {
+          setPostImages((prevImages) => [...prevImages, image]);
+          window.location.reload();
+        }
+      }
+    });
     // Clean up the socket connection on component unmount
     return () => {
       socket.disconnect();
@@ -154,12 +172,11 @@ const LoggedUserPost = ({ post, userId }) => {
       if (res.status === 200) {
         setIsLiked(!isLiked);
       } else {
-        console.error("Failed to update likes");
+        // console.error("Failed to update likes");
         // Handle error appropriately, e.g., show an error message to the user
       }
     } catch (error) {
-      console.log(error);
-      console.error("Error updating likes:", error);
+      // console.error("Error updating likes:", error);
     }
   };
 
@@ -222,10 +239,67 @@ const LoggedUserPost = ({ post, userId }) => {
     }
   };
 
-  async function updatePost() {
-    alert("Called Updated");
-  }
+  // async function updatePost() {
+  //   try {
 
+  //     const formData = new FormData();
+  //     formData.append("userId", parsedID);
+  //     formData.append("description", input);
+  //     formData.append("username", username);
+
+  //     if (imagePreview) {
+  //       Array.from(imagePreview).forEach((file, index) => {
+  //         formData.append(`images`, file);
+  //       });
+  //     }
+
+  //     const response = await fetch(
+  //       `http://localhost:5000/api/posts/delete_post/${parsedID}/${post.id}`,
+  //       {
+  //         method: "PUT",
+  //       }
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error("Failed to delete post");
+  //     }
+  //     const responseData = await response.json();
+  //   } catch (error) {
+  //     console.error("Error deleting post:", error);
+  //   }
+  // }
+
+  // Function to handle changes in the textarea
+  const handleInputChange = (e) => {
+    setInput(e.target.value); // Update the input state with the new value
+  };
+
+  async function updatePost() {
+    try {
+      const formData = new FormData();
+      formData.append("userId", parsedID);
+      formData.append("postId", post.id);
+      formData.append("description", input); 
+      if (imagePreview) {
+        Array.from(imagePreview).forEach((file, index) => {
+          formData.append(`images`, file);
+        });
+      }
+      const response = await fetch(
+        `http://localhost:5000/api/posts/update_post/${parsedID}/${post.id}`, // Update the endpoint
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update post");
+      }
+      const responseData = await response.json();
+      // Optionally, you can handle the response data if needed
+    } catch (error) {
+      console.error("Error updating post:", error);
+    }
+  }
 
   async function deletePost() {
     try {
@@ -249,13 +323,13 @@ const LoggedUserPost = ({ post, userId }) => {
       <div className={styles.container}>
         <div className={styles.user}>
           <div className={styles.userInfo}>
-            <img src={post.profilePic} alt="" />
+            <img src={`http://localhost:5000/${userPhoto}`} alt="" />
             <div className={styles.details}>
               <Link
                 to={`/profile/${post.userId}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <span className={styles.name}>{post.name}</span>
+                <span className={styles.name}>{post.username}</span>
               </Link>
               <span className={styles.date}>
                 {getTimeDifferenceString(post.createdAt)}
@@ -263,7 +337,7 @@ const LoggedUserPost = ({ post, userId }) => {
             </div>
           </div>
           {userId === post.userId && (
-            <MoreHorizIcon className= {styles.icon} onClick={handleToggle} />
+            <MoreHorizIcon className={styles.icon} onClick={handleToggle} />
           )}
           {/* <MoreHorizIcon className="icon" onClick={handleToggle}/> */}
           {toggle ? (
@@ -288,7 +362,15 @@ const LoggedUserPost = ({ post, userId }) => {
                 <CloseIcon onClick={closeModal} />
               </div>
               <div className={styles.updatePostContent}>
-                <textarea name="addCaption" id="" cols="30" rows="5" placeholder="Update post caption"></textarea>
+                <textarea
+                  name="addCaption"
+                  id=""
+                  cols="30"
+                  rows="5"
+                  placeholder="Update post caption"
+                  value={input}
+                  onChange={handleInputChange}
+                ></textarea>
                 <label htmlFor="addMedia">
                   <p>Add Media</p>
                   <AddPhotoAlternateRoundedIcon
@@ -304,18 +386,27 @@ const LoggedUserPost = ({ post, userId }) => {
                   id="addMedia"
                 />
               </div>
-              {imagePreview && (
-                <div className={styles.imagePreviewContainer}>
-                  <button className="close-btn" onClick={handleClosePreview}>
-                    <CloseRoundedIcon className="close-icon" />
-                  </button>
-                  <img src={imagePreview} alt="Preview" />
-                </div>
-              )}
+
+              {imagePreview &&
+                imagePreview.length > 0 &&
+                Array.from(imagePreview).map((file, index) => (
+                  <div className={styles.imagePreviewContainer}>
+                    <button className="close-btn" onClick={handleClosePreview}>
+                      <CloseRoundedIcon className="close-icon" />
+                    </button>
+                    {/* // <img src={imagePreview} alt="Preview" /> */}
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt=""
+                      className="shareImg"
+                    />
+                  </div>
+                ))}
               <div className={styles.confirmUpdate}>
                 <button className={styles.confirmUpdatePostBtn}>
                   <CheckCircleRoundedIcon
                     className={styles.confirmUpdatePostBtnIcon}
+                    onClick={updatePost}
                   />
                 </button>
               </div>
@@ -323,13 +414,18 @@ const LoggedUserPost = ({ post, userId }) => {
           )}
         </div>
         <div className={styles.content}>
-          <h3>{post.username}</h3>
-          <p>{post.description}</p>
+          {/* <h3>{post.username}</h3> */}
+          {updatedDescription ? (
+            <p>{updatedDescription}</p>
+          ) : (
+            <p>{post.description}</p>
+          )}
+          {/* <p>{post.description}</p> */}
           {/* Render images */}
           {/* <div className={(images && images.length && images.length <= 2) ? styles.gridTwo : styles.gridMore}> */}
           <div className={styles.gallery}>
-            {images &&
-              images.map((image, index) => (
+            {postImages &&
+              postImages.map((image, index) => (
                 <div className={styles.imgContainer} key={index}>
                   <img
                     src={`http://localhost:5000/uploads/${image}`}
@@ -374,7 +470,7 @@ const LoggedUserPost = ({ post, userId }) => {
         <div className={styles.info}>
           <div className={styles.item}>
             {isLiked ? (
-              <FavoriteOutlinedIcon />
+              <FavoriteOutlinedIcon onClick={LikeHandler}/>
             ) : (
               <FavoriteBorderOutlinedIcon onClick={LikeHandler} />
             )}
@@ -396,7 +492,13 @@ const LoggedUserPost = ({ post, userId }) => {
             {/* Share */}
           </div>
         </div>
-        {/* {commentOpen && <Comments />} */}
+        {commentOpen && (
+          <CommentSection
+            postId={post.id}
+            userId={parsedID}
+            userName={post.username}
+          />
+        )}
       </div>
     </div>
   );

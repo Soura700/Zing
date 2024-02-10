@@ -18,6 +18,7 @@ import { useState } from "react";
 import RightBar from "../RightBar/RightBar";
 import axios from "axios";
 import { useTheme } from "../../Contexts/themeContext";
+import Logo from "../../assets/buzz_logo_final-1.svg";
 // Toggler
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { Link } from "react-router-dom";
@@ -26,6 +27,7 @@ import CircularProgress from "@mui/material/CircularProgress"; // Add this line
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { WindPower } from "@mui/icons-material";
 
 const Navbar = ({ toggleMenu, user }) => {
   const { theme, toggleTheme } = useTheme();
@@ -258,14 +260,12 @@ const Navbar = ({ toggleMenu, user }) => {
           console.log(acceptFriendRequestData);
 
           if (fromUserId === parsedID && socket) {
-            alert("Enteredddddddddddddddddddddddd");
             if (
               !deletedAcceptedRequests.some(
                 (request) =>
                   request.senderUserId === acceptFriendRequestData.senderUserId
               )
             ) {
-              alert("Hellooooo");
               setMessage((prevRequests) => {
                 // Check again inside the callback to ensure no race conditions
                 if (
@@ -420,8 +420,9 @@ const Navbar = ({ toggleMenu, user }) => {
     setunreadMessageCount(0);
   };
 
-  const handleThemeToggle = () => {
-    toggleTheme();
+  const handleMessageRedirect = () => {
+    window.location.href = "/message"
+    // toggleTheme();
   };
 
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -469,8 +470,6 @@ const Navbar = ({ toggleMenu, user }) => {
 
   // Function to confirm the request
   const handleConfirm = async (senderName, receiverName) => {
-    alert("Called");
-
     try {
       const res = await fetch(
         "http://localhost:5000/api/friend_request/acceptFriendRequest",
@@ -571,7 +570,8 @@ const Navbar = ({ toggleMenu, user }) => {
       <div className={styles.navbar}>
         <div className={styles.left_navbar}>
           <Link to="/" style={{ textDecoration: "none" }}>
-            <span className={styles.title}>SocialMedia</span>
+            {/* <span className={styles.title}>{Logo}</span> */}
+            <img  className={styles.title} src={Logo}/>
           </Link>
 
           {/* <HomeOutlinedIcon className={styles.icon} /> */}
@@ -639,10 +639,13 @@ const Navbar = ({ toggleMenu, user }) => {
 
         <div className={styles.right_navbar}>
           <div className={styles.userOptPart}>
-            <BedtimeRoundedIcon
+            {/* <a to="/message"> */}
+            <MessageRoundedIcon
               className={styles.icon}
-              onClick={handleThemeToggle}
+              onClick={handleMessageRedirect}
             />
+            {/* </a> */}
+          
             {/* dark mode button */}
             <div className={styles.profileIconContainer}>
               <PersonRoundedIcon

@@ -5,7 +5,7 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
 
-const Posts = ({ styles }) => {
+const Posts = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [socket, setSocket] = useState(null); //For setting the socket connection
@@ -166,7 +166,7 @@ const Posts = ({ styles }) => {
 
   console.log(postofFriendsData);
   return (
-    <div className={styles.posts} style={styles}>
+    <div className={styles.posts}>
       {postofFriendsData.map((post) => (
         <Post post={post} userId={parsedID} key={post.id} style={styles} />
       ))}

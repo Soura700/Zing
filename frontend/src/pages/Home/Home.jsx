@@ -15,15 +15,17 @@ const Home = () => {
 
 
   const styles = {
-    backgroundColor: theme === "light" ? "#ffffff" : "#3d3061",
+    backgroundColor: theme === "light" ? "#ffffff" : "#20202b",
     color: theme === "light" ? "#000000" : "#ffffff",
+    // border: `1px solid ${theme === "light" ? "#e0e0e0" : "#424242"}`, 
   };
 
   return (
     <div className='home' style={styles}>
       <Story/>
-      <Share/>
+      <Share styles={styles}/>
       <Posts styles={styles}/>
+      
     </div>
   )
 }

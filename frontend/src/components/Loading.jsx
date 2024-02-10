@@ -1,17 +1,19 @@
 import React from "react";
-import CircularProgress from "@mui/material/CircularProgress";
+import "../components/loading.css"
+import Logo from "../../src/assets/buzz_logo_final-1.svg";
 
 const LoadingComponent = () => (
   <div
     style={{
       display: "flex",
+      flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
       height: "100vh",
     }}
   >
-    <CircularProgress />
-    <p>Loading...</p>
+    <img src={Logo} />
+     <div class="loader"></div> 
   </div>
 );
 

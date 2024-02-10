@@ -20,7 +20,7 @@
    overflow: hidden;
    cursor: pointer;
    width: 150px;
-   border: 0px solid red;
+   border: 2px solid rgba(187, 127, 252, 0.389);
    max-width: 210px;
    /* min-width: 50px; */
  }
@@ -94,6 +94,10 @@
   z-index: 9999;
   top: 30px;
  } */
+
+ .storyImg .storyImgClass{
+  object-fit: contain;
+ }
 
 
    .story .showFullStory {

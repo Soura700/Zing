@@ -13,9 +13,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
 
-//   import Picker from "@emoji-mart/react";
+import EmojiPicker from 'emoji-picker-react';
 
-const Share = () => {
+const Share = ({styles}) => {
   const [socket, setSocket] = useState(null);
   const { isLoggedIn, id, checkAuthentication } = useAuth();
 
@@ -136,6 +136,7 @@ const Share = () => {
         // Clear input and other state values if needed
         setInput("");
         setImg(null);
+        toast("Post created successfully");
       } else {
         console.error("Failed to create post");
         // Handle error scenarios
@@ -146,7 +147,7 @@ const Share = () => {
   };
 
   return (
-    <div className="share">
+    <div className="share" style={styles}>
       <div className="shareWrapper">
         <div className="shareTop">
           <img src={userPhoto} alt="" className="shareProfileImg" />
@@ -256,7 +257,7 @@ const Share = () => {
         </div>
         {showEmojis && (
           <div className="emoji">
-            {/* <Picker onEmojiSelect={addEmoji} /> */}
+          <EmojiPicker onEmojiClick={addEmoji}/>
           </div>
         )}
         {/* <div className="shareBottom">

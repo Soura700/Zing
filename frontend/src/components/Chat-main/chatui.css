@@ -202,14 +202,15 @@
     border-radius: 20px;
     border: 1px solid  #483e5c;
     position: relative;
+    color: white;
 }
 .top-search-bar input[type=text]:focus{
     outline: none;
     border: 2px solid #665688;
 }
-::placeholder {
+input::placeholder {
     padding: 20px;
-    color: rgb(190, 190, 190);
+    color: rgb(219, 219, 219);
 }
 .top-search-bar .search-btn {
     border: 0px solid red;

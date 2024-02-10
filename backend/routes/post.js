@@ -8,6 +8,7 @@ const multer = require("multer");
 const io = require("../socket");
 const path = require("path");
 const ShareLinkSchema = require("../models/ShareLinkSchema");
+const SavedPost = require("../models/SavedPost");
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -141,19 +142,52 @@ router.get("/allPosts", (req, res) => {
 });
 
 //update post
-router.put("/update_post/:userId/:postId", (req, res) => {
+router.put("/update_post/:userId/:postId", upload.array("images", 1), (req, res) => {
   const userId = req.params.userId;
   const postId = req.params.postId;
   const description = req.body.description;
-  //const images = req.body.images;
+  const newImages = req.files.map((file) => file.filename);
+
   try {
+    // First, fetch the existing images and description for the post
     connection.query(
-      " UPDATE posts SET description = ? WHERE id = ? "[(description, postId)],
+      "SELECT description, image FROM posts WHERE id = ?",
+      [postId],
       (error, results) => {
         if (error) {
           res.status(500).json(error);
+          console.log("Error");
+          console.log(error);
         } else {
-          res.status(200).json("Post has been updated successfuly");
+          const existingImages = JSON.parse(results[0].image);
+          const existingDescription = results[0].description;
+          const updatedImages = existingImages.concat(newImages);
+          if (updatedImages.length > 4) {
+            res.status(400).json({
+              error: "Maximum number of images (4) exceeded for this post",
+            });
+            return;
+          }
+          let sqlQuery = "UPDATE posts SET ";
+          const sqlParams = [];
+          if (description) {
+            sqlQuery += "description = ?, ";
+            sqlParams.push(description);
+          } else {
+            sqlQuery += "description = ?, ";
+            sqlParams.push(existingDescription);
+          }
+          sqlQuery += "image = ? WHERE id = ?";
+          sqlParams.push(JSON.stringify(updatedImages), postId);
+          // Execute the SQL query
+          connection.query(sqlQuery, sqlParams, (error, results) => {
+            if (error) {
+              res.status(500).json(error);
+            } else {
+              io.emit('postUpdated', { postId: postId, description: description || existingDescription, image: updatedImages });
+              res.status(200).json("Post has been updated successfully");
+            }
+          });
         }
       }
     );
@@ -161,6 +195,9 @@ router.put("/update_post/:userId/:postId", (req, res) => {
     res.status(500).json(error);
   }
 });
+
+
+
 
 // Like Change(update)
 // router.put('/api/posts/:postId/like', async (req, res) => {
@@ -300,12 +337,7 @@ router.post("/like", (req, res) => {
   );
 });
 
-function updateLikeCount(postId, likeStatus, res, userLiked) {
-  console.log(postId);
-  console.log(likeStatus);
-  console.log(res);
-  console.log(userLiked);
-  
+function updateLikeCount(postId, likeStatus, res, userLiked) {  
   const incrementValue = likeStatus ? 1 : -1;
 
   console.log(likeStatus);
@@ -431,7 +463,6 @@ router.post('/share_post/:postId', async (req, res) => {
        
         if (!post) {
           const link = `https://localhost:3000/posts/${result[0].id}/${uuidv4()}`;
-          console.log("Enteredddd");
           const newPostLink = new ShareLinkSchema({
             postId: result[0].id,
             shareLink: link
@@ -440,7 +471,6 @@ router.post('/share_post/:postId', async (req, res) => {
           return res.status(200).json(link);
         }
         else {
-          console.log("Entered2")
           const link2 = `https://localhost:3000/posts/${result[0].id}/${uuidv4()}`;
           post.shareLink = link2;
           await post.save();
@@ -507,6 +537,72 @@ router.get("/check_like/:postId/:userId", (req, res) => {
       }
     }
   });
+});
+
+// 10/2/2024
+// Saved Post get Api
+router.get("/saved_posts/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const savedPosts = await SavedPost.find({ userId });
+    res.status(200).json(savedPosts);
+  } catch (error) {
+    console.error("Error fetching saved posts:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Save post to MongoDB
+router.post("/save_post", async (req, res) => {
+  const { userId, postId } = req.body;
+
+  try {
+    // Fetch description from the MySQL "posts" table
+    const postQuery = "SELECT description, userId FROM posts WHERE id = ?";
+    connection.query(postQuery, [postId], async (error, results) => {
+      if (error) {
+        console.error("Error fetching post details:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else if (results.length === 0) {
+        res.status(404).json({ error: "Post not found" });
+      } else {
+        const { description, userId: postUserId } = results[0];
+
+        // Fetch username from the MySQL "users" table
+        const userQuery = "SELECT username FROM users WHERE id = ?";
+        connection.query(
+          userQuery,
+          [postUserId],
+          async (error, userResults) => {
+            if (error) {
+              console.error("Error fetching username:", error);
+              res.status(500).json({ error: "Internal Server Error" });
+            } else if (userResults.length === 0) {
+              res.status(404).json({ error: "User not found" });
+            } else {
+              const postUsername = userResults[0].username;
+
+              // Update the MongoDB document with fetched details
+              const savedPost = new SavedPost({
+                userId,
+                postId,
+                postUsername,
+                description,
+                images: req.body.images,
+              });
+
+              await savedPost.save();
+
+              res.status(201).json({ message: "Post saved successfully" });
+            }
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.error("Error saving post:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 

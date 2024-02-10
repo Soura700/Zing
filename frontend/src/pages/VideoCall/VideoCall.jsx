@@ -29,7 +29,6 @@ const VideoCall = () => {
   const [isSoundMuted, setIsSoundMuted] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
 
-
   const location = useLocation();
   var { userId, userName, clicked } = location.state || {};
 
@@ -158,6 +157,33 @@ const VideoCall = () => {
     };
   }, [peer]);
 
+  useEffect(() => {
+    // Listen for video toggle message from server
+    socket.on("videoToggled", ({ isVideoEnabled }) => {
+      // Update video stream based on received message
+      if (isVideoEnabled) {
+        // Enable video stream
+        if (mediaStream) {
+          mediaStream.getVideoTracks().forEach((track) => {
+            track.enabled = true;
+          });
+        }
+      } else {
+        // Disable video stream
+        if (mediaStream) {
+          mediaStream.getVideoTracks().forEach((track) => {
+            track.enabled = false;
+          });
+        }
+      }
+    });
+
+    // Clean up the event listener when component unmounts
+    return () => {
+      socket.off("videoToggled");
+    };
+  }, [socket, mediaStream]);
+
   const toggleRightPart = () => {
     setShowRightPart(!showRightPart);
   };
@@ -181,19 +207,27 @@ const VideoCall = () => {
   const toggleSoundMute = () => {
     setIsSoundMuted((prevState) => !prevState);
     if (mediaStream) {
-      mediaStream.getAudioTracks().forEach(track => {
-        track.enabled = !isSoundMuted; 
+      mediaStream.getAudioTracks().forEach((track) => {
+        track.enabled = !isSoundMuted;
       });
-    } 
+    }
   };
 
-  const toggleVideo = () => {
-    setIsVideo(prevState => !prevState);
-    if (mediaStream) {
-      mediaStream.getVideoTracks().forEach(track => {
-        track.enabled = !isVideo;
-      });
-    } 
+  // const toggleVideo = () => {
+  //   setIsVideo(prevState => !prevState);
+  //   if (mediaStream) {
+  //     mediaStream.getVideoTracks().forEach(track => {
+  //       track.enabled = !isVideo;
+  //     });
+  //   }
+  // };
+  const handleVideoToggle = () => {
+    alert("Called");
+    // Toggle video state locally
+    const newVideoState = !isVideo;
+    setIsVideo(newVideoState);
+    // Emit a message to the server indicating video toggle
+    socket.emit("toggleVideo", newVideoState);
   };
 
   return (
@@ -286,7 +320,7 @@ const VideoCall = () => {
                       className="videocontrolicons "
                       onClick={() => {
                         toggleVideoIcon();
-                        toggleVideo();
+                        handleVideoToggle();
                       }}
                     />
                   ) : (
@@ -294,7 +328,7 @@ const VideoCall = () => {
                       className="videocontrolicons active"
                       onClick={() => {
                         toggleVideoIcon();
-                        toggleVideo();
+                        handleVideoToggle();
                       }}
                     />
                   )}
