@@ -31,6 +31,9 @@ const Post = ({ post, userId, style }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [updatedDescription, setUpdatedDescription] = useState(null);
 
+  const [isSaved, setIsSaved] = useState(false);
+  const [savedPosts, setSavedPosts] = useState([]);
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -186,6 +189,59 @@ const Post = ({ post, userId, style }) => {
       // console.error("Error updating likes:", error);
     }
   };
+
+     useEffect(() => {
+     // Fetch information about saved posts when the component mounts
+     const fetchSavedPosts = async () => {
+       try {
+         const res = await fetch(
+           `http://localhost:5000/api/posts/saved_posts/${userId}`
+         );
+         const data = await res.json();
+         setSavedPosts(data);
+
+         // Check if the current post is in the savedPosts state
+         const isPostSaved = data.some(
+           (savedPost) => savedPost.postId === post.id
+         );
+         setIsSaved(isPostSaved);
+       } catch (error) {
+         console.error("Error fetching saved posts:", error);
+       }
+     };
+
+     fetchSavedPosts();
+   }, [userId, post.id]);
+
+const savePost = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/api/posts/save_post", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: parsedID,
+        postId: post.id,
+        postUsername: post.name,
+        description: post.description,
+        images: post.image,
+      }),
+    });
+
+    if (res.status === 201) {
+      // Update the savedPosts state and set isSaved to true
+      setSavedPosts([...savedPosts, { postId: post.id }]);
+      setIsSaved(true);
+      alert(`UserId of the post: ${userId}`);
+    } else {
+      console.error("Failed to save post");
+    }
+  } catch (error) {
+    console.log(error);
+    console.error("Error saving post:", error);
+  }
+};
 
   //Post Option toggle
   const handleToggle = () => {
@@ -391,9 +447,22 @@ const Post = ({ post, userId, style }) => {
             <TextsmsOutlinedIcon />
             {/* 12 Comments */}
           </div>
-          <div className={styles.item}>
+{/*           <div className={styles.item}>
             <BookmarkBorderIcon />
-            {/* Save */}
+
+          </div> */}
+          <div
+            className={styles.item}
+            onClick={() => 
+              savePost()}
+            
+          >
+            {isSaved ? (
+              <BookmarkBorderIcon style={{ color: "red" }} />
+            ) : (
+              <BookmarkBorderIcon />
+            )}
+            Save
           </div>
           <div className={styles.item} onClick={handleShare}>
             <ShareOutlinedIcon />
