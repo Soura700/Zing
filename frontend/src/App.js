@@ -18,6 +18,7 @@ import { ToastContainer } from "react-toastify";
 import CreateStory from "./components/Stories/CreateStory.jsx";
 import { Let } from "./components/messaging/Let.jsx";
 import VideoCall from "./pages/VideoCall/VideoCall.jsx";
+import Settings from "./pages/Settings/Settings.jsx";
 // import Posts from "../src/components/Posts/Posts"
 
 import {
@@ -80,6 +81,10 @@ function App() {
         {
           path: "/saved",
           element: <Saved />,
+        },
+        {
+          path: "/settings",
+          element: <Settings />,
         },
       ],
     },

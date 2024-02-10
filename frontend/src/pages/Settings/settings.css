@@ -1,0 +1,180 @@
+/* settings.css */
+
+.settings-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+    border: 1px solid rgb(216, 216, 216);
+    border-radius: 35px;
+    padding: 20px;
+  }
+  
+  .settings-sidebar {
+    width: 200px;
+    background-color: rgb(242, 239, 244);
+    padding: 10px;
+    border-right: 1px solid#e5e5e5;
+    border-top-left-radius: 35px;
+    border-bottom-left-radius: 35px;
+    padding-top: 50px;
+
+  }
+  
+  .settings-sidebar .sidebar-option {
+    margin-bottom: 10px;
+    cursor: pointer;
+    height: 30px;
+    padding-top: 3px;
+    padding-left: 10px;
+    padding-left: 10px;
+    border: 0px solid rgb(194, 194, 194);
+  }
+  
+  .sidebar-option.active {
+    font-weight: bold;
+    border: 0px solid rgb(194, 194, 194);
+    height: 30px;
+    padding-top: 3px;
+    padding-left: 10px;
+    border-radius: 5px;
+    background: rgb(255, 255, 255);
+    color: rgb(63, 15, 111);
+  }
+  
+  .settings-content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .settings-content .section {
+    margin-bottom: 20px;
+  }
+  .settings-content .section label {
+    font-weight: 500;
+    color: rgb(140, 140, 140);
+    margin-left: 10px;
+  }
+  .settings-content .section h2 {
+    margin-bottom: 30px;
+  }
+  
+  .settings-content  input[type='text'],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e4e4e4;
+    border-radius: 15px;
+    padding-left: 30px;
+  }
+  textarea::placeholder {
+    margin-bottom: 20px;
+  }
+  .settings-content .social-media {
+    display: flex;
+    flex-direction: column;
+  }
+  .settings-content .social-media h2 {
+    font-size: 20px;
+  }
+  .settings-content .social-media-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .social-media-item {
+    margin-left: 10px;
+  }
+  .settings-content .social-media-item p{
+    margin: 0;
+    font-size: 18px;
+    margin-right: 5px;
+    color: rgb(81, 20, 142);
+    background: rgb(243, 231, 255);
+    border-radius: 12px;
+    padding: 5px 10px;
+    
+  }
+  .social-media-item-icon {
+    color: rgb(129, 54, 203);
+  }
+  .settings-content .social-media-item .socialInputName input{
+    width: 90%;
+    padding-left: 30px;
+  }
+  .settings-content .social-media-item .socialInputName input::placeholder {
+    font-size: 15px;
+  }
+  .settings-content .social-media-item input[type='text'] {
+    flex: 1;
+    margin-right: 10px;
+    padding-left: 30px;
+  }
+  
+  .settings-content  .social-media-item button {
+    background-color: rgb(233, 211, 255);
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    border-radius: 12px;
+    width: fit-content;
+    padding: 5px 30px;
+    margin-bottom: 10px;
+    color: rgb(72, 32, 112);
+  }
+  .settings-content  .social-media-item button:hover {
+    background-color: rgb(220, 185, 255);
+    color: rgb(72, 32, 112);
+  }
+  .settings-content .section .settingsConfirmBtn {
+    padding: 10px 20px;
+    background-color: rgb(72, 32, 112);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  .settings-content .section .settingsConfirmBtn:hover {
+    background-color: rgb(53, 23, 83);
+  }
+  .settings-content .logout-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding: 5px 20px;
+  }
+  .settings-content .section .logout-section button {
+    padding: 10px 20px;
+    background-color: rgb(253, 253, 253);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .settings-content .section .logout-section button:hover {
+
+  }
+  .settings-content .logout-section .logoutBtn {
+    border: 1px solid rgb(222, 222, 222);
+    background: rgb(255, 255, 255);
+   color: rgb(111, 12, 12);
+   font-weight: 500;
+  }
+  .settings-content .logout-section .logoutBtn:hover {
+    background: rgb(255, 198, 198);
+   color: rgb(111, 12, 12);
+   cursor: pointer;
+  }
+  .settings-content .logout-section .deleteBtn {
+    border: 1px solid rgb(222, 222, 222);
+    background: rgb(255, 255, 255); 
+    color: rgb(182, 17, 17);
+    font-weight: 500;
+  }
+  .settings-content .logout-section .deleteBtn:hover {
+    background: rgb(255, 198, 198);
+   color: rgb(111, 12, 12);
+   cursor: pointer;
+  }

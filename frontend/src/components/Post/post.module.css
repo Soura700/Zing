@@ -14,7 +14,6 @@
   margin-right: 20px;
   margin-top: 20px;
   position: relative;
-  z-index: 0;
 }
 
 .container {
@@ -585,7 +584,35 @@ input[type="file"] {
     cursor: pointer;
     font-size: 12px;
   }
-  }  
+
+  .updatePostModal {
+    border: 1px solid rgb(155, 155, 155);
+    position: absolute;
+    top: -218px;
+    left: -14px;
+    height: -moz-fit-content;
+    height: fit-content;
+    min-height: 360px;
+    background: rgb(255, 255, 255);
+    border-radius: 20px;
+    padding: 14px;
+    width: 435px;
+    box-shadow: 2px 2px 12px #757575;
+    z-index: 99;
+}
+  .updatePostModal .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .updatePostContent h1 {
+    font-size: 20px;
+    color: rgb(65, 65, 65);
+    margin-top: 10px;
+  }
+
+}  
 
 /* @media (max-width: 1170px) {
   .post .content p {
