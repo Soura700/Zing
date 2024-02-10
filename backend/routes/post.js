@@ -509,6 +509,72 @@ router.get("/check_like/:postId/:userId", (req, res) => {
   });
 });
 
+// 10/2/2024
+// Saved Post get Api
+router.get("/saved_posts/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const savedPosts = await SavedPost.find({ userId });
+    res.status(200).json(savedPosts);
+  } catch (error) {
+    console.error("Error fetching saved posts:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Save post to MongoDB
+router.post("/save_post", async (req, res) => {
+  const { userId, postId } = req.body;
+
+  try {
+    // Fetch description from the MySQL "posts" table
+    const postQuery = "SELECT description, userId FROM posts WHERE id = ?";
+    connection.query(postQuery, [postId], async (error, results) => {
+      if (error) {
+        console.error("Error fetching post details:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else if (results.length === 0) {
+        res.status(404).json({ error: "Post not found" });
+      } else {
+        const { description, userId: postUserId } = results[0];
+
+        // Fetch username from the MySQL "users" table
+        const userQuery = "SELECT username FROM users WHERE id = ?";
+        connection.query(
+          userQuery,
+          [postUserId],
+          async (error, userResults) => {
+            if (error) {
+              console.error("Error fetching username:", error);
+              res.status(500).json({ error: "Internal Server Error" });
+            } else if (userResults.length === 0) {
+              res.status(404).json({ error: "User not found" });
+            } else {
+              const postUsername = userResults[0].username;
+
+              // Update the MongoDB document with fetched details
+              const savedPost = new SavedPost({
+                userId,
+                postId,
+                postUsername,
+                description,
+                images: req.body.images,
+              });
+
+              await savedPost.save();
+
+              res.status(201).json({ message: "Post saved successfully" });
+            }
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.error("Error saving post:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 
 module.exports = router;
