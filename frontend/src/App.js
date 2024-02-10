@@ -168,7 +168,6 @@ import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import { Group } from "./components/Group/Group";
 import Personalization from "./pages/Personalization/YourComponent.jsx";
-import Saved from "./pages/Saved/Saved.jsx";
 import Profile from "./pages/Profile/Profile";
 import LeftBar from "./components/LeftBar/LeftBar";
 import RightBar from "./components/RightBar/RightBar";
@@ -182,6 +181,8 @@ import CreateStory from "./components/Stories/CreateStory.jsx";
 import { Let } from "./components/messaging/Let.jsx";
 import VideoCall from "./pages/VideoCall/VideoCall.jsx";
 import Loading from "../src/components/Loading.jsx";
+import Saved from "./pages/Saved/Saved.jsx";
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -245,7 +246,7 @@ function App() {
           element: <Posts />,
         },
         {
-          path: "/saved",
+          path: "/saved/:userId",
           element: <Saved />,
         },
       ],

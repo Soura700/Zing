@@ -21,9 +21,10 @@
     height: 33px;
     aspect-ratio: 2.5;
     box-sizing: border-box;
-    background: radial-gradient(farthest-side, #812DEC 98%, #0000) left/15px 15px, radial-gradient(farthest-side, #812DEC 98%, #0000) left/15px 15px, radial-gradient(farthest-side, #812DEC 98%, #0000) center/15px 15px, radial-gradient(farthest-side, #812DEC 98%, #0000) right/15px 15px, #ffffff;
+    /* background: radial-gradient(farthest-side, #472c6b 98%, #0000) left/15px 15px, radial-gradient(farthest-side, #7550a5 98%, #0000) left/15px 15px, radial-gradient(farthest-side, #472c6b 98%, #0000) center/15px 15px, radial-gradient(farthest-side, #472c6b 98%, #0000) right/15px 15px, #ffffff; */
+    background: radial-gradient(farthest-side, #8c72af 98%, #0000) left/15px 15px, radial-gradient(farthest-side, #8c72af 98%, #0000) left/15px 15px, radial-gradient(farthest-side, #8c72af 98%, #0000) center/15px 15px, radial-gradient(farthest-side, #8c72af 98%, #0000) right/15px 15px, #ffffff;
     background-repeat: no-repeat;
-    filter: blur(0px) contrast(4);
+    filter: blur(0px) contrast(2);
     animation: l14 1s infinite;
     color: #ffffff;
 }

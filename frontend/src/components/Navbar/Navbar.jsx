@@ -18,7 +18,7 @@ import { useState } from "react";
 import RightBar from "../RightBar/RightBar";
 import axios from "axios";
 import { useTheme } from "../../Contexts/themeContext";
-import Logo from "../../assets/buzz_logo_final.svg";
+import Logo from "../../assets/buzz_logo_final-1.svg";
 // Toggler
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { Link } from "react-router-dom";
@@ -260,14 +260,12 @@ const Navbar = ({ toggleMenu, user }) => {
           console.log(acceptFriendRequestData);
 
           if (fromUserId === parsedID && socket) {
-            alert("Enteredddddddddddddddddddddddd");
             if (
               !deletedAcceptedRequests.some(
                 (request) =>
                   request.senderUserId === acceptFriendRequestData.senderUserId
               )
             ) {
-              alert("Hellooooo");
               setMessage((prevRequests) => {
                 // Check again inside the callback to ensure no race conditions
                 if (
@@ -472,8 +470,6 @@ const Navbar = ({ toggleMenu, user }) => {
 
   // Function to confirm the request
   const handleConfirm = async (senderName, receiverName) => {
-    alert("Called");
-
     try {
       const res = await fetch(
         "http://localhost:5000/api/friend_request/acceptFriendRequest",

@@ -1,6 +1,6 @@
 import React from "react";
 import "../components/loading.css"
-import Logo from "../../src/assets/buzz_logo.svg";
+import Logo from "../../src/assets/buzz_logo_final-1.svg";
 
 const LoadingComponent = () => (
   <div
