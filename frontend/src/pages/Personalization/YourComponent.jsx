@@ -1,28 +1,56 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./YourComponent.css";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../Contexts/authContext";
 import KeyboardDoubleArrowDownRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowDownRounded";
 
 const YourComponent = () => {
   const { userId } = useParams();
-
+  const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); //Setting the loading
   const [profilePicture, setProfilePicture] = useState(null);
+  const [username, setUserName] = useState(null); //Setting the userprofile image from the database
+  const parsedID = parseInt(userId);
   const [bio, setBio] = useState("");
 
   const nextDivRef = useRef(null);
 
   const scrollToNextDiv = () => {
     if (nextDivRef.current) {
-      nextDivRef.current.scrollIntoView({ behavior: 'smooth' });
+      nextDivRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   const [selectedImage, setSelectedImage] = useState(
     "https://previews.123rf.com/images/alekseyvanin/alekseyvanin1807/alekseyvanin180701556/104886082-add-user-outline-icon-linear-style-sign-for-mobile-concept-and-web-design-follower-user-simple-line.jpg"
   );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await checkAuthentication();
+        const userRes = await fetch(
+          "http://localhost:5000/api/auth/" + parsedID,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const userDetails = await userRes.json();
+        setUserName(userDetails[0].username); //Setting the userprofile image from the database
+        // setUsername(userDetails[0].username);
+        // setUserPhoto(userDetails[0].profileImg);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Function to handle file input change
   const handleFileChange = (event) => {
@@ -99,7 +127,11 @@ const YourComponent = () => {
 
       // alert("Confirmed!");
 
-      toast.success("Confirmed!");
+      toast.success("Profile Created Successfully");
+
+      setTimeout(() => {
+        window.location.href = "http://localhost:3000";
+      }, 1000);
     } else {
       // alert("Please select two or more choices");
 
@@ -113,7 +145,7 @@ const YourComponent = () => {
         <div className="personalizerScreen1">
           <div className="part1">
             <header>
-              <h1>Welcome John Doe.</h1>
+              <h1>Welcome {username}</h1>
               <h2>Finish setting up your profile</h2>
             </header>
             <section id="profile">
@@ -161,7 +193,6 @@ const YourComponent = () => {
             <div className="goDownIcon" onClick={scrollToNextDiv}>
               <KeyboardDoubleArrowDownRoundedIcon />
             </div>
-            
           </div>
         </div>
 

@@ -17,6 +17,7 @@ import Posts from "../../components/Posts/Posts";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
+import img from "../../assets/CoverImg.jpg"
 
 const Profile = () => {
   const [user, setUser] = useState([]);
@@ -37,6 +38,7 @@ const Profile = () => {
   const [showStories, setShowStories] = useState(false);
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const [socket2, setSocket2] = useState(null); //For setting the socket connection
+  const [coverPhoto, setCoverPhoto] = useState(null);
 
   // Condition to check if the current user is viewing their own profile
   const isOwnProfile = userId == loggedInUserId;
@@ -56,6 +58,7 @@ const Profile = () => {
         });
         const userResJson = await userRes.json();
         // setUser(userResJson);
+        setCoverPhoto(userResJson[0].coverImg);
         setSenderName(userResJson[0].username);
         // setSenderName(userResJson[0].username);
         // setUserPhoto(userResJson[0].profileImg);
@@ -222,6 +225,30 @@ const Profile = () => {
     }
   };
 
+  const handleCoverImageUpdate = async (e) => {
+    const file = e.target.files[0]; 
+    const formData = new FormData(); 
+    formData.append("userId", loggedInUserId);
+    formData.append("coverPicture", file); // Append the file to FormData object
+
+    try {
+      fetch("http://localhost:5000/api/bio_profile_img/update-profile", {
+        method: "PUT",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          // Handle the response as needed
+        })
+        .catch((error) => {
+          console.error("Error uploading file:", error);
+        });
+    } catch (error) {
+      // console.error("Error updating profile image:", error);
+    }
+  };
+
   const handleUserPhotoClick = () => {
     if (selectedStory && selectedStory.length > 0) {
       setShowStories(!showStories);
@@ -229,20 +256,6 @@ const Profile = () => {
       toast("No stories available");
     }
   };
-
-  // useEffect(() => {
-  //   const fetchData = async () =>{
-  //     try {
-  //       const response = await axios.get(`http://localhost:5000/api/stories/getStories/${userId}`);
-  //       const stories = response.data.stories;
-  //       console.log("Stories");
-  //       console.log(stories);
-  //     } catch (error) {
-  //       console.error("Error updating profile image:", error);
-  //     }
-  //   }
-  //   fetchData();
-  // },[]);
 
   const getTimeDifferenceString = (timestamp) => {
     const currentDate = new Date();
@@ -283,13 +296,6 @@ const Profile = () => {
         receiverUsername: receiverUsername, // Make sure to get the receiver's ID
       });
       const result = await response.json();
-      console.log(result);
-      // Update state to remove the user suggestion
-      // setUsersWithNames((prevUsers) => {
-      //   return prevUsers.filter(
-      //     (user) => user[0].username !== receiverUsername
-      //   );
-      // });
     } catch (error) {
       console.error("Error sending friend request:", error);
     }
@@ -305,9 +311,6 @@ const Profile = () => {
     };
   }, []);
 
-  console.log("Selected Story");
-  console.log(selectedStory);
-
   const handleOverlayClick = (e) => {
     // Check if the click event target is the overlay itself
     if (e.target === e.currentTarget) {
@@ -319,11 +322,19 @@ const Profile = () => {
   return (
     <div className={styles.profile}>
       <div className={styles.images}>
-        <img
-          src="https://images.pexels.com/photos/13440765/pexels-photo-13440765.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt=""
-          className={styles.cover}
-        />
+        {coverPhoto !== null ? (
+          <img
+            src={`http://localhost:5000/${coverPhoto}`}
+            alt=""
+            className={styles.cover}
+          />
+        ) : (
+          <img
+            src={img}
+            alt=""
+            className={styles.cover}
+          />
+        )}
         {userPhoto !== null && (
           <img
             className={styles.profilePic}
@@ -368,18 +379,6 @@ const Profile = () => {
           </div>
         )}
 
-        {/* <Stories
-          key={selectedStory.id}
-          width="427px"
-          height="540px"
-          background="transparent"
-          stories={selectedStory.map((story) => ({
-            type: "image",
-            url: story.downloadURL,
-            duration: 5000,
-          }))}
-        /> */}
-
         <img className={styles.profilePic} src={userPhoto} />
         {/* <img
           className={styles.profilePic}
@@ -398,10 +397,19 @@ const Profile = () => {
           onClick={handleUserPhotoClick}
         />
 
-        <input type="file" id="changeProfilePicInput" />
-        <label htmlFor="changeProfilePicInput">
-          <AddAPhotoIcon className={styles.changeProfilePic} />
-        </label>
+        {isOwnProfile && (
+          <>
+            <input
+              type="file"
+              id="changeProfilePicInput"
+              onChange={(e) => handleCoverImageUpdate(e)}
+            />
+            <label htmlFor="changeProfilePicInput">
+              <AddAPhotoIcon className={styles.changeProfilePic} />
+            </label>
+          </>
+        )}
+
         {isOwnProfile && (
           <>
             <input

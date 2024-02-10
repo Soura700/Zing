@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext } from "react";
-// import { get } from '../../../backend/routes/registerAuth';
 
 const AuthContext = createContext();
 
@@ -8,12 +7,8 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const [ id , setUserId ] = useState(null);
-
-
   // Function to check authentication status and set isLoggedIn
   const checkAuthentication = async () => {
     try {
@@ -24,27 +19,15 @@ export const AuthProvider = ({ children }) => {
           credentials: "include",
         }
       );
-
       const data = await response.json();
-
-
       if (response.status == 200) {
-        
-
-        // setUserId(data);
-        
         setIsLoggedIn(true);
-
-
         setUserId(data);
-        
-
-        console.log("IsLogged In"  + isLoggedIn);
-
         return data;
-
-
       } else {
+        if(response.status === 400){
+          window.location.href = 'http://localhost:3000/login'
+        }
         setIsLoggedIn(false);
       }
     } catch (error) {

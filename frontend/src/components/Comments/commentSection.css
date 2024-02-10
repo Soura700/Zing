@@ -9,10 +9,9 @@
 .addCommentTop {
     position: sticky;
     top: 0;
-    background: white;
     border: 0px solid rgb(201, 201, 201);
     border-radius: 0px;
-    background: #ffffff;
+    background: #312b3e;
     padding: 10px;
     z-index: 99;
     box-shadow: 2px 2px 5px rgba(141, 141, 141, 0.551);
@@ -26,16 +25,18 @@
     padding-left: 10px;
     padding: 5px;
     min-height: 40px;
+    background: #312b3e;
+    color: white;
 }
 .addCommentContainer {
-    border: 1px solid rgb(217, 217, 217);
+    border: 1px solid #5b5170;
 }
 
 .addCommentBtn {
     width: fit-content;
     height: fit-content;
     padding: 6px 7px;
-    background: rgb(96, 81, 125);
+    background: rgb(99, 85, 129);
     border: 0px;
     color: white;
     cursor: pointer;
@@ -47,13 +48,14 @@
 .commentContainer {
     border: 1px solid rgb(228, 228, 228);
     padding: 0px;
+    background: #312b3e;
     border-radius: 20px;
     margin-top: 17px;
 }
 .commentContainer h1 {
     font-weight: 400;
     font-size: 25px;
-    color: rgb(139, 126, 167);
+    color: rgb(227, 222, 238);
 }
 .AllComments {
     margin-top: 0px;
@@ -62,7 +64,7 @@
     top: 120px;
     z-index: 99;
     border: 0px solid red;
-    background: white;
+    background: #312b3e;
     height: 50px;
     /* box-shadow: 2px 2px 5px rgba(141, 141, 141, 0.551); */
 }
@@ -76,10 +78,10 @@
     flex-direction: column;
     padding: 20px;
     margin-top: 10px;
-    border-radius: 8px;
-    box-shadow: 2px 2px 5px rgba(141, 141, 141, 0.551);
-    margin: 5px 10px;
-    background: #f9f9f986;
+    border-radius: 20px;
+    box-shadow: 2px 2px 5px #2d2639;
+    margin: 10px 10px;
+    background: #3b334a;
 }
 .commentHeaderInfo {
     display: flex;
@@ -110,19 +112,19 @@
 .commentHeaderTime p {
     margin-top: 7px;
     font-size: 12px;
-    color: rgb(84, 84, 84);
+    color: rgb(153, 153, 153);
 }
 .commentDelete button {
     
 }
 .comment h1 {
     font-size: 22px;
-    color: rgb(125, 95, 189);
+    color: rgb(255, 255, 255);
     font-weight: 500;
 }
 .comment h2 {
     font-size: 17px;
-    color: rgb(100, 100, 100);
+    color: rgb(220, 220, 220);
     font-weight: 300;
 }
 
@@ -132,6 +134,7 @@
 }
 .allCommentContainer {
     border: 0px solid red;
+    background: #312b3e;
 }
 .commentContainer {
     /* Other styles */
@@ -159,13 +162,13 @@
 }
 @media (max-width: 440px) {
     .comment h1 {
-        font-size: 20px;
-        color: rgb(125, 95, 189);
+        font-size: 22px;
+        color: rgb(255, 255, 255);
         font-weight: 500;
     }
     .comment h2 {
-        font-size: 16px;
-        color: rgb(100, 100, 100);
+        font-size: 17px;
+        color: rgb(220, 220, 220);
         font-weight: 300;
     }
 }

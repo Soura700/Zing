@@ -29,18 +29,16 @@ const bodyParser = require("body-parser");
 // const io = require("./socket");
 app.set("view engine", "ejs");
 
-
 const io = require("socket.io")(server, {
   cors: {
-    origin: '*'
-  }
+    origin: "*",
+  },
 }).listen(5500);
-
 
 const { ExpressPeerServer } = require("peer");
 const opinions = {
   debug: true,
-}
+};
 
 app.use("/peerjs", ExpressPeerServer(server, opinions));
 app.use(express.static("public"));
@@ -63,8 +61,6 @@ app.use(
     credentials: true,
   })
 );
-
-
 
 dotenv.config();
 // Step 2:
@@ -111,7 +107,6 @@ mongoose
 
   await driver.close();
 })();
-
 
 let users = [];
 const activeGroups = [];
@@ -165,10 +160,9 @@ io.on("connection", (socket) => {
     }
   );
 
-
-  socket.on("onlineUsers" , (users)=>{
-    io.emit("showOnlinUsers",users);
-  })
+  socket.on("onlineUsers", (users) => {
+    io.emit("showOnlinUsers", users);
+  });
 
   socket.on("disconnect", () => {
     users = users.filter((user) => user.socketId !== socket.id);
@@ -177,7 +171,6 @@ io.on("connection", (socket) => {
 });
 
 io.on("connection", (socket) => {
-
   socket.on("disconnect", () => {
     // console.log("User disconnected:", socket.id);
   });
@@ -208,6 +201,11 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("toggleVideo", (isVideoEnabled) => {
+    // Broadcast the video toggle message to all connected sockets
+    io.emit("videoToggled", { isVideoEnabled });
+  });
+
   socket.on("initiateCall", (data) => {
     const receiverSocket = data.receiverId;
     if (receiverSocket) {
@@ -220,24 +218,23 @@ io.on("connection", (socket) => {
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
-    setTimeout(()=>{
+    setTimeout(() => {
       socket.to(roomId).emit("user-connected", userId);
-    }, 1000)
+    }, 1000);
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
     socket.on("call-ended", () => {
       // Broadcast "call-ended" event to all other users in the room
-      socket.broadcast.emit("call-ended" , userId);
+      socket.broadcast.emit("call-ended", userId);
     });
   });
   socket.on("initiateGroupCall", ({ groupid, callerId }) => {
     // Broadcast the call initiation message to all participants in the room
     // io.to(groupId).emit("incomingGroupCallAlert", { callerId });
     // socket.to(groupId).emit("incomingGroupCallAlert", { callerId });
-    socket.to(groupid).emit("incomingGroupCallAlert", { callerId  , groupid});
-  });
-
+    socket.to(groupid).emit("incomingGroupCallAlert", { callerId, groupid });
+  });
 });
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -261,13 +258,13 @@ app.use("/api/bio_profile_img", personalization);
 app.use("/api/get", unread_message_route);
 // console.log(suggestion2);
 // suggestion2;
-app.use("/api/comment",commentRoute); //  01/02/2024
+app.use("/api/comment", commentRoute); //  01/02/2024
 console.log("hello");
 
 //step 5:
 // app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
 
 server.listen(process.env.PORT || 5000);
-module.exports ={
-  io:io
+module.exports = {
+  io: io,
 };

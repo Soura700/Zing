@@ -403,16 +403,23 @@ const RightBar = ({ isVisible }) => {
         {/* box2 content starts here */}
 
         <div className={styles.item2}>
-          {/* <h1 className={styles.header}>Latest Activities</h1>
-          {recentActivities.map((activity, index) => (
-            <div key={index} className={styles.user4}>
-              <div className={styles.userInfo}>
-              
-                <h3>{activity.userName}</h3>
+          <h1 className={styles.header}>Latest Activities</h1>
+          {recentActivities && recentActivities.length > 0 ? (
+            recentActivities.map((activity, index) => (
+              <div key={index} className={styles.user2}>
+                <div className={styles.userInfo}>
+                  {/* You can customize the display based on the activity type (like or dislike) */}
+                  <h3>{activity.userName}</h3>
+                </div>
+                <p>
+                  {activity.action === "like" ? "liked" : "disliked"} a post
+                </p>
               </div>
-              <p>{activity.action === "like" ? "liked" : "disliked"} a post</p>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className={styles.noActivity}>No recent activities</p>
+          )}
+
           {/* <div className={styles.user2}>
             <div className={styles.userInfo}>
              
@@ -430,7 +437,7 @@ const RightBar = ({ isVisible }) => {
           <div className={styles.user4}>
             <div className={styles.userInfo}>
               {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
-              {/* <h3>John Doe</h3>
+          {/* <h3>John Doe</h3>
             </div>
             <p>commented on your post</p>
           </div>
@@ -441,25 +448,34 @@ const RightBar = ({ isVisible }) => {
             <p>shared a post</p>
           </div>
           <div className={styles.more}>More</div>  */}
-
-
         </div>
 
         <div className={styles.item3}>
           <h1 className={styles.header}>Online Friends</h1>
-          {onlineFriends.map((onlinefriends, index) => {
+          {/* {onlineFriends.map((onlinefriends, index) => {
             return (
               <div className={styles.user6}>
                 <div className={styles.userInfo}>
-               
                   <h3>{onlinefriends}</h3>
                   <circle></circle>
                 </div>
               </div>
             );
-          })}
+          })} */}
+          {onlineFriends && onlineFriends.length > 0 ? (
+            onlineFriends.map((onlineFriend, index) => (
+              <div key={index} className={styles.user6}>
+                <div className={styles.userInfo}>
+                  {/* <img src={Img} alt="user" height="40px" width="40px"/> */}
+                  <h3>{onlineFriend}</h3>
+                  <circle></circle>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className={styles.noActivity}>No online friends</p>
+          )}
         </div>
-
       </div>
     </div>
   );

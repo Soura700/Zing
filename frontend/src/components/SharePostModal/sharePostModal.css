@@ -3,47 +3,56 @@
     border-radius: 20px;
     position: absolute;
     padding: 20px;
+    top: -10px;
     width: 641px;
-    height: 256px;
+    height: 235px;
     margin-left: -617px;
     background: white;
     z-index: 999;
 
     box-shadow: 0 2px 15px 2px rgba(87, 87, 87, 0.7);
 }
-
-.sharePostContainer p {
-    font-size: 25px;
-    margin-bottom: 10px;
+.sharePostContainer h3 {
+    font-size: 20px;
 }
-
 .copyclipboard {
-    margin-left: 20px;
-    background: rgba(237, 237, 237, 0.542);
+    margin-left: 0px;
+    background: rgb(243, 236, 252);
     border-radius: 20px;
-    width: 40px;
+    width: 120px;
     color: rgb(146, 70, 222);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
 }
-
+.copyclipboard p{
+    color: rgb(80, 35, 124);
+    font-size: 15px; 
+    margin-right: 5px;
+    margin-top: 11px;
+}
 .copiedBtn {
     border: 0px solid rgb(214, 214, 214);
     border-radius: 30px;
-    background: rgba(218, 218, 218, 0.367);
-    color: rgb(72, 33, 111);
+    background: rgba(255, 216, 216, 0.681);
+    color: rgb(120, 22, 22);
     font-weight: 500;
-    margin-top: 60px;
+    margin-top: 11px;
     cursor: pointer;
 }
 .copiedBtn:hover {
-    border: 0px solid rgb(214, 214, 214);
-    border-radius: 30px;
-    background: rgba(195, 195, 195, 0.367);
-    color: rgb(72, 33, 111);
-    font-weight: 500;
-    margin-top: 60px;
+
+    background: rgba(255, 216, 216, 0.681);
+    color: rgb(120, 22, 22);
+
     cursor: pointer;
 }
-
+.linkCopied {
+    font-size: 15px;
+    margin: 0;
+    color: rgb(125, 59, 192);
+}
 
 @media (max-width: 430px) {
     .sharePostContainer {
@@ -61,12 +70,11 @@
     .copiedBtn {
         border: 0px solid rgb(214, 214, 214);
         border-radius: 30px;
-        background: rgba(218, 218, 218, 0.367);
-        color: rgb(72, 33, 111);
+        background: rgba(255, 216, 216, 0.681);
+        color: rgb(120, 22, 22);
         font-weight: 500;
-        margin-top: 60px;
+        margin-top: 11px;
         cursor: pointer;
-        margin-left: 321px;
     }
 
 }    

@@ -8,9 +8,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import CloseIcon from "@mui/icons-material/Close";
-
 import { Link } from "react-router-dom";
-// import Comments from "../comments/Comments";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../Contexts/authContext";
@@ -18,7 +16,6 @@ import CommentSection from "../Comments/CommentSection";
 import ShareModal from "../SharePostModal/SharePostModal";
 
 const Post = ({ post, userId, style }) => {
-
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); //Setting the loading
@@ -31,6 +28,8 @@ const Post = ({ post, userId, style }) => {
   const [link, setLink] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [updatedDescription, setUpdatedDescription] = useState(null);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -47,9 +46,10 @@ const Post = ({ post, userId, style }) => {
     : post.image && post.image !== "[]"
     ? JSON.parse(post.image)
     : [];
+
+  const [postImages, setPostImages] = useState(images);
+
   const liked = false;
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,19 +113,52 @@ const Post = ({ post, userId, style }) => {
   // This is for the like system (for updating the socket)
   useEffect(() => {
     const socket = io("http://localhost:8000"); // Update the URL to match your server
-
-    // Listen for 'updateLikes' event
     socket.on("updateLikes", ({ postId, updatedLikes }) => {
       if (postId === post.id) {
         setLikes(updatedLikes);
       }
     });
-
+    socket.on("postUpdated", ({ postId, description, image }) => {
+      if (postId == post.id) {
+        setUpdatedDescription(description);
+        if (image) {
+          setPostImages((prevImages) => [...prevImages, image]);
+          window.location.reload();
+        }
+      }
+    });
     // Clean up the socket connection on component unmount
     return () => {
       socket.disconnect();
     };
   }, [post.id]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        // Make an API call to fetch the user's profile information
+        const response = await fetch(
+          `http://localhost:5000/api/auth/${post.userId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch user profile");
+        }
+        const userData = await response.json();
+        setUserProfile(userData[0].profileImg);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    // Call the fetchUserProfile function when the component mounts
+    fetchUserProfile();
+  }, [post.userId, userProfile]);
 
   // This function os for handling the like in the realtime for the posts
   const LikeHandler = async () => {
@@ -202,29 +235,53 @@ const Post = ({ post, userId, style }) => {
     }
   };
 
+  // const handleShare = async () => {
+  //   // Call backend API to generate a link for the post
+  //   const response = await fetch(
+  //     `http://localhost:5000/api/posts/share_post/${post.id}`,
+  //     {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       method: "POST",
+  //     }
+  //   );
+  //   const data = await response.json();
+  //   setLink(data);
+  //   // Open the modal with the generated link
+  //   setShowModal(true);
+  // };
+
   const handleShare = async () => {
-    // Call backend API to generate a link for the post
-    const response = await fetch(
-      `http://localhost:5000/api/posts/share_post/${post.id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
+    if (!link) {
+      // Check if the link hasn't been generated yet
+      try {
+        // Call backend API to generate a link for the post
+        const response = await fetch(
+          `http://localhost:5000/api/posts/share_post/${post.id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+          }
+        );
+        const data = await response.json();
+        setLink(data);
+      } catch (error) {
+        console.error("Error generating and storing link:", error);
       }
-    );
-    const data = await response.json();
-    setLink(data);
+    }
     // Open the modal with the generated link
     setShowModal(true);
   };
 
   return (
-    <div className={styles.post} style={style}>
+    <div className={styles.post}>
       <div className={styles.container}>
         <div className={styles.user}>
           <div className={styles.userInfo}>
-            <img src={post.profilePic} alt="" />
+            <img src={`http://localhost:5000/${userProfile}`} alt="" />
             <div className={styles.details}>
               <Link
                 to={`/profile/${post.userId}`}
@@ -240,7 +297,6 @@ const Post = ({ post, userId, style }) => {
           {userId === post.userId && (
             <MoreHorizIcon className="icon" onClick={handleToggle} />
           )}
-          {/* <MoreHorizIcon className="icon" onClick={handleToggle}/> */}
           {toggle ? (
             <div className={styles.postOptShow}>
               <ul>
@@ -268,13 +324,16 @@ const Post = ({ post, userId, style }) => {
           )}
         </div>
         <div className={styles.content}>
-          {/* <h3>{post.username}</h3> */}
-          <p>{post.description}</p>
+          {updatedDescription ? (
+            <p>{updatedDescription}</p>
+          ) : (
+            <p>{post.description}</p>
+          )}
+          {/* <p style={style}>{post.description}</p> */}
           {/* Render images */}
-          {/* <div className={(images && images.length && images.length <= 2) ? styles.gridTwo : styles.gridMore}> */}
           <div className={styles.gallery}>
-            {images &&
-              images.map((image, index) => (
+            {postImages &&
+              postImages.map((image, index) => (
                 <div className={styles.imgContainer} key={index}>
                   <img
                     src={`http://localhost:5000/uploads/${image}`}

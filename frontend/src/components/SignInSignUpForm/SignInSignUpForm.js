@@ -6,8 +6,8 @@ import img2 from "../../assets/img1svg.svg";
 import "./sign.css";
 import "./sign.css";
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
-import {  useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -50,6 +50,20 @@ const SignInSignUpForm = () => {
 
   const clearPasswordError = () => {
     setPasswordError([]);
+  };
+
+  const handleGoogleLoginError = () => {
+    // Redirect to login home page
+    navigate("/login");
+  };
+
+  //login with google (31/01/2024) biggo
+  const loginwithgoogle = () => {
+    try {
+      window.open("http://localhost:5000/auth/google/callback", "_self");
+    } catch (error) {
+      handleGoogleLoginError();
+    }
   };
 
   // Handle sign in
@@ -179,8 +193,6 @@ const SignInSignUpForm = () => {
           >
             <h2 class="title">Sign in</h2>
 
-
-
             <div class="input-field">
               <i class="fas fa-user"></i>
               <input
@@ -203,10 +215,9 @@ const SignInSignUpForm = () => {
 
             <input type="submit" value="Login" class="btn solid" />
             <p>
-              <Link to='/forgotpassword'>Forgot Password?</Link>
+              <Link to="/forgotpassword">Forgot Password?</Link>
             </p>
-            <p class="social-text">Or 
-            </p>
+            <p class="social-text">Or</p>
             <div class="social-media">
               {/* <a href="#" class="social-icon">
                 <i class="fa-brands fa-facebook"></i>
@@ -214,8 +225,8 @@ const SignInSignUpForm = () => {
               <a href="#" class="social-icon">
                 <i class="fab fa-twitter"></i>
               </a> */}
-              <a href="#" class="social-icon">
-                <i class="fab fa-google"></i>
+              <a class="social-icon" onClick={loginwithgoogle}>
+                <i class="fab fa-google" onClick={loginwithgoogle}></i>
                 Sign in with Google
               </a>
             </div>
@@ -261,7 +272,7 @@ const SignInSignUpForm = () => {
                 <i class="fab fa-twitter"></i>
               </a> */}
               <a href="#" class="social-icon">
-                <i class="fab fa-google"></i>
+                <i class="fab fa-google" onClick={loginwithgoogle}></i>
                 Sign up with Google
               </a>
             </div>
@@ -274,14 +285,15 @@ const SignInSignUpForm = () => {
           <div class="content">
             <h3>New here ?</h3>
             <p>
-            Join our vibrant community of adventurers, creators, and dreamers. Sign up now!
+              Join our vibrant community of adventurers, creators, and dreamers.
+              Sign up now!
             </p>
             <button
               class="btn transparent"
               id="sign-up-btn"
               onClick={handleSignUpClick}
             >
-               Sign up
+              Sign up
             </button>
           </div>
           {/* <img src={img} class="image" alt="" /> */}
@@ -290,9 +302,7 @@ const SignInSignUpForm = () => {
         <div className="panel right-panel">
           <div class="content">
             <h3>One of us ?</h3>
-            <p>
-            Welcome back, explorer! Your next adventure awaits.
-            </p>
+            <p>Welcome back, explorer! Your next adventure awaits.</p>
             <button
               class="btn transparent"
               id="sign-in-btn"

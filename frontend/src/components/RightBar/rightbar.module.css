@@ -90,7 +90,7 @@
 
 .userInfo h3 {
     background: white;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 400;
     color: rgba(36, 36, 36, 0.804);
     margin: 5px;
@@ -202,6 +202,13 @@
 /* box1 ends */
 
 /* box2 starts */
+
+.noActivity {
+    color: #797588;
+    margin-left: 15px;
+    font-size: 14px;
+}
+
 .item2 {
     /* border: 1px solid rgb(255, 255, 255); */
     /* border-bottom: 1px solid rgb(185, 185, 185); */
@@ -220,15 +227,15 @@
 }
 
 .item2 .header {
-    color: rgb(255, 255, 255);
+    color: rgb(44, 44, 44);
     text-align: left;
-    margin: 10px 15px;
+    margin: 20px 15px;
     font-size: 20px;
-    background: rgb(255, 255, 255);
-    font-size: 25px;
     font-weight: 500;
-    background: #332a49;
-    margin-bottom: 20px;
+    background: rgb(255, 255, 255);
+    color: white;
+
+    background: #32284e;
 }
 
 .item2 .user2 .userInfo img {
@@ -382,12 +389,15 @@
 }
 
 .item3 .header {
-    color: rgb(255, 255, 255);
+    color: rgb(44, 44, 44);
     text-align: left;
-    margin: 10px 15px;
+    margin: 20px 15px;
     font-size: 20px;
+    font-weight: 500;
     background: rgb(255, 255, 255);
-    background: #332a49;
+    color: white;
+
+    background: #32284e;
 }
 
 .item3 .user6 .userInfo img {

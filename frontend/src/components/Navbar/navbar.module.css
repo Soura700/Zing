@@ -16,9 +16,11 @@
 
 }
 .title {
+  margin-top: 5px;
   font-weight: bold;
   font-size: 20px;
   color: #000000;
+  
 }
 .left_navbar {
   display: flex;
@@ -80,7 +82,7 @@ input {
 
 .right_navbar .icon {
   color: #65558e;
-  margin-bottom: 2px;
+  margin-bottom: -2px;
   font-size: 25px;
   cursor: pointer;
 }
@@ -95,12 +97,12 @@ input {
 
 .right_navbar .friendsBadge {
   color: rgb(255, 255, 255);
-  background: red;
+  background: #8c77b5;
   padding: 2px 6px;
   border-radius: 50%;
   position: absolute;
   top: 12px;
-  left: 10px;
+  left: 69px;
   font-size: 10px;
   cursor: pointer;
 }
@@ -138,7 +140,7 @@ input {
   border-radius: 50%;
   position: absolute;
   top: 12px;
-  right: 65px;
+  right: 83px;
   font-size: 10px;
   cursor: pointer;
 }
@@ -502,7 +504,7 @@ if upto 7 adds a vertical scrollbar */
     z-index: 1;
     height: 3rem;
     top: 44px;
-    left: -120px;
+    left: -86px;
     position: absolute;
     /* box-shadow: 1px 1px 12px 1px black; */
     padding-left: 2rem;
@@ -609,12 +611,12 @@ if upto 7 adds a vertical scrollbar */
   
   .right_navbar .friendsBadge {
     color: rgb(255, 255, 255);
-    background: red;
+    background: #8c77b5;
     padding: 2px 6px;
     border-radius: 50%;
     position: absolute;
-    top: 12px;
-    left: 10px;
+    top: 6px;
+    left: 57px;
     font-size: 10px;
     cursor: pointer;
   }
@@ -698,9 +700,9 @@ if upto 7 adds a vertical scrollbar */
     background: rgb(255, 255, 255);
     border-radius: 15px;
     box-shadow: 2px 2px 10px rgba(95, 95, 95, 0.322);
-    top: 94px;
+    top: 100px;
     padding: 10px;
-    left: -128px;
+    left: -90px;
     width: 464px;
   }
 }

@@ -141,19 +141,52 @@ router.get("/allPosts", (req, res) => {
 });
 
 //update post
-router.put("/update_post/:userId/:postId", (req, res) => {
+router.put("/update_post/:userId/:postId", upload.array("images", 1), (req, res) => {
   const userId = req.params.userId;
   const postId = req.params.postId;
   const description = req.body.description;
-  //const images = req.body.images;
+  const newImages = req.files.map((file) => file.filename);
+
   try {
+    // First, fetch the existing images and description for the post
     connection.query(
-      " UPDATE posts SET description = ? WHERE id = ? "[(description, postId)],
+      "SELECT description, image FROM posts WHERE id = ?",
+      [postId],
       (error, results) => {
         if (error) {
           res.status(500).json(error);
+          console.log("Error");
+          console.log(error);
         } else {
-          res.status(200).json("Post has been updated successfuly");
+          const existingImages = JSON.parse(results[0].image);
+          const existingDescription = results[0].description;
+          const updatedImages = existingImages.concat(newImages);
+          if (updatedImages.length > 4) {
+            res.status(400).json({
+              error: "Maximum number of images (4) exceeded for this post",
+            });
+            return;
+          }
+          let sqlQuery = "UPDATE posts SET ";
+          const sqlParams = [];
+          if (description) {
+            sqlQuery += "description = ?, ";
+            sqlParams.push(description);
+          } else {
+            sqlQuery += "description = ?, ";
+            sqlParams.push(existingDescription);
+          }
+          sqlQuery += "image = ? WHERE id = ?";
+          sqlParams.push(JSON.stringify(updatedImages), postId);
+          // Execute the SQL query
+          connection.query(sqlQuery, sqlParams, (error, results) => {
+            if (error) {
+              res.status(500).json(error);
+            } else {
+              io.emit('postUpdated', { postId: postId, description: description || existingDescription, image: updatedImages });
+              res.status(200).json("Post has been updated successfully");
+            }
+          });
         }
       }
     );
@@ -161,6 +194,9 @@ router.put("/update_post/:userId/:postId", (req, res) => {
     res.status(500).json(error);
   }
 });
+
+
+
 
 // Like Change(update)
 // router.put('/api/posts/:postId/like', async (req, res) => {
@@ -300,12 +336,7 @@ router.post("/like", (req, res) => {
   );
 });
 
-function updateLikeCount(postId, likeStatus, res, userLiked) {
-  console.log(postId);
-  console.log(likeStatus);
-  console.log(res);
-  console.log(userLiked);
-  
+function updateLikeCount(postId, likeStatus, res, userLiked) {  
   const incrementValue = likeStatus ? 1 : -1;
 
   console.log(likeStatus);
@@ -431,7 +462,6 @@ router.post('/share_post/:postId', async (req, res) => {
        
         if (!post) {
           const link = `https://localhost:3000/posts/${result[0].id}/${uuidv4()}`;
-          console.log("Enteredddd");
           const newPostLink = new ShareLinkSchema({
             postId: result[0].id,
             shareLink: link
@@ -440,7 +470,6 @@ router.post('/share_post/:postId', async (req, res) => {
           return res.status(200).json(link);
         }
         else {
-          console.log("Entered2")
           const link2 = `https://localhost:3000/posts/${result[0].id}/${uuidv4()}`;
           post.shareLink = link2;
           await post.save();
