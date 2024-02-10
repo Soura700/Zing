@@ -343,7 +343,7 @@ const Profile = () => {
             onClick={handleUserPhotoClick}
           />
         )}
-
+        
         {showStories && (
           <div className={styles.overlay} onClick={handleOverlayClick}>
             <div className={styles.storyInfo}>
@@ -429,6 +429,7 @@ const Profile = () => {
             {/* {user.map((slide, index) => ( */}
             <h1>{username}</h1>
             {/* // ))} */}
+            <p className={styles.profileBio}>dsds</p>
             <div className={styles.btn}>
               {!isOwnProfile && !isFriendWithCurrentUser && (
                 <button
