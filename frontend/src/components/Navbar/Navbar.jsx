@@ -18,7 +18,7 @@ import { useState } from "react";
 import RightBar from "../RightBar/RightBar";
 import axios from "axios";
 import { useTheme } from "../../Contexts/themeContext";
-import Logo from "../../assets/buzz_logo_final-1.svg";
+import Logo from "../../assets/zing5.svg";
 // Toggler
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { Link } from "react-router-dom";
