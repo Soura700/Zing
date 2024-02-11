@@ -182,6 +182,8 @@ import { Let } from "./components/messaging/Let.jsx";
 import VideoCall from "./pages/VideoCall/VideoCall.jsx";
 import Loading from "../src/components/Loading.jsx";
 import Saved from "./pages/Saved/Saved.jsx";
+import Settings from "./pages/Settings/Settings.jsx";
+// import Posts from "../src/components/Posts/Posts"
 
 import {
   createBrowserRouter,
@@ -248,6 +250,10 @@ function App() {
         {
           path: "/saved/:userId",
           element: <Saved />,
+        },
+        {
+          path: "/settings",
+          element: <Settings />,
         },
       ],
     },

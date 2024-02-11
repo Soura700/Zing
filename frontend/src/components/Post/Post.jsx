@@ -15,6 +15,7 @@ import { useAuth } from "../../Contexts/authContext";
 import CommentSection from "../Comments/CommentSection";
 import ShareModal from "../SharePostModal/SharePostModal";
 
+
 const Post = ({ post, userId, style }) => {
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const { isLoggedIn, id, checkAuthentication } = useAuth();
@@ -332,6 +333,12 @@ const savePost = async () => {
     setShowModal(true);
   };
 
+  const parseEmoji = (text) => {
+    // Use a library or function to parse and render emojis from text
+    // Example: You can use a library like `react-emoji-render` or `emoji-js`
+    return text; // Placeholder function, replace with actual implementation
+  };
+
   return (
     <div className={styles.post}>
       <div className={styles.container}>
@@ -381,9 +388,9 @@ const savePost = async () => {
         </div>
         <div className={styles.content}>
           {updatedDescription ? (
-            <p>{updatedDescription}</p>
+            <p>{parseEmoji(updatedDescription)}</p>
           ) : (
-            <p>{post.description}</p>
+            <p>{parseEmoji(post.description)}</p>
           )}
           {/* <p style={style}>{post.description}</p> */}
           {/* Render images */}
