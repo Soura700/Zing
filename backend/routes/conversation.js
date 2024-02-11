@@ -296,62 +296,29 @@ router.post("/leave/group/conversation", async (req, res) => {
   }
 });
 
-// router.post("/block",async(req,res)=>{
-//   const {conversationId,userIdToBlock} = req.body;
-//   try{
 
-//   const conversation = await  Conversations.findById(conversationId);
-
-//   if(!conversation){
-//     return res.status(400).json({error:'Conversation Not Found'});
-//   }
-//   if(conversation.blockedUser.includes(userIdToBlock)){
-//     return res.status(400).json({error:'User Already Blocked'});
-//   }
-
-//   conversation.blockedUser.push(userIdToBlock);
-//   await conversation.save();
-
-//   return res.status(200).json({message:'User Blocked Successfully'});
-//   }catch(error){
-//     console.log("Error in blocking user : ", error);
-//     return res.status(500).json(error);
-//   }
-// })
-
-// API endpoint to block a user
+// Api to block the user 
 router.post("/block", async (req, res) => {
   try {
     // Extract data from request body
-    const { conversationId, userIdToBlock } = req.body;
-
+    const { conversationId, userIdToBlock, blockingUserId } = req.body;
     // Find the conversation document by its ID
     const conversation = await Conversations.findById(conversationId);
-
     if (!conversation) {
       return res.status(404).json({ error: "Conversation not found" });
     }
-
     // Check if blockedUsers array exists in the conversation document
     if (!conversation.blockedUser) {
       conversation.blockedUser = []; // Initialize the blockedUsers array if it doesn't exist
     }
-
     // Check if the user is already blocked
-    let isUserBlocked = false;
-    for (const blockedUser of conversation.blockedUser) {
-      if (blockedUser === userIdToBlock) {
-        isUserBlocked = true;
-        break;
-      }
-    }
-
-    if (isUserBlocked) {
+    if (conversation.blockedUser.includes(userIdToBlock)) {
       return res.status(400).json({ error: "User already blocked" });
     }
 
-    // Add the user to the blockedUsers array
-    conversation.blockedUser.push(userIdToBlock);
+    // Push both userIdToBlock and blockingUserId into the blockedUser array
+    conversation.blockedUser.push(userIdToBlock, blockingUserId);
+    conversation.blockingUserId=blockingUserId;
 
     // Save the updated conversation document
     await conversation.save();
@@ -362,6 +329,8 @@ router.post("/block", async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
 
 // Search suggestion API endpoint
 // router.get("/search-suggestions", async (req, res) => {
@@ -475,7 +444,67 @@ router.post("/search-suggestions", async (req, res) => {
 });
 
 
+router.post("/checkBlocked", async (req, res) => {
+  try {
+    // Extract data from request body
+    const { conversationId, userIdToCheck } = req.body;
 
+    // Find the conversation document by its ID
+    const conversation = await Conversations.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ error: "Conversation not found" });
+    }
 
+    // Check if blockedUsers array exists in the conversation document
+    if (!conversation.blockedUser || conversation.blockedUser.length === 0) {
+      // If blockedUser array doesn't exist or is empty, user is not blocked
+      return res.status(200).json({ blocked: false, message: "User is not blocked" });
+    }
+
+    // Check if the user is in the blockedUsers array
+    const isUserBlocked = conversation.blockedUser.includes(userIdToCheck);
+
+    if (isUserBlocked) {
+      return res.status(200).json({ blocked: true, message: "User is blocked" , blockingUserId: conversation.blockingUserId , blockedUsers:conversation.blockedUser});
+    } else {
+      return res.status(200).json({ blocked: false, message: "User is not blocked" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Api to unblock the user
+router.post("/unblock", async (req, res) => {
+  try {
+    // Extract data from request body
+    const { conversationId, userIdToUnblock } = req.body;
+    // Find the conversation document by its ID
+    const conversation = await Conversations.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ error: "Conversation not found" });
+    }
+    // Check if blockedUsers array exists in the conversation document
+    if (!conversation.blockedUser || conversation.blockedUser.length === 0) {
+      // If blockedUser array doesn't exist or is empty, user is not blocked
+      return res.status(400).json({ error: "User is not blocked" });
+    }
+    // Check if the user to unblock is in the blockedUsers array
+    const userIndex = conversation.blockedUser.indexOf(userIdToUnblock);
+    if (userIndex === -1) {
+      // If user is not found in the blockedUser array, return error
+      return res.status(400).json({ error: "User is not blocked" });
+    }
+    // Remove the user from the blockedUsers array
+    conversation.blockedUser.splice(userIndex, 1);
+    // Save the updated conversation document
+    await conversation.save();
+    return res.status(200).json({ message: "User unblocked successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 module.exports = router;

@@ -287,7 +287,7 @@ router.delete("/logout", (req, res) => {
   res.clearCookie('session_token');
 
   // Redirect to the home page
-  res.redirect('/');
+  // res.redirect('/');
 });
 
 router.post("/:userId", (req, res) => {

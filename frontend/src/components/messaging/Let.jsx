@@ -50,6 +50,7 @@ export const Let = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [searchSuggestionResult, setSearchSuggestionResult] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [photo,setUserPhoto] = useState(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 472px)");
@@ -91,19 +92,36 @@ export const Let = () => {
     };
   }, []);
 
-  const popupRef = useRef(null);
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        await checkAuthentication();
+        const userRes = await fetch(
+          "http://localhost:5000/api/auth/" + parsedId,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const userDetails = await userRes.json();
+        setUserPhoto(userDetails[0].profileImg);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchData();
+  },[id, checkAuthentication, parsedId])
 
-  // const togglePopup = () => {
-  //   setShowPopup(!showPopup);
-  // };
+  const popupRef = useRef(null);
   const togglePopup = () => {
     if (!showPopup) {
       // If popup is not already open, open it
       setShowPopup(true);
     }
   };
-
-  const showSidebarMenu = () => {
+    const showSidebarMenu = () => {
     setShowMenu(!showMenu);
   };
   const showAllGroups = () => {
@@ -125,8 +143,6 @@ export const Let = () => {
       let isMounted = true;
       setShowMessageBox(true);
       const checkExistenceOfConversation = async () => {
-        console.log("ParsedId");
-        console.log(parsedId);
         try {
           const userRes = await fetch(
             "http://localhost:5000/api/conversation/getConversation_by_sender_receiverId",
@@ -219,7 +235,6 @@ export const Let = () => {
   }, [checkAuthentication]);
 
   const handleToggle = () => {
-    alert("Clicked");
     setToggle(!toggle);
   };
   useEffect(() => {
@@ -245,12 +260,6 @@ export const Let = () => {
     return activeUsers.some((user) => user.userId === userId);
   };
 
-  console.log(activeUsers);
-  // socket.emit("onlineUsers", activeUsers);
-
-  console.log("Online Users");
-  console.log(isUserOnline());
-
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {
@@ -264,8 +273,6 @@ export const Let = () => {
           }),
         });
         const data = await res.json();
-        console.log("All conversationssssssss");
-        console.log(data);
         // Iterate through each conversation and fetch user details
         const updatedConversations = await Promise.all(
           data.map(async (conversation) => {
@@ -298,9 +305,6 @@ export const Let = () => {
     }
   }, [isLoggedIn]);
   const fetchMessages = async (id, user) => {
-    alert(id);
-    console.log("Helloo User");
-    console.log(user);
     if (isLoggedIn) {
       // Fetch user image along with other conversation details
       const userRes = await fetch(
@@ -313,7 +317,6 @@ export const Let = () => {
         }
       );
       const userData = await userRes.json();
-      console.log("Profile Imageeeeeeeeeeeeeeeeeeeeee");
       const res = await fetch(
         "http://localhost:5000/api/message/get_messages/" + id
       );
@@ -323,15 +326,13 @@ export const Let = () => {
         receiver: { ...user, profileImg: userData[0].profileImg },
         conversationId: id,
       });
-      // setConversationId(id);
-      console.log("User");
-      console.log(user)
       setActiveConversation(user);
     }
   };
+
+
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
-
     if (!conversationId) {
       console.error("No conversation selected");
       return;
@@ -361,6 +362,7 @@ export const Let = () => {
         body: JSON.stringify({
           conversationId: conversationId,
           senderId: parsedId,
+          receiverId:activeConversation.receiverId,
           message: message,
         }),
       });
@@ -418,7 +420,7 @@ export const Let = () => {
           <div className="innerContainer">
             <div className="items">
               <div className="profile-img">
-                <img src={image} alt="" />
+                <img src={`http://localhost:5000/${photo}`} alt="" />
               </div>
               <div className="item1">
                 <a style={{ textDecoration: "none" }} href="/message">
@@ -472,8 +474,6 @@ export const Let = () => {
                                     alt="User"
                                   />
                                   <p onClick={()=>{
-                                    alert("Called");
-                                    console.log("Clickeddddddddddddddddddddddddddddddd");
                                   }}>{suggestion.username}</p>
                                 </div>
                               )
@@ -732,7 +732,6 @@ export const Let = () => {
                               />
                               <p 
                               onClick={()=>{
-                                alert("Calleddddd");
                                 fetchMessages(suggestion.mongoData[0]._id,conversations)
                                 }}
                                 >
