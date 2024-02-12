@@ -178,3 +178,53 @@
    color: rgb(111, 12, 12);
    cursor: pointer;
   }
+
+
+  @media (max-width: 427px) {
+    .settings-container {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px;
+      border: 1px solid rgb(216, 216, 216);
+      border-radius: 35px;
+      padding: 20px;
+      width: 107vw;
+    }
+    .settings-content .social-media-item {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .settings-content .social-media-item .socialInputName input{
+      width: 70%;
+      padding-left: 30px;
+    }
+    .socialInputName{
+      width: 359px;
+    }
+    .settings-content .section .settingsConfirmBtn {
+      padding: 10px 20px;
+      background-color: rgb(72, 32, 112);
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      width: 100px;
+    }
+    .settings-content .logout-section .logoutBtn {
+      border: 1px solid rgb(222, 222, 222);
+      background: rgb(255, 255, 255);
+     color: rgb(111, 12, 12);
+     font-weight: 500;
+     width: 100px;
+    }
+    .settings-content .logout-section .deleteBtn {
+      border: 1px solid rgb(222, 222, 222);
+      background: rgb(255, 255, 255); 
+      color: rgb(182, 17, 17);
+      font-weight: 500;
+      width: 165px;
+    }
+  }    

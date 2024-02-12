@@ -11,7 +11,7 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress from Material-UI
 import { useState } from "react";
 import { io } from "socket.io-client";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../Contexts/authContext";
 import Peer from "simple-peer";
 import CallUI from "../../components/CallUi/CallUi";
@@ -445,6 +445,9 @@ export const Let = () => {
             <div className="top-part">
               <div className="top-part-opt">
                 <h1>Messages</h1>
+                <Link to="/">
+                <HomeRoundedIcon />
+              </Link>
               </div>
               <div className="top-search-bar">
                 <input

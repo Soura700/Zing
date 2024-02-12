@@ -18,7 +18,7 @@ import { useState } from "react";
 import RightBar from "../RightBar/RightBar";
 import axios from "axios";
 import { useTheme } from "../../Contexts/themeContext";
-import Logo from "../../assets/zing5.svg";
+import Logo from "../../assets/zing_final2.svg";
 // Toggler
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { Link } from "react-router-dom";
@@ -34,7 +34,7 @@ const Navbar = ({ toggleMenu, user }) => {
 
   const [toggle, setToggle] = useState(false);
   const [socket, setSocket] = useState(null); //For setting the socket connection
-  const { isLoggedIn, id, checkAuthentication } = useAuth();
+  const { isLoggedIn, id, id: userId, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); //Setting the loading
   const [friendRequests, setFriendRequests] = useState([]); //Sets the friends requets spreading with the old requests with the new requests in realtime
   const [senderName, setSenderName] = useState(null); //Setting the current / logged user name in the state
@@ -54,6 +54,7 @@ const Navbar = ({ toggleMenu, user }) => {
   const [suggestions, setSuggestions] = useState([]); // State to store search suggestions
   const searchRef = useRef(null);
   //popup for search modal
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -211,8 +212,6 @@ const Navbar = ({ toggleMenu, user }) => {
     }
   }, [id, parsedID, checkAuthentication]);
 
-
-
   useEffect(() => {
     // const newSocket = io("http://localhost:5500");
     const newSocket = io("http://localhost:8000");
@@ -255,7 +254,7 @@ const Navbar = ({ toggleMenu, user }) => {
       // Get Friend Request
       socket.on(
         "acceptFriendRequest",
-        ({ acceptFriendRequestData, from, to , fromUserId}) => {
+        ({ acceptFriendRequestData, from, to, fromUserId }) => {
           console.log("Accepted the friedn Request");
           console.log(acceptFriendRequestData);
 
@@ -421,7 +420,7 @@ const Navbar = ({ toggleMenu, user }) => {
   };
 
   const handleMessageRedirect = () => {
-    window.location.href = "/message"
+    window.location.href = "/message";
     // toggleTheme();
   };
 
@@ -571,7 +570,7 @@ const Navbar = ({ toggleMenu, user }) => {
         <div className={styles.left_navbar}>
           <Link to="/" style={{ textDecoration: "none" }}>
             {/* <span className={styles.title}>{Logo}</span> */}
-            <img  className={styles.title} src={Logo}/>
+            <img className={styles.title} src={Logo} />
           </Link>
 
           {/* <HomeOutlinedIcon className={styles.icon} /> */}
@@ -645,7 +644,7 @@ const Navbar = ({ toggleMenu, user }) => {
               onClick={handleMessageRedirect}
             />
             {/* </a> */}
-          
+
             {/* dark mode button */}
             <div className={styles.profileIconContainer}>
               <PersonRoundedIcon
@@ -773,15 +772,25 @@ const Navbar = ({ toggleMenu, user }) => {
         {/* <ToastContainer/> */}
       </div>
       <div className={styles.bottomNavbar}>
-        <HomeRoundedIcon className={styles.bottomNavbarIcon} />
-        <GroupRoundedIcon
-          className={styles.bottomNavbarIcon}
-          onClick={toggleRightBar}
-        />
+        <Link to={`/`}>
+          <HomeRoundedIcon className={styles.bottomNavbarIcon} />
+        </Link>
+        <Link to={`/groupmessage`}>
+          <GroupRoundedIcon
+            className={styles.bottomNavbarIcon}
+            onClick={toggleRightBar}
+          />
+        </Link>
         {showRightBar && <RightBar className={styles.bottomNavbarIcon} />}
-        <MessageRoundedIcon className={styles.bottomNavbarIcon} />
-        <BookmarkRoundedIcon className={styles.bottomNavbarIcon} />
-        <SettingsRoundedIcon className={styles.bottomNavbarIcon} />
+        <Link to={`/message`}>
+          <MessageRoundedIcon className={styles.bottomNavbarIcon} />
+        </Link>
+        <Link to={`/saved/${userId}`}>
+          <BookmarkRoundedIcon className={styles.bottomNavbarIcon} />
+        </Link>
+        <Link to={`/settings`}>
+          <SettingsRoundedIcon className={styles.bottomNavbarIcon} />
+        </Link>
         <MenuRoundedIcon
           className={styles.bottomNavbarIcon}
           onClick={toggleMenu}

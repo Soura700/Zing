@@ -267,10 +267,10 @@ const handleArrowButtonClick = () => {
           </div>
         ))}
         <div className="senders-photo">
-          <img src="your_sender_image_url" alt="Sender" />
+          <img src="your_sender_image_url" alt="Sender" className="senderPic"/>
         </div>
         <div className="recievers-photo">
-          <img src="your_receiver_image_url" alt="Receiver" />
+          <img src="your_receiver_image_url" alt="Receiver" className="receiverPic"/>
         </div>
       </div>
 

@@ -843,7 +843,9 @@ input::placeholder {
     height: 90%;
     overflow: scroll;
 }
-
+.senderPic {
+    width: 100%;
+}
 
 .chat-bottom {
     border: 0px solid red;
@@ -1364,6 +1366,14 @@ input::placeholder {
         flex-direction: column;
         width: 400px;
         border: 0px solid red;
+    }
+    .top-part-opt {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 371px;
+        align-items: center;
+        position: relative;
     }
     .top-search-bar {
         margin-top: 20px;

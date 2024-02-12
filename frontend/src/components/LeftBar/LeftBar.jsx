@@ -84,7 +84,7 @@
 
 //           {/* <div className={styles.item7}>
 //             <div className={styles.logo}>
-              
+
 //             </div>
 //             <div className={styles.header}>
 //               <h1>Trending</h1>
@@ -93,7 +93,7 @@
 
 //           <div className={styles.item8}>
 //             <div className={styles.logo}>
-              
+
 //             </div>
 //             <div className={styles.header}>
 //               <h1>Messages</h1>
@@ -110,7 +110,7 @@
 //           <hr />
 //           <div className={styles.item10}>
 //             <div className ={styles.logo}>
-              
+
 //             </div>
 //             <div className={styles.header}>
 //               <h1>Settings</h1>
@@ -119,7 +119,7 @@
 
 //           <div className={styles.item11}>
 //             <div className = {styles.logo}>
-              
+
 //             </div>
 //             <div className={styles.header}>
 //               <h1>Help</h1>
@@ -132,14 +132,6 @@
 // };
 
 // export default LeftBar;
-
-
-
-
-
-
-
-
 
 import React, { useEffect, useState } from "react";
 import "./leftBar.module.css";
@@ -159,20 +151,20 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../Contexts/authContext";
 export const LeftBar = ({ isVisible }) => {
   const { id: userId, checkAuthentication } = useAuth();
-   useEffect(() => {
-     const fetchData = async () => {
-       try {
-         await checkAuthentication();
-         // Additional fetch logic if needed
-       } catch (error) {
-         console.error("Error fetching user data:", error);
-       }
-     };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await checkAuthentication();
+        // Additional fetch logic if needed
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
-     if (userId) {
-       fetchData();
-     }
-   }, [userId, checkAuthentication]);
+    if (userId) {
+      fetchData();
+    }
+  }, [userId, checkAuthentication]);
   return (
     <>
       {/* <div className={styles.leftBar}> */}
@@ -188,15 +180,14 @@ export const LeftBar = ({ isVisible }) => {
             </div>
           </div>
 
-          <div className={styles.item2}>
+          <Link to={`/message`} className={styles.item2}>
             <div className={styles.logo}>
               <MessageIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Messages</h1>
             </div>
-          </div>
-
+          </Link>
           <div className={styles.item3}>
             <div className={styles.logo}>
               <TrendingUpIcon fontSize="small" />
@@ -221,16 +212,14 @@ export const LeftBar = ({ isVisible }) => {
               <h1>Saved</h1>
             </div>
           </Link>
-
-          <div className={styles.item6}>
+          <Link to={`/settings`} className={styles.item6}>
             <div className={styles.logo}>
               <SettingsIcon fontSize="small" />
             </div>
             <div className={styles.header}>
               <h1>Settings</h1>
             </div>
-          </div>
-
+          </Link>
           <div className={styles.item7}>
             <div className={styles.logo}>
               <HelpOutlineIcon fontSize="small" />
