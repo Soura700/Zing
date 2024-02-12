@@ -9,7 +9,7 @@ const Posts = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [isLoading, setIsLoading] = useState(true); // Add loading state
   const [socket, setSocket] = useState(null); //For setting the socket connection
-  const [createdAt, setCreatedAt] = useState(null);
+  const [updatedAt, setUpdatedAt] = useState(null);
   const [postData, setPostData] = useState([]);
   const [postofFriendsData, setPostofFriendsData] = useState([]);
   const [friends, setFriends] = useState([]);
@@ -30,7 +30,7 @@ const Posts = () => {
         const userDetails = await userRes.json();
         console.log("UserDetails");
         console.log(userDetails);
-        setCreatedAt(userDetails[0].createdAt);
+        setUpdatedAt(userDetails[0].updatedAt);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -67,7 +67,7 @@ const Posts = () => {
           const id = friend.friendId;
           const res1 = await fetch(
             `http://localhost:5000/api/posts/posts_by_timestamp/${id}/${encodeURIComponent(
-              createdAt
+              updatedAt
             )}`
           );
           return res1.json();
@@ -82,8 +82,11 @@ const Posts = () => {
 
         // Sort the validPosts array based on the createdAt property in descending order
         const sortedPosts = validPosts.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
         );
+        console.log("Sorted Posts");
+
+        console.log(sortedPosts);
 
         setPostofFriendsData(sortedPosts);
       } catch (err) {
@@ -92,7 +95,7 @@ const Posts = () => {
     };
 
     fetchPosts();
-  }, [createdAt, friends]);
+  }, [updatedAt, friends]);
 
   // Setting the socket
   useEffect(() => {

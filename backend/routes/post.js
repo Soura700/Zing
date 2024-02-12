@@ -420,12 +420,12 @@ router.get('/get_post_by_id/:postId', (req, res) => {
 });
 
 // Fetching the posts by the timestamp and the userId
-router.get("/posts_by_timestamp/:userId/:createdAt", async (req, res) => {
-  const { userId, createdAt } = req.params;
+router.get("/posts_by_timestamp/:userId/:updatedAt", async (req, res) => {
+  const { userId, updatedAt } = req.params;
   try {
     connection.query(
       "SELECT * FROM posts WHERE createdAt >= ? AND userId = ?  ORDER BY createdAt DESC",
-      [createdAt, userId],
+      [updatedAt, userId],
       (error, results) => {
         if (error) {
           res.status(500).json({ error });

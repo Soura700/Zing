@@ -16,7 +16,7 @@ const SocialLinks = new mongoose.Schema(
     twitter: {
       type: String,
     },
-    linkedIn: {
+    linkedin: {
         type: String,
       },
     pinterest: {

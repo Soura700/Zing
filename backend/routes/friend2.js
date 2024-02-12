@@ -350,6 +350,37 @@ async function deleteFriendRelationship(senderUserId, receiverUserId) {
   }
 }
 
+// Check the friend request (staus accepted or not accepted);
+router.get("/checkFriendRequestStatus/:senderId/:receiverId", async (req, res) => {
+  const { senderId, receiverId } = req.params;
+
+  try {
+    const neo4jSession = neo4jDriver.session();
+
+    // Query Neo4j to check friend request status
+    const checkStatusQuery = `
+      MATCH (:User {userId: toFloat($senderId)})-[r:FRIENDS_WITH]->(:User {userId: toFloat($receiverId)})
+      RETURN r.status AS status;
+    `;
+
+    const result = await neo4jSession.run(checkStatusQuery, { senderId: parseFloat(senderId), receiverId: parseFloat(receiverId) });
+
+    neo4jSession.close();
+
+    // Extracting friend request status from the result
+    let status = "Not Found";
+    if (result.records.length > 0) {
+      status = result.records[0].get('status');
+    }
+
+    return res.status(200).json({ success: true, status });
+  } catch (error) {
+    console.error('Error checking friend request status:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
 
 module.exports = router;

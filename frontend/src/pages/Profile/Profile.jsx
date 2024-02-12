@@ -17,7 +17,7 @@ import Posts from "../../components/Posts/Posts";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
-import img from "../../assets/CoverImg.jpg"
+import img from "../../assets/CoverImg.jpg";
 
 const Profile = () => {
   const [user, setUser] = useState([]);
@@ -30,6 +30,7 @@ const Profile = () => {
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [userPhoto, setUserPhoto] = useState(null); //Setting the userprofile image from the database
   const { userId } = useParams();
+  const parsedUserId = parseInt(userId);
   const [senderName, setSenderName] = useState(null);
   // Assuming loggedInUserId is the ID of the logged-in user
   const loggedInUserId = parseInt(id);
@@ -39,6 +40,8 @@ const Profile = () => {
   const [socket, setSocket] = useState(null); //For setting the socket connection
   const [socket2, setSocket2] = useState(null); //For setting the socket connection
   const [coverPhoto, setCoverPhoto] = useState(null);
+  const [bio, setBio] = useState(null);
+  const [status, setStatus] = useState(null);
 
   // Condition to check if the current user is viewing their own profile
   const isOwnProfile = userId == loggedInUserId;
@@ -58,7 +61,7 @@ const Profile = () => {
         });
         const userResJson = await userRes.json();
         // setUser(userResJson);
-        setCoverPhoto(userResJson[0].coverImg);
+        // setCoverPhoto(userResJson[0].coverImg);
         setSenderName(userResJson[0].username);
         // setSenderName(userResJson[0].username);
         // setUserPhoto(userResJson[0].profileImg);
@@ -82,7 +85,8 @@ const Profile = () => {
         const userResJson = await userRes.json();
         setUser(userResJson);
         setUsername(userResJson[0].username);
-        // setSenderName(userResJson[0].username);
+        setCoverPhoto(userResJson[0].coverImg);
+        setBio(userResJson[0].bio);
         setUserPhoto(userResJson[0].profileImg);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -144,7 +148,8 @@ const Profile = () => {
           return { ...userData, userId };
         });
         const result = await Promise.all(promises);
-        setFriendSuggestion(result);
+        // setFriendSuggestion(result);
+
         return result;
       } catch (error) {
         console.error("Error in suggestionOfFriends:", error);
@@ -169,12 +174,27 @@ const Profile = () => {
       }
     };
 
+    const checkStatus = async () => {
+      try {
+        // Make a GET request to fetch the profile image URL from your backend API
+        const response = await fetch(
+          `http://localhost:5000/api/friend_request/checkFriendRequestStatus/${loggedInUserId}/${parsedUserId}`
+        );
+        const status = await response.json();
+        setStatus(status.status);
+      } catch (error) {
+        console.error("Error fetching profile image:", error);
+        throw error; // Throw the error to be caught by the caller
+      }
+    };
+
     fetchOwnData();
     fetchUser();
     fetchUserFriends();
     suggestionOfFriends();
     fetchStory();
-  }, [id, checkAuthentication]);
+    checkStatus();
+  }, [id, checkAuthentication, status]);
 
   //  friendDetails with each element having a friendId property ..So removing the duplicates
   // Assuming friendDetail is the array you want to process
@@ -226,8 +246,8 @@ const Profile = () => {
   };
 
   const handleCoverImageUpdate = async (e) => {
-    const file = e.target.files[0]; 
-    const formData = new FormData(); 
+    const file = e.target.files[0];
+    const formData = new FormData();
     formData.append("userId", loggedInUserId);
     formData.append("coverPicture", file); // Append the file to FormData object
 
@@ -295,6 +315,8 @@ const Profile = () => {
         senderUsername: senderUsername, // Make sure to get the sender's ID
         receiverUsername: receiverUsername, // Make sure to get the receiver's ID
       });
+      setStatus("Not Accepted");
+
       const result = await response.json();
     } catch (error) {
       console.error("Error sending friend request:", error);
@@ -311,6 +333,87 @@ const Profile = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on(
+        "acceptFriendRequest",
+        async ({ acceptFriendRequestData, from, to, fromUserId }) => {
+          console.log("Accepted the friend Request");
+          console.log(acceptFriendRequestData);
+
+          if (fromUserId === loggedInUserId && socket) {
+            // if (
+            //   !deletedAcceptedRequests.some(
+            //     (request) =>
+            //       request.senderUserId === acceptFriendRequestData.senderUserId
+            //   )
+            // )
+            {
+              try {
+                // Fetch the profile image of the new friend
+                const response = await fetchProfileImage(
+                  acceptFriendRequestData.receiverUserId
+                );
+                const user = await response.json();
+                console.log(user);
+                console.log(user[0].profileImg);
+                const profileImg = user[0].profileImg;
+
+                // Create the new friend object with the profile image
+                const newFriend = {
+                  id: acceptFriendRequestData.receiverUserId,
+                  username: acceptFriendRequestData.receiverUsername,
+                  profileImg: profileImg,
+                };
+
+                // Update the state to include the new friend
+                setFriendDetail((prevFriendDetails) => [
+                  ...prevFriendDetails,
+                  newFriend,
+                ]);
+                setStatus("Accepted");
+              } catch (error) {
+                console.error("Error fetching profile image:", error);
+              }
+            }
+          }
+        }
+      );
+    }
+  },[socket, senderName]);
+
+  // useEffect(()=>{
+  //   const checkStatus = async ()=>{
+  //     try {
+  //       // Make a GET request to fetch the profile image URL from your backend API
+  //       const response = await fetch(`http://localhost:5000/api/friend_request/checkFriendRequestStatus/${loggedInUserId}/${parsedUserId}`);
+  //       console.log("Responseeeeeeeeee");
+  //       const status = await response.json();
+  //       console.log(status);
+  //     } catch (error) {
+  //       console.error("Error fetching profile image:", error);
+  //       throw error; // Throw the error to be caught by the caller
+  //     }
+  //   }
+  //   checkStatus();
+  // },[id,isLoggedIn,checkAuthentication])
+
+  const fetchProfileImage = async (userId) => {
+    try {
+      // Make a GET request to fetch the profile image URL from your backend API
+      const response = await fetch(`http://localhost:5000/api/auth/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response; // Return the response object
+    } catch (error) {
+      console.error("Error fetching profile image:", error);
+      throw error; // Throw the error to be caught by the caller
+    }
+  };
+
   const handleOverlayClick = (e) => {
     // Check if the click event target is the overlay itself
     if (e.target === e.currentTarget) {
@@ -318,6 +421,7 @@ const Profile = () => {
       setShowStories(false);
     }
   };
+
 
   return (
     <div className={styles.profile}>
@@ -329,11 +433,7 @@ const Profile = () => {
             className={styles.cover}
           />
         ) : (
-          <img
-            src={img}
-            alt=""
-            className={styles.cover}
-          />
+          <img src={img} alt="" className={styles.cover} />
         )}
         {userPhoto !== null && (
           <img
@@ -343,7 +443,7 @@ const Profile = () => {
             onClick={handleUserPhotoClick}
           />
         )}
-        
+
         {showStories && (
           <div className={styles.overlay} onClick={handleOverlayClick}>
             <div className={styles.storyInfo}>
@@ -429,16 +529,57 @@ const Profile = () => {
             {/* {user.map((slide, index) => ( */}
             <h1>{username}</h1>
             {/* // ))} */}
-            <p className={styles.profileBio}>dsds</p>
+            <p className={styles.profileBio}>{bio}</p>
             <div className={styles.btn}>
-              {!isOwnProfile && !isFriendWithCurrentUser && (
+              {!isOwnProfile &&
+                !isFriendWithCurrentUser &&
+                status === "Not Accepted" && (
+                  <button
+                    className={styles.btn1}
+                    onClick={() => follow(senderName, username)}
+                  >
+                    Send Already
+                  </button>
+                )}
+
+              {!isOwnProfile &&
+                !isFriendWithCurrentUser &&
+                status === "Not Found" && (
+                  <button
+                    className={styles.btn1}
+                    onClick={() => follow(senderName, username)}
+                  >
+                    Follow
+                  </button>
+                )}
+
+              {!isOwnProfile &&
+                status === "Accepted" && (
+                  <button
+                    className={styles.btn1}
+                  >
+                    Friends
+                  </button>
+                )}
+
+              {/* {!isOwnProfile &&
+              !isFriendWithCurrentUser &&
+              status === "Not Accepted" ? (
+                <button
+                  className={styles.btn1}
+                  // onClick={() => follow(senderName, username)}
+                >
+                  Send
+                </button>
+              ) : (
                 <button
                   className={styles.btn1}
                   onClick={() => follow(senderName, username)}
                 >
                   Follow
                 </button>
-              )}
+              )} */}
+
               {/* <button className={styles.btn1}>follow</button> */}
               {!isOwnProfile && (
                 <button

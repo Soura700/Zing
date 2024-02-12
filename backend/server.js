@@ -24,6 +24,7 @@ const interests_route = require("./routes/interest");
 const unread_message_route = require("./routes/unreadmessages");
 const fof = require("./routes/suggestion");
 const commentRoute = require("./routes/comment");
+const settingRoute = require("./routes/settings");
 const path = require("path");
 const bodyParser = require("body-parser");
 // const io = require("./socket");
@@ -201,10 +202,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("toggleVideo", (isVideoEnabled) => {
-    // Broadcast the video toggle message to all connected sockets
-    io.emit("videoToggled", { isVideoEnabled });
-  });
 
   socket.on("initiateCall", (data) => {
     const receiverSocket = data.receiverId;
@@ -258,6 +255,7 @@ app.use("/api/bio_profile_img", personalization);
 app.use("/api/get", unread_message_route);
 // console.log(suggestion2);
 // suggestion2;
+app.use("/api/settings",settingRoute)
 app.use("/api/comment", commentRoute); //  01/02/2024
 console.log("hello");
 

@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './settings.css';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { useAuth } from "../../Contexts/authContext";
+
+
 
 const Settings = () => {
   const [userName, setUserName] = useState('');
@@ -9,10 +15,12 @@ const Settings = () => {
   const [userId,setUserId] = useState(null);
   const [socialMediaName, setSocialMediaName] = useState('');
   const [socialMedia, setSocialMedia] = useState('');
+  const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [socialMediaList, setSocialMediaList] = useState([]);
+  const parsedID = parseInt(id);
+
   
 
-  var id;
 
   const handleAddSocialMedia = () => {
     if (socialMedia.trim() !== '') {
@@ -25,13 +33,31 @@ const Settings = () => {
     }
   };
 
-  console.log(socialMediaList);
-
   const handleDeleteSocialMedia = (index) => {
     const updatedSocialMediaList = [...socialMediaList];
     updatedSocialMediaList.splice(index, 1);
     setSocialMediaList(updatedSocialMediaList);
   };
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        await checkAuthentication();
+        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const userDetails = await userRes.json();
+        console.log("UserDetails");
+        console.log(userDetails);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchData();
+  },[id, parsedID, checkAuthentication])
 
   const handleConfirm = () => {
     fetch('http://localhost:5000/api/settings', {
@@ -42,14 +68,14 @@ const Settings = () => {
       body: JSON.stringify({
         userName:userName,
         bio:bio,
-        userId:2,
+        userId:parsedID,
         socialMediaLinks:socialMediaList
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        // Handle success or error
-        console.log(data);
+        // console.log(data);
+        toast.success("Profile Updated Successfully");
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -143,6 +169,7 @@ const Settings = () => {
           </button>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 };
