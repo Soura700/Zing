@@ -508,6 +508,7 @@ span {
     padding: 20px;
     margin-left: 70px;
     border-radius: 30px;
+    position: relative;
 }
 .info {
     height: 4rem;
@@ -573,6 +574,9 @@ span {
     top: 50px;
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
     border: 1px solid #38333d;
     border-radius: 16px;
     background: #1b1720;
@@ -645,6 +649,22 @@ span {
 .info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt1 .bottom-icon {
     margin-top: 3px;
 }
+.info .right-part .RightPopUpShow .PopUpBox .updateGrp {
+    border: 1px solid #3a3343;
+    background: transparent;
+    color: #cccccc;
+    border-radius: 20px;
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    padding: 5px 8px;
+    cursor: pointer;
+}
+.info .right-part .RightPopUpShow .PopUpBox  .updateGrp h2 {
+    font-size: 15px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
 .info .right-part .RightPopUpShow .PopUpBox .bottom .userOpt1:hover {
     border: 1px solid #3a3343;
     background: transparent;
@@ -685,10 +705,42 @@ span {
     cursor: pointer;
 }
 
+.updateGroupModalDefault {
+    position: absolute;
+    border: 0px solid red;
+
+}
+.update-group-modal{
+    border: 1px solid rgb(65, 52, 78);
+    border-radius: 30px;
+    /* box-shadow: 5px 5px 12px rgb(147, 147, 147); */
+    background: rgb(38, 33, 45);
+    position: absolute;
+    margin-left: -356px;
+    margin-top: 2px;
+    padding: 20px;
+    height: fit-content;
+    z-index: 999;
+}
+.updateGroupModalShow {
+    position: absolute;
 
 
+    border: 1px solid rgb(65, 52, 78);
+    border-radius: 30px;
+    /* box-shadow: 5px 5px 12px rgb(147, 147, 147); */
+    background: rgb(38, 33, 45);
+    position: absolute;
+    margin-left: 40%;
+    margin-top: 10%;
+    padding: 20px;
+    height: fit-content;
+} 
 
-
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+}
 
 .grp-inner-container {
     margin-top: 0px;
@@ -700,7 +752,9 @@ span {
     overflow: scroll;
 }
 
-
+.chatPic {
+   width: 100%; 
+}
 .grp-inner-container::-webkit-scrollbar {
     width: 5px;
     height: 3px;
@@ -1578,4 +1632,21 @@ span {
         box-shadow: 0px 0px 2px 2px #23202a;
         text-align: center;
     }
+
+    .update-group-modal{
+        border: 1px solid rgb(65, 52, 78);
+        border-radius: 30px;
+        /* box-shadow: 5px 5px 12px rgb(147, 147, 147); */
+        background: rgb(38, 33, 45);
+        position: absolute;
+        margin-left: -225px;
+        margin-top: 83px;
+        padding: 10px;
+        height: -moz-fit-content;
+        height: fit-content;
+        z-index: 999;
+    }
+
+
+
 }    
