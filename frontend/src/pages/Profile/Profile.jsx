@@ -148,7 +148,7 @@ const Profile = () => {
           return { ...userData, userId };
         });
         const result = await Promise.all(promises);
-        // setFriendSuggestion(result);
+        setFriendSuggestion(result);
 
         return result;
       } catch (error) {
@@ -531,16 +531,16 @@ const Profile = () => {
             {/* // ))} */}
             <p className={styles.profileBio}>{bio}</p>
             <div className={styles.btn}>
-              {!isOwnProfile &&
+              {/* {!isOwnProfile &&
                 !isFriendWithCurrentUser &&
                 status === "Not Accepted" && (
                   <button
                     className={styles.btn1}
-                    onClick={() => follow(senderName, username)}
+                    // onClick={() => follow(senderName, username)}
                   >
                     Send Already
                   </button>
-                )}
+                )} */}
 
               {!isOwnProfile &&
                 !isFriendWithCurrentUser &&

@@ -111,12 +111,8 @@ const Posts = () => {
   useEffect(() => {
     // Listen for new posts
     if (socket) {
-      console.log("Entered");
-      socket.on("newPost", ({ newPost, userId }) => {
+      socket.on("newPost", ({ newPost, userId , username, createdAt }) => {
         if (userId != parsedID) {
-          alert(newPost);
-          console.log("newPost");
-          console.log(newPost);
           setPostofFriendsData((prevPosts) => [newPost, ...prevPosts]);
         }
         // alert(newPost);
