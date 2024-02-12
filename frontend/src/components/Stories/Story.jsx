@@ -60,15 +60,46 @@ const Story = () => {
   //   };
   // }, [socket]);
 
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("new_story", (story) => {
+  //       const storyArray = [story];
+  //       setFriendStories((prevStories) => {
+  //         const newStories = [...prevStories]; // Create a copy of the previous stories array
+  //         newStories.unshift(storyArray); // Add the new story array at the beginning
+  //         return newStories;
+  //       });
+  //     });
+  //   }
+  //   return () => {
+  //     if (socket) {
+  //       socket.off("new_story");
+  //     }
+  //   };
+  // }, [socket]);
+
   useEffect(() => {
     if (socket) {
       socket.on("new_story", (story) => {
-        const storyArray = [story];
-        setFriendStories((prevStories) => {
-          const newStories = [...prevStories]; // Create a copy of the previous stories array
-          newStories.unshift(storyArray); // Add the new story array at the beginning
-          return newStories;
-        });
+        // Check if the new story belongs to an existing user
+        const existingUserIndex = friendStories.findIndex((userStories) =>
+          userStories.some((s) => s.userId === story.userId)
+        );
+  
+        if (existingUserIndex !== -1) {
+          // If the user already has stories, update their existing stories
+          setFriendStories((prevStories) => {
+            const updatedStories = [...prevStories];
+            updatedStories[existingUserIndex].unshift(story);
+            return updatedStories;
+          });
+        } else {
+          // If the user doesn't have stories yet, add a new entry for them
+          setFriendStories((prevStories) => {
+            const newStories = [...prevStories, [story]];
+            return newStories;
+          });
+        }
       });
     }
     return () => {
@@ -76,7 +107,8 @@ const Story = () => {
         socket.off("new_story");
       }
     };
-  }, [socket]);
+  }, [socket, friendStories]);
+  
 
   useEffect(() => {
     const fetchData = async () => {

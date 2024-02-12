@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 
 const { check, validationResult } = require("express-validator");
 const { QueryStatistics } = require("neo4j-driver");
+const { now } = require("mongoose");
 
 router.use(
   session({
@@ -89,6 +90,17 @@ router.post(
             if (error) {
               // res.status(500).json(error);
             } else {
+              // req.session.userId = user.id;
+              console.log(results);
+              const user = results.insertId;
+              console.log(user);
+               req.session.userId = user;
+              const userId = user.toString();
+              const customValue = `custom_${userId}`;
+              res.cookie("session_token", customValue, {
+                httpOnly: true,
+                expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+              });
               res.status(200).json(results);
             }
           }
@@ -213,10 +225,12 @@ router.post(
               expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
             });
 
+            const now = new Date();
+
             // Update current_login_time
             connection.query(
-              "UPDATE users SET ip_addresses = ? WHERE email = ?",
-              [userIP, email],
+              "UPDATE users SET ip_addresses = ? , updatedAt = ? WHERE email = ?",
+              [userIP, now ,  email],
               (error, results) => {
                 if (error) {
                   console.error("Error updating IP:", error);
@@ -287,7 +301,7 @@ router.delete("/logout", (req, res) => {
   res.clearCookie('session_token');
 
   // Redirect to the home page
-  res.redirect('/');
+  // res.redirect('/');
 });
 
 router.post("/:userId", (req, res) => {

@@ -23,14 +23,33 @@ const Saved = () => {
     fetchSavedPosts();
   }, [userId]);
 
+  // const parseImages = (images) => {
+  //   try {
+  //     if (Array.isArray(images)) {
+  //       return images;
+  //     }
+
+  //     const parsedImages = JSON.parse(images);
+
+  //     return Array.isArray(parsedImages) ? parsedImages : [parsedImages];
+  //   } catch (error) {
+  //     console.error("Error parsing images:", error);
+  //     return [];
+  //   }
+  // };
+
   const parseImages = (images) => {
     try {
+      if (!images || images.length === 0) {
+        return []; // Return an empty array if images is null or empty
+      }
+  
       if (Array.isArray(images)) {
         return images;
       }
-
+  
       const parsedImages = JSON.parse(images);
-
+  
       return Array.isArray(parsedImages) ? parsedImages : [parsedImages];
     } catch (error) {
       console.error("Error parsing images:", error);

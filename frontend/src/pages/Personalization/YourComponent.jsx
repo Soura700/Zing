@@ -80,6 +80,9 @@ const YourComponent = () => {
   // Selecting the interests and hadling the edge cases
 
   const handleConfirmClick = () => {
+
+    alert(bio);
+
     const selectedCount = selectedInterests.length;
 
     if (selectedCount >= 2) {

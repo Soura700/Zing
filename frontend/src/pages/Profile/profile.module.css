@@ -43,7 +43,7 @@
 }
 
 .withStoryBorder {
-  border: 4px solid rgb(175, 95, 255);
+  border: 4px solid rgb(175, 95, 255) !important;
   border-radius: 50%; /* To make the border circular */
 }
 

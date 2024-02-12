@@ -6,45 +6,75 @@ const connection = require("../connection");
 const Messages = require("../models/Messages");
 const Conversations = require("../models/Conversations");
 
-router.post("/create", async (req, res) => {
-    try {
-      // const { conversationId , senderId , message , receiverId = '' } = req.body;
+// router.post("/create", async (req, res) => {
+//     try {
+//       // const { conversationId , senderId , message , receiverId = '' } = req.body;
 
-      const { conversationId , senderId , message , receiverId  } = req.body;
+//       const { conversationId , senderId , message , receiverId  } = req.body;
 
-      // if(!conversationId) {
-      //     const newConversation =  new Conversations({members:senderId})
-      //     const await
-      // }->Need to check later right now ok....
+//       // if(!conversationId) {
+//       //     const newConversation =  new Conversations({members:senderId})
+//       //     const await
+//       // }->Need to check later right now ok....
 
-      if(!senderId || !message) return res.status(400).json('Please Fill all required fields');
+//       if(!senderId || !message) return res.status(400).json('Please Fill all required fields');
 
-      // if(!conversationId && receiverId){
-        if(!conversationId && receiverId){
+//       // if(!conversationId && receiverId){
+//         if(!conversationId && receiverId){
 
-        const newConversation = new Conversations({
-            members: [senderId, receiverId],
-        });
+//         const newConversation = new Conversations({
+//             members: [senderId, receiverId],
+//         });
 
-        const conversation = await newConversation.save();
+//         const conversation = await newConversation.save();
 
-        const newMessage = new Messages({ conversationId:conversation._id , senderId , receiverId ,  message });
-        const messages = await newMessage.save();
+//         const newMessage = new Messages({ conversationId:conversation._id , senderId , receiverId ,  message });
+//         const messages = await newMessage.save();
 
-        return res.status(200).send('Message Sent Successfully');
-      }
-    //   else{
-    //     return res.status(400).send('Please fill all the required fields');
-    //   }
+//         return res.status(200).send('Message Sent Successfully');
+//       }
+//     //   else{
+//     //     return res.status(400).send('Please fill all the required fields');
+//     //   }
   
-      const newMessage = new Messages({ conversationId , senderId , receiverId ,  message });
-      const messages = await newMessage.save();
-      res.status(200).json(messages);
-    } catch (error) {
+//       const newMessage = new Messages({ conversationId , senderId , receiverId ,  message });
+//       const messages = await newMessage.save();
+//       res.status(200).json(messages);
+//     } catch (error) {
+//       console.log(error);
+//       res.status(500).json(error);
+//     }
+//   });
+
+router.post("/create", async (req, res) => {
+  try {
+      const { conversationId, senderId, message, receiverId } = req.body;
+      if (!senderId || !message || !receiverId) {
+          return res.status(400).json('Please fill all required fields');
+      }
+      // Check if the receiver is blocked
+      const conversation = await Conversations.findById(conversationId);
+      if (!conversation) {
+        console.log("Entered");
+          return res.status(404).json({ error: "Conversation not found" });
+      }
+
+      if (conversation.blockedUser && conversation.blockedUser.includes(receiverId)) {
+        console.log("Entered 2 ");
+          return res.status(403).json({ error: "Receiver is blocked. Cannot send message." });
+      }
+
+      // If not blocked, proceed to send the message
+      const newMessage = new Messages({ conversationId, senderId, receiverId, message });
+      const savedMessage = await newMessage.save();
+
+      res.status(200).json(savedMessage);
+  } catch (error) {
       console.log(error);
       res.status(500).json(error);
-    }
-  });
+  }
+});
+
 
 
   // Getting the messages 

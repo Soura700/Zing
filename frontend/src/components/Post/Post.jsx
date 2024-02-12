@@ -234,7 +234,6 @@ const savePost = async () => {
       // Update the savedPosts state and set isSaved to true
       setSavedPosts([...savedPosts, { postId: post.id }]);
       setIsSaved(true);
-      alert(`UserId of the post: ${userId}`);
     } else {
       console.error("Failed to save post");
     }

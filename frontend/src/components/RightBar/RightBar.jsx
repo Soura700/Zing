@@ -146,9 +146,7 @@ const RightBar = ({ isVisible }) => {
     if (socket) {
       socket.on("friendRequest", (data) => {
         console.log("Received friend request:", data);
-
         if (data.action === "removeSuggestion") {
-          alert("Called2");
           // Update state to remove the user suggestion
           setUsersWithNames((prevUsers) => {
             return prevUsers.filter(
@@ -243,10 +241,6 @@ const RightBar = ({ isVisible }) => {
   };
 
   const handleFollow = async (senderUsername, receiverUsername) => {
-    alert("Called");
-    console.log("Called");
-    alert(senderName);
-    alert(receiverUsername);
     try {
       const response = await fetch(
         "http://localhost:5000/api/friend_request/sendFriendRequest",
@@ -285,8 +279,6 @@ const RightBar = ({ isVisible }) => {
   };
 
   const handleDismiss = (receiverUsername, id) => {
-    alert(receiverUsername);
-    alert(id);
     // Emit a socket event to inform the backend about the dismissal
     socket.emit("dismissSuggestion", {
       targetUserId: parsedId, //It is the logged user whom i am displaying the suggestions

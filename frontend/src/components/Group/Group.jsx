@@ -68,6 +68,8 @@ export const Group = () => {
   const [groupMembersLenght, setGroupMembersLenght] = useState(null);
   const [searchSuggestionResult, setSearchSuggestionResult] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const  [ socket2 , setSocket2 ] = useState(null);
+
   const [updateGroup, setUpdateGroup] = useState(false);
   var msg = "";
   //25 Sep 2023 code
@@ -172,17 +174,22 @@ export const Group = () => {
     if (socket) {
       // Listen for incoming calls
       socket.on("incomingGroupCallAlert", ({ callerId, groupid }) => {
-        alert("groupid" + groupid);
-        alert("groupId" + groupId);
         setIncomingCall(true);
-        // if(groupid == groupId )
-        // {
-        //   alert("True");
-        //   setIncomingCall(true);
-        // }
       });
     }
   }, [socket]);
+
+  useEffect(() => {
+    if (socket2) {
+      socket2.on("memberLeft", ({ groupid , memberId }) => {
+        if(groupId == groupid ){
+          toast("Entered");
+          toast(memberId + "has left the group");
+          window.location.reload();
+        }
+      });
+    }
+  }, [socket2]);
 
   // Function to toggle the Create Group modal
   const toggleCreateGroupModal = () => {
@@ -238,6 +245,7 @@ export const Group = () => {
 
   useEffect(() => {
     setSocket(io("http://localhost:5500"));
+    setSocket2(io("http://localhost:8000"))
   }, []);
 
   useEffect(() => {
@@ -294,6 +302,12 @@ export const Group = () => {
   }, [socket, parsedId, isLoggedIn]);
 
   const sendMessage = async () => {
+
+    if(!message){
+      toast.error("Can't send empty message");
+      return;
+    }
+
     const messageIndex = 0;
     setGroupMessages((prev) => [
       ...prev,
@@ -507,7 +521,6 @@ export const Group = () => {
   };
 
   const handleGroupClick = async (groupId) => {
-    alert("Hello");
     socket.emit(groupId, parsedId);
     socket.emit("join chat", groupId);
     try {
@@ -538,7 +551,6 @@ export const Group = () => {
     }
   };
 
-  console.log(groupMessages);
 
   //function for selecting only image files as media attachment in chat
 
@@ -581,7 +593,6 @@ export const Group = () => {
     }
   }
 
-  console.log(Image);
 
   async function uploadImage() {
     const messageIndex = 0;
@@ -659,10 +670,10 @@ export const Group = () => {
     window.location.href = url;
   };
 
-  const getGroupMembers = async () => {
+  const getGroupMembers = async (groupId) => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/group/get_group_members?groupId=65bfaa29eeef4bcdeb846f91",
+        `http://localhost:5000/api/group/get_group_members?groupId=${groupId}`,
         {
           params: { query: groupId }, // Pass the search query as a parameter
         }
@@ -705,6 +716,38 @@ export const Group = () => {
     // Logic to close the modal
     setUpdateGroup(false); // Assuming you have a state to control the modal visibility
   };
+
+  const leaveGroup = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/group/leave",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            memberId: parsedId,
+            groupId: groupId,
+          }),
+        }
+      );
+
+      if (res.status === 200) {
+        toast("Leaved");
+        // // Clear the input field after sending
+        // setMessage("");
+      } else {
+        toast("Error");
+        // console.error("Failed to send message to the API");
+        // Handle error appropriately, e.g., show an error message to the user
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  
 
   // Render the rest of your component based on the authentication status
   return (
@@ -820,7 +863,7 @@ export const Group = () => {
                         setGroupId(group._id);
                         // alert(group.groupName);
                         setGroupName(group.groupName);
-                        getGroupMembers();
+                        getGroupMembers(group._id);
                         getConversationId(group._id);
                         handleGroupClick(group._id);
                       }}
@@ -917,7 +960,7 @@ export const Group = () => {
                             <BlockIcon className="bottom-icon" />
                             <h2>Report</h2>
                           </div>
-                          <div className="userOpt2">
+                          <div className="userOpt2" onClick={leaveGroup}>
                             <ReportIcon className="bottom-icon" />
                             <h2>Leave</h2>
                           </div>

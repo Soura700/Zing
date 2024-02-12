@@ -118,5 +118,76 @@ router.get("/search-suggestions", async (req, res) => {
   }
 });
 
+router.post("/leave", async (req, res) => {
+  try {
+    const { groupId, memberId } = req.body;
+
+    // Find the group by ID
+    const group = await Group.findById(groupId);
+
+    // Check if the group exists
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    // Check if the member is part of the group
+    const memberIndex = group.members.indexOf(memberId);
+    if (memberIndex === -1) {
+      return res
+        .status(400)
+        .json({ message: "Member is not part of the group" });
+    }
+
+    // Remove the member from the group
+    group.members.splice(memberIndex, 1);
+
+    io.emit("memberLeft", {groupid:groupId,memberId:memberId});
+
+
+    // Save the updated group
+    const updatedGroup = await group.save();
+
+    // Emit socket event to notify the member
+    io.to(memberId).emit("groupLeft", groupId);
+
+    res.status(200).json(updatedGroup);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+router.post("/add-members", async (req, res) => {
+  try {
+    const { groupId, newMembers } = req.body;
+
+    // Find the group by ID
+    const group = await Group.findById(groupId);
+
+    // Check if the group exists
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    // Add new members to the group
+    group.members.push(...newMembers);
+
+    // Save the updated group
+    const updatedGroup = await group.save();
+
+    // Emit socket event to notify all members of the group about the new members
+    newMembers.forEach((member) => {
+      io.to(member).emit("memberAddedToGroup", { groupId, newMembers });
+    });
+
+    res.status(200).json(updatedGroup);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+
+
 
 module.exports = router;

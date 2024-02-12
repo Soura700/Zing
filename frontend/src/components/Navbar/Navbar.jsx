@@ -181,16 +181,66 @@ const Navbar = ({ toggleMenu, user }) => {
       }
     };
 
+    // const fetchUnreadMessages = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       "http://localhost:5000/api/get/get_unread_read_message/" + parsedID
+    //     );
+    //     const data = await response.json();
+    //     console.log("Data");
+    //     console.log(data);
+    //     setdeletedAcceptedRequests(data);
+    //     setMessage(data);
+    //     // Count the number of unread messages
+    //     const unreadMessages = data.filter(
+    //       (message) => message.status === "Unread"
+    //     );
+    //     setunreadMessageCount(unreadMessages.length);
+    //   } catch (error) {
+    //     console.error("Error fetching unread notification count:", error);
+    //   }
+    // };
+
     const fetchUnreadMessages = async () => {
       try {
         const response = await fetch(
           "http://localhost:5000/api/get/get_unread_read_message/" + parsedID
         );
         const data = await response.json();
-        setdeletedAcceptedRequests(data);
-        setMessage(data);
+        console.log("Data");
+        console.log(data);
+
+        // Fetch profile images for each user associated with unread messages
+        const fetchProfileImages = data.map(async (message) => {
+          try {
+
+            const userResponse = await fetch(
+              `http://localhost:5000/api/auth/${message.receiverId}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            const userData = await userResponse.json();
+            console.log("userData");
+            console.log(userData);
+            return { ...message, profileImg: userData[0].profileImg }; // Assuming profileImg is the property containing the profile image URL
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+            return message; // Return the message without the profile image
+          }
+        });
+
+        // Wait for all fetch requests to complete
+        const messagesWithProfileImages = await Promise.all(fetchProfileImages);
+
+        setdeletedAcceptedRequests(messagesWithProfileImages);
+        setMessage(messagesWithProfileImages);
+
         // Count the number of unread messages
-        const unreadMessages = data.filter(
+        const unreadMessages = messagesWithProfileImages.filter(
           (message) => message.status === "Unread"
         );
         setunreadMessageCount(unreadMessages.length);
@@ -198,6 +248,9 @@ const Navbar = ({ toggleMenu, user }) => {
         console.error("Error fetching unread notification count:", error);
       }
     };
+
+    console.log("Message");
+    console.log(message);
 
     if (id && parsedID) {
       Promise.all([
@@ -221,6 +274,8 @@ const Navbar = ({ toggleMenu, user }) => {
       newSocket.disconnect();
     };
   }, []);
+
+  // Function to fetch profile image based on user ID
 
   useEffect(() => {
     if (socket) {
@@ -253,8 +308,7 @@ const Navbar = ({ toggleMenu, user }) => {
 
       // Get Friend Request
       socket.on(
-        "acceptFriendRequest",
-        ({ acceptFriendRequestData, from, to, fromUserId }) => {
+        "acceptFriendRequest", async ({ acceptFriendRequestData, from, to, fromUserId }) => {
           console.log("Accepted the friedn Request");
           console.log(acceptFriendRequestData);
 
@@ -265,6 +319,12 @@ const Navbar = ({ toggleMenu, user }) => {
                   request.senderUserId === acceptFriendRequestData.senderUserId
               )
             ) {
+              try{
+                const response = await fetchProfileImage(acceptFriendRequestData.receiverUserId);
+                const user = await response.json();
+                console.log(user);
+                console.log(user[0].profileImg);
+                const profileImg = user[0].profileImg;
               setMessage((prevRequests) => {
                 // Check again inside the callback to ensure no race conditions
                 if (
@@ -278,6 +338,7 @@ const Navbar = ({ toggleMenu, user }) => {
                   const acceptedMessage = {
                     ...acceptFriendRequestData,
                     message: `${acceptFriendRequestData.receiverUsername} has accepted your friend request`,
+                    profileImg:profileImg
                   };
 
                   // return [...prevRequests, deleteFriendRequestData];
@@ -286,14 +347,16 @@ const Navbar = ({ toggleMenu, user }) => {
                 return prevRequests;
               });
               setunreadMessageCount((prevCount) => prevCount + 1);
+            }catch(error){
+              console.error("Error fetching profile image:", error);
             }
+          }
           }
         }
       );
 
       socket.on(
-        "deleteFriendRelationship",
-        ({ deleteFriendRequestData, from, to }) => {
+        "deleteFriendRelationship", async ({ deleteFriendRequestData, from, to }) => {
           if (from === parsedID && socket) {
             if (
               !deletedAcceptedRequests.some(
@@ -301,6 +364,9 @@ const Navbar = ({ toggleMenu, user }) => {
                   request.senderUserId === deleteFriendRequestData.senderUserId
               )
             ) {
+              try{
+                const response = await fetchProfileImage(deleteFriendRequestData.receiverUserId);
+                const profileImg = await response.json();
               // Using the callback function to avoid race conditions
               setMessage((prevRequests) => {
                 // Check again inside the callback to ensure no race conditions
@@ -323,7 +389,10 @@ const Navbar = ({ toggleMenu, user }) => {
                 return prevRequests;
               });
               setunreadMessageCount((prevCount) => prevCount + 1);
+            }catch(error){
+              console.error("Error fetching profile image:", error);
             }
+          }
           }
         }
       );
@@ -335,6 +404,25 @@ const Navbar = ({ toggleMenu, user }) => {
       }
     };
   }, [socket, senderName]);
+
+  const fetchProfileImage = async (userId) => {
+    try {
+      // Make a GET request to fetch the profile image URL from your backend API
+      const response = await fetch(`http://localhost:5000/api/auth/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Responseeeeeeeeee");
+      console.log(response);
+      return response; // Return the response object
+    } catch (error) {
+      console.error("Error fetching profile image:", error);
+      throw error; // Throw the error to be caught by the caller
+    }
+  };
+
 
   const handleInputChange = async (event) => {
     const inputValue = event.target.value;
@@ -670,6 +758,7 @@ const Navbar = ({ toggleMenu, user }) => {
                       <li className={styles.request} key={index}>
                         <div className={styles.left}>
                           <img src={userPhoto} />
+                          {/* <img src={`http://localhost:3000/profile/${userPhoto}`} /> */}
                         </div>
                         <p className={styles.middle}>
                           <a
@@ -734,7 +823,9 @@ const Navbar = ({ toggleMenu, user }) => {
                       return (
                         <li className={styles.request} key={index}>
                           <div className={styles.left}>
-                            <img src={userPhoto} />
+                            <img
+                              src={`http://localhost:5000/${user.profileImg}`}
+                            />
                           </div>
                           <p className={styles.middle}>
                             <a
@@ -764,7 +855,7 @@ const Navbar = ({ toggleMenu, user }) => {
               href={`/profile/${parsedID}`}
               className={styles.userNameLink}
             >
-              <img src={userPhoto} />
+              <img src={`http://localhost:5000/${userPhoto}`} />
               <span>{username}</span>
             </a>
           </div>

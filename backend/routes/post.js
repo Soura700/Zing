@@ -77,14 +77,61 @@ router.delete("/delete_post/:userId/:postId", (req, res) => {
 //   });
 // });
 
-router.post("/create", upload.array("images", 5), (req, res) => {
-  const { userId, description , username } = req.body;
+// router.post("/create", upload.array("images", 5), (req, res) => {
+//   const { userId, description , username } = req.body;
 
+//   const images = req.files.map((file) => file.filename);
+
+//   const checkUserQuery = "SELECT id FROM users WHERE id = ?";
+//   const insertPostQuery =
+//     "INSERT INTO posts (userId, username, description , image) VALUES (?, ? , ? , ?)";
+//     const getPostQuery =
+//     "SELECT id, createdAt FROM posts WHERE id = ?";
+
+
+//   const values = [userId, username, description, JSON.stringify(images)];
+
+//   // Check if the user exists
+//   connection.query(checkUserQuery, [userId], (err, results) => {
+//     if (err) {
+//       console.error("Error checking user existence:", err);
+//       res.status(500).json(err);
+//     } else if (results.length === 0) {
+//       res.status(400).json({ error: "User not found" });
+//     } else {
+//       // User exists, insert the post
+//       connection.query(insertPostQuery, values, (err, result) => {
+//         if (err) {
+//           console.error("Error creating post:", err);
+//           res.status(500).json(err);
+//         } else {
+
+//           const postId = result.insertId;
+
+//           const newPost = {
+//             id: result.insertId,
+//             userId,
+//             description,
+//             username,
+//             image:images
+//           };
+//           io.emit('newPost', { newPost: newPost , username:username , userId:userId }); // Emit new post to all connected clients
+//           res.status(201).json({ id: result.insertId, ...req.body , images:images });
+//         }
+//       });
+//     }
+//   });
+// });
+
+router.post("/create", upload.array("images", 5), (req, res) => {
+  const { userId, description, username } = req.body;
   const images = req.files.map((file) => file.filename);
 
   const checkUserQuery = "SELECT id FROM users WHERE id = ?";
   const insertPostQuery =
-    "INSERT INTO posts (userId, username, description , image) VALUES (?, ? , ? , ?)";
+    "INSERT INTO posts (userId, username, description, image) VALUES (?, ?, ?, ?)";
+  const getPostQuery =
+    "SELECT id, createdAt FROM posts WHERE id = ?";
 
   const values = [userId, username, description, JSON.stringify(images)];
 
@@ -102,19 +149,31 @@ router.post("/create", upload.array("images", 5), (req, res) => {
           console.error("Error creating post:", err);
           res.status(500).json(err);
         } else {
-          const newPost = {
-            id: result.insertId,
-            userId,
-            description,
-            image:images
-          };
-          io.emit('newPost', { newPost: newPost , userId:userId }); // Emit new post to all connected clients
-          res.status(201).json({ id: result.insertId, ...req.body , images:images });
+          const postId = result.insertId;
+          // Fetch the createdAt timestamp of the newly inserted post
+          connection.query(getPostQuery, [postId], (err, postResult) => {
+            if (err) {
+              console.error("Error fetching post data:", err);
+              res.status(500).json(err);
+            } else {
+              const newPost = {
+                id: postId,
+                userId,
+                description,
+                username,
+                image: images,
+                createdAt: postResult[0].createdAt // Add createdAt field
+              };
+              io.emit('newPost', { newPost: newPost, username: username, userId: userId }); // Emit new post to all connected clients
+              res.status(201).json({ id: postId, ...req.body, images: images });
+            }
+          });
         }
       });
     }
   });
 });
+
 
 // // Get All post
 
@@ -420,12 +479,12 @@ router.get('/get_post_by_id/:postId', (req, res) => {
 });
 
 // Fetching the posts by the timestamp and the userId
-router.get("/posts_by_timestamp/:userId/:createdAt", async (req, res) => {
-  const { userId, createdAt } = req.params;
+router.get("/posts_by_timestamp/:userId/:updatedAt", async (req, res) => {
+  const { userId, updatedAt } = req.params;
   try {
     connection.query(
       "SELECT * FROM posts WHERE createdAt >= ? AND userId = ?  ORDER BY createdAt DESC",
-      [createdAt, userId],
+      [updatedAt, userId],
       (error, results) => {
         if (error) {
           res.status(500).json({ error });

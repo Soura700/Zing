@@ -1,6 +1,5 @@
 /* chatui2.jsx */
 
-
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -14,10 +13,12 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MicNoneIcon from "@mui/icons-material/MicNone";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./chatui.css";
+import { ToastContainer } from "react-toastify";
 
 import { useNavigate } from "react-router-dom";
-import { Hidden } from "@mui/material";
 
 const ChatUI2 = ({
   showSidebarMenu,
@@ -33,14 +34,14 @@ const ChatUI2 = ({
   profileImg,
   showMessageBox,
   mobileZindex,
-  clickToggle
+  clickToggle,
 }) => {
-  // alert("Clicked Toggle " + clickToggle);
   const [socket, setSocket] = useState(/* Your socket instance */);
   const [incomingCall, setIncomingCall] = useState(false);
-  // const [ mobileZindex , setMobileZindex] = useState(1);
+  const [blocked, setIsBlocked] = useState(false);
   const [clicked, setClicked] = useState(true);
-  const [btntoggle, setBtntoggle] = useState(true);
+  const [blockingUserId, setblockingUserId] = useState(null);
+  const [blockList, setBlockList] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,60 +60,66 @@ const ChatUI2 = ({
   }, []);
 
   useEffect(() => {
+    const checkBlock = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:5000/api/conversation/checkBlocked",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              conversationId: messages.conversationId,
+              userIdToCheck: activeConversation.receiverId,
+            }),
+          }
+        );
+        const resJson = await res.json();
+        console.log("Result");
+        console.log(resJson);
+        console.log(resJson.blockedUsers);
+        if (resJson.blocked === true) {
+          setIsBlocked(true);
+          if (resJson.blockingUserId) {
+            setblockingUserId(resJson.blockingUserId);
+            setBlockList(resJson.blockedUsers);
+          }
+        }
+        if (res.ok) {
+        }
+        const data = await res.json();
+        console.log("success:", data);
+      } catch (error) {
+        // console.error("error", error.message);
+      }
+    };
+    checkBlock();
+  }, []);
+
+  useEffect(() => {
     if (socket) {
       // Listen for incoming calls
       socket.on("incomingCallAlert", (data) => {
-        console.log("Hellloooooooooooooooooooo" + data);
         setIncomingCall(true);
       });
     }
   }, [socket]);
 
-  // useEffect(() => {
-  //   if (clickToggle) {
-  //       setClicked(false);
-  //   }
-  //   // clickToggle=false;
-  // }, [clicked]);
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     const chatSection = document.querySelector(".main-chat-section");
-  //     // const sidebarMenu = document.querySelector(".showFullMenu");
-  //     if (
-  //       chatSection &&
-  //       !chatSection.contains(event.target)
-        
-  //       // && !sidebarMenu.contains(event.target)
-  //     ) {
-  //       // Clicked outside of the chat section and sidebar menu, close it
-  //       setClicked(false);
-  //     }
-  //   };
-
-  //   document.addEventListener("click", handleClickOutside);
-
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside);
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     const chatSection = document.querySelector(".main-chat-section");
-  //     if (chatSection && !chatSection.contains(event.target)) {
-  //       // Clicked outside of the chat section, close it
-  //       setClicked(false);
-  //     }
-  //   };
-
-  //   document.addEventListener("click", handleClickOutside);
-
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside);
-  //   };
-  // }, []);
-
+  const handleSendMessage = () => {
+    // If the receiver is blocked, show a toast message and return
+    if (blocked) {
+      if (blockingUserId == parsedId) {
+        toast.error("Please unblock the user to chat");
+        return;
+      } else {
+        // toast.error("You are blocked");
+        return;
+      }
+    }
+    // Otherwise, proceed with sending the message
+    sendMessage();
+  };
 
   const handleMessageButtonClick = () => {
     socket.emit("initiateCall", {
@@ -129,52 +136,71 @@ const ChatUI2 = ({
       state: { userId: messages.receiver.receiverId, clicked: true },
     });
   };
-  // useEffect(()=>{
-  //   if(clicked){
-  //     menuZIndex();
-  //   } 
-  // },[clicked])
-  // const menuZIndex = () => {
-  //   // Update z-index when showSidebarMenu is clicked
-  //   alert("Clicked");
-  //   setClicked(!clicked);
-  //   // Other logic for showing the sidebar menu
-  // };
-  // const customStyle = clicked ? { zIndex: 0 }: { zIndex: mobileZindex };
 
-  // const handleArrowButtonClick = () => {
-  //   alert("CLICKED");
-  //   // const customStyle = { visibility: clicked ? "hidden" : "visible" }
-  //   // showSidebarMenu(); // Call the function to handle sidebar menu visibility
-  //   setClicked(true); // Set clicked to false to show the main-chat-section
-  // };
+  const handleArrowButtonClick = () => {
+    setClicked((prevClicked) => {
+      if (prevClicked) {
+        navigate("/message");
+        window.location.reload();
+      }
+      return !prevClicked;
+    });
+  };
 
-//   const handleArrowButtonClick = () => {
-//   setClicked((clicked) => {
-//     alert("Previous clicked state:" + clicked);
-//     return !clicked; 
-//   });
-// };
+  const customStyle = { zIndex: !clicked ? 0 : mobileZindex };
 
-const handleArrowButtonClick = () => {
-  setClicked((prevClicked) => {
-    // Toggle the previous state
-    if (prevClicked) {
-      // If the user is going back to the /message page, trigger a reload
-      navigate("/message");
-      window.location.reload();
+  const handleBlock = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/conversation/block", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          conversationId: messages.conversationId,
+          userIdToBlock: activeConversation.receiverId,
+          blockingUserId: parsedId,
+        }),
+      });
+      if (res.ok) {
+        window.location.reload();
+        throw new Error("error");
+      }
+      const data = await res.json();
+      console.log("success:", data);
+    } catch (error) {
+      // console.error("error", error.message);
     }
-    return !prevClicked;
-  });
-};
-  // const customStyle = {   zIndex: mobileZindex , visibility: clicked ? "hidden" : "visible" }
+  };
 
-  // alert(mobileZindex);
+  const handleUnblock = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/conversation/unblock",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            conversationId: messages.conversationId,
+            userIdToUnblock: activeConversation.receiverId,
+            blockingUserId: parsedId,
+          }),
+        }
+      );
+      if (res.ok) {
+        window.location.reload();
+        setIsBlocked(false);
+        throw new Error("error");
+      }
+      const data = await res.json();
+      console.log("success:", data);
+    } catch (error) {
+      // console.error("error", error.message);
+    }
+  };
 
-  const customStyle = { zIndex: !clicked ? 0 : mobileZindex}
-
-
-  // alert("sidebar = "+ showSidebarMenu);
   return (
     <div className="main-chat-section" style={customStyle}>
       <div className="info">
@@ -189,11 +215,15 @@ const handleArrowButtonClick = () => {
             {activeConversation && (
               <div className="user-info">
                 <h1>{activeConversation.username}</h1>
-                <p>
-                  {isUserOnline(activeConversation.receiverId)
-                    ? "Online"
-                    : "Offline"}
-                </p>
+                {!blockList.includes(
+                  activeConversation.receiverId
+                ) && (
+                  <p>
+                    {isUserOnline(activeConversation.receiverId)
+                      ? "Online"
+                      : "Offline"}
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -215,40 +245,27 @@ const handleArrowButtonClick = () => {
                   <img src={`http://localhost:5000/${profileImg}`} alt=""></img>
                   <h1>{activeConversation.username}</h1>
                 </div>
-                {/* <div className="mid2">
-                          <div className="userOpt">
-                            <CollectionsIcon className="right-part-icon" />
-                            <h2>Media</h2>
-                          </div>
-                        </div> */}
-                {/* <div className="mid3">
-                          <div className="userOpt">
-                            <VolumeOffIcon className="right-part-icon" />
-                            <h2>Mute Chat</h2>
-                          </div>
-                        </div> */}
-                {/* <div className="mid4">
-                          <div className="userOpt">
-                            <ArrowBackIosIcon className="right-part-icon" />
-                            <h2>Close Chat</h2>
-                          </div>
-                        </div> */}
-                {/* <div className="mid5">
-                          <div className="userOpt">
-                            <LockIcon className="right-part-icon" />
-                            <h2>Chat Lock</h2>
-                          </div>
-                        </div> */}
-                <div className="bottom">
+                {blocked === true && blockingUserId === parsedId ? (
+                  <div className="bottom" onClick={handleUnblock}>
+                    <div className="userOpt1">
+                      <BlockIcon className="bottom-icon" />
+                      <h2>Unblock</h2>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bottom" onClick={handleBlock}>
+                    <div className="userOpt1">
+                      <BlockIcon className="bottom-icon" />
+                      <h2>Block</h2>
+                    </div>
+                  </div>
+                )}
+                {/* <div className="bottom" onClick={handleBlock}>
                   <div className="userOpt1">
                     <BlockIcon className="bottom-icon" />
                     <h2>Block</h2>
                   </div>
-                  {/* <div className="userOpt2">
-                    <ReportIcon className="bottom-icon" />
-                    <h2>Leave</h2>
-                  </div> */}
-                </div>
+                </div> */}
               </div>
             </div>
           ) : (
@@ -297,14 +314,26 @@ const handleArrowButtonClick = () => {
           <MicNoneIcon className="chat-btn" /> */}
         </div>
         <div className="submit-btn-class">
-          <button onClick={() => sendMessage()}>
+          {/* <button onClick={() => sendMessage()}> */}
+          <button onClick={() => handleSendMessage()}>
             <ArrowUpwardRoundedIcon className="submit-btn" />
           </button>
-          {incomingCall &&
-            (alert("accept button below"),
-            (<button onClick={handleAcceptButtonClick}>Accept</button>))}
+          {incomingCall && (
+            <button onClick={handleAcceptButtonClick}>Accept</button>
+          )}
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };
