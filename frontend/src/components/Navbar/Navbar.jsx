@@ -54,7 +54,7 @@ const Navbar = ({ toggleMenu, user }) => {
   const [suggestions, setSuggestions] = useState([]); // State to store search suggestions
   const searchRef = useRef(null);
   //popup for search modal
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -146,7 +146,6 @@ const Navbar = ({ toggleMenu, user }) => {
 
     const fetchFriendRequests = async () => {
       try {
-        console.log(parsedID);
         const res = await fetch(
           "http://localhost:5000/api/friend_request/get_friend_requests",
           {
@@ -160,11 +159,21 @@ const Navbar = ({ toggleMenu, user }) => {
           }
         );
         const data = await res.json();
-        setFriendRequests(data);
+        const requestsWithProfileImages = await Promise.all(
+          data.map(async (request) => {
+            const profile = await fetchProfileImage(request.senderUserId);
+            const profileImg = await profile.json();
+            return { ...request, profileImg: profileImg[0].profileImg };
+          })
+        );
+
+        // setFriendRequests(data);
+        setFriendRequests(requestsWithProfileImages);
       } catch (error) {
         console.error("Error fetching friend requests:", error);
       }
     };
+
 
     const fetchUnreadNotificationCount = async () => {
       try {
@@ -207,13 +216,10 @@ const Navbar = ({ toggleMenu, user }) => {
           "http://localhost:5000/api/get/get_unread_read_message/" + parsedID
         );
         const data = await response.json();
-        console.log("Data");
-        console.log(data);
 
         // Fetch profile images for each user associated with unread messages
         const fetchProfileImages = data.map(async (message) => {
           try {
-
             const userResponse = await fetch(
               `http://localhost:5000/api/auth/${message.receiverId}`,
               {
@@ -224,8 +230,6 @@ const Navbar = ({ toggleMenu, user }) => {
               }
             );
             const userData = await userResponse.json();
-            console.log("userData");
-            console.log(userData);
             return { ...message, profileImg: userData[0].profileImg }; // Assuming profileImg is the property containing the profile image URL
           } catch (error) {
             console.error("Error fetching user data:", error);
@@ -249,8 +253,7 @@ const Navbar = ({ toggleMenu, user }) => {
       }
     };
 
-    console.log("Message");
-    console.log(message);
+
 
     if (id && parsedID) {
       Promise.all([
@@ -279,7 +282,7 @@ const Navbar = ({ toggleMenu, user }) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("friendRequest", ({ friendRequestData, from, to }) => {
+      socket.on("friendRequest", async ({ friendRequestData, from, to }) => {
         if (to === parsedID) {
           // Check if the friend request is not already in the state
           if (
@@ -288,6 +291,9 @@ const Navbar = ({ toggleMenu, user }) => {
                 request.senderUserId === friendRequestData.senderUserId
             )
           ) {
+            const profile = await fetchProfileImage(friendRequestData.senderUserId);
+            const user = await profile.json();
+            friendRequestData.profileImg = user[0].profileImg;
             // Using the callback function to avoid race conditions
             setFriendRequests((prevRequests) => {
               // Check again inside the callback to ensure no race conditions
@@ -308,9 +314,8 @@ const Navbar = ({ toggleMenu, user }) => {
 
       // Get Friend Request
       socket.on(
-        "acceptFriendRequest", async ({ acceptFriendRequestData, from, to, fromUserId }) => {
-          console.log("Accepted the friedn Request");
-          console.log(acceptFriendRequestData);
+        "acceptFriendRequest",
+        async ({ acceptFriendRequestData, from, to, fromUserId }) => {
 
           if (fromUserId === parsedID && socket) {
             if (
@@ -319,44 +324,45 @@ const Navbar = ({ toggleMenu, user }) => {
                   request.senderUserId === acceptFriendRequestData.senderUserId
               )
             ) {
-              try{
-                const response = await fetchProfileImage(acceptFriendRequestData.receiverUserId);
+              try {
+                const response = await fetchProfileImage(
+                  acceptFriendRequestData.receiverUserId
+                );
                 const user = await response.json();
-                console.log(user);
-                console.log(user[0].profileImg);
                 const profileImg = user[0].profileImg;
-              setMessage((prevRequests) => {
-                // Check again inside the callback to ensure no race conditions
-                if (
-                  !prevRequests.some(
-                    (request) =>
-                      request.senderUserId ===
-                      acceptFriendRequestData.senderUserId
-                  )
-                ) {
-                  // Modify the message to include the declined information
-                  const acceptedMessage = {
-                    ...acceptFriendRequestData,
-                    message: `${acceptFriendRequestData.receiverUsername} has accepted your friend request`,
-                    profileImg:profileImg
-                  };
+                setMessage((prevRequests) => {
+                  // Check again inside the callback to ensure no race conditions
+                  if (
+                    !prevRequests.some(
+                      (request) =>
+                        request.senderUserId ===
+                        acceptFriendRequestData.senderUserId
+                    )
+                  ) {
+                    // Modify the message to include the declined information
+                    const acceptedMessage = {
+                      ...acceptFriendRequestData,
+                      message: `${acceptFriendRequestData.receiverUsername} has accepted your friend request`,
+                      profileImg: profileImg,
+                    };
 
-                  // return [...prevRequests, deleteFriendRequestData];
-                  return [...prevRequests, acceptedMessage];
-                }
-                return prevRequests;
-              });
-              setunreadMessageCount((prevCount) => prevCount + 1);
-            }catch(error){
-              console.error("Error fetching profile image:", error);
+                    // return [...prevRequests, deleteFriendRequestData];
+                    return [...prevRequests, acceptedMessage];
+                  }
+                  return prevRequests;
+                });
+                setunreadMessageCount((prevCount) => prevCount + 1);
+              } catch (error) {
+                console.error("Error fetching profile image:", error);
+              }
             }
-          }
           }
         }
       );
 
       socket.on(
-        "deleteFriendRelationship", async ({ deleteFriendRequestData, from, to }) => {
+        "deleteFriendRelationship",
+        async ({ deleteFriendRequestData, from, to }) => {
           if (from === parsedID && socket) {
             if (
               !deletedAcceptedRequests.some(
@@ -364,35 +370,38 @@ const Navbar = ({ toggleMenu, user }) => {
                   request.senderUserId === deleteFriendRequestData.senderUserId
               )
             ) {
-              try{
-                const response = await fetchProfileImage(deleteFriendRequestData.receiverUserId);
-                const profileImg = await response.json();
-              // Using the callback function to avoid race conditions
-              setMessage((prevRequests) => {
-                // Check again inside the callback to ensure no race conditions
-                if (
-                  !prevRequests.some(
-                    (request) =>
-                      request.senderUserId ===
-                      deleteFriendRequestData.senderUserId
-                  )
-                ) {
-                  // Modify the message to include the declined information
-                  const declinedMessage = {
-                    ...deleteFriendRequestData,
-                    message: `${deleteFriendRequestData.receiverUsername} has declined your friend request`,
-                  };
+              try {
+                const response = await fetchProfileImage(
+                  deleteFriendRequestData.receiverUserId
+                );
+                const user = await response.json();
+                const profileImg = user[0].profileImg;                // Using the callback function to avoid race conditions
+                setMessage((prevRequests) => {
+                  // Check again inside the callback to ensure no race conditions
+                  if (
+                    !prevRequests.some(
+                      (request) =>
+                        request.senderUserId ===
+                        deleteFriendRequestData.senderUserId
+                    )
+                  ) {
+                    // Modify the message to include the declined information
+                    const declinedMessage = {
+                      ...deleteFriendRequestData,
+                      message: `${deleteFriendRequestData.receiverUsername} has declined your friend request`,
+                      profileImg: profileImg,
+                    };
 
-                  // return [...prevRequests, deleteFriendRequestData];
-                  return [...prevRequests, declinedMessage];
-                }
-                return prevRequests;
-              });
-              setunreadMessageCount((prevCount) => prevCount + 1);
-            }catch(error){
-              console.error("Error fetching profile image:", error);
+                    // return [...prevRequests, deleteFriendRequestData];
+                    return [...prevRequests, declinedMessage];
+                  }
+                  return prevRequests;
+                });
+                setunreadMessageCount((prevCount) => prevCount + 1);
+              } catch (error) {
+                console.error("Error fetching profile image:", error);
+              }
             }
-          }
           }
         }
       );
@@ -414,15 +423,12 @@ const Navbar = ({ toggleMenu, user }) => {
           "Content-Type": "application/json",
         },
       });
-      console.log("Responseeeeeeeeee");
-      console.log(response);
       return response; // Return the response object
     } catch (error) {
       console.error("Error fetching profile image:", error);
       throw error; // Throw the error to be caught by the caller
     }
   };
-
 
   const handleInputChange = async (event) => {
     const inputValue = event.target.value;
@@ -644,8 +650,6 @@ const Navbar = ({ toggleMenu, user }) => {
     setShowRightBar(!showRightBar);
   };
 
-  console.log("Suggestions");
-  console.log(suggestions);
 
   // const styles = {
   //   backgroundColor: theme === "light" ? "#ffffff" : "#000000",
@@ -749,7 +753,6 @@ const Navbar = ({ toggleMenu, user }) => {
               <div className={styles.popup_menu}>
                 <ul className={styles.requests}>
                   {friendRequests.map((user, index) => {
-                    console.log(user);
                     const username =
                       user.userDetails && user.userDetails.length > 0
                         ? user.userDetails[0].username
@@ -757,8 +760,8 @@ const Navbar = ({ toggleMenu, user }) => {
                     return (
                       <li className={styles.request} key={index}>
                         <div className={styles.left}>
-                          <img src={userPhoto} />
-                          {/* <img src={`http://localhost:3000/profile/${userPhoto}`} /> */}
+                          {/* <img src={userPhoto} /> */}
+                          <img src={`http://localhost:5000/${user.profileImg}`} />
                         </div>
                         <p className={styles.middle}>
                           <a
@@ -814,8 +817,6 @@ const Navbar = ({ toggleMenu, user }) => {
                 <div className={styles.notifcontainer}>
                   <ul className={styles.requests}>
                     {message.map((user, index) => {
-                      console.log("Message User");
-                      console.log(user);
                       const username =
                         user.userDetails && user.userDetails.length > 0
                           ? user.userDetails[0].username
