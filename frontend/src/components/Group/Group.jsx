@@ -22,6 +22,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import GroupsIcon from "@mui/icons-material/Groups";
 import GroupAddRoundedIcon from "@mui/icons-material/GroupAddRounded";
 import ArrowUpwardRoundedIcon from "@mui/icons-material/ArrowUpwardRounded";
+import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
 import { useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "../../Contexts/authContext";
@@ -67,9 +68,9 @@ export const Group = () => {
   const [groupMembersLenght, setGroupMembersLenght] = useState(null);
   const [searchSuggestionResult, setSearchSuggestionResult] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [socket2, setSocket2] = useState(null);
+  const  [ socket2 , setSocket2 ] = useState(null);
 
-  
+  const [updateGroup, setUpdateGroup] = useState(false);
   var msg = "";
   //25 Sep 2023 code
   const [Image, setImage] = useState("");
@@ -78,6 +79,10 @@ export const Group = () => {
   const navigate = useNavigate();
   const additionalDivRef = useRef(null);
   /* code for search popup modal */
+
+  const toggleUpdateGroupModal = () => {
+    setUpdateGroup(!updateGroup);
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -739,6 +744,11 @@ export const Group = () => {
     } catch (error) {
       console.error("Error fetching search suggestions:", error);
     }
+  };  
+
+  const handleCloseModal = () => {
+    // Logic to close the modal
+    setUpdateGroup(false); // Assuming you have a state to control the modal visibility
   };
 
   const leaveGroup = async () => {
@@ -767,6 +777,8 @@ export const Group = () => {
       console.error("Error sending message:", error);
     }
   };
+
+  
 
   // Render the rest of your component based on the authentication status
   return (
@@ -984,12 +996,112 @@ export const Group = () => {
                             <h2>Leave</h2>
                           </div>
                         </div>
+                        <div
+                          className="updateGrp"
+                          onClick={toggleUpdateGroupModal}
+                        >
+                          <ManageAccountsRoundedIcon className="bottom-icon" />
+                          <h2>Update Group </h2>
+                        </div>
                       </div>
                     </div>
                   ) : (
                     <div className="RightPopUpDefault"></div>
                   )}
                 </div>
+                {updateGroup ? (
+                  <div className="updateGroupModalShow">
+                    <div className="update-group-modal">
+                      <div className="modal-content">
+                        <div className="modal-header">
+                          <h2>Update Group</h2>
+                          <CloseIcon
+                            fontSize="small"
+                            className="close-icon"
+                            onClick={handleCloseModal} 
+                          />
+                        </div>
+                        <div className="add-members">
+                          <h3>Add members</h3>
+                          <div className="add-members-input">
+                            <input
+                              type="text"
+                              name="search-bar"
+                              value={searchValue}
+                              onChange={(e) => setSearchValue(e.target.value)}
+                              placeholder="Search"
+                              className="add-members-input"
+                            />
+                            {/* <div className="search-btn">
+                <SearchIcon
+                  className="search-icon"
+                  onClick={handleSearchIconClick}
+                />
+              </div> */}
+                            <div className="search-btn">
+                              <SearchIcon
+                                className="search-icon"
+                                onClick={handleSearchIconClick}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="membersLabel">
+                          {selectedUserNames.length > 0 ? (
+                            <div className="addMembersLabel">
+                              {/* Display the selected user names here */}
+                              {selectedUserNames.map((name, index) => (
+                                <>
+                                  <p key={index} className="membersLabelName">
+                                    {name}
+                                  </p>
+                                  <CloseIcon
+                                    fontSize="10px"
+                                    className="membersLabelCloseIcon"
+                                    onClick={() => handleDelete(name)}
+                                  />
+                                </>
+                              ))}
+                              {/* <CloseIcon
+                    fontSize="10px"
+                    className="membersLabel"
+                    onClick={ () =>handleDelete(id)}
+                  /> */}
+                            </div>
+                          ) : null}
+                        </div>
+
+                        <div className="user-list">
+                          {searchResult.map((user) => (
+                            <div className="userListContainer">
+                              <div className="userLists" key={user.id}>
+                                <p>{user.username}</p>
+                                <div className="userListIconContainer">
+                                  <DoneIcon
+                                    className="userListIconTick"
+                                    onClick={() => addUserToGroup(user)}
+                                  />
+                                  <CloseIcon
+                                    className="userListIconCross"
+                                    onClick={""}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <button
+                          className="createGrpChatBtn"
+                          
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="updateGroupModalDefault"></div>
+                )}
 
                 {additionalDivOpen && (
                   <div
@@ -1071,7 +1183,11 @@ export const Group = () => {
                         }
                         key={index}
                       >
-                        <img src={message} alt="Sent Image" />
+                        <img
+                          src={message}
+                          alt="Sent Image"
+                          className="chatPic"
+                        />
                       </div>
                     );
                   } else {

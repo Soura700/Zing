@@ -41,7 +41,7 @@
   border: 1px solid rgb(222, 222, 222);
   padding: 5px;
   border-radius: 20px;
-  margin-left: 15rem;
+  margin-left: 12rem;
 }
 
 .search .icon {
@@ -78,6 +78,7 @@ input {
   gap: 20px;
   align-items: center;
   margin-right: 15px;
+  position: relative;
 }
 
 .right_navbar .icon {
@@ -101,14 +102,14 @@ input {
   padding: 2px 6px;
   border-radius: 50%;
   position: absolute;
-  top: 12px;
-  left: 69px;
+  top: 5px;/* Adjust the position relative to the icon */
+  right: -6px; 
   font-size: 10px;
   cursor: pointer;
 }
 
 .right_navbar .messagesBadgeIcon {
-  position: relative;
+  /* position: relative; */
   color: #65558e;
   font-size: 25px;
   cursor: pointer;
@@ -120,14 +121,14 @@ input {
   padding: 2px 6px;
   border-radius: 50%;
   position: absolute;
-  top: 12px;
-  left: 108px;
+  top: 5px;
+  left: 109px; 
   font-size: 10px;
   cursor: pointer;
 }
 
 .right_navbar .notifBadgeIcon {
-  position: relative;
+  /* position: relative; */
   color: #65558e;
   font-size: 25px;
   cursor: pointer;
@@ -139,8 +140,8 @@ input {
   padding: 2px 6px;
   border-radius: 50%;
   position: absolute;
-  top: 12px;
-  right: 65px;
+  top: 5px;
+  right: 5px;
   font-size: 10px;
   cursor: pointer;
 }
@@ -150,6 +151,7 @@ input {
   align-items: center;
   gap: 10px;
   font-weight: 500;
+  
 
   img {
     width: 30px;
@@ -163,12 +165,16 @@ input {
     color: #4e4e4e;
     font-size: 10px;
     margin-bottom: 5px;
+    display: flex;
+    flex-wrap: wrap;
   }
 }
 
 .user a {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .menuIcon {
@@ -470,7 +476,7 @@ if upto 7 adds a vertical scrollbar */
   }
   .bottomNavbar {
     display: block;
-    width: 115%;
+    width: 117%;
     box-shadow: 2px 2px 12px rgba(212, 212, 212, 0.551);
     display: flex;
     justify-content: space-around;
@@ -504,7 +510,7 @@ if upto 7 adds a vertical scrollbar */
     z-index: 1;
     height: 3rem;
     top: 44px;
-    left: -86px;
+    left: -115px;
     position: absolute;
     /* box-shadow: 1px 1px 12px 1px black; */
     padding-left: 2rem;
@@ -592,6 +598,7 @@ if upto 7 adds a vertical scrollbar */
     gap: 14px;
     align-items: center;
     margin-right: 10px;
+    /* position: relative; */
   }
   
   .right_navbar .icon {
@@ -634,8 +641,8 @@ if upto 7 adds a vertical scrollbar */
     padding: 2px 6px;
     border-radius: 50%;
     position: absolute;
-    top: 6px;
-    left: 97px;
+    top: 5px;
+    left: 94px; 
     font-size: 10px;
     cursor: pointer;
   }
@@ -653,8 +660,8 @@ if upto 7 adds a vertical scrollbar */
     padding: 2px 6px;
     border-radius: 50%;
     position: absolute;
-    top: 6px;
-    right: 56px;
+    top: 5px;
+    right: 5px;
     font-size: 10px;
     cursor: pointer;
   }
