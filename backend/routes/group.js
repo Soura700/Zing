@@ -17,9 +17,8 @@ router.post("/create", async (req, res) => {
     });
     const group = await newGroup.save();
     members.forEach((member) => {
-      io.to(member).emit("showCreatedGroup", group);
+      io.emit("showCreatedGroup", {group:newGroup , member:member});
     });
-    io.emit("showCreatedGroup");
     res.status(200).json(group);
   } catch (error) {
     console.log(error);
@@ -148,7 +147,7 @@ router.post("/leave", async (req, res) => {
     const updatedGroup = await group.save();
 
     // Emit socket event to notify the member
-    io.to(memberId).emit("groupLeft", groupId);
+    // io.emit("groupLeft", {groupId:groupId, userID:memberId});
 
     res.status(200).json(updatedGroup);
   } catch (error) {

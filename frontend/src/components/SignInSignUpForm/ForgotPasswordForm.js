@@ -21,48 +21,20 @@ const ForgotPasswordForm = () => {
         { email }
       );
 
+      alert(response.status);
+
       if (response.status === 200) {
         toast.success("Email has been sent successfully");
         setEmailSent(true);
       }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
+      if (error.response && error.response.status === 400) {
         toast.error("Wrong Credentials");
         setInvalidEmail(true);
       }
     }
   };
 
-  // Use these styles in the component:
-
-  // const styles = {
-  //   container: {
-  //     maxWidth: '400px',
-  //     margin: 'auto',
-  //     padding: '20px',
-  //     border: '1px solid #ccc',
-  //     borderRadius: '5px',
-  //   },
-  //   input: {
-  //     width: '100%',
-  //     padding: '10px',
-  //     marginBottom: '10px',
-  //     boxSizing: 'border-box',
-  //   },
-  //   button: {
-  //     width: '100%',
-  //     padding: '10px',
-  //     backgroundColor: '#4CAF50',
-  //     color: 'white',
-  //     border: 'none',
-  //     borderRadius: '5px',
-  //     cursor: 'pointer',
-  //   },
-  //   error: {
-  //     color: 'red',
-  //     marginBottom: '10px',
-  //   },
-  // };
 
   return (
     <div className="pwcontainer">

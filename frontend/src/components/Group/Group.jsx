@@ -67,8 +67,9 @@ export const Group = () => {
   const [groupMembersLenght, setGroupMembersLenght] = useState(null);
   const [searchSuggestionResult, setSearchSuggestionResult] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const  [ socket2 , setSocket2 ] = useState(null);
+  const [socket2, setSocket2] = useState(null);
 
+  
   var msg = "";
   //25 Sep 2023 code
   const [Image, setImage] = useState("");
@@ -165,6 +166,11 @@ export const Group = () => {
   }, []);
 
   useEffect(() => {
+    setSocket(io("http://localhost:5500"));
+    setSocket2(io("http://localhost:8000"));
+  }, []);
+
+  useEffect(() => {
     if (socket) {
       // Listen for incoming calls
       socket.on("incomingGroupCallAlert", ({ callerId, groupid }) => {
@@ -172,18 +178,6 @@ export const Group = () => {
       });
     }
   }, [socket]);
-
-  useEffect(() => {
-    if (socket2) {
-      socket2.on("memberLeft", ({ groupid , memberId }) => {
-        if(groupId == groupid ){
-          toast("Entered");
-          toast(memberId + "has left the group");
-          window.location.reload();
-        }
-      });
-    }
-  }, [socket2]);
 
   // Function to toggle the Create Group modal
   const toggleCreateGroupModal = () => {
@@ -238,11 +232,6 @@ export const Group = () => {
   };
 
   useEffect(() => {
-    setSocket(io("http://localhost:5500"));
-    setSocket2(io("http://localhost:8000"))
-  }, []);
-
-  useEffect(() => {
     checkAuthentication().then(() => {
       setIsLoading(false); // Mark loading as complete when authentication data is available
     });
@@ -295,9 +284,57 @@ export const Group = () => {
     }
   }, [socket, parsedId, isLoggedIn]);
 
-  const sendMessage = async () => {
+  // useEffect(() => {
+  //   if (socket2) {
+  //     socket2.on("showCreatedGroup", ({ group, member }) => {
+  //       if (parsedId !== member && !groups.some(g => g.groupName === group.groupName)) {
+  //         setGroups((prevGroups) => [...prevGroups, group]);
+  //       }
+  //       // setGroups((prevGroups) => [...prevGroups, group]);
+  //     });
 
-    if(!message){
+  //     socket2.on("memberLeft", ({ groupid, memberId }) => {
+  //       if (groupId == groupid) {
+  //         toast("Entered");
+  //         toast(memberId + "has left the group");
+  //         window.location.reload();
+  //       }
+  //     });
+  //   }
+  // }, [socket2, groups , parsedId]);
+
+  useEffect(() => {
+    if (socket2) {
+      const handler = (data) => {
+        if (
+          parsedId !== data.member &&
+          !groups.some((group) => group.groupName === data.group.groupName)
+        ) {
+          setGroups((prevGroups) => [...prevGroups, data.group]);
+        }
+      };
+
+      socket2.on("showCreatedGroup", handler);
+
+      socket2.on("memberLeft", ({ groupid, memberId }) => {
+        alert("Group" + groupId);
+        alert("Group2" + groupid);
+        if (groupId === groupid) {
+          alert("Called");
+          toast(memberId + "has left the group");
+          window.location.reload();
+        }
+      });
+
+      // Clean up the event listener when the component unmounts or when the group has been added
+      return () => {
+        socket2.off("showCreatedGroup", handler);
+      };
+    }
+  }, [socket2, groups, parsedId]);
+
+  const sendMessage = async () => {
+    if (!message) {
       toast.error("Can't send empty message");
       return;
     }
@@ -545,7 +582,6 @@ export const Group = () => {
     }
   };
 
-
   //function for selecting only image files as media attachment in chat
 
   function chooseImage() {
@@ -586,7 +622,6 @@ export const Group = () => {
       }
     }
   }
-
 
   async function uploadImage() {
     const messageIndex = 0;
@@ -708,19 +743,16 @@ export const Group = () => {
 
   const leaveGroup = async () => {
     try {
-      const res = await fetch(
-        "http://localhost:5000/api/group/leave",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            memberId: parsedId,
-            groupId: groupId,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:5000/api/group/leave", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          memberId: parsedId,
+          groupId: groupId,
+        }),
+      });
 
       if (res.status === 200) {
         toast("Leaved");

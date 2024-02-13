@@ -55,7 +55,23 @@ const CommentSection = ({ postId, userId, userName }) => {
           `http://localhost:5000/api/comment/get_comments/${postId}`
         );
         const data = await res.json();
-        setComments(data);
+
+        // Fetch profile image for each user who has commented
+        const commentsWithProfileImages = await Promise.all(
+          data.map(async (comment) => {
+            const profileImageResponse = await fetchProfileImage(
+              comment.userId
+            );
+            const profile = await profileImageResponse.json();
+            comment.profileImg = profile[0].profileImg; // Assuming profileImg is the field containing the image URL
+            return comment;
+          })
+        );
+
+        console.log("commentsWithProfileImages")
+        console.log(commentsWithProfileImages);
+
+        setComments(commentsWithProfileImages);
       } catch (err) {
         console.error(err);
       }
@@ -65,12 +81,13 @@ const CommentSection = ({ postId, userId, userName }) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("comment", ({ comment, postid, userid }) => {
-        if (userid !== userId) {
+      socket.on("comment", async ({ comment, postid, userid }) => {
           if (postid === postId) {
+            const user = await fetchProfileImage(userid);
+            const profile = await user.json();
+            comment.profileImg = profile[0].profileImg; // Adding profile image to the comment object
             setComments((prevComments) => [...prevComments, comment]);
           }
-        }
       });
 
       socket.on("deleteComment", ({ comment, commentId }) => {
@@ -85,6 +102,24 @@ const CommentSection = ({ postId, userId, userName }) => {
     }
   }, [socket, postId]);
 
+  const fetchProfileImage = async (userId) => {
+    try {
+      // Make a GET request to fetch the profile image URL from your backend API
+      const response = await fetch(`http://localhost:5000/api/auth/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Responseeeeeeeeee");
+      console.log(response);
+      return response; // Return the response object
+    } catch (error) {
+      console.error("Error fetching profile image:", error);
+      throw error; // Throw the error to be caught by the caller
+    }
+  };
+
   const handleComment = async () => {
     try {
       const response = await axios.post(
@@ -96,7 +131,7 @@ const CommentSection = ({ postId, userId, userName }) => {
           text: newComment,
         }
       );
-      setComments((prevComments) => [...prevComments, response.data]);
+      // setComments((prevComments) => [...prevComments, response.data]);
       setNewComment("");
     } catch (error) {
       console.error(error);
@@ -198,7 +233,7 @@ const CommentSection = ({ postId, userId, userName }) => {
                 <div className="commentHeaderUserDiv">
                   <div className="commentHeaderInfo">
                     <img
-                      src="SocialMedia\frontend\src\assets\jd-chow-gutlccGLXKI-unsplash.jpg"
+                      src={`http://localhost:5000/${comment.profileImg}`}
                       alt=""
                     />
                     <h1>{comment.userName}</h1>
@@ -221,12 +256,18 @@ const CommentSection = ({ postId, userId, userName }) => {
           </div>
         ))
       ) : (
-        <p style={{"color":"rgb(179 177 184)" , "marginLeft":"15px" , "fontSize":"14px"}}>No Comments</p>
+        <p
+          style={{
+            color: "rgb(179 177 184)",
+            marginLeft: "15px",
+            fontSize: "14px",
+          }}
+        >
+          No Comments
+        </p>
       )}
     </div>
   );
 };
 
 export default CommentSection;
-
- 
