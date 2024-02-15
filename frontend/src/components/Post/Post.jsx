@@ -5,6 +5,7 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkRoundedIcon from '@mui/icons-material/BookmarkRounded';
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import CloseIcon from "@mui/icons-material/Close";
@@ -441,10 +442,12 @@ const savePost = async () => {
           <div className={styles.item}>
             {isLiked ? (
               <FavoriteOutlinedIcon onClick={LikeHandler} />
+              
             ) : (
               <FavoriteBorderOutlinedIcon onClick={LikeHandler} />
             )}
             {likes}
+            <p>2</p>
           </div>
           <div
             className={styles.item}
@@ -464,11 +467,10 @@ const savePost = async () => {
             
           >
             {isSaved ? (
-              <BookmarkBorderIcon style={{ color: "red" }} />
+              <BookmarkRoundedIcon style={{ color: 'rgb(129, 101, 162)' }}/>
             ) : (
               <BookmarkBorderIcon />
             )}
-            Save
           </div>
           <div className={styles.item} onClick={handleShare}>
             <ShareOutlinedIcon />

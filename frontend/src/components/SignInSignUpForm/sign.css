@@ -104,8 +104,19 @@ form.sign-in-form {
   font-weight: 500;
 }
 
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #959595;
+}
+
+
 .signin-signup a {
   color: rgb(98, 66, 131);
+  text-decoration: none;
 }
 Link {
   color: red;
@@ -122,6 +133,7 @@ Link {
   justify-content: center;
   margin: 5px;
   padding: 5px;
+  cursor: pointer;
 }
 
 .social-icon {
@@ -154,7 +166,7 @@ Link {
 
 .social-icon:hover {
   color: #4481eb;
-  border-color: #4481eb;
+  border-color: #470970;
   text-decoration: none;
 }
 

@@ -103,9 +103,10 @@ input {
   border-radius: 50%;
   position: absolute;
   top: 5px;/* Adjust the position relative to the icon */
-  right: -6px; 
+  /* left: 2px; */
   font-size: 10px;
   cursor: pointer;
+  margin-left: 14px;
 }
 
 .right_navbar .messagesBadgeIcon {
@@ -190,10 +191,10 @@ if upto 7 adds a vertical scrollbar */
 .popup_menu {
   position: absolute;
   top: 60px;
-  left: -190px;
+  left: -310px;
   max-height: 430px;
   padding: 10px 20px;
-  width: 390px;
+  width: 531px;
   background-color: #ffffff;
   border: 0px solid #000000;
   border-radius: 3px;
@@ -216,9 +217,11 @@ if upto 7 adds a vertical scrollbar */
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  align-items: center;
+  align-items: start;
   text-align: center;
   margin-top: 20px;
+  /* max-width: 350px; */
+  /* flex-wrap: wrap; */
 }
 
 .popup_menu .request .right {
@@ -606,6 +609,7 @@ if upto 7 adds a vertical scrollbar */
     margin-bottom: 2px;
     font-size: 22px;
     cursor: pointer;
+    display: none;
   }
   
   .right_navbar .friendsBadgeIcon {
@@ -623,7 +627,7 @@ if upto 7 adds a vertical scrollbar */
     border-radius: 50%;
     position: absolute;
     top: 6px;
-    left: 57px;
+    
     font-size: 10px;
     cursor: pointer;
   }
@@ -642,7 +646,7 @@ if upto 7 adds a vertical scrollbar */
     border-radius: 50%;
     position: absolute;
     top: 5px;
-    left: 94px; 
+    left: 57px; 
     font-size: 10px;
     cursor: pointer;
   }

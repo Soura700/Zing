@@ -57,7 +57,7 @@
 
 .item .logo {
     margin: 11px 8px;
-    color: rgb(70, 70, 70);
+    color: #665b7b;
 }
 
 .item:hover {
@@ -92,11 +92,12 @@
     font-size: 20px;
     font-weight: 800;
     color: #665b7b;
+    text-decoration: none;
 }
 
 .item2 .logo {
     margin: 11px 8px;
-    color: rgb(70, 70, 70);
+    color: #665b7b;
 }
 
 .item2:hover {
@@ -105,7 +106,26 @@
     color: #5829b7;
     cursor: pointer;
 }
-
+  .item2 {
+    text-decoration: none;
+  }
+  
+  .item2:hover {
+    text-decoration: none;
+  }
+  
+  .item2:visited {
+    text-decoration: none;
+  }
+  
+  .item2:focus {
+    text-decoration: none;
+  }
+  
+  .item2:active {
+    text-decoration: none;
+  }
+  
 .item3 {
     border: none;
     border-radius: 12px;
@@ -135,7 +155,7 @@
 
 .item3 .logo {
     margin: 11px 8px;
-    color: rgb(70, 70, 70);
+    color: #665b7b;
 }
 
 .item3:hover {
@@ -144,7 +164,25 @@
     color: #5829b7;
     cursor: pointer;
 }
-
+.item3 {
+    text-decoration: none;
+  }
+  
+  .item3:hover {
+    text-decoration: none;
+  }
+  
+  .item3:visited {
+    text-decoration: none;
+  }
+  
+  .item3:focus {
+    text-decoration: none;
+  }
+  
+  .item3:active {
+    text-decoration: none;
+  }
 
 .item4 {
     border: none;
@@ -175,7 +213,7 @@
 
 .item4 .logo {
     margin: 11px 8px;
-    color: rgb(70, 70, 70);
+    color: #665b7b;
 }
 
 .item4:hover {
@@ -184,12 +222,29 @@
     color: #5829b7;
     cursor: pointer;
 }
-
+.item4 {
+    text-decoration: none;
+  }
+  
+  .item4:hover {
+    text-decoration: none;
+  }
+  
+  .item4:visited {
+    text-decoration: none;
+  }
+  
+  .item4:focus {
+    text-decoration: none;
+  }
+  
+  .item4:active {
+    text-decoration: none;
+  }
 
 link h1:hover {
     outline: none;
     text-decoration: none;
-    color: aqua;
 }
 .item5 {
     border: none;
@@ -221,7 +276,7 @@ link h1:hover {
 
 .item5 .logo {
     margin: 11px 8px;
-    color: rgb(70, 70, 70);
+    color: #665b7b;
 }
 
 .item5:hover {
@@ -230,7 +285,25 @@ link h1:hover {
     color: #5829b7;
     cursor: pointer;
 }
-
+.item5 {
+    text-decoration: none;
+  }
+  
+  .item5:hover {
+    text-decoration: none;
+  }
+  
+  .item5:visited {
+    text-decoration: none;
+  }
+  
+  .item5:focus {
+    text-decoration: none;
+  }
+  
+  .item5:active {
+    text-decoration: none;
+  }
 .item6 {
     border: none;
     border-radius: 12px;
@@ -260,7 +333,7 @@ link h1:hover {
 
 .item6 .logo {
     margin: 11px 8px;
-    color: rgb(70, 70, 70);
+    color: #665b7b;
 }
 
 .item6:hover {
@@ -269,7 +342,25 @@ link h1:hover {
     color: #5829b7;
     cursor: pointer;
 }
-
+.item6 {
+    text-decoration: none;
+  }
+  
+  .item6:hover {
+    text-decoration: none;
+  }
+  
+  .item6:visited {
+    text-decoration: none;
+  }
+  
+  .item6:focus {
+    text-decoration: none;
+  }
+  
+  .item6:active {
+    text-decoration: none;
+  }
 .item7 {
     border: none;
     border-radius: 12px;
@@ -299,7 +390,7 @@ link h1:hover {
 
 .item7 .logo {
     margin: 11px 8px;
-    color: rgb(70, 70, 70);
+    color: #665b7b;
 }
 
 .item7:hover {
@@ -308,7 +399,25 @@ link h1:hover {
     color: #5829b7;
     cursor: pointer;
 }
-
+.item7 {
+    text-decoration: none;
+  }
+  
+  .item7:hover {
+    text-decoration: none;
+  }
+  
+  .item7:visited {
+    text-decoration: none;
+  }
+  
+  .item7:focus {
+    text-decoration: none;
+  }
+  
+  .item7:active {
+    text-decoration: none;
+  }
 /*
 .item8 {
     border: none;

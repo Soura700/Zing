@@ -110,8 +110,11 @@ form.sign-in-form {
 .social-media {
   display: flex;
   justify-content: center;
+  text-decoration: none;
 }
-
+.social-media a {
+  text-decoration: none;
+}
 .social-icon {
   height: 46px;
   width: 46px;
@@ -125,6 +128,7 @@ form.sign-in-form {
   text-decoration: none;
   font-size: 1.1rem;
   transition: 0.3s;
+  text-decoration: none;
 }
 
 .social-icon:hover {
@@ -248,7 +252,9 @@ form.sign-in-form {
 .container.sign-up-mode .signin-signup {
   left: 25%;
 }
-
+.container.sign-up-mode .signin-signup a {
+  text-decoration: none;
+}
 .container.sign-up-mode form.sign-up-form {
   opacity: 1;
   z-index: 2;
