@@ -94,7 +94,7 @@ router.post(
               console.log(results);
               const user = results.insertId;
               console.log(user);
-               req.session.userId = user;
+              req.session.userId = user;
               const userId = user.toString();
               const customValue = `custom_${userId}`;
               res.cookie("session_token", customValue, {
@@ -230,7 +230,7 @@ router.post(
             // Update current_login_time
             connection.query(
               "UPDATE users SET ip_addresses = ? , updatedAt = ? WHERE email = ?",
-              [userIP, now ,  email],
+              [userIP, now, email],
               (error, results) => {
                 if (error) {
                   console.error("Error updating IP:", error);
@@ -297,8 +297,8 @@ router.get("/check-cookie", (req, res) => {
 
 router.delete("/logout", (req, res) => {
   // Clear the cookies
-  res.clearCookie('user');
-  res.clearCookie('session_token');
+  res.clearCookie("user");
+  res.clearCookie("session_token");
 
   // Redirect to the home page
   // res.redirect('/');
@@ -352,10 +352,12 @@ router.post("/password/forgotpassword", async (req, res) => {
       [email], // Add a comma here to separate the query string from the parameter array
       (error, results) => {
         if (error) {
-          return res.status(500).json(error);
+          console.log(error);
+          return res.status(400).json(error);
         } else {
-          if (!results[0].email) {
-            return res.status(409).json("User is not registered");
+          // if (!results[0].email) {
+          if (results.length === 0) {
+            res.status(400).json("User is not registered");
           } else {
             const secret = process.env.SECRET_KEY + results[0].user_password;
             const payload = {
@@ -382,6 +384,7 @@ router.post("/password/forgotpassword", async (req, res) => {
               if (error) {
               } else {
                 // console.log("Email sent: " + info.response);
+                res.status(200).json({msg:"Link has been send successfylly"});
               }
             });
             // res.send("Password link has been sent...");
@@ -447,7 +450,6 @@ router.post("/resetpassword/:id/:token", async (req, res, next) => {
         // Hash the new password
         const salt = await bcrypt.genSalt(12);
         const hashedPass = await bcrypt.hash(req.body.user_password, salt);
-
 
         // Update the user's password in the database
         connection.query(
