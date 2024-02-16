@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import './settings.css';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import React, { useEffect, useState } from "react";
+import "./settings.css";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -23,13 +23,13 @@ const Settings = () => {
 
 
   const handleAddSocialMedia = () => {
-    if (socialMedia.trim() !== '') {
+    if (socialMedia.trim() !== "") {
       setSocialMediaList([
         ...socialMediaList,
         { name: socialMediaName, url: socialMedia },
       ]);
-      setSocialMedia('');
-      setSocialMediaName('');
+      setSocialMedia("");
+      setSocialMediaName("");
     }
   };
 
@@ -39,7 +39,7 @@ const Settings = () => {
     setSocialMediaList(updatedSocialMediaList);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
@@ -57,19 +57,19 @@ const Settings = () => {
       }
     };
     fetchData();
-  },[id, parsedID, checkAuthentication])
+  }, [id, parsedID, checkAuthentication]);
 
   const handleConfirm = () => {
-    fetch('http://localhost:5000/api/settings', {
-      method: 'POST',
+    fetch("http://localhost:5000/api/settings", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userName:userName,
-        bio:bio,
-        userId:parsedID,
-        socialMediaLinks:socialMediaList
+        userName: userName,
+        bio: bio,
+        userId: parsedID,
+        socialMediaLinks: socialMediaList,
       }),
     })
       .then((response) => response.json())
@@ -78,98 +78,107 @@ const Settings = () => {
         toast.success("Profile Updated Successfully");
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
   };
 
   const handleLogout = () => {
+    alert("Called");
     // Logic to logout
+    fetch("http://localhost:5000/api/auth/logout", {
+      method: "POST",
+      // credentials: "same-origin", // include this if your cookies are HTTP-only
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Logout successful
+          // Perform any additional logic here (e.g., redirect to login page)
+          window.location.href = "/login"; // Redirect to the login page
+        } else {
+          // Handle error
+          console.error("Logout failed:", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+      });
   };
 
   const handleDeleteAccount = () => {
     // Logic to delete account
   };
 
-
-
   return (
-    <div className='settings-container'>
+    <div className="settings-container">
       {/* <div className="settings-sidebar">
         <div className="sidebar-option active">Account</div>
         <div className="sidebar-option">General</div>
       </div> */}
-      <div className='settings-content'>
-        <div className='section'>
+      <div className="settings-content">
+        <div className="section">
           <h2>Account Settings</h2>
-          <label htmlFor='usernameID'>Change Username</label>
+          <label htmlFor="usernameID">Change Username</label>
           <input
-            type='text'
-            placeholder='Enter new username'
+            type="text"
+            placeholder="Enter new username"
             value={userName}
-            id='usernameID'
+            id="usernameID"
             onChange={(e) => setUserName(e.target.value)}
           />
-          <label htmlFor='bioID'>Update profile bio</label>
+          <label htmlFor="bioID">Update profile bio</label>
           <textarea
-            placeholder='Enter new bio'
+            placeholder="Enter new bio"
             value={bio}
-            id='bioID'
-            onChange={(e) => setBio(e.target.value)}></textarea>
-          <div className='social-media'>
+            id="bioID"
+            onChange={(e) => setBio(e.target.value)}
+          ></textarea>
+          <div className="social-media">
             <h2>Update Socials</h2>
-            <div className='social-media-item'>
-              <div className='socialInputName'>
+            <div className="social-media-item">
+              <div className="socialInputName">
                 <input
-                  type='text'
-                  placeholder='Social Media Name'
+                  type="text"
+                  placeholder="Social Media Name"
                   value={socialMediaName}
                   onChange={(e) => setSocialMediaName(e.target.value)}
                 />
               </div>
 
               <input
-                type='text'
-                placeholder='Enter Social Media URL'
+                type="text"
+                placeholder="Enter Social Media URL"
                 value={socialMedia}
                 onChange={(e) => setSocialMedia(e.target.value)}
               />
               <button onClick={handleAddSocialMedia}>Add</button>
             </div>
             {socialMediaList.map((media, index) => (
-              <div
-                key={index}
-                className='social-media-item'>
+              <div key={index} className="social-media-item">
                 <p>
                   {media.name}: {media.url}
                 </p>
                 <CloseRoundedIcon
                   onClick={() => handleDeleteSocialMedia(index)}
-                  className='social-media-item-icon'
+                  className="social-media-item-icon"
                 />
               </div>
             ))}
           </div>
-          <button
-            onClick={handleConfirm}
-            className='settingsConfirmBtn'>
+          <button onClick={handleConfirm} className="settingsConfirmBtn">
             Confirm
           </button>
         </div>
         <hr />
-        <div className='logout-section'>
-          <button
-            onClick={handleLogout}
-            className='logoutBtn'>
+        <div className="logout-section">
+          <button onClick={handleLogout} className="logoutBtn">
             Logout
           </button>
-          <button
-            onClick={handleDeleteAccount}
-            className='deleteBtn'>
+          <button onClick={handleDeleteAccount} className="deleteBtn">
             Delete Account
           </button>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };

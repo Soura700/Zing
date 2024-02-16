@@ -101,7 +101,10 @@ router.post(
                 httpOnly: true,
                 expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
               });
+              // localStorage.setItem("isNewUser", "true")
+              // res.sessionStorage.setItem("isNewUser", "true");
               res.status(200).json(results);
+              // res.status(200).json( results , { isNewUser: true });
             }
           }
         );
@@ -295,13 +298,27 @@ router.get("/check-cookie", (req, res) => {
   }
 });
 
-router.delete("/logout", (req, res) => {
-  // Clear the cookies
-  res.clearCookie("user");
+router.post("/logout", (req, res) => {
+  // Set the expiration date to a date in the past
+  // const expirationDate = new Date(Date.now() - 1000 * 60 * 60 * 24); // One day ago
+
+  // // Set the cookie with the expiration date
+  // res.cookie("session_token", "", {
+  //   httpOnly: true,
+  //   expires: expirationDate,
+  // });
   res.clearCookie("session_token");
 
-  // Redirect to the home page
-  // res.redirect('/');
+  // Destroy the session
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Error destroying session:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    // Send a success response
+    res.status(200).json({ message: "User logged out successfully" });
+  });
 });
 
 router.post("/:userId", (req, res) => {

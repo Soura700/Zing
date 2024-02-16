@@ -42,6 +42,7 @@ const Profile = () => {
   const [coverPhoto, setCoverPhoto] = useState(null);
   const [bio, setBio] = useState(null);
   const [status, setStatus] = useState(null);
+  const [socialMediaLinks, setSocialMediaLinks] = useState([]);
 
   // Condition to check if the current user is viewing their own profile
   const isOwnProfile = userId == loggedInUserId;
@@ -188,12 +189,26 @@ const Profile = () => {
       }
     };
 
+    // Fetching the user details
+    async function fetchSocialLinks() {
+      try {
+        const userRes = await fetch(
+          "http://localhost:5000/api/settings/social-links/" + parsedUserId
+        );
+        const userResJson = await userRes.json();
+        setSocialMediaLinks(userResJson);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
     fetchOwnData();
     fetchUser();
     fetchUserFriends();
     suggestionOfFriends();
     fetchStory();
     checkStatus();
+    fetchSocialLinks();
   }, [id, checkAuthentication, status]);
 
   //  friendDetails with each element having a friendId property ..So removing the duplicates
@@ -380,7 +395,7 @@ const Profile = () => {
         }
       );
     }
-  },[socket, senderName]);
+  }, [socket, senderName]);
 
   // useEffect(()=>{
   //   const checkStatus = async ()=>{
@@ -422,6 +437,8 @@ const Profile = () => {
     }
   };
 
+  console.log("Social Media Links");
+  console.log(socialMediaLinks);
 
   return (
     <div className={styles.profile}>
@@ -553,14 +570,9 @@ const Profile = () => {
                   </button>
                 )}
 
-              {!isOwnProfile &&
-                status === "Accepted" && (
-                  <button
-                    className={styles.btn1}
-                  >
-                    Friends
-                  </button>
-                )}
+              {!isOwnProfile && status === "Accepted" && (
+                <button className={styles.btn1}>Friends</button>
+              )}
 
               {/* {!isOwnProfile &&
               !isFriendWithCurrentUser &&
@@ -605,7 +617,7 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className={styles.links}>
+          {/* <div className={styles.links}>
             <a href="http://facebook.com">
               <FacebookTwoToneIcon fontSize="large" />
             </a>
@@ -621,6 +633,34 @@ const Profile = () => {
             <a href="http://facebook.com">
               <PinterestIcon fontSize="large" />
             </a>
+          </div> */}
+
+          <div className={styles.links}>
+            {socialMediaLinks.facebook && (
+              <a href={socialMediaLinks.facebook}>
+                <FacebookTwoToneIcon fontSize="large" />
+              </a>
+            )}
+            {socialMediaLinks.instagram && (
+              <a href={socialMediaLinks.instagram}>
+                <InstagramIcon fontSize="large" />
+              </a>
+            )}
+            {socialMediaLinks.twitter && (
+              <a href={socialMediaLinks.twitter}>
+                <TwitterIcon fontSize="large" />
+              </a>
+            )}
+            {socialMediaLinks.linkedin && (
+              <a href={socialMediaLinks.linkedin}>
+                <LinkedInIcon fontSize="large" />
+              </a>
+            )}
+            {socialMediaLinks.pinterest && (
+              <a href={socialMediaLinks.pinterest}>
+                <PinterestIcon fontSize="large" />
+              </a>
+            )}
           </div>
 
           {/* <div className={styles.right}>

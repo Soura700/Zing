@@ -145,6 +145,7 @@ const SignInSignUpForm = () => {
       );
 
       if (response.status === 200) {
+        localStorage.setItem("isNewUser", "true");
         navigate(`/profile_setting/` + response.data.insertId);
       }
 
