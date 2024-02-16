@@ -68,9 +68,10 @@ export const Group = () => {
   const [groupMembersLenght, setGroupMembersLenght] = useState(null);
   const [searchSuggestionResult, setSearchSuggestionResult] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const  [ socket2 , setSocket2 ] = useState(null);
+  const [socket2, setSocket2] = useState(null);
 
   const [updateGroup, setUpdateGroup] = useState(false);
+  const [name,setUserName] = useState(null);
   var msg = "";
   //25 Sep 2023 code
   const [Image, setImage] = useState("");
@@ -78,6 +79,7 @@ export const Group = () => {
   const [clicked, setClicked] = useState(true);
   const navigate = useNavigate();
   const additionalDivRef = useRef(null);
+  const [photo,setUserPhoto] = useState(null);
   /* code for search popup modal */
 
   const toggleUpdateGroupModal = () => {
@@ -146,6 +148,8 @@ export const Group = () => {
     });
   };
   const customStyle = { zIndex: !clicked ? 0 : setZIndex };
+
+
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 472px)");
@@ -228,6 +232,28 @@ export const Group = () => {
 
   const parsedId = parseInt(id);
 
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        await checkAuthentication();
+        const userRes = await fetch(
+          "http://localhost:5000/api/auth/" + parsedId,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const userDetails = await userRes.json();
+        setUserPhoto(userDetails[0].profileImg);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchData();
+  },[id, checkAuthentication, parsedId])
+
   const styles = {
     "*": {
       margin: 0,
@@ -308,6 +334,8 @@ export const Group = () => {
   //   }
   // }, [socket2, groups , parsedId]);
 
+  // alert(groupId);
+
   useEffect(() => {
     if (socket2) {
       const handler = (data) => {
@@ -321,13 +349,31 @@ export const Group = () => {
 
       socket2.on("showCreatedGroup", handler);
 
-      socket2.on("memberLeft", ({ groupid, memberId }) => {
-        alert("Group" + groupId);
-        alert("Group2" + groupid);
-        if (groupId === groupid) {
-          alert("Called");
-          toast(memberId + "has left the group");
-          window.location.reload();
+      socket2.on("memberLeft", async ({ groupid, memberId }) => {
+        const parseMember =  parseInt(memberId);
+        if (groupId === groupid && memberId !== parsedId) {
+          // try {
+          //   const userRes = await fetch(
+          //     "http://localhost:5000/api/auth/" + parseMember,
+          //     {
+          //       method: "POST",
+          //       headers: {
+          //         "Content-Type": "application/json",
+          //       },
+          //     }
+          //   );
+          //   console.log("User name");
+          //   console.log(userDetails[0].username);
+          //   const userDetails = await userRes.json();
+          //   setUserName(userDetails[0].username);
+          // } catch (error) {
+          //   console.error("Error fetching user data:", error);
+          // }
+          toast(memberId + " " +"has left the group");
+          // window.location.reload();
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
         }
       });
 
@@ -336,7 +382,7 @@ export const Group = () => {
         socket2.off("showCreatedGroup", handler);
       };
     }
-  }, [socket2, groups, parsedId]);
+  }, [socket2, groups, parsedId, groupId]);
 
   const sendMessage = async () => {
     if (!message) {
@@ -744,7 +790,7 @@ export const Group = () => {
     } catch (error) {
       console.error("Error fetching search suggestions:", error);
     }
-  };  
+  };
 
   const handleCloseModal = () => {
     // Logic to close the modal
@@ -765,7 +811,10 @@ export const Group = () => {
       });
 
       if (res.status === 200) {
-        toast("Leaved");
+        toast("Left Group Successfully");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
         // // Clear the input field after sending
         // setMessage("");
       } else {
@@ -778,8 +827,6 @@ export const Group = () => {
     }
   };
 
-  
-
   // Render the rest of your component based on the authentication status
   return (
     <div style={styles} className="grpOuterDiv">
@@ -790,7 +837,8 @@ export const Group = () => {
           <div className="container">
             <div className="items">
               <div className="profile-img">
-                <img src={image} alt="" />
+                {/* <img src={image} alt="" /> */}
+                <img src={`http://localhost:5000/${photo}`} alt="" />
               </div>
               <div className="item1">
                 <TextsmsIcon fontSize="medium" className="icon1" />
@@ -846,7 +894,6 @@ export const Group = () => {
                           />
                           <p
                             onClick={() => {
-                              alert("Hello");
                               setActiveConversations(true);
                               setGroupId(suggestion._id);
                               setGroupName(suggestion.groupName);
@@ -889,7 +936,6 @@ export const Group = () => {
                       // }
 
                       onClick={() => {
-                        alert("Hello");
                         setActiveConversations(true);
                         setGroupId(group._id);
                         // alert(group.groupName);
@@ -911,7 +957,7 @@ export const Group = () => {
                           // }
                         />
                         <div className="left-info">
-                          <h2 onClick={() => console.log("Hello")}>
+                          <h2>
                             {/* {conversation.conversationUserData[0].username} */}
                             {group.groupName}
                           </h2>
@@ -1018,7 +1064,7 @@ export const Group = () => {
                           <CloseIcon
                             fontSize="small"
                             className="close-icon"
-                            onClick={handleCloseModal} 
+                            onClick={handleCloseModal}
                           />
                         </div>
                         <div className="add-members">
@@ -1090,12 +1136,7 @@ export const Group = () => {
                             </div>
                           ))}
                         </div>
-                        <button
-                          className="createGrpChatBtn"
-                          
-                        >
-                          Add
-                        </button>
+                        <button className="createGrpChatBtn">Add</button>
                       </div>
                     </div>
                   </div>
