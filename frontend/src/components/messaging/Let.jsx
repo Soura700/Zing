@@ -50,7 +50,8 @@ export const Let = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [searchSuggestionResult, setSearchSuggestionResult] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [photo,setUserPhoto] = useState(null);
+  const [photo, setUserPhoto] = useState(null);
+  const parsedID = parseInt(id);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 472px)");
@@ -92,7 +93,7 @@ export const Let = () => {
     };
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
@@ -112,7 +113,7 @@ export const Let = () => {
       }
     };
     fetchData();
-  },[id, checkAuthentication, parsedId])
+  }, [id, checkAuthentication, parsedId]);
 
   const popupRef = useRef(null);
   const togglePopup = () => {
@@ -121,7 +122,7 @@ export const Let = () => {
       setShowPopup(true);
     }
   };
-    const showSidebarMenu = () => {
+  const showSidebarMenu = () => {
     setShowMenu(!showMenu);
   };
   const showAllGroups = () => {
@@ -330,7 +331,6 @@ export const Let = () => {
     }
   };
 
-
   const sendMessage = async () => {
     const conversationId = messages?.conversationId;
     if (!conversationId) {
@@ -362,7 +362,7 @@ export const Let = () => {
         body: JSON.stringify({
           conversationId: conversationId,
           senderId: parsedId,
-          receiverId:activeConversation.receiverId,
+          receiverId: activeConversation.receiverId,
           message: message,
         }),
       });
@@ -381,8 +381,6 @@ export const Let = () => {
   if (isLoading || socket === null) {
     return <CircularProgress />; // Use CircularProgress for a loading spinner
   }
-
-
 
   const handleInputChange = async (event) => {
     const inputValue = event.target.value;
@@ -420,7 +418,13 @@ export const Let = () => {
           <div className="innerContainer">
             <div className="items">
               <div className="profile-img">
-                <img src={`http://localhost:5000/${photo}`} alt="" />
+                <a
+                  style={{ textDecoration: "none" }}
+                  href={`/profile/${parsedID}`}
+                  className={styles.userNameLink}
+                >
+                  <img src={`http://localhost:5000/${photo}`} alt="" />
+                </a>
               </div>
               <div className="item1">
                 <a style={{ textDecoration: "none" }} href="/message">
@@ -448,8 +452,8 @@ export const Let = () => {
               <div className="top-part-opt">
                 <h1>Messages</h1>
                 <Link to="/">
-                <HomeRoundedIcon />
-              </Link>
+                  <HomeRoundedIcon />
+                </Link>
               </div>
               <div className="top-search-bar">
                 <input
@@ -468,20 +472,15 @@ export const Let = () => {
                         {searchSuggestionResult.length === 0 ? (
                           <p>No Search Results</p>
                         ) : (
-                          searchSuggestionResult.map(
-                            (suggestion, index) => (
-                              (
-                                <div className="popupUser">
-                                  <img
-                                    src={`http://localhost:5000/${suggestion.profileImg}`}
-                                    alt="User"
-                                  />
-                                  <p onClick={()=>{
-                                  }}>{suggestion.username}</p>
-                                </div>
-                              )
-                            )
-                          )
+                          searchSuggestionResult.map((suggestion, index) => (
+                            <div className="popupUser">
+                              <img
+                                src={`http://localhost:5000/${suggestion.profileImg}`}
+                                alt="User"
+                              />
+                              <p onClick={() => {}}>{suggestion.username}</p>
+                            </div>
+                          ))
                         )}
                         {/* <div className="popupUser">
                           <img
@@ -641,7 +640,9 @@ export const Let = () => {
             <div className="top-part-opt">
               <h1>Messages</h1>
               {/* <GroupsIcon className="group-icon" onClick={showAllGroups} /> */}
-              <HomeRoundedIcon />
+              <Link to="/">
+                <HomeRoundedIcon />
+              </Link>
             </div>
             {showGroup ? (
               <div className="showAllGroups">
@@ -726,18 +727,21 @@ export const Let = () => {
                       searchSuggestionResult.map(
                         (suggestion, index) => (
                           console.log("Suggestions"),
-                          // console.log(suggestion.mongoData[0]._id),
                           (
+                            // console.log(suggestion.mongoData[0]._id),
                             <div className="popupUser">
                               <img
                                 src={`http://localhost:5000/${suggestion.profileImg}`}
                                 alt="User"
                               />
-                              <p 
-                              onClick={()=>{
-                                fetchMessages(suggestion.mongoData[0]._id,conversations)
+                              <p
+                                onClick={() => {
+                                  fetchMessages(
+                                    suggestion.mongoData[0]._id,
+                                    conversations
+                                  );
                                 }}
-                                >
+                              >
                                 {suggestion.username}
                               </p>
                             </div>

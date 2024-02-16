@@ -272,11 +272,22 @@ const SignInSignUpForm = () => {
             <div class="input-field">
               <i class="fas fa-lock"></i>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="user_password"
                 onChange={clearPasswordError}
                 placeholder="Password"
               />
+              {showPassword ? (
+                <VisibilityOffRoundedIcon
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              ) : (
+                <VisibilityRoundedIcon
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              )}
             </div>
 
             <input type="submit" class="btn" value="Sign up" />

@@ -299,7 +299,6 @@
 //     },
 //   ]);
 
-  
 //   return (
 //     <ThemeProvider>
 //       <div>
@@ -312,9 +311,6 @@
 // }
 
 // export default App;
-
-
-
 
 import React, { useState, useEffect } from "react";
 import "./style.css";
@@ -337,7 +333,7 @@ import VideoCall from "./pages/VideoCall/VideoCall.jsx";
 import Loading from "../src/components/Loading.jsx";
 import Saved from "./pages/Saved/Saved.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
-import Tour from 'react-joyride';
+import Tour from "react-joyride";
 
 import {
   createBrowserRouter,
@@ -350,25 +346,52 @@ import ViewSharePost from "./components/SharePostModal/ViewSharePost.jsx";
 
 import styles from "./components/Navbar/navbar.module.css"; // Import Navbar CSS module
 import leftBarStyles from "./components/LeftBar/leftBar.module.css"; // Import LeftBar CSS module
+import rightBarStyles from "./components/RightBar/rightbar.module.css"; // Import LeftBar CSS module
 
 function App() {
+  const [tourIndex, setTourIndex] = useState(-1); // Start with -1 to prevent any popup initially
+  const [isNewUser, setIsNewUser] = useState(false);
+
+  
+  const handleNext = () => {
+    // Increment the tour index to move to the next step
+    setTourIndex((prevIndex) => prevIndex + 1);
+  };
+
+  const handleBack = () => {
+    // Decrement the tour index to move to the previous step
+    setTourIndex((prevIndex) => prevIndex - 1);
+  };
+
+  useEffect(() => {
+    // Automatically start the tour when component mounts
+    setTourIndex(0);
+  }, []);
+  
+
   const tourSteps = [
+
     {
       target: `.${styles.navbar}`,
-      content: 'This is the navbar. It allows you to navigate through the application.',
+      content: 'From here you can search for your friends and check out the Notifications and Messages you have and access your Profile page from here',
     },
     {
       target: `.${leftBarStyles.leftBar}`,
-      content: 'This is the left bar. It provides additional navigation and options.',
+      content: 'From here you can check out your saved posts from Saved or update your profile by going to the Settings.',
+    },
+    {
+      target: `.${rightBarStyles.Rightbar}`,
+      content: 'From here you can get suggestions of Friends and updates on what your Friends are up to.',
     },
     // Add more steps as needed
   ];
-  
 
   const [runTour, setRunTour] = useState(true);
   const [loading, setLoading] = useState(true); // State to track loading status
 
   useEffect(() => {
+    const isNewUser = localStorage.getItem("isNewUser");
+    setIsNewUser(isNewUser === "true");
     // Simulate loading delay
     const timeout = setTimeout(() => {
       setLoading(false); // Set loading to false after a delay (e.g., 2000 milliseconds)
@@ -376,6 +399,14 @@ function App() {
 
     return () => clearTimeout(timeout); // Cleanup function to clear the timeout
   }, []);
+
+  useEffect(() => {
+    // Automatically start the tour when component mounts and user is new
+    if (isNewUser) {
+      setTourIndex(0);
+      setRunTour(true);
+    }
+  }, [isNewUser]);
 
   const Layout = function () {
     // Toggling
@@ -387,6 +418,53 @@ function App() {
     return (
       <div>
         <ToastContainer />
+        <Tour
+          steps={tourSteps}
+          run={runTour && isNewUser}
+          continuous={true}
+          disableCloseOnEsc
+          disableOverlayClose
+          index={tourIndex}
+          onAfterChange={index => setTourIndex(index)}
+          locale={{
+            last: 'End Tour',
+          }}
+          styles={{
+            options: {
+              arrowColor: 'rgb(78, 60, 114)', // Change the color of the arrow
+              backgroundColor: 'white', // Change the background color of the pop-up
+              primaryColor: 'rgb(78, 60, 114)',
+               // Change the primary color of the pop-up (e.g., buttons)
+              textColor: 'black', // Change the text color
+            },
+            spotlight: {
+              height: '100vh',
+              
+            },
+            tooltip: {
+              fontSize: '16px', // Change the font size of the tooltip text
+              padding: '30px',
+               // Add padding to the tooltip
+               marginTop: '20px',
+               marginLeft: '20px',
+            },
+            // body: {
+            //   marginTop: '50px',
+            // },
+            overlay: {
+              backgroundColor: 'rgba(0, 0, 0, 0.3)', // Change the color of the beacon
+              textColor: 'white', // Change the text color of the beacon
+            },
+            beacon: {
+              backgroundColor: 'white', // Change the color of the beacon
+              textColor: 'white',
+              marginTop: '30px', // Change the text color of the beacon
+            },
+            button: {
+              backgroundColor: 'green',
+            }
+          }}
+        />
         <Navbar toggleMenu={toggleMenu} />
         <div style={{ display: "flex" }}>
           <LeftBar />
@@ -397,11 +475,7 @@ function App() {
           </div>
           <RightBar isVisible={toggle} />
         </div>
-        <Tour
-          steps={tourSteps}
-          run={runTour}
-          continuous={true}
-        />
+        {/* <Tour steps={tourSteps} run={runTour} continuous={true} /> */}
       </div>
     );
   };
@@ -487,4 +561,3 @@ function App() {
 }
 
 export default App;
-

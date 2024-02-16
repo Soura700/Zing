@@ -1,6 +1,6 @@
 import React from "react";
 import "../components/loading.css"
-import Logo from "../../src/assets/zing5.svg";
+import Logo from "../../src/assets/zing6.svg";
 
 const LoadingComponent = () => (
   <div
