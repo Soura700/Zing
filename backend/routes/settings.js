@@ -85,4 +85,31 @@ async function updateSocialMediaLinks(userId, socialMediaLinks) {
 }
 
 
+router.get('/social-links/:userId', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      // Query the database to find the profile data for the given userId
+      const profile = await SocialLinks.findOne({ userId });
+  
+      if (!profile) {
+        // If no profile data found, return null
+        return res.json({ facebook: null, twitter: null, instagram : null, linkedIn :null , other: null });
+      }
+  
+      // If profile data found, return the social media links
+      res.json({
+        facebook: profile.facebook || null,
+        twitter: profile.twitter || null,
+        linkedIn:profile.link || null,
+        instagram: profile.instagram || null,
+        pinterest: profile.pinterest || null,
+
+        // other: profile.other || null
+      });
+    } catch (error) {
+      console.error('Error checking social links:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
 module.exports = router;
