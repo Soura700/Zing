@@ -10,6 +10,9 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+
 
 const SignInSignUpForm = () => {
   const navigate = useNavigate();
@@ -27,6 +30,8 @@ const SignInSignUpForm = () => {
 
   const [signInemailError, setSignInEmailError] = useState("");
   const [signInPasswordError, setSignInPasswordError] = useState([]);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignInClick = () => {
     setIsSignUp(false);
@@ -207,12 +212,24 @@ const SignInSignUpForm = () => {
             <div class="input-field">
               <i class="fas fa-lock"></i>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="user_password"
                 onChange={clearSignInPasswordError}
                 placeholder="Password"
               />
+              {showPassword ? (
+                <VisibilityOffRoundedIcon
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              ) : (
+                <VisibilityRoundedIcon
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              )}
             </div>
+
 
             <input type="submit" value="Login" class="btn solid" />
             <p>
@@ -256,11 +273,22 @@ const SignInSignUpForm = () => {
             <div class="input-field">
               <i class="fas fa-lock"></i>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="user_password"
                 onChange={clearPasswordError}
                 placeholder="Password"
               />
+              {showPassword ? (
+                <VisibilityOffRoundedIcon
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              ) : (
+                <VisibilityRoundedIcon
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                />
+              )}
             </div>
 
             <input type="submit" class="btn" value="Sign up" />

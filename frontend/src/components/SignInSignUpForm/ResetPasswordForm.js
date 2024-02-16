@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import "./resetPasswordForm.css"
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+
 
 const ResetPasswordForm = () => {
   const { id, token } = useParams();
@@ -9,6 +12,8 @@ const ResetPasswordForm = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [passwordUpdated, setPasswordUpdated] = useState(false);
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
 
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
@@ -30,59 +35,55 @@ const ResetPasswordForm = () => {
         setPasswordUpdated(true);
       }
     } catch (error) {
-      // Handle error
     }
   };
 
-  // Use these styles in the component:
-
-  // const styles = {
-  //   container: {
-  //     maxWidth: '400px',
-  //     margin: 'auto',
-  //     padding: '20px',
-  //     border: '1px solid #ccc',
-  //     borderRadius: '5px',
-  //   },
-  //   input: {
-  //     width: '100%',
-  //     padding: '10px',
-  //     marginBottom: '10px',
-  //     boxSizing: 'border-box',
-  //   },
-  //   button: {
-  //     width: '100%',
-  //     padding: '10px',
-  //     backgroundColor: '#4CAF50',
-  //     color: 'white',
-  //     border: 'none',
-  //     borderRadius: '5px',
-  //     cursor: 'pointer',
-  //   },
-  //   error: {
-  //     color: 'red',
-  //     marginBottom: '10px',
-  //   },
-  // };
 
   return (
     <div className='rpcontainer'>
 
       <div className='resetBox'>
         <h2>Reset Password</h2>
-        <input
-          type='password'
-          placeholder='Enter your new password'
-          value={newPassword}
-          onChange={handleNewPasswordChange}
-        />
-        <input
-          type='password'
-          placeholder='Confirm your new password'
-          value={confirmNewPassword}
-          onChange={handleConfirmNewPasswordChange}
-        />
-        {!passwordsMatch && <p >Passwords do not match</p>}
+        <div className="password-input">
+          <input
+            type={showPassword1 ? 'text' : 'password'}
+            placeholder='Enter your new password'
+            value={newPassword}
+            onChange={handleNewPasswordChange}
+          />
+          {showPassword1 ? (
+            <VisibilityOffRoundedIcon
+              className="toggle-password-icon"
+              onClick={() => setShowPassword1(!showPassword1)}
+            />
+          ) : (
+            <VisibilityRoundedIcon
+              className="toggle-password-icon"
+              onClick={() => setShowPassword1(!showPassword1)}
+            />
+          )}
+        </div>
+        <div className="password-input">
+          <input
+            type={showPassword2 ? 'text' : 'password'}
+            placeholder='Confirm your new password'
+            value={confirmNewPassword}
+            onChange={handleConfirmNewPasswordChange}
+          />
+          {showPassword2 ? (
+            <VisibilityOffRoundedIcon
+              className="toggle-password-icon1"
+              onClick={() => setShowPassword2(!showPassword2)}
+            />
+          ) : (
+            <VisibilityRoundedIcon
+              className="toggle-password-icon1"
+              onClick={() => setShowPassword2(!showPassword2)}
+            />
+          )}
+        </div>
+
+        {!passwordsMatch && <p >Passwords do not match!</p>}
         {passwordUpdated ? (
           <p>
             Password updated successfully. You can now log in with your new
@@ -96,8 +97,10 @@ const ResetPasswordForm = () => {
         )}
       </div>
 
-      </div>
-      );
+    </div>
+  );
 };
 
-      export default ResetPasswordForm;
+
+
+export default ResetPasswordForm;

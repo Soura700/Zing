@@ -206,12 +206,14 @@
 .info>.item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   cursor: pointer;
   font-size: 14px;
   color: rgb(129, 101, 162);
 }
-
+.item p{
+  margin: 0;
+}
 .user .icon {
   justify-content: flex-end;
   cursor: pointer;
