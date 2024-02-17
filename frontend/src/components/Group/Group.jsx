@@ -827,6 +827,40 @@ export const Group = () => {
     }
   };
 
+  const updateGroupMember = async ()=>{
+    try {
+      const memberIds = selectedUsers.map((user) => user.userId);
+      const res = await fetch("http://localhost:5000/api/group/update-members", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: parsedId,
+          groupId: groupId,
+          newMembers:memberIds
+        }),
+      });
+
+      if (res.status === 200) {
+        toast("Group updated Successfully");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+        // // Clear the input field after sending
+        // setMessage("");
+      } else if(res.status === 403) {
+        toast("You are not admin");
+      }else if(res.status === 404 ){
+        toast("Group not found");
+      }else if(res.status === 201){
+        toast("Members are already added into the group");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  }
+
   // Render the rest of your component based on the authentication status
   return (
     <div style={styles} className="grpOuterDiv">
@@ -1136,7 +1170,7 @@ export const Group = () => {
                             </div>
                           ))}
                         </div>
-                        <button className="createGrpChatBtn">Add</button>
+                        <button className="createGrpChatBtn" onClick={updateGroupMember}>Add</button>
                       </div>
                     </div>
                   </div>

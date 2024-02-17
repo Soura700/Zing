@@ -387,7 +387,7 @@ const Story = () => {
             onClick={handleMessageButtonClick}
           />
         </div>
-        <span>Soura Bose</span>
+        <span>You</span>
         {/* <button onClick={() => navigate("/create_story")}>+</button> */}
         <button onClick={handleMessageButtonClick}>+</button>
       </div>

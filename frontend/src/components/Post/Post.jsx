@@ -447,7 +447,7 @@ const savePost = async () => {
               <FavoriteBorderOutlinedIcon onClick={LikeHandler} />
             )}
             {likes}
-            <p>2</p>
+            {/* <p>2</p> */}
           </div>
           <div
             className={styles.item}

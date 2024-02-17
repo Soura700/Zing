@@ -107,7 +107,6 @@ const Share = ({styles}) => {
   };
 
   const handlePost = async () => {
-    alert(input);
     try {
       const formData = new FormData();
       // Append text data

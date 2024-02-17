@@ -127,7 +127,6 @@ const LoggedUserPosts = ( {userId} ) => {
       });
 
       socket.on("postDelete", ({ postId }) => {
-        alert("Entered Successfully");
         console.log(postData);
         let filteredPosts = postData.filter(
           (post) => post.id != postId

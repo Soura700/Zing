@@ -299,7 +299,6 @@
 //     },
 //   ]);
 
-  
 //   return (
 //     <ThemeProvider>
 //       <div>
@@ -312,9 +311,6 @@
 // }
 
 // export default App;
-
-
-
 
 import React, { useState, useEffect } from "react";
 import "./style.css";
@@ -338,7 +334,6 @@ import Loading from "../src/components/Loading.jsx";
 import Saved from "./pages/Saved/Saved.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
 import Tour from "react-joyride";
-
 
 import {
   createBrowserRouter,
@@ -372,23 +367,22 @@ function App() {
     }
   }, []);
 
-  
-
   const tourSteps = [
-
     {
       target: `.${styles.navbar}`,
-      content: 'From here you can search for your friends and check out the Notifications and Messages you have and access your Profile page from here',
+      content:
+        "From here you can search for your friends and check out the Notifications and Messages you have and access your Profile page from here",
     },
     {
-      target: `.${leftBarStyles.leftBar}`,
-      content: 'From here you can check out your saved posts from Saved or update your profile by going to the Settings.',
+      target: `.${leftBarStyles.container}`,
+      content:
+        "From here you can check out your saved posts from Saved or update your profile by going to the Settings.",
     },
     {
-      target: `.${rightBarStyles.Rightbar}`,
-      content: 'From here you can get suggestions of Friends and updates on what your Friends are up to.',
+      target: `.${rightBarStyles.item}`,
+      content:
+        "From here you can get suggestions of Friends and updates on what your Friends are up to.",
     },
-
 
     // Add more steps as needed
   ];
@@ -427,7 +421,45 @@ function App() {
           </div>
           <RightBar isVisible={toggle} />
         </div>
-        {/* <Tour steps={tourSteps} run={runTour} continuous={true} /> */}
+        <Tour
+          steps={tourSteps}
+          run={isNewUser}
+          continuous={true}
+          styles={{
+            options: {
+              arrowColor: "rgb(78, 60, 114)", // Change the color of the arrow
+              backgroundColor: "white", // Change the background color of the pop-up
+              primaryColor: "rgb(78, 60, 114)",
+              // Change the primary color of the pop-up (e.g., buttons)
+              textColor: "black", // Change the text color
+            },
+            spotlight: {
+              height: "100vh",
+            },
+            tooltip: {
+              fontSize: "16px", // Change the font size of the tooltip text
+              padding: "30px",
+              // Add padding to the tooltip
+              //  marginTop: '50px',
+              marginLeft: "20px",
+            },
+            // body: {
+            //   marginTop: '50px',
+            // },
+            overlay: {
+              backgroundColor: "rgba(0, 0, 0, 0.3)", // Change the color of the beacon
+              textColor: "white", // Change the text color of the beacon
+            },
+            beacon: {
+              backgroundColor: "white", // Change the color of the beacon
+              textColor: "white",
+              marginTop: "30px", // Change the text color of the beacon
+            },
+            button: {
+              backgroundColor: "green",
+            },
+          }}
+        />
       </div>
     );
   };
