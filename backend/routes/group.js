@@ -186,6 +186,62 @@ router.post("/add-members", async (req, res) => {
   }
 });
 
+router.post("/update-members", async (req, res) => {
+  try {
+    const { groupId, newMembers , userId } = req.body;
+
+    // Find the group by ID
+    const group = await Group.findById(groupId);
+
+    // Check if the group exists
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    console.log("Group Admin");
+    console.log(group.groupAdmin[0]);
+
+    if(userId != group.groupAdmin[0]){
+      return res.status(403).json({message:"You are not Admin"});
+    }
+
+
+    // Check if any of the new members are already in the group
+    const existingMembers = group.members;
+    const newMembersToAdd = [];
+    newMembers.forEach((member) => {
+      if (!existingMembers.includes(member)) {
+        newMembersToAdd.push(member);
+      } else {
+        console.log(`Member ${member} is already in the group.`);
+      }
+    });
+
+    // Add new members to the group if they are not already in the group
+    if (newMembersToAdd.length > 0) {
+      group.members.push(...newMembersToAdd);
+
+      // Save the updated group
+      const updatedGroup = await group.save();
+
+      // Emit socket event to notify all members of the group about the new members
+      newMembersToAdd.forEach((member) => {
+        // io.to(member).emit("memberAddedToGroup", { groupId, newMembersToAdd });
+        io.emit("showCreatedGroup", {group:group , member:member});
+      });
+
+      res.status(200).json(updatedGroup);
+    } else {
+      // No new members to add
+      res.status(201).json({ message: "No new members to add" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+
 
 
 
