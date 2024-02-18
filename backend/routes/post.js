@@ -10,6 +10,9 @@ const path = require("path");
 const ShareLinkSchema = require("../models/ShareLinkSchema");
 const SavedPost = require("../models/SavedPost");
 const { v4: uuidv4 } = require('uuid');
+const axios = require("axios");
+const FormData = require("form-data");
+const fs = require("fs");
 
 
 const storage = multer.diskStorage({
@@ -123,55 +126,132 @@ router.delete("/delete_post/:userId/:postId", (req, res) => {
 //   });
 // });
 
-router.post("/create", upload.array("images", 5), (req, res) => {
+// router.post("/create", upload.array("images", 5), (req, res) => {
+//   const { userId, description, username } = req.body;
+//   const images = req.files.map((file) => file.filename);
+
+//   const checkUserQuery = "SELECT id FROM users WHERE id = ?";
+//   const insertPostQuery =
+//     "INSERT INTO posts (userId, username, description, image) VALUES (?, ?, ?, ?)";
+//   const getPostQuery =
+//     "SELECT id, createdAt FROM posts WHERE id = ?";
+
+//   const values = [userId, username, description, JSON.stringify(images)];
+
+//   // Check if the user exists
+//   connection.query(checkUserQuery, [userId], (err, results) => {
+//     if (err) {
+//       console.error("Error checking user existence:", err);
+//       res.status(500).json(err);
+//     } else if (results.length === 0) {
+//       res.status(400).json({ error: "User not found" });
+//     } else {
+//       // User exists, insert the post
+//       connection.query(insertPostQuery, values, (err, result) => {
+//         if (err) {
+//           console.error("Error creating post:", err);
+//           res.status(500).json(err);
+//         } else {
+//           const postId = result.insertId;
+//           // Fetch the createdAt timestamp of the newly inserted post
+//           connection.query(getPostQuery, [postId], (err, postResult) => {
+//             if (err) {
+//               console.error("Error fetching post data:", err);
+//               res.status(500).json(err);
+//             } else {
+//               const newPost = {
+//                 id: postId,
+//                 userId,
+//                 description,
+//                 username,
+//                 image: images,
+//                 createdAt: postResult[0].createdAt // Add createdAt field
+//               };
+//               io.emit('newPost', { newPost: newPost, username: username, userId: userId }); // Emit new post to all connected clients
+//               res.status(201).json({ id: postId, ...req.body, images: images });
+//             }
+//           });
+//         }
+//       });
+//     }
+//   });
+// });
+
+router.post("/create", upload.array("images", 5), async (req, res) => {
   const { userId, description, username } = req.body;
   const images = req.files.map((file) => file.filename);
 
-  const checkUserQuery = "SELECT id FROM users WHERE id = ?";
-  const insertPostQuery =
-    "INSERT INTO posts (userId, username, description, image) VALUES (?, ?, ?, ?)";
-  const getPostQuery =
-    "SELECT id, createdAt FROM posts WHERE id = ?";
+  // Sightengine API call to check for nudity
+  try {
+    const form = new FormData();
+    images.forEach((image) => {
+      form.append("media", fs.createReadStream(`uploads/${image}`));
+    });
+    form.append("models", "nudity-2.0");
+    form.append("api_user", "1498986529");
+    form.append("api_secret", "77xk4zUxM6gJBVsftXLohCjsCKxuyzGw");
 
-  const values = [userId, username, description, JSON.stringify(images)];
+    const sightEngineResponse = await axios.post(
+      "https://api.sightengine.com/1.0/check.json",
+      form,
+      {
+        headers: form.getHeaders(),
+      }
+    );
 
-  // Check if the user exists
-  connection.query(checkUserQuery, [userId], (err, results) => {
-    if (err) {
-      console.error("Error checking user existence:", err);
-      res.status(500).json(err);
-    } else if (results.length === 0) {
-      res.status(400).json({ error: "User not found" });
-    } else {
-      // User exists, insert the post
-      connection.query(insertPostQuery, values, (err, result) => {
-        if (err) {
-          console.error("Error creating post:", err);
-          res.status(500).json(err);
-        } else {
-          const postId = result.insertId;
-          // Fetch the createdAt timestamp of the newly inserted post
-          connection.query(getPostQuery, [postId], (err, postResult) => {
-            if (err) {
-              console.error("Error fetching post data:", err);
-              res.status(500).json(err);
-            } else {
-              const newPost = {
-                id: postId,
-                userId,
-                description,
-                username,
-                image: images,
-                createdAt: postResult[0].createdAt // Add createdAt field
-              };
-              io.emit('newPost', { newPost: newPost, username: username, userId: userId }); // Emit new post to all connected clients
-              res.status(201).json({ id: postId, ...req.body, images: images });
-            }
-          });
-        }
+    const nudity = sightEngineResponse.data.nudity;
+    // Check nudity score
+    if (
+      nudity &&
+      (nudity.sexual_activity > 0.5 ||
+        nudity.sexual_display > 0.5 ||
+        nudity.erotica > 0.5 ||
+        nudity.sexy > 0.5)
+    ) {
+      // If nudity detected, reject the post
+      return res.status(400).json({
+        error: "Nudity detected in the images. 18+ content cannot be uploaded.",
       });
     }
-  });
+
+    // Proceed to save the post if no nudity detected
+    const checkUserQuery = "SELECT id FROM users WHERE id = ?";
+    const insertPostQuery =
+      "INSERT INTO posts (userId, username, description , image) VALUES (?, ? , ? , ?)";
+    const values = [userId, username, description, JSON.stringify(images)];
+
+    // Check if the user exists
+    connection.query(checkUserQuery, [userId], (err, results) => {
+      if (err) {
+        console.error("Error checking user existence:", err);
+        res.status(500).json(err);
+      } else if (results.length === 0) {
+        res.status(400).json({ error: "User not found" });
+      } else {
+        // User exists, insert the post
+        connection.query(insertPostQuery, values, (err, result) => {
+          if (err) {
+            console.error("Error creating post:", err);
+            res.status(500).json(err);
+          } else {
+            const newPost = {
+              id: result.insertId,
+              userId,
+              description,
+              image: images,
+            };
+            io.emit("newPost", { newPost: newPost, userId: userId }); // Emit new post to all connected clients
+            res
+              .status(201)
+              .json({ id: result.insertId, ...req.body, images: images });
+          }
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error checking nudity:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 
