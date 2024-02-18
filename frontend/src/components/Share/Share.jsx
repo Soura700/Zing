@@ -139,6 +139,13 @@ const Share = ({styles}) => {
         toast("Post created successfully");
       } else {
         console.error("Failed to create post");
+        const errorData = await response.json();
+        if (response.status === 400 && errorData.error) {
+          // Display toast notification for 18+ content error
+          toast.error(errorData.error);
+        } else {
+          console.error("Failed to create post");
+        }
         // Handle error scenarios
       }
     } catch (error) {
