@@ -185,7 +185,7 @@ const ChatUI2 = ({
           body: JSON.stringify({
             conversationId: messages.conversationId,
             userIdToUnblock: activeConversation.receiverId,
-            blockingUserId: parsedId,
+            unblockingUserId: parsedId,
           }),
         }
       );

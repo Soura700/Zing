@@ -476,10 +476,41 @@ router.post("/checkBlocked", async (req, res) => {
 });
 
 // Api to unblock the user
+// router.post("/unblock", async (req, res) => {
+//   try {
+//     // Extract data from request body
+//     const { conversationId, userIdToUnblock  } = req.body;
+//     // Find the conversation document by its ID
+//     const conversation = await Conversations.findById(conversationId);
+//     if (!conversation) {
+//       return res.status(404).json({ error: "Conversation not found" });
+//     }
+//     // Check if blockedUsers array exists in the conversation document
+//     if (!conversation.blockedUser || conversation.blockedUser.length === 0) {
+//       // If blockedUser array doesn't exist or is empty, user is not blocked
+//       return res.status(400).json({ error: "User is not blocked" });
+//     }
+//     // Check if the user to unblock is in the blockedUsers array
+//     const userIndex = conversation.blockedUser.indexOf(userIdToUnblock);
+//     if (userIndex === -1) {
+//       // If user is not found in the blockedUser array, return error
+//       return res.status(400).json({ error: "User is not blocked" });
+//     }
+//     // Remove the user from the blockedUsers array
+//     conversation.blockedUser.splice(userIndex, 1);
+//     // Save the updated conversation document
+//     await conversation.save();
+//     return res.status(200).json({ message: "User unblocked successfully" });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+
 router.post("/unblock", async (req, res) => {
   try {
     // Extract data from request body
-    const { conversationId, userIdToUnblock } = req.body;
+    const { conversationId, userIdToUnblock, unblockingUserId } = req.body;
     // Find the conversation document by its ID
     const conversation = await Conversations.findById(conversationId);
     if (!conversation) {
@@ -496,8 +527,15 @@ router.post("/unblock", async (req, res) => {
       // If user is not found in the blockedUser array, return error
       return res.status(400).json({ error: "User is not blocked" });
     }
-    // Remove the user from the blockedUsers array
+    // Remove the user to unblock from the blockedUsers array
     conversation.blockedUser.splice(userIndex, 1);
+
+    // Remove the unblocking user from the blockedUsers array
+    const unblockingUserIndex = conversation.blockedUser.indexOf(unblockingUserId);
+    if (unblockingUserIndex !== -1) {
+      conversation.blockedUser.splice(unblockingUserIndex, 1);
+    }
+
     // Save the updated conversation document
     await conversation.save();
     return res.status(200).json({ message: "User unblocked successfully" });
@@ -506,5 +544,6 @@ router.post("/unblock", async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 module.exports = router;

@@ -5,16 +5,15 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "../../Contexts/authContext";
-
-
+import axios from "axios";
 
 const Settings = () => {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [bio, setBio] = useState('');
-  const [userId,setUserId] = useState(null);
-  const [socialMediaName, setSocialMediaName] = useState('');
-  const [socialMedia, setSocialMedia] = useState('');
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [bio, setBio] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [socialMediaName, setSocialMediaName] = useState("");
+  const [socialMedia, setSocialMedia] = useState("");
   const { isLoggedIn, id, checkAuthentication } = useAuth();
   const [socialMediaList, setSocialMediaList] = useState([]);
   const parsedID = parseInt(id);
@@ -82,26 +81,21 @@ const Settings = () => {
       });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     alert("Called");
-    // Logic to logout
-    fetch("http://localhost:5000/api/auth/logout", {
-      method: "POST",
-      // credentials: "same-origin", // include this if your cookies are HTTP-only
-    })
-      .then((response) => {
-        if (response.ok) {
-          // Logout successful
-          // Perform any additional logic here (e.g., redirect to login page)
-          window.location.href = "/login"; // Redirect to the login page
-        } else {
-          // Handle error
-          console.error("Logout failed:", response.statusText);
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/logout",
+        {
+          withCredentials: true,
         }
-      })
-      .catch((error) => {
-        console.error("Error during logout:", error);
-      });
+      );
+      if (response.status === 200) {
+        window.location.href = "/login";  //On successfull redirect to the home page
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleDeleteAccount = () => {

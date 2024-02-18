@@ -298,28 +298,29 @@ router.get("/check-cookie", (req, res) => {
   }
 });
 
-router.post("/logout", (req, res) => {
-  // Set the expiration date to a date in the past
-  // const expirationDate = new Date(Date.now() - 1000 * 60 * 60 * 24); // One day ago
 
-  // // Set the cookie with the expiration date
-  // res.cookie("session_token", "", {
-  //   httpOnly: true,
-  //   expires: expirationDate,
-  // });
-  res.clearCookie("session_token");
-
-  // Destroy the session
+router.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      console.error("Error destroying session:", err);
+      console.error("Error destroying session: ", err);
       return res.status(500).json({ error: "Internal Server Error" });
     }
 
-    // Send a success response
-    res.status(200).json({ message: "User logged out successfully" });
+    // Clear the session cookie by setting its expiry time to a past date
+    res.cookie("session_token", "", {
+      expires: new Date(0),
+      httpOnly: true,
+    });
+
+    res.clearCookie("session_token");
+
+    // Clear the custom cookie, if needed
+    // res.clearCookie("custom_cookie_name");
+
+    res.json({ msg: "Logged out" });
   });
 });
+
 
 router.post("/:userId", (req, res) => {
   const userId = req.params.userId;
@@ -401,7 +402,9 @@ router.post("/password/forgotpassword", async (req, res) => {
               if (error) {
               } else {
                 // console.log("Email sent: " + info.response);
-                res.status(200).json({msg:"Link has been send successfylly"});
+                res
+                  .status(200)
+                  .json({ msg: "Link has been send successfylly" });
               }
             });
             // res.send("Password link has been sent...");
