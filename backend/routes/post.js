@@ -10,6 +10,9 @@ const path = require("path");
 const ShareLinkSchema = require("../models/ShareLinkSchema");
 const SavedPost = require("../models/SavedPost");
 const { v4: uuidv4 } = require('uuid');
+const axios = require("axios");
+const FormData = require("form-data");
+const fs = require("fs");
 
 
 const storage = multer.diskStorage({
