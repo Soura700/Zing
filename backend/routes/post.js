@@ -50,9 +50,83 @@ router.delete("/delete_post/:userId/:postId", (req, res) => {
 
 //create post
 
+// router.post("/create", upload.array("images", 5), (req, res) => {
+//   const { userId, description } = req.body;
+
+//   const images = req.files.map((file) => file.filename);
+
+//   const checkUserQuery = "SELECT id FROM users WHERE id = ?";
+//   const insertPostQuery = "INSERT INTO posts (userId, description, images) VALUES (?, ?, ?)";
+//   const values = [userId, description, JSON.stringify(images)];
+
+//   // Check if the user exists
+//   connection.query(checkUserQuery, [userId], (err, results) => {
+//     if (err) {
+//       console.error("Error checking user existence:", err);
+//       res.status(500).json(err);
+//     } else if (results.length === 0) {
+//       res.status(400).json({ error: "User not found" });
+//     } else {
+//       // User exists, insert the post
+//       connection.query(insertPostQuery, values, (err, result) => {
+//         if (err) {
+//           console.error("Error creating post:", err);
+//           res.status(500).json(err);
+//         } else {
+//           res.status(201).json({ id: result.insertId, ...req.body, images });
+//         }
+//       });
+//     }
+//   });
+// });
+
+// router.post("/create", upload.array("images", 5), (req, res) => {
+//   const { userId, description , username } = req.body;
+
+//   const images = req.files.map((file) => file.filename);
+
+//   const checkUserQuery = "SELECT id FROM users WHERE id = ?";
+//   const insertPostQuery =
+//     "INSERT INTO posts (userId, username, description , image) VALUES (?, ? , ? , ?)";
+//     const getPostQuery =
+//     "SELECT id, createdAt FROM posts WHERE id = ?";
 
 
-// router.post("/create", upload.array("images", 5), async (req, res) => {
+//   const values = [userId, username, description, JSON.stringify(images)];
+
+//   // Check if the user exists
+//   connection.query(checkUserQuery, [userId], (err, results) => {
+//     if (err) {
+//       console.error("Error checking user existence:", err);
+//       res.status(500).json(err);
+//     } else if (results.length === 0) {
+//       res.status(400).json({ error: "User not found" });
+//     } else {
+//       // User exists, insert the post
+//       connection.query(insertPostQuery, values, (err, result) => {
+//         if (err) {
+//           console.error("Error creating post:", err);
+//           res.status(500).json(err);
+//         } else {
+
+//           const postId = result.insertId;
+
+//           const newPost = {
+//             id: result.insertId,
+//             userId,
+//             description,
+//             username,
+//             image:images
+//           };
+//           io.emit('newPost', { newPost: newPost , username:username , userId:userId }); // Emit new post to all connected clients
+//           res.status(201).json({ id: result.insertId, ...req.body , images:images });
+//         }
+//       });
+//     }
+//   });
+// });
+
+// router.post("/create", upload.array("images", 5), (req, res) => {
 //   const { userId, description, username } = req.body;
 //   const images = req.files.map((file) => file.filename);
 
@@ -133,20 +207,17 @@ router.delete("/delete_post/:userId/:postId", (req, res) => {
 
 router.post("/create", upload.array("images", 5), async (req, res) => {
   const { userId, description, username } = req.body;
-  let images = [];
+  const images = req.files.map((file) => file.filename);
 
-  // Check if images were uploaded
-  if (req.files && req.files.length > 0) {
-    images = req.files.map((file) => file.filename);
-    // Sightengine API call to check for nudity
-    try {
-      const form = new FormData();
-      images.forEach((image) => {
-        form.append("media", fs.createReadStream(`uploads/${image}`));
-      });
-      form.append("models", "nudity-2.0");
-      form.append("api_user", "1498986529");
-      form.append("api_secret", "77xk4zUxM6gJBVsftXLohCjsCKxuyzGw");
+  // Sightengine API call to check for nudity
+  try {
+    const form = new FormData();
+    images.forEach((image) => {
+      form.append("media", fs.createReadStream(`uploads/${image}`));
+    });
+    form.append("models", "nudity-2.0");
+    form.append("api_user", "1498986529");
+    form.append("api_secret", "77xk4zUxM6gJBVsftXLohCjsCKxuyzGw");
 
       const sightEngineResponse = await axios.post(
         "https://api.sightengine.com/1.0/check.json",
@@ -156,58 +227,59 @@ router.post("/create", upload.array("images", 5), async (req, res) => {
         }
       );
 
-      const nudity = sightEngineResponse.data.nudity;
-      // Check nudity score
-      if (
-        nudity &&
-        (nudity.sexual_activity > 0.5 ||
-          nudity.sexual_display > 0.5 ||
-          nudity.erotica > 0.5 ||
-          nudity.sexy > 0.5)
-      ) {
-        // If nudity detected, reject the post
-        return res.status(400).json({
-          error: "Nudity detected in the images. 18+ content cannot be uploaded.",
-        });
-      }
-    } catch (error) {
-      console.error("Error checking nudity:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
-
-  // Proceed to save the post whether images were uploaded or not
-  const checkUserQuery = "SELECT id FROM users WHERE id = ?";
-  const insertPostQuery =
-    "INSERT INTO posts (userId, username, description, image) VALUES (?, ?, ?, ?)";
-  const values = [userId, username, description, JSON.stringify(images)];
-
-  // Check if the user exists
-  connection.query(checkUserQuery, [userId], (err, results) => {
-    if (err) {
-      console.error("Error checking user existence:", err);
-      res.status(500).json(err);
-    } else if (results.length === 0) {
-      res.status(400).json({ error: "User not found" });
-    } else {
-      // User exists, insert the post
-      connection.query(insertPostQuery, values, (err, result) => {
-        if (err) {
-          console.error("Error creating post:", err);
-          res.status(500).json(err);
-        } else {
-          const newPost = {
-            id: result.insertId,
-            userId,
-            description,
-            image: images,
-          };
-          io.emit("newPost", { newPost: newPost, userId: userId }); // Emit new post to all connected clients
-          res.status(201).json({ id: result.insertId, ...req.body, images: images });
-        }
+    const nudity = sightEngineResponse.data.nudity;
+    // Check nudity score
+    if (
+      nudity &&
+      (nudity.sexual_activity > 0.5 ||
+        nudity.sexual_display > 0.5 ||
+        nudity.erotica > 0.5 ||
+        nudity.sexy > 0.5)
+    ) {
+      // If nudity detected, reject the post
+      return res.status(400).json({
+        error: "Nudity detected in the images. 18+ content cannot be uploaded.",
       });
     }
-  });
+
+    // Proceed to save the post if no nudity detected
+    const checkUserQuery = "SELECT id FROM users WHERE id = ?";
+    const insertPostQuery =
+      "INSERT INTO posts (userId, username, description , image) VALUES (?, ? , ? , ?)";
+    const values = [userId, username, description, JSON.stringify(images)];
+
+    // Check if the user exists
+    connection.query(checkUserQuery, [userId], (err, results) => {
+      if (err) {
+        console.error("Error checking user existence:", err);
+        res.status(500).json(err);
+      } else if (results.length === 0) {
+        res.status(400).json({ error: "User not found" });
+      } else {
+        // User exists, insert the post
+        connection.query(insertPostQuery, values, (err, result) => {
+          if (err) {
+            console.error("Error creating post:", err);
+            res.status(500).json(err);
+          } else {
+            const newPost = {
+              id: result.insertId,
+              userId,
+              description,
+              image: images,
+            };
+            io.emit("newPost", { newPost: newPost, userId: userId }); // Emit new post to all connected clients
+            res
+              .status(201)
+              .json({ id: result.insertId, ...req.body, images: images });
+          }
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error checking nudity:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 
