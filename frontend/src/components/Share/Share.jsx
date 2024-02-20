@@ -12,8 +12,29 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
+import * as tf from "@tensorflow/tfjs";
+import * as toxicity from "@tensorflow-models/toxicity";
 
 import EmojiPicker from 'emoji-picker-react';
+// Function to check text toxicity
+const checkTextToxicity = async (description) => {
+  // Load the toxicity model
+  const model = await toxicity.load();
+
+  // Classify the description text for toxicity
+  const predictions = await model.classify(description);
+
+  // Check if any toxic predictions exceed the threshold
+  for (const prediction of predictions) {
+    if (prediction.results[0].match) {
+      // If toxicity is detected, return true
+      return true;
+    }
+  }
+
+  // If no toxicity detected, return false
+  return false;
+};
 
 const Share = ({styles}) => {
   const [socket, setSocket] = useState(null);
@@ -106,52 +127,109 @@ const Share = ({styles}) => {
     setImg(selectedFiles);
   };
 
+  // const handlePost = async () => {
+  //   try {
+  //     const formData = new FormData();
+  //     // Append text data
+  //     formData.append("userId", id);
+  //     formData.append("description", input);
+  //     formData.append("username", username);
+
+  //     if (img) {
+  //       Array.from(img).forEach((file, index) => {
+  //         formData.append(`images`, file);
+  //       });
+  //     }
+  //     // Assuming you have an API endpoint for creating a new post
+  //     const response = await fetch("http://localhost:5000/api/posts/create", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       // You can do something with the result if needed
+  //       console.log("Post created successfully:", result);
+
+  //       // Emit a socket event to inform other clients about the new post
+  //       socket.emit("newPost", { newPost: result , userId:id });
+
+  //       // Clear input and other state values if needed
+  //       setInput("");
+  //       setImg(null);
+  //       toast("Post created successfully");
+  //     } else {
+  //       console.error("Failed to create post");
+  //       const errorData = await response.json();
+  //       if (response.status === 400 && errorData.error) {
+  //         // Display toast notification for 18+ content error
+  //         toast.error(errorData.error);
+  //       } else {
+  //         console.error("Failed to create post");
+  //       }
+  //       // Handle error scenarios
+  //     }
+  //   } catch (error) {
+  //     console.error("Error creating post:", error);
+  //   }
+  // };
+
   const handlePost = async () => {
-    try {
-      const formData = new FormData();
-      // Append text data
-      formData.append("userId", id);
-      formData.append("description", input);
-      formData.append("username", username);
+     // Check text toxicity before posting
+     const isToxic = await checkTextToxicity(input);
 
-      if (img) {
-        Array.from(img).forEach((file, index) => {
-          formData.append(`images`, file);
-        });
-      }
-      // Assuming you have an API endpoint for creating a new post
-      const response = await fetch("http://localhost:5000/api/posts/create", {
-        method: "POST",
-        body: formData,
-      });
+     if (isToxic) {
+       // If text is toxic, display error message and prevent posting
+       toast.error(
+         "Your post contains toxic content. Please revise your message."
+       );
+       return;
+     }
 
-      if (response.ok) {
-        const result = await response.json();
-        // You can do something with the result if needed
-        console.log("Post created successfully:", result);
+     // Proceed with posting if text is not toxic
+     try {
+       const formData = new FormData();
+       // Append text data
+       formData.append("userId", id);
+       formData.append("description", input);
+       formData.append("username", username);
 
-        // Emit a socket event to inform other clients about the new post
-        socket.emit("newPost", { newPost: result , userId:id });
+       if (img) {
+         Array.from(img).forEach((file, index) => {
+           formData.append(`images`, file);
+         });
+       }
+       // Assuming you have an API endpoint for creating a new post
+       const response = await fetch("http://localhost:5000/api/posts/create", {
+         method: "POST",
+         body: formData,
+       });
 
-        // Clear input and other state values if needed
-        setInput("");
-        setImg(null);
-        toast("Post created successfully");
-      } else {
-        console.error("Failed to create post");
-        const errorData = await response.json();
-        if (response.status === 400 && errorData.error) {
-          // Display toast notification for 18+ content error
-          toast.error(errorData.error);
-        } else {
-          console.error("Failed to create post");
-        }
-        // Handle error scenarios
-      }
-    } catch (error) {
-      console.error("Error creating post:", error);
-    }
-  };
+       if (response.ok) {
+         const result = await response.json();
+         // You can do something with the result if needed
+         console.log("Post created successfully:", result);
+
+         // Emit a socket event to inform other clients about the new post
+         socket.emit("newPost", { newPost: result, userId: id });
+
+         // Clear input and other state values if needed
+         setInput("");
+         setImg(null);
+         toast("Post created successfully");
+       } else {
+         const errorData = await response.json();
+         if (response.status === 400 && errorData.error) {
+           // Display toast notification for 18+ content error
+           toast.error(errorData.error);
+         } else {
+           console.error("Failed to create post");
+         }
+       }
+     } catch (error) {
+       console.error("Error creating post:", error);
+     }
+   };
 
   return (
     <div className="share" style={styles}>
