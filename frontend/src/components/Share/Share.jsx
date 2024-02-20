@@ -12,31 +12,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
-import * as tf from "@tensorflow/tfjs";
+// import * as tf from "@tensorflow/tfjs";
 import * as toxicity from "@tensorflow-models/toxicity";
 
-import EmojiPicker from 'emoji-picker-react';
-// Function to check text toxicity
-const checkTextToxicity = async (description) => {
-  // Load the toxicity model
-  const model = await toxicity.load();
+import EmojiPicker from "emoji-picker-react";
 
-  // Classify the description text for toxicity
-  const predictions = await model.classify(description);
 
-  // Check if any toxic predictions exceed the threshold
-  for (const prediction of predictions) {
-    if (prediction.results[0].match) {
-      // If toxicity is detected, return true
-      return true;
-    }
-  }
-
-  // If no toxicity detected, return false
-  return false;
-};
-
-const Share = ({styles}) => {
+const Share = ({ styles }) => {
+  // Function to check text toxicity
+  
   const [socket, setSocket] = useState(null);
   const { isLoggedIn, id, checkAuthentication } = useAuth();
 
@@ -127,109 +111,81 @@ const Share = ({styles}) => {
     setImg(selectedFiles);
   };
 
-  // const handlePost = async () => {
-  //   try {
-  //     const formData = new FormData();
-  //     // Append text data
-  //     formData.append("userId", id);
-  //     formData.append("description", input);
-  //     formData.append("username", username);
+  const checkTextToxicity = async (description) => {
+    // Load the toxicity model
+    const model = await toxicity.load();
 
-  //     if (img) {
-  //       Array.from(img).forEach((file, index) => {
-  //         formData.append(`images`, file);
-  //       });
-  //     }
-  //     // Assuming you have an API endpoint for creating a new post
-  //     const response = await fetch("http://localhost:5000/api/posts/create", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
+    // Classify the description text for toxicity
+    const predictions = await model.classify(description);
 
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       // You can do something with the result if needed
-  //       console.log("Post created successfully:", result);
+    // Check if any toxic predictions exceed the threshold
+    for (const prediction of predictions) {
+      if (prediction.results[0].match) {
+        // If toxicity is detected, return true
+        return true;
+      }
+    }
 
-  //       // Emit a socket event to inform other clients about the new post
-  //       socket.emit("newPost", { newPost: result , userId:id });
-
-  //       // Clear input and other state values if needed
-  //       setInput("");
-  //       setImg(null);
-  //       toast("Post created successfully");
-  //     } else {
-  //       console.error("Failed to create post");
-  //       const errorData = await response.json();
-  //       if (response.status === 400 && errorData.error) {
-  //         // Display toast notification for 18+ content error
-  //         toast.error(errorData.error);
-  //       } else {
-  //         console.error("Failed to create post");
-  //       }
-  //       // Handle error scenarios
-  //     }
-  //   } catch (error) {
-  //     console.error("Error creating post:", error);
-  //   }
-  // };
-
+    // If no toxicity detected, return false
+    return false;
+  };
+  
   const handlePost = async () => {
-     // Check text toxicity before posting
-     const isToxic = await checkTextToxicity(input);
+    // Check text toxicity before posting
+    const isToxic = await checkTextToxicity(input);
 
-     if (isToxic) {
-       // If text is toxic, display error message and prevent posting
-       toast.error(
-         "Your post contains toxic content. Please revise your message."
-       );
-       return;
-     }
+    if (isToxic) {
+      // If text is toxic, display error message and prevent posting
+      toast.error(
+        "Your post contains toxic content. Please revise your message."
+      );
+      return;
+    }
 
-     // Proceed with posting if text is not toxic
-     try {
-       const formData = new FormData();
-       // Append text data
-       formData.append("userId", id);
-       formData.append("description", input);
-       formData.append("username", username);
+    // Proceed with posting if text is not toxic
+    try {
+      const formData = new FormData();
+      // Append text data
+      formData.append("userId", id);
+      formData.append("description", input);
+      formData.append("username", username);
 
-       if (img) {
-         Array.from(img).forEach((file, index) => {
-           formData.append(`images`, file);
-         });
-       }
-       // Assuming you have an API endpoint for creating a new post
-       const response = await fetch("http://localhost:5000/api/posts/create", {
-         method: "POST",
-         body: formData,
-       });
+      if (img) {
+        Array.from(img).forEach((file, index) => {
+          formData.append(`images`, file);
+        });
+      }
+      // Assuming you have an API endpoint for creating a new post
+      const response = await fetch("http://localhost:5000/api/posts/create", {
+        method: "POST",
+        body: formData,
+      });
 
-       if (response.ok) {
-         const result = await response.json();
-         // You can do something with the result if needed
-         console.log("Post created successfully:", result);
+      if (response.ok) {
+        const result = await response.json();
+        // You can do something with the result if needed
+        console.log("Post created successfully:", result);
 
-         // Emit a socket event to inform other clients about the new post
-         socket.emit("newPost", { newPost: result, userId: id });
+        // Emit a socket event to inform other clients about the new post
+        socket.emit("newPost", { newPost: result, userId: id });
 
-         // Clear input and other state values if needed
-         setInput("");
-         setImg(null);
-         toast("Post created successfully");
-       } else {
-         const errorData = await response.json();
-         if (response.status === 400 && errorData.error) {
-           // Display toast notification for 18+ content error
-           toast.error(errorData.error);
-         } else {
-           console.error("Failed to create post");
-         }
-       }
-     } catch (error) {
-       console.error("Error creating post:", error);
-     }
-   };
+        // Clear input and other state values if needed
+        setInput("");
+        setImg(null);
+        toast("Post created successfully");
+      } else {
+        const errorData = await response.json();
+        if (response.status === 400 && errorData.error) {
+          // Display toast notification for 18+ content error
+          toast.error(errorData.error);
+        } else {
+          console.error("Failed to create post");
+        }
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
 
   return (
     <div className="share" style={styles}>
@@ -342,7 +298,7 @@ const Share = ({styles}) => {
         </div>
         {showEmojis && (
           <div className="emoji">
-          <EmojiPicker onEmojiClick={addEmoji}/>
+            <EmojiPicker onEmojiClick={addEmoji} />
           </div>
         )}
         {/* <div className="shareBottom">
@@ -357,5 +313,3 @@ const Share = ({styles}) => {
 };
 
 export default Share;
-
-
