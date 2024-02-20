@@ -74,6 +74,63 @@ connection.connect((err) => {
   }
 
   console.log("Connected to the database");
+
+  // const createTableQuery = `
+  // CREATE TABLE users (
+  //   id int UNSIGNED NOT NULL primary key auto_increment,
+  //   username varchar(1000) NOT NULL,
+  //   email varchar(500) NOT NULL,
+  //   user_password varchar(1000) NOT NULL,
+  //   isAdmin int DEFAULT '0',
+  //   userstatus int DEFAULT '0' COMMENT '0=logout 1=login 2=blocked',
+  //   lastonline timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  //   profileImg varchar(1000) DEFAULT NULL,
+  //   coverImg varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'cover image path store',
+  //   bio varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'bio store',
+  //   ip_addresses varchar(1000) DEFAULT NULL,
+  //   createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  //   updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  // );`
+
+  //   const createTableQuery = `
+  // // CREATE TABLE posts (
+  // //   id int NOT NULL primary key auto_increment,
+  // //   userId int UNSIGNED NOT NULL,
+  // //   description varchar(500) DEFAULT NULL,
+  // //   image varchar(255) DEFAULT NULL,
+  // //   createdAt timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  // //   updatedAt timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  // //   username varchar(250) DEFAULT NULL,
+  // //   likes int NOT NULL DEFAULT 0
+  // // )`;
+
+  // const createTableQuery = `
+  // CREATE TABLE post_likes (
+  //   id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  //   post_id int DEFAULT NULL,
+  //   user_id int UNSIGNED DEFAULT NULL,
+  //   created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  // ) ;`
+
+  // connection.query(createTableQuery, (err, results, fields) => {
+  //   if (err) {
+  //     console.error("Error creating table: ", err.stack);
+  //     return;
+  //   }
+
+  //   console.log("Table created successfully");
+  // });
+
+  // const dropTableQuery = `DROP TABLE IF EXISTS post_likes`;
+
+  // connection.query(dropTableQuery, (err, results, fields) => {
+  //   if (err) {
+  //     console.error("Error dropping table: ", err.stack);
+  //     return;
+  //   }
+
+  //   console.log("Table dropped successfully");
+  // });
 });
 
 mongoose
@@ -171,6 +228,10 @@ io.on("connection", (socket) => {
   }); // Disconnecting the user
 });
 
+app.get('/hello', (req, res) => {
+  res.json({ message: 'Hello, world!' });
+});
+
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     // console.log("User disconnected:", socket.id);
@@ -261,6 +322,18 @@ console.log("hello");
 
 //step 5:
 // app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
+
+
+// Release MySQL connection
+// connection.end((err) => {
+//   if (err) {
+//     console.error("Error releasing MySQL connection: ", err);
+//     return;
+//   }
+//   console.log("MySQL connection released");
+// });
+
+
 
 server.listen(process.env.PORT || 5000);
 module.exports = {
