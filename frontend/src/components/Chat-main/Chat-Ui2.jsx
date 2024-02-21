@@ -63,7 +63,8 @@ const ChatUI2 = ({
     const checkBlock = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/conversation/checkBlocked",
+          // "http://localhost:5000/api/conversation/checkBlocked",
+          "https://zing-media.onrender.com/api/conversation/checkBlocked",
           {
             method: "POST",
             headers: {
@@ -151,7 +152,8 @@ const ChatUI2 = ({
 
   const handleBlock = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/conversation/block", {
+      // const res = await fetch("http://localhost:5000/api/conversation/block", {
+        const res = await fetch("https://zing-media.onrender.com/api/conversation/block", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -176,7 +178,8 @@ const ChatUI2 = ({
   const handleUnblock = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/conversation/unblock",
+        // "http://localhost:5000/api/conversation/unblock",
+        "https://zing-media.onrender.com/api/conversation/unblock",
         {
           method: "POST",
           headers: {
@@ -209,7 +212,8 @@ const ChatUI2 = ({
             <ArrowBackIosIcon onClick={handleArrowButtonClick} />
           </div>
           <div className="user-pic">
-            <img src={`http://localhost:5000/${profileImg}`} alt="User" />
+            {/* <img src={`http://localhost:5000/${profileImg}`} alt="User" /> */}
+            <img src={`https://zing-media.onrender.com/${profileImg}`} alt="User" />
           </div>
           <div className="user-info">
             {activeConversation && (
@@ -242,7 +246,8 @@ const ChatUI2 = ({
             <div className="RightPopUpShow">
               <div className="PopUpBox">
                 <div className="top">
-                  <img src={`http://localhost:5000/${profileImg}`} alt=""></img>
+                  {/* <img src={`http://localhost:5000/${profileImg}`} alt=""></img> */}
+                  <img src={`https://zing-media.onrender.com/${profileImg}`} alt=""></img>
                   <h1>{activeConversation.username}</h1>
                 </div>
                 {blocked === true && blockingUserId === parsedId ? (

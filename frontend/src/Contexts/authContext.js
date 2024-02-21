@@ -14,7 +14,8 @@ export const AuthProvider = ({ children }) => {
   const checkAuthentication = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/check-cookie",
+        // "http://localhost:5000/api/auth/check-cookie",
+        "https://zing-media.onrender.com/api/auth/check-cookie",
         {
           method: "GET",
           credentials: "include",
@@ -27,7 +28,8 @@ export const AuthProvider = ({ children }) => {
         return data;
       } else {
         if(response.status === 400){
-          window.location.href = 'http://localhost:3000/login'
+          // window.location.href = 'http://localhost:3000/login'
+          window.location.href = 'https://social-media-soura700.vercel.app/login'
         }
         setIsLoggedIn(false);
       }

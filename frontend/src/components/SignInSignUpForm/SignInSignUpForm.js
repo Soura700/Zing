@@ -65,7 +65,7 @@ const SignInSignUpForm = () => {
   //login with google (31/01/2024) biggo
   const loginwithgoogle = () => {
     try {
-      window.open("http://localhost:5000/auth/google/callback", "_self");
+      window.open("https://zing-media.onrender.com/auth/google/callback", "_self");
     } catch (error) {
       handleGoogleLoginError();
     }
@@ -80,7 +80,7 @@ const SignInSignUpForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://zing-media.onrender.com/api/auth/login",
         data,
         {
           withCredentials: true,
@@ -137,7 +137,7 @@ const SignInSignUpForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "https://zing-media.onrender.com/api/auth/register",
         data,
         {
           withCredentials: true,

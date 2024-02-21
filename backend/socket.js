@@ -12,7 +12,8 @@ const socketIO = require("socket.io");
 
 const io = require("socket.io")(server,{
   cors:{
-    origin:'http://localhost:3000'
+    // origin:'http://localhost:3000'
+    origin:'https://social-media-soura700.vercel.app/'
   }
 }).listen(8000);
 

@@ -25,7 +25,7 @@ const CommentSection = ({ postId, userId, userName }) => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
-        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+        const userRes = await fetch("https://zing-media.onrender.com/api/auth/" + id, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -52,7 +52,7 @@ const CommentSection = ({ postId, userId, userName }) => {
     async function fetchComments() {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/comment/get_comments/${postId}`
+          `https://zing-media.onrender.com/api/comment/get_comments/${postId}`
         );
         const data = await res.json();
 
@@ -105,7 +105,7 @@ const CommentSection = ({ postId, userId, userName }) => {
   const fetchProfileImage = async (userId) => {
     try {
       // Make a GET request to fetch the profile image URL from your backend API
-      const response = await fetch(`http://localhost:5000/api/auth/${userId}`, {
+      const response = await fetch(`https://zing-media.onrender.com/api/auth/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +123,7 @@ const CommentSection = ({ postId, userId, userName }) => {
   const handleComment = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/comment/create_comments",
+        "https://zing-media.onrender.com/api/comment/create_comments",
         {
           postId: postId,
           userId: userId,
@@ -141,7 +141,7 @@ const CommentSection = ({ postId, userId, userName }) => {
   const handleDeleteComment = async (commentId) => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/comment/delete_comments/${commentId}`
+        `https://zing-media.onrender.com/api/comment/delete_comments/${commentId}`
       );
       setComments((prevComments) =>
         prevComments.filter((comment) => comment._id !== commentId)
@@ -233,7 +233,7 @@ const CommentSection = ({ postId, userId, userName }) => {
                 <div className="commentHeaderUserDiv">
                   <div className="commentHeaderInfo">
                     <img
-                      src={`http://localhost:5000/${comment.profileImg}`}
+                      src={`https://zing-media.onrender.com/${comment.profileImg}`}
                       alt=""
                     />
                     <h1>{comment.userName}</h1>

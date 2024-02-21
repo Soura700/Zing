@@ -57,7 +57,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://social-media-soura700.vercel.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
