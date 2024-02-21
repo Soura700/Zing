@@ -38,7 +38,7 @@ const ViewSharePost = () => {
       alert("Called");
       try {
         await checkAuthentication();
-        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+        const userRes = await fetch("https://zing-media.onrender.com/api/auth/" + id, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const ViewSharePost = () => {
     const fetchFriendRequests = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/friend_request/getFriends/" + parsedID
+          "https://zing-media.onrender.com/api/friend_request/getFriends/" + parsedID
         );
         const data = await res.json();
       } catch (error) {
@@ -76,7 +76,7 @@ const ViewSharePost = () => {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/posts/get_post_by_id/${postid}`,
+          `https://zing-media.onrender.com/api/posts/get_post_by_id/${postid}`,
           {
             method: "GET",
             headers: {
@@ -136,7 +136,7 @@ const ViewSharePost = () => {
     const userId = parseInt(id);
     const postId = post[0].id;
     try {
-      const res = await fetch("http://localhost:5000/api/posts/like", {
+      const res = await fetch("https://zing-media.onrender.com/api/posts/like", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -161,7 +161,7 @@ const ViewSharePost = () => {
   const handleShare = async () => {
     // Call backend API to generate a link for the post
     const response = await fetch(
-      `http://localhost:5000/api/posts/share_post/${post[0].id}`,
+      `https://zing-media.onrender.com/api/posts/share_post/${post[0].id}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -249,7 +249,7 @@ const ViewSharePost = () => {
                     images.map((image, index) => (
                       <div className={styles.imgContainer} key={index}>
                         <img
-                          src={`http://localhost:5000/uploads/${image}`}
+                          src={`https://zing-media.onrender.com/uploads/${image}`}
                           alt={`Image ${index}`}
                           onClick={() => showPostImg(index)}
                         />
@@ -258,7 +258,7 @@ const ViewSharePost = () => {
                             <h2>Preview Post</h2>
                             <div className={styles.showFullImg}>
                               <img
-                                src={`http://localhost:5000/uploads/${image}`}
+                                src={`https://zing-media.onrender.com/uploads/${image}`}
                                 alt={`Image ${index}`}
                                 onClick={() => showPostImg(index)}
                               />

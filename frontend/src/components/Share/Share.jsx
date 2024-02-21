@@ -42,7 +42,7 @@ const Share = ({ styles }) => {
       try {
         await checkAuthentication();
         const userRes = await fetch(
-          "http://localhost:5000/api/auth/" + parsedID,
+          "https://zing-media.onrender.com/api/auth/" + parsedID,
           {
             method: "POST",
             headers: {
@@ -156,7 +156,7 @@ const Share = ({ styles }) => {
         });
       }
       // Assuming you have an API endpoint for creating a new post
-      const response = await fetch("http://localhost:5000/api/posts/create", {
+      const response = await fetch("https://zing-media.onrender.com/api/posts/create", {
         method: "POST",
         body: formData,
       });

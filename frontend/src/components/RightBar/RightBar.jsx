@@ -27,7 +27,7 @@ const RightBar = ({ isVisible }) => {
       try {
         await checkAuthentication();
         const userRes = await fetch(
-          "http://localhost:5000/api/auth/" + parsedId,
+          "https://zing-media.onrender.com/api/auth/" + parsedId,
           {
             method: "POST",
             headers: {
@@ -45,7 +45,7 @@ const RightBar = ({ isVisible }) => {
         }
         // Fetch other data
         const filteredUserRes = await fetch(
-          "http://localhost:5000/api/api/filteredSuggestions/" + parsedId
+          "https://zing-media.onrender.com/api/api/filteredSuggestions/" + parsedId
         );
         const filteredData = await filteredUserRes.json();
 
@@ -55,7 +55,7 @@ const RightBar = ({ isVisible }) => {
 
         const promises = formattedResults.map(async ({ userId }) => {
           const userRes = await fetch(
-            "http://localhost:5000/api/auth/" + userId,
+            "https://zing-media.onrender.com/api/auth/" + userId,
             {
               method: "POST",
               headers: {
@@ -78,7 +78,7 @@ const RightBar = ({ isVisible }) => {
     const fetchFriendRequests = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/friend_request/getFriends/" + parsedId
+          "https://zing-media.onrender.com/api/friend_request/getFriends/" + parsedId
         );
         const data = await res.json();
         // console.log(data);
@@ -163,7 +163,7 @@ const RightBar = ({ isVisible }) => {
           try {
             // Fetch user details using the dislikeUser ID
             const userRes = await fetch(
-              "http://localhost:5000/api/auth/" + likeUser,
+              "https://zing-media.onrender.com/api/auth/" + likeUser,
               {
                 method: "POST",
                 headers: {
@@ -195,7 +195,7 @@ const RightBar = ({ isVisible }) => {
           try {
             // Fetch user details using the dislikeUser ID
             const userRes = await fetch(
-              "http://localhost:5000/api/auth/" + dislikeUser,
+              "https://zing-media.onrender.com/api/auth/" + dislikeUser,
               {
                 method: "POST",
                 headers: {
@@ -243,7 +243,7 @@ const RightBar = ({ isVisible }) => {
   const handleFollow = async (senderUsername, receiverUsername) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/friend_request/sendFriendRequest",
+        "https://zing-media.onrender.com/api/friend_request/sendFriendRequest",
         {
           method: "POST",
           headers: {

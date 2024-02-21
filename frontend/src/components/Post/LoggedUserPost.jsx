@@ -82,7 +82,7 @@ const LoggedUserPost = ({ post, userId }) => {
 
   // Parse the JSON string into an array
 
-  // const imageUrls = images.map((image) => `http://localhost:5000/uploads/${image}`);
+  // const imageUrls = images.map((image) => `https://zing-media.onrender.com/uploads/${image}`);
   const liked = false;
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const LoggedUserPost = ({ post, userId }) => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
-        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+        const userRes = await fetch("https://zing-media.onrender.com/api/auth/" + id, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -114,7 +114,7 @@ const LoggedUserPost = ({ post, userId }) => {
     const fetchFriendRequests = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/friend_request/getFriends/" + parsedID
+          "https://zing-media.onrender.com/api/friend_request/getFriends/" + parsedID
         );
         const data = await res.json();
       } catch (error) {
@@ -158,7 +158,7 @@ const LoggedUserPost = ({ post, userId }) => {
     // Assuming you have a post ID
     const postId = post.id;
     try {
-      const res = await fetch("http://localhost:5000/api/posts/like", {
+      const res = await fetch("https://zing-media.onrender.com/api/posts/like", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -207,7 +207,7 @@ const LoggedUserPost = ({ post, userId }) => {
     const fetchLikeStatus = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/posts/check_like/${post.id}/${userId}`
+          `https://zing-media.onrender.com/api/posts/check_like/${post.id}/${userId}`
         );
         const data = await response.json();
         setIsLiked(data.liked);
@@ -254,7 +254,7 @@ const LoggedUserPost = ({ post, userId }) => {
   //     }
 
   //     const response = await fetch(
-  //       `http://localhost:5000/api/posts/delete_post/${parsedID}/${post.id}`,
+  //       `https://zing-media.onrender.com/api/posts/delete_post/${parsedID}/${post.id}`,
   //       {
   //         method: "PUT",
   //       }
@@ -285,7 +285,7 @@ const LoggedUserPost = ({ post, userId }) => {
         });
       }
       const response = await fetch(
-        `http://localhost:5000/api/posts/update_post/${parsedID}/${post.id}`, // Update the endpoint
+        `https://zing-media.onrender.com/api/posts/update_post/${parsedID}/${post.id}`, // Update the endpoint
         {
           method: "PUT",
           body: formData,
@@ -304,7 +304,7 @@ const LoggedUserPost = ({ post, userId }) => {
   async function deletePost() {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/posts/delete_post/${parsedID}/${post.id}`,
+        `https://zing-media.onrender.com/api/posts/delete_post/${parsedID}/${post.id}`,
         {
           method: "DELETE",
         }
@@ -323,7 +323,7 @@ const LoggedUserPost = ({ post, userId }) => {
       <div className={styles.container}>
         <div className={styles.user}>
           <div className={styles.userInfo}>
-            <img src={`http://localhost:5000/${userPhoto}`} alt="" />
+            <img src={`https://zing-media.onrender.com/${userPhoto}`} alt="" />
             <div className={styles.details}>
               <Link
                 to={`/profile/${post.userId}`}
@@ -428,7 +428,7 @@ const LoggedUserPost = ({ post, userId }) => {
               postImages.map((image, index) => (
                 <div className={styles.imgContainer} key={index}>
                   <img
-                    src={`http://localhost:5000/uploads/${image}`}
+                    src={`https://zing-media.onrender.com/uploads/${image}`}
                     alt={`Image ${index}`}
                     onClick={() => showPostImg(index)}
                   />
@@ -437,7 +437,7 @@ const LoggedUserPost = ({ post, userId }) => {
                       <h2>Preview Post</h2>
                       <div className={styles.showFullImg}>
                         <img
-                          src={`http://localhost:5000/uploads/${image}`}
+                          src={`https://zing-media.onrender.com/uploads/${image}`}
                           alt={`Image ${index}`}
                           onClick={() => showPostImg(index)}
                         />

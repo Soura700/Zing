@@ -178,7 +178,7 @@ const ChatUI = ({
             <ArrowBackIosIcon onClick={showSidebarMenu} />
           </div>
           <div className="user-pic">
-            <img src={`http://localhost:5000/${profileImg}`} alt="User" />
+            <img src={`https://zing-media.onrender.com/${profileImg}`} alt="User" />
           </div>
           <div className="user-info">
             {activeConversation && (

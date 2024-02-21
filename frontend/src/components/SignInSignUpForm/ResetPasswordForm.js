@@ -27,7 +27,7 @@ const ResetPasswordForm = () => {
   const handleUpdateClick = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/auth/resetpassword/${id}/${token}`,
+        `https://zing-media.onrender.com/api/auth/resetpassword/${id}/${token}`,
         { user_password: confirmNewPassword }
       );
 

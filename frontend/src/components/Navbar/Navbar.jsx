@@ -105,7 +105,7 @@ const Navbar = ({ toggleMenu, user }) => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
-        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+        const userRes = await fetch("https://zing-media.onrender.com/api/auth/" + id, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -123,7 +123,7 @@ const Navbar = ({ toggleMenu, user }) => {
       try {
         await checkAuthentication();
         const userRes = await fetch(
-          "http://localhost:5000/api/auth/" + parsedID,
+          "https://zing-media.onrender.com/api/auth/" + parsedID,
           {
             method: "POST",
             headers: {
@@ -147,7 +147,7 @@ const Navbar = ({ toggleMenu, user }) => {
     const fetchFriendRequests = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/friend_request/get_friend_requests",
+          "https://zing-media.onrender.com/api/friend_request/get_friend_requests",
           {
             method: "POST",
             headers: {
@@ -178,7 +178,7 @@ const Navbar = ({ toggleMenu, user }) => {
     const fetchUnreadNotificationCount = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/get/get_unread_friend_message/" + parsedID
+          "https://zing-media.onrender.com/api/get/get_unread_friend_message/" + parsedID
         );
         const data = await response.json();
         // Assuming data is an array of user objects with a 'name' property
@@ -193,7 +193,7 @@ const Navbar = ({ toggleMenu, user }) => {
     // const fetchUnreadMessages = async () => {
     //   try {
     //     const response = await fetch(
-    //       "http://localhost:5000/api/get/get_unread_read_message/" + parsedID
+    //       "https://zing-media.onrender.com/api/get/get_unread_read_message/" + parsedID
     //     );
     //     const data = await response.json();
     //     console.log("Data");
@@ -213,7 +213,7 @@ const Navbar = ({ toggleMenu, user }) => {
     const fetchUnreadMessages = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/get/get_unread_read_message/" + parsedID
+          "https://zing-media.onrender.com/api/get/get_unread_read_message/" + parsedID
         );
         const data = await response.json();
 
@@ -221,7 +221,7 @@ const Navbar = ({ toggleMenu, user }) => {
         const fetchProfileImages = data.map(async (message) => {
           try {
             const userResponse = await fetch(
-              `http://localhost:5000/api/auth/${message.receiverId}`,
+              `https://zing-media.onrender.com/api/auth/${message.receiverId}`,
               {
                 method: "POST",
                 headers: {
@@ -417,7 +417,7 @@ const Navbar = ({ toggleMenu, user }) => {
   const fetchProfileImage = async (userId) => {
     try {
       // Make a GET request to fetch the profile image URL from your backend API
-      const response = await fetch(`http://localhost:5000/api/auth/${userId}`, {
+      const response = await fetch(`https://zing-media.onrender.com/api/auth/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -437,7 +437,7 @@ const Navbar = ({ toggleMenu, user }) => {
     try {
       // Make an AJAX request to fetch search suggestions from the backend
       const response = await axios.get(
-        "http://localhost:5000/api/auth/search-suggestions?query=",
+        "https://zing-media.onrender.com/api/auth/search-suggestions?query=",
         {
           params: { query: inputValue }, // Pass the search query as a parameter
         }
@@ -491,7 +491,7 @@ const Navbar = ({ toggleMenu, user }) => {
     try {
       // Call the API to mark messages as "Read"
       const response = await fetch(
-        "http://localhost:5000/api/get/markMessagesAsRead/" + parsedID,
+        "https://zing-media.onrender.com/api/get/markMessagesAsRead/" + parsedID,
         {
           method: "PUT",
           headers: {
@@ -523,7 +523,7 @@ const Navbar = ({ toggleMenu, user }) => {
   const handleIconClick = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/get/delete_unread_friend_message/" +
+        "https://zing-media.onrender.com/api/get/delete_unread_friend_message/" +
           parsedID,
         {
           method: "DELETE",
@@ -565,7 +565,7 @@ const Navbar = ({ toggleMenu, user }) => {
   const handleConfirm = async (senderName, receiverName) => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/friend_request/acceptFriendRequest",
+        "https://zing-media.onrender.com/api/friend_request/acceptFriendRequest",
         {
           method: "POST",
           headers: {
@@ -603,7 +603,7 @@ const Navbar = ({ toggleMenu, user }) => {
   const handleDelete = async (senderName, receiverName) => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/friend_request/deleteFriendRelationship",
+        "https://zing-media.onrender.com/api/friend_request/deleteFriendRelationship",
         {
           method: "DELETE",
           headers: {
@@ -706,7 +706,7 @@ const Navbar = ({ toggleMenu, user }) => {
                       <div className={styles.searchUser} key={index}>
                         <a href={`http://localhost:3000/profile/${user.id}`}>
                           <img
-                            src={`http://localhost:5000/${user.profileImg}`}
+                            src={`https://zing-media.onrender.com/${user.profileImg}`}
                             alt={`user${index}`}
                           />
                         </a>
@@ -761,7 +761,7 @@ const Navbar = ({ toggleMenu, user }) => {
                       <li className={styles.request} key={index}>
                         <div className={styles.left}>
                           {/* <img src={userPhoto} /> */}
-                          <img src={`http://localhost:5000/${user.profileImg}`} />
+                          <img src={`https://zing-media.onrender.com/${user.profileImg}`} />
                         </div>
                         <p className={styles.middle}>
                           <a
@@ -825,7 +825,7 @@ const Navbar = ({ toggleMenu, user }) => {
                         <li className={styles.request} key={index}>
                           <div className={styles.left}>
                             <img
-                              src={`http://localhost:5000/${user.profileImg}`}
+                              src={`https://zing-media.onrender.com/${user.profileImg}`}
                             />
                           </div>
                           <p className={styles.middle}>
@@ -856,7 +856,7 @@ const Navbar = ({ toggleMenu, user }) => {
               href={`/profile/${parsedID}`}
               className={styles.userNameLink}
             >
-              <img src={`http://localhost:5000/${userPhoto}`} />
+              <img src={`https://zing-media.onrender.com/${userPhoto}`} />
               <span>{username}</span>
             </a>
           </div>

@@ -21,7 +21,7 @@ const Posts = () => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
-        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+        const userRes = await fetch("https://zing-media.onrender.com/api/auth/" + id, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const Posts = () => {
       try {
         console.log(parsedID);
         const res = await fetch(
-          "http://localhost:5000/api/friend_request/getFriends/" + parsedID
+          "https://zing-media.onrender.com/api/friend_request/getFriends/" + parsedID
         );
         const data = await res.json();
         console.log("data");
@@ -66,7 +66,7 @@ const Posts = () => {
         const promises = friends.friends.map(async (friend) => {
           const id = friend.friendId;
           const res1 = await fetch(
-            `http://localhost:5000/api/posts/posts_by_timestamp/${id}/${encodeURIComponent(
+            `https://zing-media.onrender.com/api/posts/posts_by_timestamp/${id}/${encodeURIComponent(
               updatedAt
             )}`
           );
@@ -147,7 +147,7 @@ const Posts = () => {
     async function fetchPosts() {
       try {
         const postsRes = await axios.get(
-          "http://localhost:5000/api/posts/allPosts"
+          "https://zing-media.onrender.com/api/posts/allPosts"
         );
 
         //  console.log("Data" + postsRes.data)

@@ -197,7 +197,7 @@ export const Group = () => {
   const searchUserSuggestions = async (searchValue) => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/conversation/get/conversation/" +
+        "https://zing-media.onrender.com/api/conversation/get/conversation/" +
           searchValue,
         {
           method: "POST",
@@ -237,7 +237,7 @@ export const Group = () => {
       try {
         await checkAuthentication();
         const userRes = await fetch(
-          "http://localhost:5000/api/auth/" + parsedId,
+          "https://zing-media.onrender.com/api/auth/" + parsedId,
           {
             method: "POST",
             headers: {
@@ -275,7 +275,7 @@ export const Group = () => {
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {
-        const res = await fetch("http://localhost:5000/api/conversation/get", {
+        const res = await fetch("https://zing-media.onrender.com/api/conversation/get", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -354,7 +354,7 @@ export const Group = () => {
         if (groupId === groupid && memberId !== parsedId) {
           // try {
           //   const userRes = await fetch(
-          //     "http://localhost:5000/api/auth/" + parseMember,
+          //     "https://zing-media.onrender.com/api/auth/" + parseMember,
           //     {
           //       method: "POST",
           //       headers: {
@@ -410,7 +410,7 @@ export const Group = () => {
       });
       try {
         const res = await fetch(
-          "http://localhost:5000/api/groupmessage/group/message_create",
+          "https://zing-media.onrender.com/api/groupmessage/group/message_create",
           {
             method: "POST",
             headers: {
@@ -443,7 +443,7 @@ export const Group = () => {
       });
       try {
         const res = await fetch(
-          "http://localhost:5000/api/groupmessage/group/message_create",
+          "https://zing-media.onrender.com/api/groupmessage/group/message_create",
           {
             method: "POST",
             headers: {
@@ -479,7 +479,7 @@ export const Group = () => {
       console.log(groupValue);
       console.log(typeof groupValue);
 
-      const res = await fetch("http://localhost:5000/api/group/create", {
+      const res = await fetch("https://zing-media.onrender.com/api/group/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -497,7 +497,7 @@ export const Group = () => {
       setGroupChat(response.groupName);
 
       const createConversation = await fetch(
-        "http://localhost:5000/api/conversation/create/group/conversation",
+        "https://zing-media.onrender.com/api/conversation/create/group/conversation",
         {
           method: "POST",
           headers: {
@@ -535,7 +535,7 @@ export const Group = () => {
   useEffect(() => {
     const fetchGroups = async () => {
       const res = await fetch(
-        "http://localhost:5000/api/group/groups/" + parsedId
+        "https://zing-media.onrender.com/api/group/groups/" + parsedId
       );
       const data = await res.json();
       setGroups(data);
@@ -579,7 +579,7 @@ export const Group = () => {
     try {
       // Make an API request to fetch group messages based on groupId
       const res = await fetch(
-        `http://localhost:5000/api/conversation/get_group_id/conversation`,
+        `https://zing-media.onrender.com/api/conversation/get_group_id/conversation`,
         {
           method: "POST",
           headers: {
@@ -608,7 +608,7 @@ export const Group = () => {
     try {
       // Make an API request to fetch group messages based on groupId
       const res = await fetch(
-        `http://localhost:5000/api/groupmessage/get_group_messages/${groupId}`
+        `https://zing-media.onrender.com/api/groupmessage/get_group_messages/${groupId}`
       );
       if (res.ok) {
         const data = await res.json();
@@ -699,7 +699,7 @@ export const Group = () => {
       });
       try {
         const res = await fetch(
-          "http://localhost:5000/api/groupmessage/group/message_create",
+          "https://zing-media.onrender.com/api/groupmessage/group/message_create",
           {
             method: "POST",
             headers: {
@@ -741,19 +741,19 @@ export const Group = () => {
       callerId: parsedId,
     });
 
-    const url = `http://localhost:5000/${groupId}`;
+    const url = `https://zing-media.onrender.com/${groupId}`;
     window.location.href = url;
   };
 
   const handleAcceptButtonClick = () => {
-    const url = `http://localhost:5000/${groupId}`;
+    const url = `https://zing-media.onrender.com/${groupId}`;
     window.location.href = url;
   };
 
   const getGroupMembers = async (groupId) => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/group/get_group_members?groupId=${groupId}`,
+        `https://zing-media.onrender.com/api/group/get_group_members?groupId=${groupId}`,
         {
           params: { query: groupId }, // Pass the search query as a parameter
         }
@@ -780,7 +780,7 @@ export const Group = () => {
     try {
       // Make an AJAX request to fetch search suggestions from the backend
       const response = await axios.get(
-        "http://localhost:5000/api/group/search-suggestions",
+        "https://zing-media.onrender.com/api/group/search-suggestions",
         {
           params: { query: searchQuery }, // Pass the search query as a parameter
         }
@@ -799,7 +799,7 @@ export const Group = () => {
 
   const leaveGroup = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/group/leave", {
+      const res = await fetch("https://zing-media.onrender.com/api/group/leave", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -830,7 +830,7 @@ export const Group = () => {
   const updateGroupMember = async ()=>{
     try {
       const memberIds = selectedUsers.map((user) => user.userId);
-      const res = await fetch("http://localhost:5000/api/group/update-members", {
+      const res = await fetch("https://zing-media.onrender.com/api/group/update-members", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -872,7 +872,7 @@ export const Group = () => {
             <div className="items">
               <div className="profile-img">
                 {/* <img src={image} alt="" /> */}
-                <img src={`http://localhost:5000/${photo}`} alt="" />
+                <img src={`https://zing-media.onrender.com/${photo}`} alt="" />
               </div>
               <div className="item1">
                 <TextsmsIcon fontSize="medium" className="icon1" />
@@ -1063,7 +1063,7 @@ export const Group = () => {
                     <div className="RightPopUpShow">
                       <div className="PopUpBox">
                         <div className="top">
-                          {/* <img src={`http://localhost:5000/${profileImg}`} alt=""></img>
+                          {/* <img src={`https://zing-media.onrender.com/${profileImg}`} alt=""></img>
                         <h1>{activeConversations.username}</h1> */}
                         </div>
                         <div className="bottom">
@@ -1196,7 +1196,7 @@ export const Group = () => {
                               style={{ "text-decoration": " none" }}
                             >
                               <img
-                                src={`http://localhost:5000/${groupMember.user.profileImg}`}
+                                src={`https://zing-media.onrender.com/${groupMember.user.profileImg}`}
                                 alt="User"
                               />
                             </a>

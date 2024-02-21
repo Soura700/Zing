@@ -81,7 +81,7 @@ export const Leftbar2 = () => {
         console.log(parsedId);
         try {
           const userRes = await fetch(
-            "http://localhost:5000/api/conversation/getConversation_by_sender_receiverId",
+            "https://zing-media.onrender.com/api/conversation/getConversation_by_sender_receiverId",
             {
               method: "POST",
               headers: {
@@ -102,7 +102,7 @@ export const Leftbar2 = () => {
           if (userDetails.length === 0) {
             try {
               const createRes = await fetch(
-                "http://localhost:5000/api/conversation/create/conversation",
+                "https://zing-media.onrender.com/api/conversation/create/conversation",
                 {
                   method: "POST",
                   headers: {
@@ -115,7 +115,7 @@ export const Leftbar2 = () => {
                 }
               );
               const userRes = await fetch(
-                "http://localhost:5000/api/conversation/getConversation_by_sender_receiverId",
+                "https://zing-media.onrender.com/api/conversation/getConversation_by_sender_receiverId",
                 {
                   method: "POST",
                   headers: {
@@ -241,7 +241,7 @@ export const Leftbar2 = () => {
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {
-        const res = await fetch("http://localhost:5000/api/conversation/get", {
+        const res = await fetch("https://zing-media.onrender.com/api/conversation/get", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -257,7 +257,7 @@ export const Leftbar2 = () => {
         const updatedConversations = await Promise.all(
           data.map(async (conversation) => {
             const userRes = await fetch(
-              `http://localhost:5000/api/auth/${conversation.user.receiverId}`,
+              `https://zing-media.onrender.com/api/auth/${conversation.user.receiverId}`,
               {
                 method: "POST",
                 headers: {
@@ -289,7 +289,7 @@ export const Leftbar2 = () => {
     if (isLoggedIn) {
       // Fetch user image along with other conversation details
       const userRes = await fetch(
-        `http://localhost:5000/api/auth/${user.receiverId}`,
+        `https://zing-media.onrender.com/api/auth/${user.receiverId}`,
         {
           method: "POST",
           headers: {
@@ -300,7 +300,7 @@ export const Leftbar2 = () => {
       const userData = await userRes.json();
       console.log("Profile Imageeeeeeeeeeeeeeeeeeeeee");
       const res = await fetch(
-        "http://localhost:5000/api/message/get_messages/" + id
+        "https://zing-media.onrender.com/api/message/get_messages/" + id
       );
       const resJson = await res.json();
       setMessages({
@@ -338,7 +338,7 @@ export const Leftbar2 = () => {
     });
 
     try {
-      const res = await fetch("http://localhost:5000/api/message/create", {
+      const res = await fetch("https://zing-media.onrender.com/api/message/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -776,7 +776,7 @@ export const Leftbar2 = () => {
                       >
                         <div className="left">
                           <img
-                            src={`http://localhost:5000/${conversation.user.profileImg}`}
+                            src={`https://zing-media.onrender.com/${conversation.user.profileImg}`}
                             alt="User"
                             onClick={() =>
                               fetchMessages(

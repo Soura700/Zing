@@ -60,7 +60,7 @@ const Post = ({ post, userId, style }) => {
     const fetchData = async () => {
       try {
         await checkAuthentication();
-        const userRes = await fetch("http://localhost:5000/api/auth/" + id, {
+        const userRes = await fetch("https://zing-media.onrender.com/api/auth/" + id, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -75,7 +75,7 @@ const Post = ({ post, userId, style }) => {
     const fetchFriendRequests = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/friend_request/getFriends/" + parsedID
+          "https://zing-media.onrender.com/api/friend_request/getFriends/" + parsedID
         );
         const data = await res.json();
       } catch (error) {
@@ -103,7 +103,7 @@ const Post = ({ post, userId, style }) => {
     const fetchLikeStatus = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/posts/check_like/${post.id}/${userId}`
+          `https://zing-media.onrender.com/api/posts/check_like/${post.id}/${userId}`
         );
         const data = await response.json();
         setIsLiked(data.liked);
@@ -143,7 +143,7 @@ const Post = ({ post, userId, style }) => {
       try {
         // Make an API call to fetch the user's profile information
         const response = await fetch(
-          `http://localhost:5000/api/auth/${post.userId}`,
+          `https://zing-media.onrender.com/api/auth/${post.userId}`,
           {
             method: "POST",
             headers: {
@@ -170,7 +170,7 @@ const Post = ({ post, userId, style }) => {
     // Assuming you have a post ID
     const postId = post.id;
     try {
-      const res = await fetch("http://localhost:5000/api/posts/like", {
+      const res = await fetch("https://zing-media.onrender.com/api/posts/like", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -197,7 +197,7 @@ const Post = ({ post, userId, style }) => {
      const fetchSavedPosts = async () => {
        try {
          const res = await fetch(
-           `http://localhost:5000/api/posts/saved_posts/${userId}`
+           `https://zing-media.onrender.com/api/posts/saved_posts/${userId}`
          );
          const data = await res.json();
          setSavedPosts(data);
@@ -217,7 +217,7 @@ const Post = ({ post, userId, style }) => {
 
 const savePost = async () => {
   try {
-    const res = await fetch("http://localhost:5000/api/posts/save_post", {
+    const res = await fetch("https://zing-media.onrender.com/api/posts/save_post", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -295,7 +295,7 @@ const savePost = async () => {
   // const handleShare = async () => {
   //   // Call backend API to generate a link for the post
   //   const response = await fetch(
-  //     `http://localhost:5000/api/posts/share_post/${post.id}`,
+  //     `https://zing-media.onrender.com/api/posts/share_post/${post.id}`,
   //     {
   //       headers: {
   //         "Content-Type": "application/json",
@@ -315,7 +315,7 @@ const savePost = async () => {
       try {
         // Call backend API to generate a link for the post
         const response = await fetch(
-          `http://localhost:5000/api/posts/share_post/${post.id}`,
+          `https://zing-media.onrender.com/api/posts/share_post/${post.id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -344,7 +344,7 @@ const savePost = async () => {
       <div className={styles.container}>
         <div className={styles.user}>
           <div className={styles.userInfo}>
-            <img src={`http://localhost:5000/${userProfile}`} alt="" />
+            <img src={`https://zing-media.onrender.com/${userProfile}`} alt="" />
             <div className={styles.details}>
               <Link
                 to={`/profile/${post.userId}`}
@@ -399,7 +399,7 @@ const savePost = async () => {
               postImages.map((image, index) => (
                 <div className={styles.imgContainer} key={index}>
                   <img
-                    src={`http://localhost:5000/uploads/${image}`}
+                    src={`https://zing-media.onrender.com/uploads/${image}`}
                     alt={`Image ${index}`}
                     onClick={() => showPostImg(index)}
                   />
@@ -408,7 +408,7 @@ const savePost = async () => {
                       <h2>Preview Post</h2>
                       <div className={styles.showFullImg}>
                         <img
-                          src={`http://localhost:5000/uploads/${image}`}
+                          src={`https://zing-media.onrender.com/uploads/${image}`}
                           alt={`Image ${index}`}
                           onClick={() => showPostImg(index)}
                         />

@@ -98,7 +98,7 @@ export const Let = () => {
       try {
         await checkAuthentication();
         const userRes = await fetch(
-          "http://localhost:5000/api/auth/" + parsedId,
+          "https://zing-media.onrender.com/api/auth/" + parsedId,
           {
             method: "POST",
             headers: {
@@ -146,7 +146,7 @@ export const Let = () => {
       const checkExistenceOfConversation = async () => {
         try {
           const userRes = await fetch(
-            "http://localhost:5000/api/conversation/getConversation_by_sender_receiverId",
+            "https://zing-media.onrender.com/api/conversation/getConversation_by_sender_receiverId",
             {
               method: "POST",
               headers: {
@@ -167,7 +167,7 @@ export const Let = () => {
           if (userDetails.length === 0) {
             try {
               const createRes = await fetch(
-                "http://localhost:5000/api/conversation/create/conversation",
+                "https://zing-media.onrender.com/api/conversation/create/conversation",
                 {
                   method: "POST",
                   headers: {
@@ -180,7 +180,7 @@ export const Let = () => {
                 }
               );
               const userRes = await fetch(
-                "http://localhost:5000/api/conversation/getConversation_by_sender_receiverId",
+                "https://zing-media.onrender.com/api/conversation/getConversation_by_sender_receiverId",
                 {
                   method: "POST",
                   headers: {
@@ -264,7 +264,7 @@ export const Let = () => {
   useEffect(() => {
     if (isLoggedIn) {
       const fetchData = async () => {
-        const res = await fetch("http://localhost:5000/api/conversation/get", {
+        const res = await fetch("https://zing-media.onrender.com/api/conversation/get", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -278,7 +278,7 @@ export const Let = () => {
         const updatedConversations = await Promise.all(
           data.map(async (conversation) => {
             const userRes = await fetch(
-              `http://localhost:5000/api/auth/${conversation.user.receiverId}`,
+              `https://zing-media.onrender.com/api/auth/${conversation.user.receiverId}`,
               {
                 method: "POST",
                 headers: {
@@ -309,7 +309,7 @@ export const Let = () => {
     if (isLoggedIn) {
       // Fetch user image along with other conversation details
       const userRes = await fetch(
-        `http://localhost:5000/api/auth/${user.receiverId}`,
+        `https://zing-media.onrender.com/api/auth/${user.receiverId}`,
         {
           method: "POST",
           headers: {
@@ -319,7 +319,7 @@ export const Let = () => {
       );
       const userData = await userRes.json();
       const res = await fetch(
-        "http://localhost:5000/api/message/get_messages/" + id
+        "https://zing-media.onrender.com/api/message/get_messages/" + id
       );
       const resJson = await res.json();
       setMessages({
@@ -354,7 +354,7 @@ export const Let = () => {
     });
 
     try {
-      const res = await fetch("http://localhost:5000/api/message/create", {
+      const res = await fetch("https://zing-media.onrender.com/api/message/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -389,7 +389,7 @@ export const Let = () => {
     try {
       // Make an AJAX request to fetch search suggestions from the backend
       const response = await axios.post(
-        `http://localhost:5000/api/conversation/search-suggestions/?query=${searchQuery}`,
+        `https://zing-media.onrender.com/api/conversation/search-suggestions/?query=${searchQuery}`,
         { index0: parsedId }, // Pass additional data in the request body
         {
           headers: {
@@ -423,7 +423,7 @@ export const Let = () => {
                   href={`/profile/${parsedID}`}
                   className={styles.userNameLink}
                 >
-                  <img src={`http://localhost:5000/${photo}`} alt="" />
+                  <img src={`https://zing-media.onrender.com/${photo}`} alt="" />
                 </a>
               </div>
               <div className="item1">
@@ -475,7 +475,7 @@ export const Let = () => {
                           searchSuggestionResult.map((suggestion, index) => (
                             <div className="popupUser">
                               <img
-                                src={`http://localhost:5000/${suggestion.profileImg}`}
+                                src={`https://zing-media.onrender.com/${suggestion.profileImg}`}
                                 alt="User"
                               />
                               <p onClick={() => {}}>{suggestion.username}</p>
@@ -731,7 +731,7 @@ export const Let = () => {
                             // console.log(suggestion.mongoData[0]._id),
                             <div className="popupUser">
                               <img
-                                src={`http://localhost:5000/${suggestion.profileImg}`}
+                                src={`https://zing-media.onrender.com/${suggestion.profileImg}`}
                                 alt="User"
                               />
                               <p
@@ -778,7 +778,7 @@ export const Let = () => {
                       >
                         <div className="left">
                           <img
-                            src={`http://localhost:5000/${conversation.user.profileImg}`}
+                            src={`https://zing-media.onrender.com/${conversation.user.profileImg}`}
                             alt="User"
                             onClick={() =>
                               fetchMessages(

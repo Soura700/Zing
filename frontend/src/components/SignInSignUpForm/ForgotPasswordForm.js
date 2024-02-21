@@ -17,7 +17,7 @@ const ForgotPasswordForm = () => {
   const handleSendClick = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/password/forgotpassword",
+        "https://zing-media.onrender.com/api/auth/password/forgotpassword",
         { email }
       );
 
