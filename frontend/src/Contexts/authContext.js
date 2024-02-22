@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         if(response.status === 400){
           // window.location.href = 'http://localhost:3000/login'
-          window.location.href = 'https://social-media-soura700.vercel.app/login'
+          window.location.href = 'https://zing-five.vercel.app/login'
         }
         setIsLoggedIn(false);
       }

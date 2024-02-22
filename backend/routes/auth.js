@@ -100,8 +100,7 @@ router.post(
               res.cookie("session_token", customValue, {
                 httpOnly: true,
                 expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-                domain: "social-media-soura700.vercel.app",
-                path:'/'
+                domain: "https://zing-five.vercel.app",
               });
               // localStorage.setItem("isNewUser", "true")
               // res.sessionStorage.setItem("isNewUser", "true");
