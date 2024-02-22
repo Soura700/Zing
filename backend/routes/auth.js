@@ -100,7 +100,7 @@ router.post(
               res.cookie("session_token", customValue, {
                 httpOnly: true,
                 expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-                domain: "https://zing-five.vercel.app",
+                domain: "zing-five.vercel.app",
               });
               // localStorage.setItem("isNewUser", "true")
               // res.sessionStorage.setItem("isNewUser", "true");
@@ -225,7 +225,7 @@ router.post(
             const customValue = `custom_${userId}`;
 
             res.cookie("session_token", customValue, {
-              domain:'https://zing-five.vercel.app',
+              domain:'zing-five.vercel.app',
               httpOnly: true,
               expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
             });
