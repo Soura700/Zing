@@ -68,7 +68,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://social-media-soura700.vercel.app/"
+    "https://zing-five.vercel.app"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
