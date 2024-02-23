@@ -225,7 +225,7 @@ router.post(
             const customValue = `custom_${userId}`;
 
             res.cookie("session_token", customValue, {
-              domain:'onrender.com',
+              domain:'.vercel.app',
               path:"/",
               secure:true,
               httpOnly: true,
