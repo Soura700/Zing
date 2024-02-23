@@ -11,6 +11,7 @@ const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const { QueryStatistics } = require("neo4j-driver");
 const { now } = require("mongoose");
+const { NonMaxSuppressionV3 } = require("@tensorflow/tfjs");
 
 router.use(
   session({
@@ -225,8 +226,9 @@ router.post(
             const customValue = `custom_${userId}`;
 
             res.cookie("session_token", customValue, {
-              // !
+              // domain:'https://zing-five.vercel.app',
               httpOnly: true,
+              sameSite:none,
               expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
             });
 
