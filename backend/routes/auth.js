@@ -228,7 +228,6 @@ router.post(
             res.cookie("session_token", customValue, {
               // domain:'https://zing-five.vercel.app',
               httpOnly: true,
-              sameSite:none,
               expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
             });
 
