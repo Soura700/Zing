@@ -63,6 +63,15 @@ app.use(
   })
 );
 
+app.use(
+  cors({
+    origin: "https://zing-media.onrender.com",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
+
+
 
 // Set middleware of CORS 
 app.use((req, res, next) => {
