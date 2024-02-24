@@ -192,7 +192,7 @@ function App() {
     },
 
     {
-      path: "https://zing-clya.onrender.com/login",
+      path: "/login",
       element: <SignInSignUpForm />,
     },
     {
