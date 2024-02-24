@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         if(response.status === 400){
           // window.location.href = 'http://localhost:3000/login'
-          window.location.href = 'https://zing-clya.onrender.com/login'
+          window.location.href = 'https://zing-qb6s.onrender.com/login'
           // window.location.href = 'https://zing-five.vercel.app/login'
         }
         setIsLoggedIn(false);
