@@ -226,7 +226,8 @@ router.post(
             const customValue = `custom_${userId}`;
 
             res.cookie("session_token", customValue, {
-              domain:'.zing-five.vercel.app',
+              // domain:'.zing-five.vercel.app',
+              domain:'.zing-y974.onrender.com',
               secure: true, 
               sameSite: 'None', // Set to 'None' if the frontend is hosted on a different domain
               path: '/',
