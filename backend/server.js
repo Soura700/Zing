@@ -58,7 +58,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   cors({
     // origin: "https://zing-five.vercel.app",
-    origin: "https://zing-y974.onrender.com",
+    origin: "https://zing-clya.onrender.com",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
@@ -72,7 +72,7 @@ app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
     // "https://zing-five.vercel.app"
-    "https://zing-y974.onrender.com"
+    "https://zing-clya.onrender.com"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
